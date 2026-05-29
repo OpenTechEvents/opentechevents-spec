@@ -1,0 +1,55 @@
+{
+  "specVersion": "0.1.0",
+  "kind": "feed",
+  "title": "Eventos de IA en España",
+  "feedUrl": "https://eventos.example/feeds/ia-es.json",
+  "homePageUrl": "https://eventos.example/ia-es",
+  "description": "Meetups y conferencias de inteligencia artificial en España.",
+  "updatedAt": "2026-05-29T08:00:00Z",
+  "scope": {
+    "tags": ["ai"],
+    "country": "ES"
+  },
+  "events": [
+    {
+      "specVersion": "0.1.0",
+      "id": "https://pyalmeria.example/charlas/2026-06-llms-locales",
+      "name": "PyAlmería — LLMs en local con llama.cpp",
+      "startDate": "2026-06-11T18:30:00",
+      "endDate": "2026-06-11T20:00:00",
+      "timezone": "Europe/Madrid",
+      "attendanceMode": "hybrid",
+      "url": "https://pyalmeria.example/charlas/2026-06-llms-locales",
+      "languages": ["es"],
+      "location": {
+        "venue": { "name": "El Cable", "city": "Almería", "country": "ES" },
+        "online": { "url": "https://meet.example/pyalmeria", "platform": "jitsi" }
+      },
+      "tags": ["ai", "llm", "python"],
+      "community": { "uri": "https://pyalmeria.example", "name": "PyAlmería" }
+    },
+    {
+      "specVersion": "0.1.0",
+      "id": "https://devfest-levante.example/2026",
+      "name": "DevFest Levante 2026",
+      "summary": "Conferencia de desarrollo del sureste, edición 2026",
+      "startDate": "2026-10-16T09:00:00",
+      "endDate": "2026-10-17T18:00:00",
+      "timezone": "Europe/Madrid",
+      "attendanceMode": "in-person",
+      "url": "https://devfest-levante.example/2026",
+      "languages": ["es", "en"],
+      "location": {
+        "venue": { "name": "Las Naves", "city": "Valencia", "country": "ES" }
+      },
+      "tags": ["cloud", "ai", "web"],
+      "community": { "uri": "https://gdglevante.example", "name": "GDG Levante" },
+      "cfp": {
+        "url": "https://devfest-levante.example/2026/cfp",
+        "closesAt": "2026-07-15T23:59:59",
+        "timezone": "Europe/Madrid"
+      }
+    }
+  ],
+  "next": "https://eventos.example/feeds/ia-es.json?page=2"
+}
