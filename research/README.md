@@ -17,6 +17,7 @@ Plantilla común que aplicamos a cada plataforma/proyecto analizado, para poder 
 - **Obligatorio vs. opcional**: qué exige y qué es opcional.
 - **Formas de contribuir**: manual (formulario, issue, PR) o automatizable (API).
 - **Consumo estándar**: si ya expone los datos en algún formato estándar (JSON, iCal, RSS, JSON-LD…).
+- **Licencia de los datos** 🔲: bajo qué licencia/términos publica sus datos la fuente y qué permite (reutilización, redistribución, atribución requerida). **Crítico**: determina si las herramientas del ecosistema pueden legalmente **ingerir y re-publicar** esos eventos. Pendiente de revisar en todas las fuentes.
 - **¿Es agregador?**: si a su vez recopila datos de otras fuentes (y cuáles).
 - **URLs relevantes**: de dónde se extrajo la información (verificable), dónde se envían los datos (formulario/endpoint), etc.
 
@@ -33,6 +34,9 @@ Para los **estándares** existentes (iCal, RSS, schema.org…) el enfoque cambia
 | Luma | https://luma.com/ | ✅ |
 | joind.in | https://joind.in/ | ✅ |
 | Papercall.io | https://www.papercall.io/ | ✅ |
+| Guild | https://guild.host/ | 🔲 |
+| Saraos.tech | https://saraos.tech/ | 🔲 |
+| Eventos de Linkedin | https://www.linkedin.com/help/linkedin/answer/a552496 | 🔲 |
 
 ### Directorios y agregadores — [findings/directories.md](findings/directories.md)
 

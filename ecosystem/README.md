@@ -11,6 +11,7 @@ Las ideas se agrupan por el ciclo de vida del dato: **crear/validar → ingerir 
 - **Validador de esquema** (JSON Schema): CLI, versión web y *GitHub Action* para validar en CI los eventos de un repo.
 - **Linter** de buenas prácticas (avisos más allá del esquema: fechas coherentes, zona horaria presente, enlaces vivos…).
 - **Editor / generador de eventos**: formulario web que produce el JSON/YAML OTE válido (para quien no quiera escribir a mano).
+- **Bot conversacional (Telegram o similar)** _(propuesto por [@qwor01](https://github.com/qwor01))_: el dinamizador "suelta" la idea de un evento en lenguaje natural; el bot genera el borrador en formato OTE Spec y responde con una **URL** donde terminar de concretarlo (completar campos, revisar, publicar).
 - **Soporte en editores**: esquema para autocompletado y validación en VS Code (JSON/YAML).
 
 ## Ingerir (importar hacia OTE)

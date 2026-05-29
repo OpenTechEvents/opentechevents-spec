@@ -44,6 +44,10 @@ Objetivo de diseño: que un feed OTE sea **suscribible con herramientas que la g
 | `updatedAt` | string (ISO 8601) | — | Última actualización. |
 | `scope` | `Scope` | — | Filtros ya aplicados (ver abajo). |
 | `next` | string (URL) | — | Siguiente página (paginación). |
+| `license` | string (SPDX id o URL) | — | Licencia **por defecto** de los eventos del feed (cada `Event` puede sobrescribirla con su propio `license`). |
+| `source` | `Source` \| `Source[]` | — | Procedencia/atribución del feed si agrega otras fuentes. |
+
+> Atribución y licencia: un feed que **agrega** varias fuentes debería declarar `source`/`license` a nivel de feed y/o por evento, para respetar y propagar la procedencia. Ver [data-model.md](data-model.md#sub-objeto-source).
 
 `events` puede contener eventos **completos** o una forma reducida con enlace (`id`/`url`) a la ficha completa; pendiente de decidir (ver preguntas abiertas).
 

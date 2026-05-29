@@ -13,7 +13,7 @@ Derivados de la investigación ([analysis.md](../research/findings/analysis.md),
 4. **Online/presencial/híbrido de primera clase.** `attendanceMode` explícito, no inferido de la ubicación.
 5. **CFP como módulo propio.** Ningún estándar generalista lo modela.
 6. **Fechas ISO 8601 + zona IANA.** Base convertible a todas las formas de iCal y schema.org.
-7. **Serializable en JSON y YAML.** Mismo modelo, dos sintaxis.
+7. **Serializable en JSON y YAML** _(provisional, en debate)_. El borrador asume JSON/YAML (mismo modelo, dos sintaxis) por ser lo más extendido en la investigación, pero la **elección del formato sigue abierta** — ver [Preguntas abiertas](#preguntas-abiertas).
 8. **Separar evento de comunidad (sin acoplar a un registro concreto).** El evento describe el **encuentro**, no al organizador. La comunidad se **referencia** mediante un identificador **global y descentralizado** (su URL canónica), de forma opcional. Ver siguiente sección.
 
 ## Separación de responsabilidades: evento vs. comunidad
@@ -54,6 +54,8 @@ En consecuencia, el evento OTE **no duplica** datos del organizador; como mucho 
 | `location` | `Location` | —² | Ubicación. ²Recomendada según `attendanceMode`. | schema `location` |
 | `tags` | string[] | — | Temáticas (p. ej. `["ai","cloud"]`). Comparte taxonomía con el directorio. | schema `keywords`, iCal `CATEGORIES` |
 | `community` | `CommunityRef` \| `CommunityRef[]` | —³ | **Referencia** a la comunidad organizadora por URI global. ³Opcional pero recomendada. No se duplican sus datos. | schema `organizer` (resuelto) |
+| `license` | string (SPDX id o URL) | — | Licencia de **estos datos**: cómo pueden reutilizarse. P. ej. `CC0-1.0`, `CC-BY-4.0` o una URL. | schema `license` |
+| `source` | `Source` \| `Source[]` | — | **Procedencia/atribución**: de dónde provienen los datos (si se importaron o agregaron de otra fuente). | schema `isBasedOn` |
 | `createdAt` / `updatedAt` | string (ISO 8601) | — | Metadatos de la ficha. | iCal `DTSTAMP` / `LAST-MODIFIED` |
 
 > **Un documento = un evento concreto** (una fecha). La spec **no** modela recurrencia: un meetup que se repite produce **varios** documentos de evento, uno por ocurrencia, todos referenciando la misma `community`. La cadencia (mensual, anual…) es propiedad de la *serie*, no del evento → ver [Conceptos diferidos](#conceptos-diferidos).
@@ -91,6 +93,19 @@ Registry: { name: "community-builders", url: "https://github.com/ComBuildersES/c
 `registries` permite enlazar la comunidad con **cualquier** directorio compatible (ComBuilders u otros) sin acoplar la spec a ninguno. `localId` es el id que use ese registro concreto.
 
 > Un mismo evento puede co-organizarse entre varias comunidades → `community` se admite también como **lista** de `CommunityRef`.
+
+### Sub-objeto `Source`
+
+Atribución de la procedencia cuando los datos se **importan o agregan** de otra fuente (Meetup, un directorio, otro feed OTE…). Permite dar crédito y respetar la licencia de origen.
+
+| Campo | Tipo | Oblig.² | Descripción |
+| --- | --- | :---: | --- |
+| `name` | string | ✅ | Nombre de la fuente (p. ej. "Meetup", "confs.tech"). |
+| `url` | string (URL) | — | Enlace a la ficha original (verificable). |
+| `license` | string (SPDX id o URL) | — | Licencia bajo la que esa fuente publica el dato. |
+| `retrievedAt` | string (ISO 8601) | — | Cuándo se obtuvo. |
+
+> **Nota legal** 🔲: poder declarar `source`/`license` no exime de respetar los términos de la fuente original. Qué licencias permiten ingerir y re-publicar está **pendiente de investigar** por fuente (ver [research](../research/README.md)).
 
 ## Módulos opcionales
 
@@ -212,6 +227,8 @@ governance:
 | `speakers` | `performer` | (sin equiv.) | — |
 | `offers` | `offers` | (sin equiv.) | — |
 | `promotion.hashtag` | (sin equiv.) | (sin equiv.) | — |
+| `license` | `license` | (sin equiv.) | — |
+| `source` | `isBasedOn` | (sin equiv.) | — |
 
 > **Difusión**: RSS y JSON Feed no modelan eventos → un evento por `item`, con enlace a la ficha y el evento estructurado en una extensión (namespace en RSS, campo `_ote` en JSON Feed).
 
@@ -236,8 +253,12 @@ Cada documento de evento declara la versión a la que se adhiere en `specVersion
 
 ## Preguntas abiertas
 
+- **Formato de serialización** _(decisión de fondo, abierta)_: ¿JSON, YAML, XML, JSON-LD u otro? Consideraciones de la [investigación](../research/findings/analysis.md): la mayoría de proyectos usan **JSON/YAML**; **XML** aparece casi solo a través de RSS; **JSON-LD** facilita la detección automática (schema.org/dev.events). Sub-preguntas: ¿un **formato canónico** único (p. ej. JSON) con el resto como representaciones derivadas, o varios igual de válidos? ¿El canónico es JSON "a secas" o **JSON-LD** directamente? El borrador usa JSON/YAML de forma provisional, sin cerrar el debate.
+
 - **Identidad de la comunidad**: ¿imponer que `community.uri` sea una URL resoluble, o admitir otros esquemas URI (DID, etc.)? ¿Cómo se "resuelven" los datos de la comunidad desde el `uri` (convención de descubrimiento)?
 - **Identidad del evento** (sí es de la spec; el *dónde* se almacena, no): ¿`event.id` siempre URI resoluble o se admite slug? ¿Cómo garantizar unicidad **independiente de la ubicación** de los datos?
 - ¿Normalizar `tags` con un vocabulario controlado (reutilizando taxonomías existentes) o dejar libre?
+- **Licencia por defecto**: ¿qué licencia recomendar a las comunidades adheridas para sus eventos (p. ej. `CC0-1.0` / `CC-BY-4.0`)? ¿Debe `license` ser **obligatorio** en el evento, o se asume una por defecto si falta?
+- **Atribución**: ¿`source` debe ser obligatorio cuando el dato se importa/agrega de otra fuente? ¿Cómo se propaga la atribución en cadena (fuente → feed agregado → re-publicación)?
 - **Serie de eventos**: ¿hace falta una entidad `EventSeries` que agrupe ocurrencias (meetup mensual, ediciones anuales) y, opcionalmente, las enlace? ¿Cómo se referencian entre sí evento y serie? (ver [Conceptos diferidos](#conceptos-diferidos)).
 - Validación: ¿JSON Schema oficial, versionado junto a la spec?

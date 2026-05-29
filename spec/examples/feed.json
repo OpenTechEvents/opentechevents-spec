@@ -6,6 +6,7 @@
   "homePageUrl": "https://eventos.example/ia-es",
   "description": "Meetups y conferencias de inteligencia artificial en España.",
   "updatedAt": "2026-05-29T08:00:00Z",
+  "license": "CC-BY-4.0",
   "scope": {
     "tags": ["ai"],
     "country": "ES"
@@ -26,7 +27,13 @@
         "online": { "url": "https://meet.example/pyalmeria", "platform": "jitsi" }
       },
       "tags": ["ai", "llm", "python"],
-      "community": { "uri": "https://pyalmeria.example", "name": "PyAlmería" }
+      "community": { "uri": "https://pyalmeria.example", "name": "PyAlmería" },
+      "source": {
+        "name": "Meetup",
+        "url": "https://www.meetup.com/pyalmeria/events/123456789/",
+        "license": "proprietary",
+        "retrievedAt": "2026-05-29T07:55:00Z"
+      }
     },
     {
       "specVersion": "0.1.0",

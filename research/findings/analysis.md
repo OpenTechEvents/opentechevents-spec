@@ -22,6 +22,8 @@ Se analizaron plataformas populares para anunciar eventos tecnológicos (Meetup,
 
 7. **Agregadores**. CallingAllPapers y CFP Tracker no permiten alta manual; dependen de otras fuentes. dev.events también funciona como agregador combinando automatización y envíos manuales[dev.events](https://dev.events/about#:~:text=The%20project%20is%20coded%20and,organizers%2C%20tech%20community%2C%20and%20volunteers).
 
+8. **Licencia de los datos** 🔲 _(pendiente en todas las fuentes)_. No hemos revisado aún bajo qué términos publica cada fuente sus datos. Es **crítico**: condiciona si las herramientas pueden ingerir y re-publicar legalmente, y si hace falta **atribución**. Implicaciones para OTE: (a) la spec debe permitir declarar **procedencia/atribución** y **licencia** de cada evento (ver `source`/`license` en [../../spec/data-model.md](../../spec/data-model.md)); (b) conviene recomendar a las comunidades adheridas una licencia abierta y clara para sus eventos.
+
 ## Conclusiones para el diseño de un nuevo estándar
 
 - **Esquema modular**: El nuevo estándar debería definir un núcleo obligatorio (nombre, descripción, fechas, zona horaria, ubicación) y módulos opcionales para CFP, redes sociales, etiquetas, imágenes y logística. La experiencia de joind.in demuestra que basta con unos pocos campos obligatorios[docs.joind.in](https://docs.joind.in/joindin-api/events.html#:~:text=the%20images%20associated%20with%20this,See%20also%20%202), mientras que otros datos enriquecen la ficha.
