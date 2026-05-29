@@ -46,6 +46,8 @@ Una vez estabilizada la especificación, el objetivo es construir un ecosistema 
 - **Exportar / transformar** a RSS, iCalendar y otros formatos compatibles.
 - **Automatizar la publicación** en múltiples destinos: Meetup, LinkedIn, Eventbrite, repositorios de GitHub que aceptan *Pull Requests*, webs con formularios de alta, etc.
 
+👉 Lista abierta de ideas concretas de herramientas en [ecosystem/](ecosystem/README.md).
+
 ## Estado del proyecto
 
 🚧 **Fase inicial.** Ahora mismo el trabajo se centra en **investigar y diseñar la especificación**. Todo (nombre, licencia, alcance, gobernanza) es provisional y está abierto a debate.
@@ -65,6 +67,7 @@ Una vez estabilizada la especificación, el objetivo es construir un ecosistema 
 - `CONTRIBUTING.md` — *(próximamente)* cómo participar en el diseño de la especificación.
 - `research/` — resultados de la investigación inicial: análisis de plataformas, directorios y estándares.
 - `spec/` — la especificación. Por ahora un **borrador inicial** del modelo de datos para ilustrar la idea.
+- `ecosystem/` — ideas de herramientas que podrían construirse sobre el estándar.
 
 ## De qué depende el éxito
 
@@ -89,9 +92,67 @@ Una vez exista una propuesta sólida, habrá que **acordar la organización a la
 
 Nada de esto está decidido todavía: forma parte de lo que queremos consensuar con la comunidad.
 
+## Preguntas frecuentes (FAQ)
+
+**¿Qué es OTE exactamente?**
+Una **especificación** (un formato de datos), no una plataforma ni una app. Define cómo describir un evento para que sea reutilizable e interoperable.
+
+**¿Compite con Meetup, Eventbrite, Luma…?**
+No. El objetivo es **interoperar** con ellas: describir el evento una vez y poder publicarlo/transformarlo hacia esas plataformas y directorios, no sustituirlas.
+
+**¿Reemplaza a RSS o iCalendar?**
+No. OTE se diseña para ser **compatible** y convertible a esos estándares. Un feed OTE puede exportarse a RSS, JSON Feed o iCal para consumirse con las herramientas que ya usas (lector RSS, app de calendario).
+
+**¿Tengo que abandonar mis herramientas actuales?**
+No. La idea es justo la contraria: que tus datos fluyan hacia las herramientas y plataformas que ya usas.
+
+**Como comunidad, ¿qué gano adhiriéndome?**
+Publicar tus eventos **una sola vez** y automatizar su difusión a múltiples directorios y plataformas, en lugar de dar de alta cada evento manualmente en cada sitio.
+
+**Como asistente/usuario, ¿qué gano?**
+Poder **suscribirte a feeds** y filtrar los eventos que te interesan, sin vigilar decenas de plataformas y directorios por separado.
+
+**¿Esto es de Community Builders? ¿Es un estándar oficial ya?**
+Lo impulsa [Community Builders](https://github.com/ComBuildersES) con vocación internacional, pero **no es un estándar oficial ni estable todavía**: está en fase de diseño y todo es provisional.
+
+**¿Está listo para usarse en producción?**
+Todavía no. Estamos diseñando la especificación (versión `0.x`, inestable). El [borrador del modelo](spec/) es ilustrativo y cambiará.
+
+**¿Qué relación tiene con el directorio de comunidades de Community Builders?**
+OTE describe **eventos**; el directorio describe **comunidades** (organizadores). Un evento *referencia* a su comunidad por un identificador global, sin acoplarse a ningún directorio concreto. Ese directorio es un **registro compatible** de referencia, no un requisito.
+
+**¿Cómo puedo participar?**
+Ver [Cómo contribuir](#cómo-contribuir).
+
 ## Cómo contribuir
 
 El proyecto está en fase de diseño y **toda aportación es bienvenida**: experiencias, necesidades de tu comunidad, referencias de estándares y propuestas concretas. Mientras preparamos un `CONTRIBUTING.md`, puedes participar abriendo *issues* para debatir.
+
+## Contribuidores
+
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contribuidores)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+
+Gracias a todas las personas que contribuyen a este proyecto ([clave de emojis](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/hhkaos"><img src="https://avatars.githubusercontent.com/hhkaos?s=100" width="100px;" alt="hhkaos"/><br /><sub><b>hhkaos</b></sub></a><br /><a href="#ideas-hhkaos" title="Ideas, Planning, & Feedback">🤔</a> <a href="#research-hhkaos" title="Research">🔬</a> <a href="#doc-hhkaos" title="Documentation">📖</a> <a href="#projectManagement-hhkaos" title="Project Management">📆</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+Este proyecto sigue la especificación [all-contributors](https://github.com/all-contributors/all-contributors): se reconoce **cualquier tipo de contribución**, no solo código.
 
 ## Licencia
 
