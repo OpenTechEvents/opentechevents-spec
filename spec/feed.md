@@ -107,3 +107,7 @@ Para máxima compatibilidad, un `Feed` OTE debería poder exportarse a:
 - ¿Estandarizar paginación (`next`) o delegar en el transporte (HTTP `Link`)?
 - ¿Feeds de **CFP** como tipo aparte, o un feed normal con `?hasCfp=true`?
 - ¿Soporte de "tiempo real" (WebSub/hubs, como JSON Feed) o solo polling?
+- **¿Cómo se descubre un feed OTE desde una web?** RSS resuelve esto con *autodiscovery*. Opciones a evaluar (no excluyentes):
+  - **HTML `<link rel="alternate">`** en el `<head>`, símil RSS: `<link rel="alternate" type="application/ote+json" href="https://eventos.example/feeds/ia-es.json">`. Falta decidir el `type` (MIME propio vs. `application/feed+json`).
+  - **`.well-known/`** a nivel de dominio (p.ej. `/.well-known/ote-feed`) para descubrir sin parsear HTML.
+  - **JSON-LD / `schema.org` `Event`** embebido en la página, reaprovechando lo que ya detectan crawlers (dev.events, Google). Ver [research/findings/analysis.md](../research/findings/analysis.md).
