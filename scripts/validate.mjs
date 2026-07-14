@@ -13,6 +13,7 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, basename } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
+import { fieldsOf, loadSchemas } from "./schema-model.mjs";
 
 const VERSIONS = ["v0.1"];
 const SPEC_DIR = "spec";
@@ -72,6 +73,28 @@ for (const version of VERSIONS) {
     const validate = pick(file);
     const valid = validate(JSON.parse(readFileSync(path, "utf8")));
     log(valid, `${path}${valid ? "" : "\n" + ajv.errorsText(validate.errors, { separator: "\n" })}`);
+  }
+
+  // Every `examples` entry must satisfy the very field it illustrates. Without this, the
+  // documentation drifts from the schema silently: someone tightens a format, forgets the
+  // example, and the docs go on showing a value the validator would now reject.
+  const { event: eventSchema, feed: feedSchema, registry } = loadSchemas(version);
+  for (const [schemaName, schema] of [
+    ["event", eventSchema],
+    ["feed", feedSchema],
+  ]) {
+    for (const [path, , meta] of fieldsOf(schema, registry)) {
+      for (const [i, example] of meta.examples.entries()) {
+        // By reference, not by copy: an isolated subschema cannot resolve #/$defs/… refs.
+        const check = ajv.compile({ $ref: `${schema.$id}#${meta.pointer}` });
+        const valid = check(example);
+        log(
+          valid,
+          `${schemaName}.${path} examples[${i}] = ${JSON.stringify(example)}` +
+            (valid ? "" : `\n${ajv.errorsText(check.errors)}`)
+        );
+      }
+    }
   }
 
   // Negative cases: these must be rejected, and it must be for the stated reason.

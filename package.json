@@ -36,9 +36,10 @@
     "spec/v0.1/README.md"
   ],
   "scripts": {
-    "validate": "node scripts/validate.mjs",
+    "validate": "node scripts/validate.mjs && node scripts/build-reference.mjs --check",
     "publish-schemas": "mkdir -p docs/schema/v0.1 && cp spec/v0.1/event.schema.json spec/v0.1/feed.schema.json docs/schema/v0.1/",
-    "prepublishOnly": "npm run validate"
+    "prepublishOnly": "npm run validate",
+    "build-reference": "node scripts/build-reference.mjs"
   },
   "devDependencies": {
     "ajv": "^8.17.1",

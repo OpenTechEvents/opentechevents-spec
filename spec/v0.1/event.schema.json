@@ -28,52 +28,102 @@
       "properties": {
         "specVersion": {
           "description": "Version of OTE Spec this document adheres to.",
-          "const": "0.1.0"
+          "const": "0.1.0",
+          "examples": [
+            "0.1.0"
+          ]
         },
         "id": {
           "description": "Stable, globally unique identifier. A URI under a domain the publisher controls. Minted once, never rewritten — this is what lets consumers update an event instead of duplicating it.",
           "type": "string",
           "format": "uri",
-          "pattern": "^[a-zA-Z][a-zA-Z0-9+.-]*:"
+          "pattern": "^[a-zA-Z][a-zA-Z0-9+.-]*:",
+          "examples": [
+            "https://pyalmeria.example/eventos/2026-06-async",
+            "https://calendar.example/ics/rust-madrid#a1b2c3d4-uid"
+          ]
         },
         "url": {
           "description": "Canonical URL where the event is described today. May change over time; id may not.",
           "type": "string",
           "format": "uri",
-          "pattern": "^https?://"
+          "pattern": "^https?://",
+          "examples": [
+            "https://pyalmeria.example/eventos/2026-06-async"
+          ]
         },
         "name": {
           "description": "Display name of the event.",
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "examples": [
+            "PyAlmería — Introducción a async/await"
+          ]
         },
         "description": {
           "description": "Short description. Plain text or Markdown.",
-          "type": "string"
+          "type": "string",
+          "examples": [
+            "Charla introductoria a la programación asíncrona en Python, con ejemplos en vivo."
+          ]
         },
         "timezone": {
           "description": "IANA timezone (e.g. Europe/Madrid). Turns a wall-clock startDate into an unambiguous instant. For all-day events it contextualises the date — it does not shift it.",
           "type": "string",
-          "pattern": "^[A-Za-z_]+(?:/[A-Za-z0-9_+-]+)+$|^UTC$"
+          "pattern": "^[A-Za-z_]+(?:/[A-Za-z0-9_+-]+)+$|^UTC$",
+          "examples": [
+            "Europe/Madrid",
+            "America/Bogota",
+            "UTC"
+          ]
         },
         "startDate": {
           "description": "Wall-clock start: a date (2026-10-15) for all-day events, or a local date-time (2026-10-15T09:00:00). Never carries a UTC offset — timezone does that.",
-          "$ref": "#/$defs/wallClock"
+          "$ref": "#/$defs/wallClock",
+          "examples": [
+            "2026-06-11T18:30:00",
+            "2026-10-15"
+          ]
         },
         "endDate": {
           "description": "Wall-clock end, in the SAME form as startDate (both dates, or both date-times). If absent, the event is assumed to end on the day it starts.",
-          "$ref": "#/$defs/wallClock"
+          "$ref": "#/$defs/wallClock",
+          "examples": [
+            "2026-06-11T20:00:00",
+            "2026-10-16"
+          ]
         },
         "license": {
           "description": "License of THIS DATA, not of the event. SPDX identifier (CC0-1.0, CC-BY-4.0…) or a URL.",
-          "$ref": "#/$defs/license"
+          "$ref": "#/$defs/license",
+          "examples": [
+            "CC-BY-4.0",
+            "CC0-1.0"
+          ]
         },
         "location": {
-          "$ref": "#/$defs/location"
+          "$ref": "#/$defs/location",
+          "examples": [
+            {
+              "venue": "El Cable, Almería"
+            },
+            {
+              "onlineUrl": "https://meet.example/pyalmeria"
+            },
+            {
+              "venue": "Campus Madrid, Calle de Moreno Nieto 2, Madrid",
+              "onlineUrl": "https://meet.example/rust-madrid"
+            }
+          ]
         },
         "attendanceMode": {
           "description": "What the organiser says this event is. NO DEFAULT: absent means unknown, never in-person.",
           "enum": [
+            "in-person",
+            "online",
+            "hybrid"
+          ],
+          "examples": [
             "in-person",
             "online",
             "hybrid"
@@ -86,7 +136,16 @@
             "type": "string",
             "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"
           },
-          "minItems": 1
+          "minItems": 1,
+          "examples": [
+            [
+              "es"
+            ],
+            [
+              "es",
+              "en"
+            ]
+          ]
         },
         "status": {
           "description": "A cancelled or postponed event MUST stay published: removing it leaves a dead event in subscribers' calendars.",
@@ -96,11 +155,23 @@
             "postponed",
             "rescheduled"
           ],
-          "default": "scheduled"
+          "default": "scheduled",
+          "examples": [
+            "scheduled",
+            "cancelled"
+          ]
         },
         "source": {
           "description": "Provenance. Required when the event was imported or aggregated from elsewhere; omitted when the organiser describes their own event — they are the source.",
-          "$ref": "#/$defs/source"
+          "$ref": "#/$defs/source",
+          "examples": [
+            {
+              "name": "Rust Madrid",
+              "url": "https://calendar.example/ics/rust-madrid",
+              "license": "CC-BY-4.0",
+              "retrievedAt": "2026-06-01T05:00:00Z"
+            }
+          ]
         }
       },
       "allOf": [
@@ -169,13 +240,19 @@
         "venue": {
           "description": "Human-readable physical location. Its presence means the event has a physical venue.",
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "examples": [
+            "El Cable, Almería"
+          ]
         },
         "onlineUrl": {
           "description": "URL to attend online. Its presence means the event has online access.",
           "type": "string",
           "format": "uri",
-          "pattern": "^https?://"
+          "pattern": "^https?://",
+          "examples": [
+            "https://meet.example/pyalmeria"
+          ]
         }
       },
       "anyOf": [
@@ -200,21 +277,34 @@
         "name": {
           "description": "Name of the origin (e.g. \"Rust Madrid\", \"Meetup\").",
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "examples": [
+            "Rust Madrid",
+            "Meetup"
+          ]
         },
         "url": {
           "description": "Link to the original record, so the data can be verified and corrected upstream.",
           "type": "string",
           "format": "uri",
-          "pattern": "^https?://"
+          "pattern": "^https?://",
+          "examples": [
+            "https://calendar.example/ics/rust-madrid"
+          ]
         },
         "license": {
           "description": "License under which the ORIGIN publishes the data. Constrains what may be republished: declaring a license does not grant rights the origin never gave.",
-          "$ref": "#/$defs/license"
+          "$ref": "#/$defs/license",
+          "examples": [
+            "CC-BY-4.0"
+          ]
         },
         "retrievedAt": {
           "description": "When the data was fetched.",
-          "$ref": "#/$defs/instant"
+          "$ref": "#/$defs/instant",
+          "examples": [
+            "2026-06-01T05:00:00Z"
+          ]
         }
       }
     }

@@ -3,23 +3,23 @@
     "title": "OpenTechEvents — an open spec for tech community events",
     "description": "An open specification to describe, publish and share tech community events. Publish once, be everywhere."
   },
-  "a11y": { "skip": "Skip to content" },
-
+  "a11y": {
+    "skip": "Skip to content"
+  },
   "draft": {
     "pill": "Draft 0.x",
     "body": "The spec is not stable yet: fields can still change, be renamed or be dropped. The core of v0.1 is being decided right now.",
     "link": "Follow the discussion"
   },
-
   "nav": {
     "problem": "Problem",
     "spec": "Spec",
     "benefits": "Benefits",
     "adopt": "Adopt it",
     "adopters": "Who uses it",
-    "tools": "Tools"
+    "tools": "Tools",
+    "reference": "Reference"
   },
-
   "hero": {
     "eyebrow": "Open specification · Draft 0.1",
     "title": "Publish your event once. Let it show up everywhere.",
@@ -28,7 +28,6 @@
     "ctaSecondary": "See the format",
     "note": "No platform to sign up for. No tool to install. It's just a file you publish."
   },
-
   "problem": {
     "title": "You already know the problem",
     "lead": "You organise one event. Then you announce it five times, by hand, in five different formats — and you still miss half the people who would have come.",
@@ -46,13 +45,21 @@
     },
     "pull": "There is no shortage of information about your events. What's missing is <strong>interoperability</strong>."
   },
-
   "spec": {
     "title": "One file. That's the whole idea.",
     "lead": "You describe your events in a simple JSON file and publish it at a stable URL. Anything that speaks OTE — directories, calendars, bots, websites — can then read it without asking you for anything.",
-    "s1": { "title": "You publish", "body": "A feed with your events at a URL you control, e.g. <code>yourcommunity.dev/events.json</code>." },
-    "s2": { "title": "Tools read it", "body": "Aggregators, directories and converters pick it up automatically — and turn it into RSS, iCalendar or schema.org." },
-    "s3": { "title": "People find you", "body": "Attendees subscribe by topic or city and get your events in the tools they already use — no extra platform." },
+    "s1": {
+      "title": "You publish",
+      "body": "A feed with your events at a URL you control, e.g. <code>yourcommunity.dev/events.json</code>."
+    },
+    "s2": {
+      "title": "Tools read it",
+      "body": "Aggregators, directories and converters pick it up automatically — and turn it into RSS, iCalendar or schema.org."
+    },
+    "s3": {
+      "title": "People find you",
+      "body": "Attendees subscribe by topic or city and get your events in the tools they already use — no extra platform."
+    },
     "min": {
       "title": "The minimum is genuinely minimal",
       "body": "A valid event needs little more than a name, a start date, a time zone and where it happens. Optional modules — CFP, speakers, price, accessibility — cover the rest when you need them.",
@@ -65,14 +72,25 @@
       "caption": "Minimal valid event"
     }
   },
-
   "docs": {
     "title": "Read the full specification",
     "lead": "Everything is public and in the open — including what's still undecided. The spec is at version 0.x: expect it to change, and expect your feedback to be what changes it.",
-    "d1": { "title": "Data model", "body": "Every field of an event: what's required, what's optional, and how it maps to iCalendar, RSS and schema.org." },
-    "d2": { "title": "Feed format", "body": "How to group several events into a feed: metadata, pagination, licence and discovery." },
-    "d3": { "title": "Examples", "body": "Complete documents to copy: a minimal event, a meetup, a conference with an open CFP, and a full feed." },
-    "d4": { "title": "Research", "body": "The analysis behind the decisions: existing standards, platforms and directories we studied." },
+    "d1": {
+      "title": "Field reference",
+      "body": "Every field of an event and of a feed: type, whether it's required, examples. Generated from the schemas, so it can't drift."
+    },
+    "d2": {
+      "title": "Feed format",
+      "body": "How to group several events into a feed: metadata, pagination, licence and discovery."
+    },
+    "d3": {
+      "title": "Examples",
+      "body": "Complete documents to copy: a minimal event, a meetup, a conference with an open CFP, and a full feed."
+    },
+    "d4": {
+      "title": "Research",
+      "body": "The analysis behind the decisions: existing standards, platforms and directories we studied."
+    },
     "contrib": {
       "title": "Something doesn't fit your community?",
       "body": "Then the spec is wrong, not your community. It's still a draft precisely so that organisers can push back before anything is set in stone — a missing field, a format that breaks your case, a name that makes no sense. Say so in an issue.",
@@ -80,23 +98,46 @@
       "cta2": "How to contribute"
     }
   },
-
   "benefits": {
     "title": "What you get out of it",
     "lead": "Adopting OTE is a couple of hours of work, once. Here's what it buys you.",
-    "b1": { "title": "Stop doing data entry", "body": "Write the event once. Let tooling push it to directories, calendars and feeds instead of you copy-pasting it into yet another form." },
-    "b2": { "title": "Reach beyond your own bubble", "body": "Directories and aggregators can pick up your events the moment you publish them. Your meetup shows up where people are actually looking." },
-    "b3": { "title": "Own your data", "body": "Your events live at your URL, in an open format. If a platform shuts down, changes its API or its pricing, your history and your feed are still yours." },
-    "b4": { "title": "Free integrations, forever", "body": "Every new tool built on OTE — an .ics export, a website widget, a Telegram bot — works for you without you lifting a finger." },
-    "b5": { "title": "Accurate everywhere", "body": "Change the date in one place and every consumer that re-reads your feed gets the correction. No more zombie listings with the old venue." },
-    "b6": { "title": "Shape the standard", "body": "The spec is in draft. Early adopters decide what it looks like — if something doesn't fit your community, it can still be changed." }
+    "b1": {
+      "title": "Stop doing data entry",
+      "body": "Write the event once. Let tooling push it to directories, calendars and feeds instead of you copy-pasting it into yet another form."
+    },
+    "b2": {
+      "title": "Reach beyond your own bubble",
+      "body": "Directories and aggregators can pick up your events the moment you publish them. Your meetup shows up where people are actually looking."
+    },
+    "b3": {
+      "title": "Own your data",
+      "body": "Your events live at your URL, in an open format. If a platform shuts down, changes its API or its pricing, your history and your feed are still yours."
+    },
+    "b4": {
+      "title": "Free integrations, forever",
+      "body": "Every new tool built on OTE — an .ics export, a website widget, a Telegram bot — works for you without you lifting a finger."
+    },
+    "b5": {
+      "title": "Accurate everywhere",
+      "body": "Change the date in one place and every consumer that re-reads your feed gets the correction. No more zombie listings with the old venue."
+    },
+    "b6": {
+      "title": "Shape the standard",
+      "body": "The spec is in draft. Early adopters decide what it looks like — if something doesn't fit your community, it can still be changed."
+    }
   },
-
   "adopt": {
     "title": "How to adopt it",
     "lead": "Three steps. The first one is the only one that takes real work, and it's a text file.",
-    "s1": { "title": "Publish an OTE feed", "body": "Create a JSON file with your events and host it anywhere you already publish — your site, GitHub Pages, a gist. If your events live in a Google Calendar or Meetup, a converter can generate the feed for you." },
-    "s2": { "title": "Make it discoverable", "body": "Add one line to the <code>&lt;head&gt;</code> of your website so tools can find the feed on their own — the same way RSS readers do.", "caption": "In your site's &lt;head&gt;" },
+    "s1": {
+      "title": "Publish an OTE feed",
+      "body": "Create a JSON file with your events and host it anywhere you already publish — your site, GitHub Pages, a gist. If your events live in a Google Calendar or Meetup, a converter can generate the feed for you."
+    },
+    "s2": {
+      "title": "Make it discoverable",
+      "body": "Add one line to the <code>&lt;head&gt;</code> of your website so tools can find the feed on their own — the same way RSS readers do.",
+      "caption": "In your site's &lt;head&gt;"
+    },
     "s3": {
       "title": "Tell us, and get listed",
       "body": "Open an issue with your feed URL. We'll validate it, list your community on this page, and aggregators will start picking up your events.",
@@ -117,31 +158,36 @@
       "body": "That's fine — open an issue anyway and tell us where your events live today. Helping the first communities get on board is exactly what this stage of the project is for."
     }
   },
-
   "adopters": {
     "title": "Who publishes in OTE",
     "lead": "Communities and events already exposing their data in this format.",
     "empty": "The spec is brand new, so this list is still short. Be one of the first — early adopters get a say in what the standard becomes.",
     "emptyCta": "Be the first"
   },
-
   "consumers": {
     "title": "Who consumes OTE data",
     "lead": "Directories, aggregators and people reusing feeds published in this format. Every one of them is a place your events can reach for free.",
     "empty": "Building a directory, a newsletter or a bot? Consume OTE feeds and get listed here.",
     "emptyCta": "Add your project"
   },
-
   "tools": {
     "title": "Ecosystem of tools",
     "lead": "What exists today, and what's up for grabs. Claim one by opening an issue.",
-    "f": { "all": "All", "working": "Working", "wip": "In progress", "proposed": "Proposed" },
-    "status": { "working": "Working", "wip": "In progress", "proposed": "Proposed" },
+    "f": {
+      "all": "All",
+      "working": "Working",
+      "wip": "In progress",
+      "proposed": "Proposed"
+    },
+    "status": {
+      "working": "Working",
+      "wip": "In progress",
+      "proposed": "Proposed"
+    },
     "cta": "Propose or claim a tool",
     "linkRepo": "View repository",
     "linkIdea": "Discuss the idea"
   },
-
   "faq": {
     "title": "Frequently asked questions",
     "items": [
@@ -171,14 +217,12 @@
       }
     ]
   },
-
   "final": {
     "title": "A standard is worth exactly as much as the number of people using it",
     "body": "Every community that publishes an OTE feed makes the format more useful for every other community — and for everyone trying to find your events.",
     "cta": "Publish your first feed",
     "cta2": "Join the discussion"
   },
-
   "footer": {
     "note": "An initiative by Community Builders. Draft specification — the name, scope and licence are still provisional.",
     "spec": "Specification",

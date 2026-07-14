@@ -1,0 +1,46 @@
+{
+  "_comment": "Traducción de la referencia de campos. El inglés vive en las `description` del schema (viaja en el paquete npm hacia implementadores de todo el mundo); aquí solo las traducciones. Las claves son <schema>.<ruta del campo>. El CI falla si falta alguna: `npm run build-reference -- --check`.",
+
+  "schemas": {
+    "event": {
+      "title": "Evento",
+      "description": "Un evento de una comunidad técnica."
+    },
+    "feed": {
+      "title": "Feed",
+      "description": "Una colección de eventos OTE publicada en una URL estable. Un formato de intercambio, no una API."
+    }
+  },
+
+  "fields": {
+    "event.specVersion": "Versión de OTE Spec a la que se adhiere el documento.",
+    "event.id": "Identificador estable y único a nivel global. Una URI bajo un dominio que controle quien publica. Se acuña una vez y no se reescribe jamás: es lo que permite a un consumidor actualizar el evento en vez de duplicarlo.",
+    "event.url": "URL canónica donde se describe el evento hoy. Puede cambiar con el tiempo; el `id` no.",
+    "event.name": "Nombre del evento.",
+    "event.description": "Descripción breve. Texto plano o Markdown.",
+    "event.timezone": "Zona horaria IANA (p. ej. `Europe/Madrid`). Convierte un `startDate` de reloj de pared en un instante inequívoco. En eventos de todo el día contextualiza la fecha: no la desplaza.",
+    "event.startDate": "Inicio en hora de reloj de pared: una fecha (`2026-10-15`) para eventos de todo el día, o una fecha-hora local (`2026-10-15T09:00:00`). Nunca lleva offset UTC: eso lo aporta `timezone`.",
+    "event.endDate": "Fin en hora de reloj de pared, en la MISMA forma que `startDate` (ambas fechas, o ambas fecha-hora). Si falta, se asume que el evento termina el día que empieza.",
+    "event.license": "Licencia de ESTOS DATOS, no del evento. Identificador SPDX (`CC0-1.0`, `CC-BY-4.0`…) o una URL.",
+    "event.location": "Qué se SABE de dónde ocurre el evento. Pregunta distinta de `attendanceMode`, que declara la intención de quien organiza.",
+    "event.location.venue": "Lugar físico, legible por personas. Su presencia significa que el evento tiene sede física.",
+    "event.location.onlineUrl": "URL para asistir en remoto. Su presencia significa que el evento tiene acceso online.",
+    "event.attendanceMode": "Qué dice quien organiza que es este evento. SIN VALOR POR DEFECTO: ausente significa desconocido, nunca presencial.",
+    "event.languages": "Etiquetas BCP 47, p. ej. `[\"es\",\"en\"]`. Sin valor por defecto: ausente significa desconocido.",
+    "event.status": "Un evento cancelado o pospuesto DEBE seguir publicado: borrarlo deja un evento muerto en el calendario de quien se suscribió.",
+    "event.source": "Procedencia. Obligatoria cuando el evento se importó o agregó de otro sitio; se omite cuando quien organiza describe su propio evento: es la fuente.",
+    "event.source.name": "Nombre de la fuente (p. ej. «Rust Madrid», «Meetup»).",
+    "event.source.url": "Enlace a la ficha original, para poder verificar y corregir el dato en origen.",
+    "event.source.license": "Licencia bajo la que la FUENTE publica el dato. Restringe lo que puede republicarse: declarar una licencia no concede derechos que la fuente nunca dio.",
+    "event.source.retrievedAt": "Cuándo se obtuvo el dato.",
+
+    "feed.specVersion": "Versión de OTE Spec a la que se adhiere el feed. Aplica a todos sus eventos.",
+    "feed.title": "Nombre del feed, legible por personas.",
+    "feed.description": "Descripción breve del feed.",
+    "feed.url": "URL canónica de la comunidad, directorio u organización que publica el feed.",
+    "feed.license": "Licencia del contenido del feed. Actúa como VALOR POR DEFECTO de todo evento que no declare la suya. Identificador SPDX o URL.",
+    "feed.licenseUrl": "URL del texto completo de la licencia.",
+    "feed.updatedAt": "Cuándo se generó este feed.",
+    "feed.events": "Los eventos del feed. Cada uno hereda `specVersion` y `license` del feed salvo que declare los suyos."
+  }
+}

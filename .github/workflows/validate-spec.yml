@@ -2,9 +2,9 @@ name: Validate spec
 
 on:
   push:
-    paths: ["spec/**", "scripts/**", "package.json", ".github/workflows/validate-spec.yml"]
+    paths: ["spec/**", "scripts/**", "docs/**", "package.json", ".github/workflows/validate-spec.yml"]
   pull_request:
-    paths: ["spec/**", "scripts/**", "package.json", ".github/workflows/validate-spec.yml"]
+    paths: ["spec/**", "scripts/**", "docs/**", "package.json", ".github/workflows/validate-spec.yml"]
   workflow_dispatch:
 
 jobs:

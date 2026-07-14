@@ -1,0 +1,400 @@
+{
+  "specVersion": "0.1.0",
+  "languages": [
+    "en",
+    "es"
+  ],
+  "schemas": [
+    {
+      "name": "event",
+      "title": {
+        "en": "OTE Event",
+        "es": "Evento"
+      },
+      "description": {
+        "en": "A single tech community event. See https://opentechevents.org for the normative prose.",
+        "es": "Un evento de una comunidad técnica."
+      },
+      "fields": [
+        {
+          "path": "specVersion",
+          "type": "const: \"0.1.0\"",
+          "required": true,
+          "examples": [
+            "0.1.0"
+          ],
+          "description": {
+            "en": "Version of OTE Spec this document adheres to.",
+            "es": "Versión de OTE Spec a la que se adhiere el documento."
+          }
+        },
+        {
+          "path": "id",
+          "type": "string (uri)",
+          "required": true,
+          "examples": [
+            "https://pyalmeria.example/eventos/2026-06-async",
+            "https://calendar.example/ics/rust-madrid#a1b2c3d4-uid"
+          ],
+          "description": {
+            "en": "Stable, globally unique identifier. A URI under a domain the publisher controls. Minted once, never rewritten — this is what lets consumers update an event instead of duplicating it.",
+            "es": "Identificador estable y único a nivel global. Una URI bajo un dominio que controle quien publica. Se acuña una vez y no se reescribe jamás: es lo que permite a un consumidor actualizar el evento en vez de duplicarlo."
+          }
+        },
+        {
+          "path": "url",
+          "type": "string (uri)",
+          "required": false,
+          "examples": [
+            "https://pyalmeria.example/eventos/2026-06-async"
+          ],
+          "description": {
+            "en": "Canonical URL where the event is described today. May change over time; id may not.",
+            "es": "URL canónica donde se describe el evento hoy. Puede cambiar con el tiempo; el `id` no."
+          }
+        },
+        {
+          "path": "name",
+          "type": "string",
+          "required": true,
+          "examples": [
+            "PyAlmería — Introducción a async/await"
+          ],
+          "description": {
+            "en": "Display name of the event.",
+            "es": "Nombre del evento."
+          }
+        },
+        {
+          "path": "description",
+          "type": "string",
+          "required": false,
+          "examples": [
+            "Charla introductoria a la programación asíncrona en Python, con ejemplos en vivo."
+          ],
+          "description": {
+            "en": "Short description. Plain text or Markdown.",
+            "es": "Descripción breve. Texto plano o Markdown."
+          }
+        },
+        {
+          "path": "timezone",
+          "type": "string",
+          "required": true,
+          "examples": [
+            "Europe/Madrid",
+            "America/Bogota",
+            "UTC"
+          ],
+          "description": {
+            "en": "IANA timezone (e.g. Europe/Madrid). Turns a wall-clock startDate into an unambiguous instant. For all-day events it contextualises the date — it does not shift it.",
+            "es": "Zona horaria IANA (p. ej. `Europe/Madrid`). Convierte un `startDate` de reloj de pared en un instante inequívoco. En eventos de todo el día contextualiza la fecha: no la desplaza."
+          }
+        },
+        {
+          "path": "startDate",
+          "type": "string",
+          "required": true,
+          "examples": [
+            "2026-06-11T18:30:00",
+            "2026-10-15"
+          ],
+          "description": {
+            "en": "Wall-clock start: a date (2026-10-15) for all-day events, or a local date-time (2026-10-15T09:00:00). Never carries a UTC offset — timezone does that.",
+            "es": "Inicio en hora de reloj de pared: una fecha (`2026-10-15`) para eventos de todo el día, o una fecha-hora local (`2026-10-15T09:00:00`). Nunca lleva offset UTC: eso lo aporta `timezone`."
+          }
+        },
+        {
+          "path": "endDate",
+          "type": "string",
+          "required": false,
+          "examples": [
+            "2026-06-11T20:00:00",
+            "2026-10-16"
+          ],
+          "description": {
+            "en": "Wall-clock end, in the SAME form as startDate (both dates, or both date-times). If absent, the event is assumed to end on the day it starts.",
+            "es": "Fin en hora de reloj de pared, en la MISMA forma que `startDate` (ambas fechas, o ambas fecha-hora). Si falta, se asume que el evento termina el día que empieza."
+          }
+        },
+        {
+          "path": "license",
+          "type": "string",
+          "required": true,
+          "examples": [
+            "CC-BY-4.0",
+            "CC0-1.0"
+          ],
+          "description": {
+            "en": "License of THIS DATA, not of the event. SPDX identifier (CC0-1.0, CC-BY-4.0…) or a URL.",
+            "es": "Licencia de ESTOS DATOS, no del evento. Identificador SPDX (`CC0-1.0`, `CC-BY-4.0`…) o una URL."
+          }
+        },
+        {
+          "path": "location",
+          "type": "object",
+          "required": false,
+          "examples": [
+            {
+              "venue": "El Cable, Almería"
+            },
+            {
+              "onlineUrl": "https://meet.example/pyalmeria"
+            },
+            {
+              "venue": "Campus Madrid, Calle de Moreno Nieto 2, Madrid",
+              "onlineUrl": "https://meet.example/rust-madrid"
+            }
+          ],
+          "description": {
+            "en": "What is KNOWN about where the event happens. Not the same question as attendanceMode, which states the organiser's intent.",
+            "es": "Qué se SABE de dónde ocurre el evento. Pregunta distinta de `attendanceMode`, que declara la intención de quien organiza."
+          }
+        },
+        {
+          "path": "location.venue",
+          "type": "string",
+          "required": false,
+          "examples": [
+            "El Cable, Almería"
+          ],
+          "description": {
+            "en": "Human-readable physical location. Its presence means the event has a physical venue.",
+            "es": "Lugar físico, legible por personas. Su presencia significa que el evento tiene sede física."
+          }
+        },
+        {
+          "path": "location.onlineUrl",
+          "type": "string (uri)",
+          "required": false,
+          "examples": [
+            "https://meet.example/pyalmeria"
+          ],
+          "description": {
+            "en": "URL to attend online. Its presence means the event has online access.",
+            "es": "URL para asistir en remoto. Su presencia significa que el evento tiene acceso online."
+          }
+        },
+        {
+          "path": "attendanceMode",
+          "type": "enum: in-person | online | hybrid",
+          "required": false,
+          "examples": [
+            "in-person",
+            "online",
+            "hybrid"
+          ],
+          "description": {
+            "en": "What the organiser says this event is. NO DEFAULT: absent means unknown, never in-person.",
+            "es": "Qué dice quien organiza que es este evento. SIN VALOR POR DEFECTO: ausente significa desconocido, nunca presencial."
+          }
+        },
+        {
+          "path": "languages",
+          "type": "string[]",
+          "required": false,
+          "examples": [
+            [
+              "es"
+            ],
+            [
+              "es",
+              "en"
+            ]
+          ],
+          "description": {
+            "en": "BCP 47 tags, e.g. [\"es\",\"en\"]. No default: absent means unknown.",
+            "es": "Etiquetas BCP 47, p. ej. `[\"es\",\"en\"]`. Sin valor por defecto: ausente significa desconocido."
+          }
+        },
+        {
+          "path": "status",
+          "type": "enum: scheduled | cancelled | postponed | rescheduled",
+          "required": false,
+          "examples": [
+            "scheduled",
+            "cancelled"
+          ],
+          "description": {
+            "en": "A cancelled or postponed event MUST stay published: removing it leaves a dead event in subscribers' calendars.",
+            "es": "Un evento cancelado o pospuesto DEBE seguir publicado: borrarlo deja un evento muerto en el calendario de quien se suscribió."
+          }
+        },
+        {
+          "path": "source",
+          "type": "object",
+          "required": false,
+          "examples": [
+            {
+              "name": "Rust Madrid",
+              "url": "https://calendar.example/ics/rust-madrid",
+              "license": "CC-BY-4.0",
+              "retrievedAt": "2026-06-01T05:00:00Z"
+            }
+          ],
+          "description": {
+            "en": "Provenance. Required when the event was imported or aggregated from elsewhere; omitted when the organiser describes their own event — they are the source.",
+            "es": "Procedencia. Obligatoria cuando el evento se importó o agregó de otro sitio; se omite cuando quien organiza describe su propio evento: es la fuente."
+          }
+        },
+        {
+          "path": "source.name",
+          "type": "string",
+          "required": true,
+          "examples": [
+            "Rust Madrid",
+            "Meetup"
+          ],
+          "description": {
+            "en": "Name of the origin (e.g. \"Rust Madrid\", \"Meetup\").",
+            "es": "Nombre de la fuente (p. ej. «Rust Madrid», «Meetup»)."
+          }
+        },
+        {
+          "path": "source.url",
+          "type": "string (uri)",
+          "required": false,
+          "examples": [
+            "https://calendar.example/ics/rust-madrid"
+          ],
+          "description": {
+            "en": "Link to the original record, so the data can be verified and corrected upstream.",
+            "es": "Enlace a la ficha original, para poder verificar y corregir el dato en origen."
+          }
+        },
+        {
+          "path": "source.license",
+          "type": "string",
+          "required": false,
+          "examples": [
+            "CC-BY-4.0"
+          ],
+          "description": {
+            "en": "License under which the ORIGIN publishes the data. Constrains what may be republished: declaring a license does not grant rights the origin never gave.",
+            "es": "Licencia bajo la que la FUENTE publica el dato. Restringe lo que puede republicarse: declarar una licencia no concede derechos que la fuente nunca dio."
+          }
+        },
+        {
+          "path": "source.retrievedAt",
+          "type": "string",
+          "required": false,
+          "examples": [
+            "2026-06-01T05:00:00Z"
+          ],
+          "description": {
+            "en": "When the data was fetched.",
+            "es": "Cuándo se obtuvo el dato."
+          }
+        }
+      ]
+    },
+    {
+      "name": "feed",
+      "title": {
+        "en": "OTE Feed",
+        "es": "Feed"
+      },
+      "description": {
+        "en": "A collection of OTE events published at a stable URL. An exchange format, not an API.",
+        "es": "Una colección de eventos OTE publicada en una URL estable. Un formato de intercambio, no una API."
+      },
+      "fields": [
+        {
+          "path": "specVersion",
+          "type": "const: \"0.1.0\"",
+          "required": true,
+          "examples": [
+            "0.1.0"
+          ],
+          "description": {
+            "en": "Version of OTE Spec this feed adheres to. Applies to every event in it.",
+            "es": "Versión de OTE Spec a la que se adhiere el feed. Aplica a todos sus eventos."
+          }
+        },
+        {
+          "path": "title",
+          "type": "string",
+          "required": true,
+          "examples": [
+            "Eventos de PyAlmería"
+          ],
+          "description": {
+            "en": "Human-readable name of the feed.",
+            "es": "Nombre del feed, legible por personas."
+          }
+        },
+        {
+          "path": "description",
+          "type": "string",
+          "required": false,
+          "examples": [
+            "Meetups mensuales de Python en Almería."
+          ],
+          "description": {
+            "en": "Short description of the feed.",
+            "es": "Descripción breve del feed."
+          }
+        },
+        {
+          "path": "url",
+          "type": "string (uri)",
+          "required": false,
+          "examples": [
+            "https://pyalmeria.example"
+          ],
+          "description": {
+            "en": "Canonical URL of the community, directory or organisation publishing the feed.",
+            "es": "URL canónica de la comunidad, directorio u organización que publica el feed."
+          }
+        },
+        {
+          "path": "license",
+          "type": "string",
+          "required": true,
+          "examples": [
+            "CC-BY-4.0",
+            "CC0-1.0"
+          ],
+          "description": {
+            "en": "License for the feed's contents. Acts as the DEFAULT for every event that does not declare its own. SPDX identifier or URL.",
+            "es": "Licencia del contenido del feed. Actúa como VALOR POR DEFECTO de todo evento que no declare la suya. Identificador SPDX o URL."
+          }
+        },
+        {
+          "path": "licenseUrl",
+          "type": "string (uri)",
+          "required": false,
+          "examples": [
+            "https://creativecommons.org/licenses/by/4.0/"
+          ],
+          "description": {
+            "en": "URL of the full license text.",
+            "es": "URL del texto completo de la licencia."
+          }
+        },
+        {
+          "path": "updatedAt",
+          "type": "string",
+          "required": true,
+          "examples": [
+            "2026-07-06T10:00:00Z"
+          ],
+          "description": {
+            "en": "When this feed was generated.",
+            "es": "Cuándo se generó este feed."
+          }
+        },
+        {
+          "path": "events",
+          "type": "object[]",
+          "required": true,
+          "examples": [],
+          "description": {
+            "en": "Events in this feed. Each one inherits the feed's specVersion and license unless it declares its own.",
+            "es": "Los eventos del feed. Cada uno hereda `specVersion` y `license` del feed salvo que declare los suyos."
+          }
+        }
+      ]
+    }
+  ]
+}
