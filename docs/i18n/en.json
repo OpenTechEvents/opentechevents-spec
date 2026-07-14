@@ -23,7 +23,8 @@
     "lead": "OpenTechEvents (OTE) is an open, free specification to describe tech community events — meetups, conferences, workshops, online or in person — in a single format that directories, calendars and tools can read automatically.",
     "ctaPrimary": "Adopt the spec",
     "ctaSecondary": "See the format",
-    "note": "No platform to sign up for. No tool to install. It's just a file you publish."
+    "note": "No platform to sign up for. No tool to install: a file you publish, or a link in your site's &lt;head&gt;.",
+    "shortcut": "Already use Meetup, Luma or a calendar? We'll convert it for you →"
   },
   "problem": {
     "title": "You already know the problem",
@@ -142,12 +143,12 @@
       "cta2": "Copy a working example"
     },
     "ics": {
-      "tag": "Already have an .ics? Skip all of the above.",
-      "title": "Give us your calendar and we'll do the conversion",
-      "body": "If your events already live in a public calendar (Google Calendar, Nextcloud, your own site), you don't have to write a single line of JSON to try this out. Register the <code>.ics</code> URL as a source in the OTE aggregator: it reads your calendar, converts it to OTE and republishes it as a feed — including <code>.ics</code>, RSS and JSON Feed exports.",
-      "body2": "You commit to nothing and you change nothing. It's the cheapest way to see what your events look like in OTE — and if it's not worth it, you walk away having lost one issue.",
-      "caveat": "Honest caveat: the aggregator is being built right now, and the MVP starts precisely with <code>.ics</code>. Registering your calendar today means being one of the first sources it ingests — and its first real test.",
-      "cta": "Register my .ics calendar",
+      "tag": "Don't want to adopt anything? Read this first.",
+      "title": "Give us the URL you already have. We do the conversion.",
+      "body": "If your events already live somewhere with a public address — a calendar (Google Calendar, Nextcloud, your own <code>.ics</code>), an RSS feed, a Meetup or Luma page — you don't have to write a single line of JSON, change tools, or change anything you do today. Register that URL as a source in the OTE aggregator: it reads it, converts it to OTE and republishes it as a feed, with its <code>.ics</code>, RSS and JSON Feed exports.",
+      "body2": "You commit to nothing. It's the cheapest way to see what your events look like in OTE — and if it's not worth it, you walk away having lost one issue. Adopting the format properly, on your own URL, is always the better end state: it's what makes the data yours. But it doesn't have to be the first step.",
+      "caveat": "Honest caveat: the aggregator is being built right now, and the MVP starts with <code>.ics</code> — the other sources come after. Registering your URL today means being one of the first sources it ingests, and its first real test.",
+      "cta": "Register my URL",
       "cta2": "How the aggregator works"
     },
     "help": {

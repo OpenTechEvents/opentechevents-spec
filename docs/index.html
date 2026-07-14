@@ -59,23 +59,24 @@
           <a class="btn btn-primary" href="#adopt" data-i18n="hero.ctaPrimary">Adopt the spec</a>
           <a class="btn btn-ghost" href="#spec" data-i18n="hero.ctaSecondary">See the format</a>
         </div>
-        <p class="hero-note" data-i18n="hero.note">No platform to sign up for. No tool to install. It's just a file you publish.</p>
+        <p class="hero-note"><span data-i18n="hero.note">No platform to sign up for. No tool to install: a file you publish, or a link in your site's &lt;head&gt;.</span> <a href="#shortcut" data-i18n="hero.shortcut">Already use Meetup, Luma or a calendar? We'll convert it for you →</a></p>
       </div>
 
       <figure class="hero-code">
         <figcaption><span class="dot"></span><span class="dot"></span><span class="dot"></span> <code>events.json</code></figcaption>
-        <pre><code>{
+        <pre data-ote="event"><code>{
   <k>"specVersion"</k>: <s>"0.1.0"</s>,
-  <k>"id"</k>: <s>"https://pyalmeria.dev/2026-06-async"</s>,
+  <k>"id"</k>: <s>"https://pyalmeria.example/2026-06-async"</s>,
+  <k>"url"</k>: <s>"https://pyalmeria.example/2026-06-async"</s>,
   <k>"name"</k>: <s>"PyAlmería — Intro to async/await"</s>,
   <k>"startDate"</k>: <s>"2026-06-11T18:30:00"</s>,
   <k>"timezone"</k>: <s>"Europe/Madrid"</s>,
   <k>"attendanceMode"</k>: <s>"hybrid"</s>,
   <k>"location"</k>: {
-    <k>"venue"</k>: { <k>"name"</k>: <s>"El Cable"</s>, <k>"city"</k>: <s>"Almería"</s> },
-    <k>"online"</k>: { <k>"url"</k>: <s>"https://meet.example/pyalmeria"</s> }
+    <k>"venue"</k>: <s>"El Cable, Almería"</s>,
+    <k>"onlineUrl"</k>: <s>"https://meet.example/pyalmeria"</s>
   },
-  <k>"tags"</k>: [<s>"python"</s>, <s>"async"</s>]
+  <k>"license"</k>: <s>"CC-BY-4.0"</s>
 }</code></pre>
       </figure>
     </div>
@@ -150,16 +151,13 @@
         </div>
         <figure class="code-block">
           <figcaption data-i18n="spec.min.caption">Minimal valid event</figcaption>
-          <pre><code>{
+          <pre data-ote="event"><code>{
   <k>"specVersion"</k>: <s>"0.1.0"</s>,
-  <k>"id"</k>: <s>"https://pyalmeria.dev/2026-06-async"</s>,
+  <k>"id"</k>: <s>"https://pyalmeria.example/2026-06-async"</s>,
   <k>"name"</k>: <s>"PyAlmería — Intro to async/await"</s>,
   <k>"startDate"</k>: <s>"2026-06-11T18:30:00"</s>,
   <k>"timezone"</k>: <s>"Europe/Madrid"</s>,
-  <k>"attendanceMode"</k>: <s>"online"</s>,
-  <k>"location"</k>: {
-    <k>"online"</k>: { <k>"url"</k>: <s>"https://meet.example/pyalmeria"</s> }
-  }
+  <k>"license"</k>: <s>"CC-BY-4.0"</s>
 }</code></pre>
         </figure>
       </div>
@@ -258,13 +256,20 @@
           <p data-i18n="adopt.s1.body">Create a JSON file with your events and host it anywhere you already publish — your site, GitHub Pages, a gist. If your events live in a Google Calendar or Meetup, a converter can generate the feed for you.</p>
           <figure class="code-block code-block-sm">
             <figcaption><code>https://tucomunidad.dev/events.json</code></figcaption>
-            <pre><code>{
+            <pre data-ote="feed"><code>{
   <k>"specVersion"</k>: <s>"0.1.0"</s>,
-  <k>"kind"</k>: <s>"feed"</s>,
   <k>"title"</k>: <s>"PyAlmería events"</s>,
-  <k>"feedUrl"</k>: <s>"https://tucomunidad.dev/events.json"</s>,
+  <k>"url"</k>: <s>"https://tucomunidad.dev"</s>,
+  <k>"license"</k>: <s>"CC-BY-4.0"</s>,
   <k>"updatedAt"</k>: <s>"2026-05-29T08:00:00Z"</s>,
-  <k>"events"</k>: [ <c>/* your events here */</c> ]
+  <k>"events"</k>: [
+    {
+      <k>"id"</k>: <s>"https://tucomunidad.dev/2026-06-async"</s>,
+      <k>"name"</k>: <s>"Intro to async/await"</s>,
+      <k>"startDate"</k>: <s>"2026-06-11T18:30:00"</s>,
+      <k>"timezone"</k>: <s>"Europe/Madrid"</s>
+    }
+  ]
 }</code></pre>
           </figure>
         </li>
@@ -288,14 +293,14 @@
         </li>
       </ol>
 
-      <aside class="shortcut">
-        <p class="shortcut-tag" data-i18n="adopt.ics.tag">Already have an .ics? Skip all of the above.</p>
-        <h3 data-i18n="adopt.ics.title">Give us your calendar and we'll do the conversion</h3>
+      <aside class="shortcut" id="shortcut">
+        <p class="shortcut-tag" data-i18n="adopt.ics.tag">Don't want to adopt anything? Read this first.</p>
+        <h3 data-i18n="adopt.ics.title">Give us the URL you already have. We do the conversion.</h3>
         <p data-i18n="adopt.ics.body">If your events already live in a public calendar (Google Calendar, Nextcloud, your own site), you don't have to write a single line of JSON to try this out. Register the <code>.ics</code> URL as a source in the OTE aggregator: it reads your calendar, converts it to OTE and republishes it as a feed — including <code>.ics</code>, RSS and JSON Feed exports.</p>
         <p data-i18n="adopt.ics.body2">You commit to nothing and you change nothing. It's the cheapest way to see what your events look like in OTE — and if it's not worth it, you walk away having lost one issue.</p>
         <p class="shortcut-caveat" data-i18n="adopt.ics.caveat">Honest caveat: the aggregator is being built right now, and the MVP starts precisely with <code>.ics</code>. Registering your calendar today means being one of the first sources it ingests — and its first real test.</p>
         <div class="cta-row">
-          <a class="btn btn-primary" href="https://github.com/OpenTechEvents/opentechevents-spec/issues/new?title=%5BSource%5D%20&amp;body=Community%3A%20%0A.ics%20URL%3A%20%0AWebsite%3A%20%0A%0AI%20am%20an%20organiser%20of%20this%20community%20and%20I%20allow%20these%20events%20to%20be%20republished%3A%20yes%2Fno%0A" data-i18n="adopt.ics.cta">Register my .ics calendar</a>
+          <a class="btn btn-primary" href="https://github.com/OpenTechEvents/opentechevents-spec/issues/new?title=%5BSource%5D%20&amp;body=Community%3A%20%0A.ics%20URL%3A%20%0AWebsite%3A%20%0A%0AI%20am%20an%20organiser%20of%20this%20community%20and%20I%20allow%20these%20events%20to%20be%20republished%3A%20yes%2Fno%0A" data-i18n="adopt.ics.cta">Register my URL</a>
           <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/ecosystem/aggregator.md" data-i18n="adopt.ics.cta2">How the aggregator works</a>
         </div>
       </aside>

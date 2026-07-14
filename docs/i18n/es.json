@@ -23,7 +23,8 @@
     "lead": "OpenTechEvents (OTE) es una especificación abierta y libre para describir eventos de comunidades tecnológicas —meetups, conferencias, talleres, online o presenciales— en un único formato que directorios, calendarios y herramientas pueden leer automáticamente.",
     "ctaPrimary": "Adherirme a la spec",
     "ctaSecondary": "Ver el formato",
-    "note": "Ninguna plataforma en la que registrarse. Ninguna herramienta que instalar. Es un archivo que publicas."
+    "note": "Ninguna plataforma en la que registrarse. Ninguna herramienta que instalar: un archivo que publicas, o una línea en el &lt;head&gt; de tu web.",
+    "shortcut": "¿Ya usas Meetup, Luma o un calendario? Te lo convertimos →"
   },
   "problem": {
     "title": "El problema ya lo conoces",
@@ -142,12 +143,12 @@
       "cta2": "Copiar un ejemplo que funciona"
     },
     "ics": {
-      "tag": "¿Ya tienes un .ics? Sáltate todo lo anterior.",
-      "title": "Danos tu calendario y la conversión la hacemos nosotros",
-      "body": "Si tus eventos ya viven en un calendario público (Google Calendar, Nextcloud, tu propia web), no necesitas escribir ni una línea de JSON para probar esto. Registra la URL del <code>.ics</code> como fuente en el agregador OTE: lee tu calendario, lo convierte a OTE y lo republica como feed — con sus exportaciones a <code>.ics</code>, RSS y JSON Feed.",
-      "body2": "No te comprometes a nada y no cambias nada de lo que ya haces. Es la forma más barata de ver qué pinta tienen tus eventos en OTE — y si no te compensa, te vas habiendo perdido un issue.",
-      "caveat": "Aviso honesto: el agregador se está construyendo ahora mismo, y el MVP arranca justamente por <code>.ics</code>. Registrar hoy tu calendario significa ser una de las primeras fuentes que ingiere — y su primera prueba real.",
-      "cta": "Registrar mi calendario .ics",
+      "tag": "¿No quieres adherirte a nada? Lee esto primero.",
+      "title": "Danos la URL que ya tienes. La conversión la hacemos nosotros.",
+      "body": "Si tus eventos ya viven en algún sitio con dirección pública —un calendario (Google Calendar, Nextcloud, tu propio <code>.ics</code>), un feed RSS, una página de Meetup o Luma—, no necesitas escribir ni una línea de JSON, ni cambiar de herramienta, ni cambiar nada de lo que haces hoy. Registra esa URL como fuente en el agregador OTE: la lee, la convierte a OTE y la republica como feed, con sus exportaciones a <code>.ics</code>, RSS y JSON Feed.",
+      "body2": "No te comprometes a nada. Es la forma más barata de ver qué pinta tienen tus eventos en OTE — y si no te compensa, te vas habiendo perdido un issue. Adherirte de verdad, en tu propia URL, siempre es mejor destino: es lo que hace que los datos sean tuyos. Pero no tiene por qué ser el primer paso.",
+      "caveat": "Aviso honesto: el agregador se está construyendo ahora mismo, y el MVP arranca por <code>.ics</code> — las demás fuentes vienen después. Registrar hoy tu URL significa ser una de las primeras fuentes que ingiere, y su primera prueba real.",
+      "cta": "Registrar mi URL",
       "cta2": "Cómo funciona el agregador"
     },
     "help": {

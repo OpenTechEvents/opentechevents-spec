@@ -146,7 +146,33 @@ El objetivo es describir **el evento**, no el registro en una base de datos.
 
 ## Preguntas abiertas
 
-- **Descubrimiento de feeds desde una web.** ¿`<link rel="alternate">` en el `<head>` (símil RSS)? ¿Qué MIME: `application/ote+json` propio o `application/feed+json`? ¿`/.well-known/`? Ver [#6](https://github.com/OpenTechEvents/opentechevents-spec/issues/6).
+### Descubrimiento: cómo se encuentra un feed desde una web
+
+Ver [#6](https://github.com/OpenTechEvents/opentechevents-spec/issues/6). Los tres mecanismos **no son excluyentes**, y probablemente hagan falta los tres:
+
+| Mecanismo | Para quién | Estado |
+| --- | --- | --- |
+| **`<link rel="alternate">`** en el `<head>`, símil RSS | **Todo el mundo.** Es el único que funciona para quien publica en una ruta cuyo dominio no controla: GitHub Pages de proyecto (`usuario.github.io/repo`), una página dentro de un dominio corporativo, un CMS ajeno. | Propuesto como **mecanismo principal**. Falta decidir el MIME: `application/ote+json` propio vs. reutilizar `application/feed+json`. |
+| **`/.well-known/ote-feed`** | Quien **sí controla el apex** de su dominio. Permite descubrir sin parsear HTML — barato para un crawler. | Propuesto como **complemento**. Ver abajo. |
+| **JSON-LD `schema.org/Event`** embebido en la página | Reaprovecha lo que ya detectan Google y agregadores como dev.events. | Es una **fuente para importadores** (ver la [extensión de navegador](../../ecosystem/browser-extension.md)), no un feed: describe *un* evento, no una colección. |
+
+> 📌 **Dato relevante sobre `/.well-known/`**: el [registro de IANA](https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml) **no tiene ninguna entrada para feeds** — ni RSS, ni Atom, ni JSON Feed. Su procedimiento de registro es *«Specification Required»*, y **OTE tiene una especificación**, así que `ote-feed` podría **registrarse formalmente** (aunque sea con estado provisional) en vez de okupar una ruta. Sería, de hecho, el primer well-known de feeds del registro.
+
+### Serialización: ¿solo un fichero, o también metadatos embebidos?
+
+Hoy la spec asume **un fichero JSON en una URL**. La alternativa —o el complemento— es permitir el feed **embebido en la propia página**, al estilo del JSON-LD de schema.org:
+
+```html
+<script type="application/ote+json">{ "specVersion": "0.1.0", "kind": "feed", … }</script>
+```
+
+- **A favor**: quien usa un CMS o un generador de sitios puede pegar un bloque en su plantilla, pero a menudo **no puede publicar un fichero suelto** ni tocar `/.well-known/`. Baja la barrera de entrada justo para quien menos herramientas tiene.
+- **En contra**: obliga a los consumidores a parsear HTML, acopla el feed a una página concreta, y complica servir el mismo dato como `.ics` o RSS.
+
+Pendiente de decidir. Si se acepta, sería una **serialización equivalente** del mismo documento, no un formato distinto — y habría que cambiar la promesa de la web («es un archivo que publicas»).
+
+### Otras
+
 - **`id` de un evento importado de un `.ics` sin URL.** Hoy los ejemplos usan `<url-del-ics>#<UID>`. Funciona y es estable, pero ata el `id` al calendario de origen: si la comunidad se muda, el `id` que acuñó el importador ya no está bajo un dominio que ella controle.
 - **Serialización.** El schema es JSON. YAML es cómodo para escribir a mano (los issues usan YAML) y se mapea 1:1. ¿Se declaran ambos normativos?
 - **`license` obligatoria en el evento suelto**: ¿es una barrera de entrada demasiado alta para quien solo quiere publicar su meetup?

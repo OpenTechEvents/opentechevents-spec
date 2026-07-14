@@ -108,6 +108,37 @@ for (const version of VERSIONS) {
   }
 }
 
+// The code samples on the landing page are a promise: "this is what an OTE event looks like".
+// They were the first thing to go stale when v0.1 landed (they still showed the old draft's
+// shape), so they are validated too. Mark a sample with `<pre data-ote="event|feed">`.
+console.log("\ndocs/index.html code samples");
+{
+  const { ajv, validateEvent, validateFeed } = build(LATEST);
+  const html = readFileSync(join("docs", "index.html"), "utf8");
+  const samples = [...html.matchAll(/<pre data-ote="(event|feed)"><code>([\s\S]*?)<\/code><\/pre>/g)];
+
+  if (!samples.length) log(false, "no samples found — did the markup change?");
+  for (const [, kind, raw] of samples) {
+    // Strip the syntax-highlighting tags and decode the entities the browser would.
+    const json = raw
+      .replace(/<[^>]+>/g, "")
+      .replace(/&quot;/g, '"')
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">");
+    let doc;
+    try {
+      doc = JSON.parse(json);
+    } catch (err) {
+      log(false, `${kind} sample is not valid JSON — ${err.message}`);
+      continue;
+    }
+    const validate = kind === "feed" ? validateFeed : validateEvent;
+    const valid = validate(doc);
+    log(valid, `${kind} sample${valid ? "" : "\n" + ajv.errorsText(validate.errors, { separator: "\n" })}`);
+  }
+}
+
 // The schemas' $id points at https://opentechevents.org/schema/<version>/… , so that URL must
 // resolve. GitHub Pages only serves docs/, hence the published copies — and hence this check,
 // which is the only thing keeping them from drifting apart.
