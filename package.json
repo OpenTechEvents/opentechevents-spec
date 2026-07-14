@@ -1,14 +1,50 @@
 {
-  "name": "opentechevents-spec",
-  "private": true,
+  "name": "@opentechevents/schema",
+  "version": "0.1.0",
+  "description": "JSON Schemas for OTE Spec — an open specification for tech community events",
   "type": "module",
-  "description": "OTE Spec \u2014 JSON Schemas and example validation",
+  "license": "CC0-1.0",
+  "homepage": "https://opentechevents.org",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpenTechEvents/opentechevents-spec.git"
+  },
+  "bugs": "https://github.com/OpenTechEvents/opentechevents-spec/issues",
+  "keywords": [
+    "opentechevents",
+    "ote",
+    "events",
+    "json-schema",
+    "meetup",
+    "conference",
+    "ical"
+  ],
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    },
+    "./v0.1/event.schema.json": "./spec/v0.1/event.schema.json",
+    "./v0.1/feed.schema.json": "./spec/v0.1/feed.schema.json"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "spec/v0.1/*.json",
+    "spec/v0.1/README.md"
+  ],
   "scripts": {
     "validate": "node scripts/validate.mjs",
-    "publish-schemas": "mkdir -p docs/schema/v0.1 && cp spec/v0.1/event.schema.json spec/v0.1/feed.schema.json docs/schema/v0.1/"
+    "publish-schemas": "mkdir -p docs/schema/v0.1 && cp spec/v0.1/event.schema.json spec/v0.1/feed.schema.json docs/schema/v0.1/",
+    "prepublishOnly": "npm run validate"
   },
   "devDependencies": {
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

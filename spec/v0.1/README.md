@@ -13,14 +13,40 @@ Especificación mínima para describir eventos de comunidades técnicas y public
 
 Los `$id` son las URLs bajo las que se publican los schemas:
 
-```
+```text
 https://opentechevents.org/schema/v0.1/event.schema.json
 https://opentechevents.org/schema/v0.1/feed.schema.json
 ```
 
 **Una vez publicada, una versión no se toca.** Los cambios van a `spec/v0.2/`. Es lo que permite que un documento diga `specVersion: "0.1.0"` y un consumidor sepa dentro de tres años contra qué validarlo.
 
-## Validar
+## Consumir los schemas
+
+**Como paquete** (recomendado para implementaciones: te ata a una versión, no a lo que hoy haya en una URL):
+
+```bash
+npm install @opentechevents/schema
+```
+
+```js
+import Ajv2020 from "ajv/dist/2020.js";
+import addFormats from "ajv-formats";
+import { eventSchema, feedSchema } from "@opentechevents/schema";
+
+const ajv = new Ajv2020({ strict: true, strictRequired: false });
+addFormats(ajv);
+ajv.addSchema(eventSchema);          // el feed referencia al evento por $id: regístralo antes
+const validateFeed = ajv.compile(feedSchema);
+```
+
+**Por URL** (para editores, CI de terceros o quien no use npm):
+
+```text
+https://opentechevents.org/schema/v0.1/event.schema.json
+https://opentechevents.org/schema/v0.1/feed.schema.json
+```
+
+## Validar este repo
 
 ```bash
 npm install
