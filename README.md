@@ -1,12 +1,12 @@
 # OpenTechEvents — OTE Spec
 
-> ⚠️ **Nombre provisional.** «OpenTechEvents» (abreviado *OTE Spec*) es un nombre de trabajo y puede cambiar.
+> 🌐 **[opentechevents.org](https://opentechevents.org)** — web del proyecto (código en [`docs/`](docs/)).
 
 Una especificación estándar y abierta para describir, publicar y compartir **eventos de comunidades tecnológicas** (meetups, conferencias, talleres, eventos online y presenciales).
 
 El objetivo es ofrecer un formato único al que cualquier comunidad pueda adherirse, que se adapte a todos los formatos de evento y que sea altamente compatible con estándares y herramientas ya existentes (RSS, iCalendar, etc.), de modo que publicar y descubrir eventos deje de ser un trabajo manual y repetitivo.
 
-Esta propuesta nace desde [**Community Builders (ComBuildersES)**](https://github.com/ComBuildersES), con vocación internacional: aunque impulsada inicialmente desde la comunidad hispana, la especificación se diseña para ser usable por cualquier comunidad del mundo.
+La propuesta nace desde [**Community Builders (ComBuildersES)**](https://github.com/ComBuildersES) y vive ya en su propia organización, [**OpenTechEvents**](https://github.com/OpenTechEvents), con vocación internacional: aunque impulsada inicialmente desde la comunidad hispana, la especificación se diseña para ser usable por cualquier comunidad del mundo.
 
 ---
 
@@ -82,15 +82,15 @@ Estas piezas se refuerzan entre sí: más adopción atrae más herramientas, má
 
 ## Organización y gobernanza
 
-Esta propuesta se impulsa desde [Community Builders (ComBuildersES)](https://github.com/ComBuildersES).
+Esta propuesta se impulsa desde [Community Builders (ComBuildersES)](https://github.com/ComBuildersES) y tiene ya **casa propia**: la organización [OpenTechEvents](https://github.com/OpenTechEvents) en GitHub y el dominio [opentechevents.org](https://opentechevents.org).
 
-Una vez exista una propuesta sólida, habrá que **acordar la organización a largo plazo**. Una opción sobre la mesa es crear una organización propia en GitHub con, por ejemplo:
+La estructura prevista dentro de la organización:
 
-- un repositorio para **la especificación** y los proyectos/comunidades adheridos a ella,
+- este repositorio para **la especificación**, la web y los proyectos/comunidades adheridos a ella,
 - posiblemente otro para **los datos**,
 - y repositorios independientes para las **diferentes herramientas** del ecosistema.
 
-Nada de esto está decidido todavía: forma parte de lo que queremos consensuar con la comunidad.
+El reparto exacto de repos y el modelo de gobernanza a largo plazo siguen abiertos: forma parte de lo que queremos consensuar con la comunidad.
 
 ## Preguntas frecuentes (FAQ)
 
@@ -113,7 +113,7 @@ Publicar tus eventos **una sola vez** y automatizar su difusión a múltiples di
 Poder **suscribirte a feeds** y filtrar los eventos que te interesan, sin vigilar decenas de plataformas y directorios por separado.
 
 **¿Esto es de Community Builders? ¿Es un estándar oficial ya?**
-Lo impulsa [Community Builders](https://github.com/ComBuildersES) con vocación internacional, pero **no es un estándar oficial ni estable todavía**: está en fase de diseño y todo es provisional.
+Lo impulsa [Community Builders](https://github.com/ComBuildersES) con vocación internacional y se desarrolla en su propia organización, [OpenTechEvents](https://github.com/OpenTechEvents), pero **no es un estándar oficial ni estable todavía**: está en fase de diseño y todo es provisional.
 
 **¿Está listo para usarse en producción?**
 Todavía no. Estamos diseñando la especificación (versión `0.x`, inestable). El [borrador del modelo](spec/) es ilustrativo y cambiará.
