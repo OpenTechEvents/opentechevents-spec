@@ -12,13 +12,10 @@
     "link": "Sigue la discusión"
   },
   "nav": {
-    "problem": "Problema",
-    "spec": "Especificación",
-    "benefits": "Beneficios",
+    "spec": "Cómo funciona",
     "adopt": "Adhiérete",
-    "adopters": "Quién la usa",
-    "tools": "Herramientas",
-    "reference": "Referencia"
+    "reference": "Referencia",
+    "tools": "Herramientas"
   },
   "hero": {
     "eyebrow": "Especificación abierta · Borrador 0.1",

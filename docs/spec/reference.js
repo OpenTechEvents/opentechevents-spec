@@ -11,7 +11,9 @@
       pill: "Draft 0.x",
       draft: "Fields can still change, be renamed or be dropped.",
       follow: "Follow the discussion",
+      navSpec: "How it works",
       navAdopt: "Adopt it",
+      navReference: "Reference",
       navTools: "Tools",
       title: "Field reference",
       lead: "Every field of OTE Spec v0.1. This page is generated from the JSON Schemas, so it cannot drift from what the validator actually enforces.",
@@ -27,7 +29,9 @@
       pill: "Borrador 0.x",
       draft: "Los campos pueden cambiar, renombrarse o desaparecer.",
       follow: "Sigue la discusión",
+      navSpec: "Cómo funciona",
       navAdopt: "Adhiérete",
+      navReference: "Referencia",
       navTools: "Herramientas",
       title: "Referencia de campos",
       lead: "Todos los campos de OTE Spec v0.1. Esta página se genera a partir de los JSON Schema, así que no puede separarse de lo que el validador exige de verdad.",
@@ -151,6 +155,11 @@
       render();
     });
   });
+
+  // Same nav as the landing page, so moving between them doesn't feel like leaving the site.
+  // This page IS the reference, so say so.
+  var current = document.querySelector('.nav a[data-nav="reference"]');
+  if (current) current.setAttribute("aria-current", "page");
 
   state.lang = pickLang();
   render();

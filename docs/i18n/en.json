@@ -12,13 +12,10 @@
     "link": "Follow the discussion"
   },
   "nav": {
-    "problem": "Problem",
-    "spec": "Spec",
-    "benefits": "Benefits",
+    "spec": "How it works",
     "adopt": "Adopt it",
-    "adopters": "Who uses it",
-    "tools": "Tools",
-    "reference": "Reference"
+    "reference": "Reference",
+    "tools": "Tools"
   },
   "hero": {
     "eyebrow": "Open specification · Draft 0.1",

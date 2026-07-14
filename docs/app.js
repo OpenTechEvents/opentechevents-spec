@@ -228,6 +228,34 @@
     btn.addEventListener('click', function () { setLang(btn.dataset.lang); });
   });
 
+  /* Highlight the nav item for the section you're actually looking at. A sticky nav that never
+     reacts is what makes a long page feel like a maze. */
+  (function trackSections() {
+    var links = {};
+    document.querySelectorAll('.nav a[data-nav]').forEach(function (a) { links[a.dataset.nav] = a; });
+
+    var sections = Object.keys(links)
+      .map(function (id) { return document.getElementById(id); })
+      .filter(Boolean);
+    if (!sections.length || !('IntersectionObserver' in window)) return;
+
+    var visible = new Set();
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) visible.add(entry.target.id);
+        else visible.delete(entry.target.id);
+      });
+      Object.keys(links).forEach(function (id) {
+        links[id].removeAttribute('aria-current');
+      });
+      // Topmost visible section wins, so scrolling down moves the marker forward, not back.
+      var active = sections.find(function (section) { return visible.has(section.id); });
+      if (active) links[active.id].setAttribute('aria-current', 'true');
+    }, { rootMargin: '-64px 0px -55% 0px' });
+
+    sections.forEach(function (section) { observer.observe(section); });
+  })();
+
   document.querySelectorAll('.tools-filters .chip').forEach(function (chip) {
     chip.addEventListener('click', function () {
       state.filter = chip.dataset.filter;
