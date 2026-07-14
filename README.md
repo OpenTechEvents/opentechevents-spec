@@ -48,16 +48,34 @@ Una vez estabilizada la especificación, el objetivo es construir un ecosistema 
 
 👉 Lista abierta de ideas concretas de herramientas en [ecosystem/](ecosystem/README.md).
 
+## La especificación
+
+👉 **[OTE Spec v0.1](spec/v0.1/README.md)** — schemas ejecutables (JSON Schema 2020-12), prosa normativa y ejemplos validados en CI.
+
+```bash
+npm install @opentechevents/schema
+```
+
+```text
+https://opentechevents.org/schema/v0.1/event.schema.json
+https://opentechevents.org/schema/v0.1/feed.schema.json
+```
+
+> 🚧 **`0.x` puede romper sin previo aviso.** Se publica para que existan implementaciones reales —empezando por el importador de `.ics`— y para que rompan lo que esté mal. El debate sigue abierto en los issues [#5](https://github.com/OpenTechEvents/opentechevents-spec/issues/5) y [#6](https://github.com/OpenTechEvents/opentechevents-spec/issues/6).
+
+¿Tienes un feed y quieres comprobarlo? `npm run validate -- mi-feed.json`.
+
 ## Estado del proyecto
 
-🚧 **Fase inicial.** Ahora mismo el trabajo se centra en **investigar y diseñar la especificación**. Todo (nombre, licencia, alcance, gobernanza) es provisional y está abierto a debate.
+🚧 **Fase inicial.** Existe una **v0.1 implementable** y el trabajo se centra ahora en **construir sobre ella** (el agregador y su importador de `.ics`) para descubrir qué está mal. El nombre, el alcance y la gobernanza siguen siendo provisionales y abiertos a debate; la [licencia](#licencia) ya está decidida.
 
 ## Roadmap
 
-1. **Investigación inicial** — análisis de estándares existentes (RSS, iCalendar, schema.org/Event…), plataformas y casos de uso reales.
-2. **Diseño de la especificación** — definición del modelo de datos, campos, formatos y reglas de compatibilidad.
-3. **Validación** — pruebas con comunidades reales y ajuste de la especificación.
-4. **Ecosistema de herramientas** — desarrollo de las utilidades de ingesta, transformación y publicación automatizada.
+1. ✅ **Investigación inicial** — análisis de estándares existentes (RSS, iCalendar, schema.org/Event…), plataformas y casos de uso reales. → [research/](research/README.md)
+2. ✅ **v0.1 de la especificación** — modelo de datos mínimo, JSON Schema ejecutable y ejemplos. → [spec/v0.1/](spec/v0.1/README.md)
+3. 🔜 **Validación con implementaciones reales** — el [agregador](ecosystem/aggregator.md) y su importador de `.ics` son el banco de pruebas: si el modelo no soporta una ingesta real, el modelo está mal. De ahí saldrá la v0.2.
+4. 🔜 **Adopción** — comunidades publicando feeds y directorios consumiéndolos. Sin datos reales, el estándar es teoría.
+5. 🔜 **Ecosistema de herramientas** — ingesta, transformación y publicación automatizada. → [ecosystem/](ecosystem/README.md)
 
 ## Estructura del repositorio
 
