@@ -10,6 +10,7 @@
  * A schema that only ever accepts is not a schema.
  */
 import { readFileSync, readdirSync, existsSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { join, basename } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
@@ -153,5 +154,9 @@ for (const version of VERSIONS) {
   }
 }
 
-console.log(failures ? `\n${failures} failure(s)` : "\nAll examples validate.");
-process.exit(failures ? 1 : 0);
+// Chaining this in package.json would break `npm run validate -- my-feed.json`: npm appends the
+// arguments to the END of the script string, so they would land on the wrong command.
+const reference = spawnSync(process.execPath, ["scripts/build-reference.mjs", "--check"], { stdio: "inherit" });
+
+console.log(failures || reference.status ? `\n${failures + (reference.status ? 1 : 0)} failure(s)` : "\nAll examples validate.");
+process.exit(failures || reference.status ? 1 : 0);

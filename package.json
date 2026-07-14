@@ -37,7 +37,7 @@
   ],
   "scripts": {
     "dev": "node scripts/serve.mjs",
-    "validate": "node scripts/validate.mjs && node scripts/build-reference.mjs --check",
+    "validate": "node scripts/validate.mjs",
     "build-reference": "node scripts/build-reference.mjs",
     "publish-schemas": "mkdir -p docs/schema/v0.1 && cp spec/v0.1/event.schema.json spec/v0.1/feed.schema.json docs/schema/v0.1/",
     "prepublishOnly": "npm run validate"
