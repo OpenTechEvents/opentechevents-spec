@@ -171,15 +171,19 @@ t { color: #e08a6b; }
 .section-dark { background: var(--bg-dark); color: #d5dae4; }
 .section-dark h2, .section-dark h3, .section-dark strong { color: #fff; }
 .section-dark .section-lead { color: #9aa3b4; }
-.section-dark code { color: #7fb3ff; }
+/* Inline code only — a bare `code` selector here also hit the snippets inside
+   .code-block and turned them all light blue. */
+.section-dark p > code, .section-dark li > code { color: #7fb3ff; }
 .section-lead { font-size: 1.08rem; color: var(--ink-soft); max-width: 44em; margin-bottom: 44px; }
 
-p code, li code {
+/* Inline code only. Descendant selectors here (`li code`) also matched the
+   snippets inside <pre>, giving them the pale pill background. */
+p > code, li > code {
   font-family: var(--mono); font-size: .84em;
   background: var(--accent-soft); color: var(--accent-ink);
   padding: 2px 6px; border-radius: 5px;
 }
-.section-dark p code { background: #1b2030; }
+.section-dark p > code, .section-dark li > code { background: #1b2030; }
 
 /* ---------- cards ---------- */
 .cards { display: grid; gap: 20px; }
