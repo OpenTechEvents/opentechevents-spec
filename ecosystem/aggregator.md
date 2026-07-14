@@ -15,14 +15,41 @@ El feed publicado solo contiene eventos cuya **licencia es conocida y reutilizab
 
 ## Dónde vive
 
-**Repositorio aparte**: `OpenTechEvents/opentechevents-aggregator`.
+**Repositorio aparte**: `OpenTechEvents/opentechevents-data`.
 
 | Repo | Responsabilidad |
 | --- | --- |
 | `opentechevents-spec` (este) | El estándar: modelo de datos, feed, JSON Schema, versionado. |
-| `opentechevents-aggregator` | Implementación: conectores, GitHub Action, fuentes registradas, feed publicado. |
+| `opentechevents-data` | El directorio: fuentes registradas, conectores, Action diaria y datos publicados. |
 
-Motivo: el debate del estándar no debe mezclarse con bugs de implementación, y el agregador debe ser **un consumidor más** de la spec (dogfooding: consume el JSON Schema publicado, no una copia privada).
+Se llama `-data` y no `-aggregator` porque **lo que el proyecto le ofrece al mundo son los datos**; el agregador es la maquinaria que los produce. El nombre debe describir el producto, no la implementación.
+
+Motivo de la separación respecto a la spec: el debate del estándar no debe mezclarse con bugs de implementación, y el agregador debe ser **un consumidor más** de la spec (dogfooding: consume el JSON Schema publicado, no una copia privada).
+
+### Los conectores viven dentro, no en repos aparte
+
+Decisión tomada y documentada aquí para no volver a debatirla. Los importadores son **paquetes dentro de `opentechevents-data`**, no repos externos que la Action diaria clona y ejecuta.
+
+Clonar y ejecutar código de terceros en la tarea diaria sería, en este orden:
+
+- **Un agujero de seguridad.** La Action corre con un token que **escribe en el repo**. Ejecutar código externo en HEAD es ejecución remota de código con permisos de escritura sobre el directorio de datos.
+- **El fin de los cambios atómicos.** Cuando la spec cambie un nombre de campo, hacen falta spec-consumer, conectores y datos regenerados **en un mismo PR revisable**. Repartidos en N repos, eso es una coreografía entre N versiones.
+- **El fin del *dry-run* en el PR** (ver [Alta de fuentes](#alta-de-fuentes-y-eventos-issue-form--pr)), que es lo que hace usable el alta: para previsualizar cuántos eventos traería una fuente nueva habría que resolver y ejecutar código externo dentro del PR de un tercero.
+
+El coste real de tenerlo todo junto (coordinar a muchos mantenedores externos) solo aparece **cuando hay muchos mantenedores externos**. Cuando llegue ese día, un conector se saca como **paquete publicado y fijado a una versión** (npm/PyPI) — una dependencia auditable. Nunca como un `git clone` de HEAD.
+
+### Los datos, en una rama aparte
+
+Dentro de `opentechevents-data`:
+
+| Rama | Contiene | Quién escribe |
+| --- | --- | --- |
+| `main` | Conectores, `sources/*.yml`, workflows, tests. | Personas, vía PR. |
+| `data` | La salida publicada (`feed.json`, `feed.ics`, `feed.xml`, `archive/`, `report.json`). | **Solo el bot**, en cada ejecución. |
+
+Así el historial humano no queda sepultado bajo cientos de commits de bot, y quien solo quiere el dataset puede clonar una rama sin arrastrar el *toolchain*. Se conserva lo bueno de commitear los datos: **cada ejecución deja un diff auditable** (qué evento apareció, cuál cambió, cuál se fue) y el historial de git prueba que un evento existió.
+
+GitHub Pages sirve la rama `data`, idealmente bajo un subdominio propio (`data.opentechevents.org`), de modo que **las URLs de los feeds no dependen de esta decisión** y pueden sobrevivir a cualquier reorganización futura del repo. La URL del `.ics` es para siempre: la gente la suscribe en su calendario y no vuelve a tocarla.
 
 ## Arquitectura
 
@@ -56,7 +83,7 @@ sources/*.yml
 [8] render ──── feed.json (canónico) → .ics, .xml (RSS), .feed.json (JSON Feed)
     │
     ▼
-[9] publish ─── commit a main + GitHub Pages
+[9] publish ─── commit a la rama `data` + GitHub Pages
 ```
 
 Los pasos 2-4 son **lo único que aporta un plugin**. El resto (5-9) es común a todos los formatos y no se toca al añadir una fuente nueva. Ese es todo el truco de la mantenibilidad.
@@ -112,7 +139,7 @@ attribution:
   url: https://rustmadrid.example
 permission:                     # solo si la fuente no declara licencia por sí misma
   grantedBy: "@handle-del-organizador"
-  evidence: https://github.com/OpenTechEvents/opentechevents-aggregator/issues/42
+  evidence: https://github.com/OpenTechEvents/opentechevents-data/issues/42
 
 # Valores por defecto aplicados a los eventos de esta fuente (no los sobrescriben si vienen)
 defaults:
@@ -266,7 +293,7 @@ on:
   push: { paths: ["sources/**"] }      # una fuente nueva se ingiere al instante
 ```
 
-El bot commitea `data/**` a `main` → cada ejecución deja un **diff revisable**: qué evento apareció, cuál cambió, cuál se fue. Auditoría e historial gratis. GitHub Pages sirve `data/`.
+El bot commitea la salida a la **rama `data`** (nunca a `main`, ver [Dónde vive](#los-datos-en-una-rama-aparte)) → cada ejecución deja un **diff revisable**: qué evento apareció, cuál cambió, cuál se fue. Auditoría e historial gratis, sin sepultar el historial humano. GitHub Pages sirve esa rama.
 
 **Resiliencia** (una fuente caída no puede tumbar el feed):
 - Fallo de red en una fuente → se **conserva el último dato bueno** de esa fuente, se marca en `report.json` y el commit sigue adelante.
