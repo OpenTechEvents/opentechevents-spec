@@ -64,7 +64,7 @@ Una vez estabilizada la especificación, el objetivo es construir un ecosistema 
 > El repositorio crecerá a medida que avance el proyecto. Estructura prevista:
 
 - `README.md` — este documento.
-- `CONTRIBUTING.md` — *(próximamente)* cómo participar en el diseño de la especificación.
+- `CONTRIBUTING.md` — cómo participar en el diseño de la especificación.
 - `research/` — resultados de la investigación inicial: análisis de plataformas, directorios y estándares.
 - `spec/` — la especificación. Por ahora un **borrador inicial** del modelo de datos para ilustrar la idea.
 - `ecosystem/` — ideas de herramientas que podrían construirse sobre el estándar.
@@ -126,7 +126,9 @@ Ver [Cómo contribuir](#cómo-contribuir).
 
 ## Cómo contribuir
 
-El proyecto está en fase de diseño y **toda aportación es bienvenida**: experiencias, necesidades de tu comunidad, referencias de estándares y propuestas concretas. Mientras preparamos un `CONTRIBUTING.md`, puedes participar abriendo *issues* para debatir.
+El proyecto está en fase de diseño y **toda aportación es bienvenida**: experiencias, necesidades de tu comunidad, referencias de estándares y propuestas concretas. Lo que más falta ahora son **casos reales que rompan el modelo** y **comunidades dispuestas a publicar un feed**.
+
+👉 Léete [**CONTRIBUTING.md**](CONTRIBUTING.md): explica cómo debatir la spec, cómo adherirse, cómo aparecer en la web y cómo reclamar una herramienta del ecosistema.
 
 ## Contribuidores
 

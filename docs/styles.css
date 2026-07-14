@@ -48,6 +48,25 @@ a:hover { text-decoration: underline; }
 }
 .skip:focus { left: 12px; top: 12px; }
 
+/* ---------- draft notice ---------- */
+.draft-bar {
+  background: #1b2030; color: #b6bfd0;
+  font-size: .86rem; padding: 9px 0;
+}
+.draft-bar .wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.draft-bar a { color: #7fb3ff; font-weight: 600; white-space: nowrap; }
+.draft-pill {
+  flex: none; font: 700 .68rem/1 var(--mono); letter-spacing: .06em; text-transform: uppercase;
+  background: var(--warn); color: #fff; padding: 4px 8px; border-radius: 999px;
+}
+
+.caveat {
+  margin: 20px 0 0; padding: 14px 16px;
+  border-left: 3px solid var(--warn); border-radius: 0 8px 8px 0;
+  background: #fdf0dc; color: #7a4b00; font-size: .9rem;
+}
+.caveat strong { color: #5e3a00; }
+
 /* ---------- header ---------- */
 .site-header {
   position: sticky; top: 0; z-index: 50;

@@ -5,6 +5,12 @@
   },
   "a11y": { "skip": "Skip to content" },
 
+  "draft": {
+    "pill": "Draft 0.x",
+    "body": "The spec is not stable yet: fields can still change, be renamed or be dropped. The core of v0.1 is being decided right now.",
+    "link": "Follow the discussion"
+  },
+
   "nav": {
     "problem": "Problem",
     "spec": "Spec",
@@ -49,7 +55,8 @@
     "s3": { "title": "People find you", "body": "Attendees subscribe by topic or city and get your events in the tools they already use — no extra platform." },
     "min": {
       "title": "The minimum is genuinely minimal",
-      "body": "A valid event needs little more than a name, a start date, a time zone and where it happens. Everything else — CFP deadlines, languages, tags, price, community — is optional and there when you need it.",
+      "body": "A valid event needs little more than a name, a start date, a time zone and where it happens. Optional modules — CFP, speakers, price, accessibility — cover the rest when you need them.",
+      "caveat": "Careful, because we'd rather be straight with you: that draft — the core fields and the optional modules alike — has not been agreed yet. It's there to show the shape of the thing and to open the debate, and it will change. What we're asking you to adopt today is the idea, and to come and break it before it sets.",
       "b1": "Plain JSON. No SDK, no account, no server required — a static file is enough.",
       "b2": "Designed to map cleanly onto RSS, iCalendar and schema.org/Event.",
       "b3": "Works the same for a recurring meetup, a multi-day conference or an online workshop.",

@@ -5,6 +5,12 @@
   },
   "a11y": { "skip": "Saltar al contenido" },
 
+  "draft": {
+    "pill": "Borrador 0.x",
+    "body": "La spec todavía no es estable: los campos pueden cambiar, renombrarse o desaparecer. El núcleo de la v0.1 se está decidiendo ahora mismo.",
+    "link": "Sigue la discusión"
+  },
+
   "nav": {
     "problem": "Problema",
     "spec": "Especificación",
@@ -49,7 +55,8 @@
     "s3": { "title": "La gente te encuentra", "body": "Quien asiste se suscribe por tema o ciudad y recibe tus eventos en las herramientas que ya usa, sin plataformas extra." },
     "min": {
       "title": "El mínimo es de verdad mínimo",
-      "body": "Un evento válido necesita poco más que un nombre, una fecha de inicio, una zona horaria y dónde ocurre. Todo lo demás —cierre de CFP, idiomas, etiquetas, precio, comunidad— es opcional y está ahí cuando lo necesites.",
+      "body": "Un evento válido necesita poco más que un nombre, una fecha de inicio, una zona horaria y dónde ocurre. Los módulos opcionales —CFP, ponentes, precio, accesibilidad— cubren el resto cuando los necesitas.",
+      "caveat": "Ojo, porque preferimos decírtelo de frente: ese borrador —tanto los campos del núcleo como los módulos opcionales— todavía no está acordado. Está ahí para enseñar la pinta que tiene la cosa y abrir el debate, y va a cambiar. Lo que te pedimos que adoptes hoy es la idea, y que vengas a romperla antes de que cuaje.",
       "b1": "JSON plano. Sin SDK, sin cuenta, sin servidor: basta con un archivo estático.",
       "b2": "Diseñada para mapearse limpiamente a RSS, iCalendar y schema.org/Event.",
       "b3": "Sirve igual para un meetup recurrente, una conferencia de varios días o un taller online.",
