@@ -67,7 +67,9 @@ Para cualquier cosa que toque **la especificación**, abre antes un issue. Un PR
 - Una rama por cambio, desde `main`.
 - Mensajes de commit en imperativo; si sigues [Conventional Commits](https://www.conventionalcommits.org/), mejor.
 - Explica **el porqué** en la descripción del PR. El qué ya se ve en el diff.
-- El repo no tiene todavía CI ni linters: no hay nada que ejecutar antes de enviar. Si tocas la web, ábrela en local (`cd docs && python3 -m http.server 8000`) y comprueba que no rompes nada.
+- Si tocas los **schemas o los ejemplos**, ejecuta `npm run validate` antes de enviar. El CI lo hace igualmente y **falla si un ejemplo deja de validar** — es lo que impide que la spec y sus ejemplos se separen (ya pasó una vez).
+- Si añades o cambias un schema, `npm run publish-schemas` copia la versión publicada a `docs/schema/` (las URLs de los `$id` deben resolver). El validador comprueba que no se hayan separado.
+- Si tocas la **web**, ábrela en local (`cd docs && python3 -m http.server 8000`) y comprueba que no rompes nada.
 
 ## Idioma
 
@@ -79,9 +81,12 @@ Se usa [all-contributors](https://allcontributors.org): se reconoce **cualquier 
 
 ## Licencia de tus contribuciones
 
-> ⚠️ **Provisional.** La licencia del proyecto **está por definir** (ver el [README](README.md#licencia)). La intención es la más abierta posible, en la línea de CC0 / dominio público, para que la spec no limite ningún uso.
+Al contribuir aceptas que tu aportación se publique bajo las licencias del proyecto (ver [LICENSE](LICENSE)):
 
-Al contribuir, aceptas que tu aportación se publique bajo la licencia que finalmente adopte el proyecto. Si eso te supone un problema, dilo en el issue **antes** de contribuir y lo hablamos.
+- **prosa** (spec, docs, web, investigación) → [CC0-1.0](LICENSES/CC0-1.0.txt), dominio público;
+- **schemas y código** → [MIT](LICENSES/MIT.txt).
+
+No hace falta firmar ningún CLA. Si esto te supone un problema, dilo en el issue **antes** de contribuir y lo hablamos.
 
 ## Conducta
 

@@ -1,0 +1,24 @@
+# Licencia
+
+Este repositorio usa **dos licencias**, según lo que estés cogiendo. Ambas son permisivas y ninguna obliga a relicenciar tu trabajo.
+
+| Qué | Licencia | Texto |
+| --- | --- | --- |
+| **La especificación** (prosa): `spec/**/*.md`, `research/**`, `ecosystem/**`, `docs/**` y este README | [CC0-1.0](LICENSES/CC0-1.0.txt) — dominio público | [`LICENSES/CC0-1.0.txt`](LICENSES/CC0-1.0.txt) |
+| **Los schemas y el código**: `spec/**/*.json`, `scripts/**`, `index.js`, `index.d.ts` | [MIT](LICENSES/MIT.txt) | [`LICENSES/MIT.txt`](LICENSES/MIT.txt) |
+
+## Por qué dos
+
+**La spec en CC0** porque implementar un estándar no debería exigir permiso ni atribución a nadie. Es la filosofía de RSS e iCalendar: el valor está en que lo use todo el mundo, no en llevarse el crédito.
+
+**Los schemas en MIT y no en CC0** por una razón concreta: **CC0 no concede derechos de patente de forma explícita**, y por eso hay políticas legales corporativas que prohíben consumir *código* bajo CC0. Los schemas se consumen como código — viajan dentro de un `npm install`. Marcarlos CC0 sería poner una barrera justo delante de quien más nos interesa que adopte el estándar. MIT no tiene ese problema y no exige nada más que conservar el aviso de copyright.
+
+## La licencia de los datos es otra cosa
+
+Esto cubre **la especificación**, no **los eventos que publiques con ella**. La licencia de tus datos la eliges tú, en el campo `license` de cada evento o feed.
+
+La spec **recomienda `CC-BY-4.0`** (o `CC0-1.0` si no quieres ni atribución):
+
+- **`CC-BY-4.0`, no 3.0**: la 4.0 es la primera que cubre expresamente el *derecho sui generis de bases de datos* de la UE. Un directorio de eventos **es** una base de datos.
+- **Evita las licencias *share-alike*** (`CC-BY-SA`, `ODbL`) para datos de eventos: contagian la obligación a cualquier feed agregado que los incluya, y con ello impiden que directorios, apps o newsletters con datos propios reutilicen el resultado. Es lo contrario de lo que busca este proyecto.
+- **`NC` y `ND` no son licencias abiertas** y no se admiten en el ecosistema.

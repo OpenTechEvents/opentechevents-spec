@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "JSON Schemas for OTE Spec — an open specification for tech community events",
   "type": "module",
-  "license": "CC0-1.0",
+  "license": "MIT",
   "homepage": "https://opentechevents.org",
   "repository": {
     "type": "git",

@@ -158,6 +158,9 @@ Este proyecto sigue la especificación [all-contributors](https://github.com/all
 
 ## Licencia
 
-> ⚠️ **Provisional.** Aún por definir formalmente.
+Dos licencias, ambas permisivas. Detalle y motivos en [LICENSE](LICENSE).
 
-La intención es usar la **licencia más abierta posible**, que no limite ningún tipo de uso, en la línea de estándares como RSS o iCalendar. Como punto de partida se contempla algo equivalente a dominio público / [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) para la especificación.
+- **La especificación** (prosa, investigación, web): [**CC0-1.0**](LICENSES/CC0-1.0.txt) — dominio público. Implementar un estándar no debería exigir permiso ni atribución a nadie.
+- **Los schemas y el código**: [**MIT**](LICENSES/MIT.txt). No van en CC0 porque **CC0 no concede derechos de patente explícitos** y hay políticas corporativas que prohíben consumir código bajo esa licencia — justo la barrera que no queremos delante de quien quiera implementar OTE.
+
+**La licencia de tus datos es otra cosa** y la eliges tú, en el campo `license` de cada evento o feed. La spec recomienda **`CC-BY-4.0`** (cubre el derecho *sui generis* de bases de datos de la UE, cosa que la 3.0 no hace) o **`CC0-1.0`**. Desaconseja las licencias *share-alike* (`CC-BY-SA`, `ODbL`): contagian la obligación a cualquier feed agregado que incluya tus eventos e impiden que otros directorios los reutilicen.

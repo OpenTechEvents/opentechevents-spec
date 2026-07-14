@@ -155,7 +155,11 @@ defaults:
 
 El CI **rechaza** un `sources/*.yml` que no cumpla una de las dos vías:
 
-1. **Licencia abierta declarada por la fuente**: `license` ∈ allowlist (`CC0-1.0`, `CC-BY-4.0`, `CC-BY-SA-4.0`, `ODbL-1.0`…) y verificable en origen.
+1. **Licencia abierta declarada por la fuente**: `license` ∈ allowlist (**`CC0-1.0`** o **`CC-BY-4.0`**) y verificable en origen.
+
+   > ⚠️ **Nada de *share-alike* (`CC-BY-SA`, `ODbL`) en la allowlist, y el motivo es el feed agregado.** Basta una fuente *share-alike* para que **el agregado entero herede la obligación**: cualquier directorio, app o newsletter que reutilice el feed quedaría obligado a relicenciar su propia base de datos igual. Eso mata el caso de uso que justifica todo el proyecto. `NC` y `ND` tampoco: no son licencias abiertas.
+   >
+   > `CC-BY-4.0` y no `3.0` porque la 4.0 es la primera que cubre expresamente el **derecho *sui generis* de bases de datos** de la UE — y un directorio de eventos es una base de datos.
 2. **Permiso explícito del organizador**: la mayoría de comunidades no ha puesto licencia a su `.ics`. Se admite si el organizador lo concede por escrito → el bloque `permission` enlaza el issue donde consta. El alta por Issue Form (abajo) captura ese permiso de forma natural: **quien da de alta la fuente suele ser el propio organizador**.
 
 Ninguna otra vía. Sin licencia ni permiso, no entra.
