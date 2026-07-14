@@ -40,6 +40,16 @@
     },
     {
       "status": "proposed",
+      "name": { "en": "Browser extension", "es": "Extensión de navegador" },
+      "desc": {
+        "en": "On your event's page in Meetup, Eventbrite or Luma, it reads the schema.org data the page already exposes, maps it to OTE and pre-fills the registration — only if you are the organiser or have permission, and you review the data before anything is sent. It can also hand you the events.json to publish on your own site.",
+        "es": "En la página de tu evento en Meetup, Eventbrite o Luma, lee los datos schema.org que la página ya expone, los mapea a OTE y prerrellena el alta — solo si eres el organizador o tienes permiso, y revisas los datos antes de enviar nada. También te da el events.json para publicarlo en tu propia web."
+      },
+      "category": { "en": "Ingest", "es": "Ingesta" },
+      "url": "https://github.com/OpenTechEvents/opentechevents-spec/blob/main/ecosystem/browser-extension.md"
+    },
+    {
+      "status": "proposed",
       "name": { "en": "Platform importers", "es": "Importadores de plataformas" },
       "desc": {
         "en": "Pull events from Meetup, Luma, Sessionize, Eventbrite or joind.in via their APIs and turn them into OTE.",
