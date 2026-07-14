@@ -86,9 +86,16 @@ Los textos libres admiten `{ "en": "…", "es": "…" }`. Detalles y ejemplos en
 
 La lista de ideas está en [ecosystem/](ecosystem/README.md), y ninguna tiene dueño. Si te quieres poner con una, **abre un issue diciéndolo** antes de empezar: te ahorra duplicar trabajo y sirve para acordar el alcance.
 
-### Traducir la web
+### Traducir
 
-La web está en inglés y español ([`docs/i18n/`](docs/i18n/)). Añadir un idioma es crear `docs/i18n/<código>.json`, registrar el código en `SUPPORTED` dentro de `docs/app.js` y añadir el botón en `index.html`. Instrucciones en [`docs/README.md`](docs/README.md).
+Inglés y español. Hay **dos sitios distintos**, y no se mezclan:
+
+| Qué | Dónde |
+| --- | --- |
+| Los textos de la web | [`docs/i18n/`](docs/i18n/) — ver [`docs/README.md`](docs/README.md) |
+| Las descripciones de los campos de la spec | [`spec/v0.1/i18n/`](spec/v0.1/i18n/) |
+
+Las `description` **dentro de los schemas se quedan en inglés**: viajan en el paquete npm hacia implementadores de todo el mundo. Las traducciones van aparte, indexadas por campo, y `npm run validate` **falla si falta alguna**. Tras traducir: `npm run build-reference` regenera `reference.<idioma>.md` y la página de referencia.
 
 ## Pull requests
 
@@ -101,7 +108,7 @@ Para cualquier cosa que toque **la especificación**, abre antes un issue. Un PR
 - Explica **el porqué** en la descripción del PR. El qué ya se ve en el diff.
 - Si tocas los **schemas o los ejemplos**, ejecuta `npm run validate` antes de enviar. El CI lo hace igualmente y **falla si un ejemplo deja de validar** — es lo que impide que la spec y sus ejemplos se separen (ya pasó una vez).
 - Si añades o cambias un schema, `npm run publish-schemas` copia la versión publicada a `docs/schema/` (las URLs de los `$id` deben resolver). El validador comprueba que no se hayan separado.
-- Si tocas la **web**, ábrela en local (`cd docs && python3 -m http.server 8000`) y comprueba que no rompes nada.
+- Si tocas la **web**, levántala en local con `npm run dev` (→ <http://localhost:8000>) y comprueba que no rompes nada.
 
 ## Publicar una versión (mantenedores)
 

@@ -6,12 +6,13 @@ Published at **[opentechevents.org](https://opentechevents.org)** via GitHub Pag
 
 ## Run it locally
 
-`fetch()` needs HTTP, so opening `index.html` from disk won't work:
+`fetch()` needs HTTP, so opening `index.html` from disk won't work. From the repo root:
 
 ```bash
-cd docs && python3 -m http.server 8000
-# http://localhost:8000
+npm run dev          # → http://localhost:8000  (and /spec/ for the field reference)
 ```
+
+No build step and no dependencies — [`scripts/serve.mjs`](../scripts/serve.mjs) is Node's `http` module and nothing else. It sends `cache-control: no-store`, so you see your edits and not yesterday's stylesheet.
 
 ## Languages
 
