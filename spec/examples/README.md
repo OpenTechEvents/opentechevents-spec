@@ -2,6 +2,9 @@
 
 > ⚠️ **Borrador inicial generado por IA, sin revisión humana todavía.**
 > Ejemplos ilustrativos con **datos semi-inventados** (comunidades, personas, URLs y lugares ficticios o usados como muestra). Sirven solo para visualizar la pinta que tendría un evento en OTE Spec; ni los datos ni el formato son definitivos.
+>
+> 🗣️ **Estos ejemplos siguen al [modelo de datos](../data-model.md) actual, que a su vez está en discusión en el [issue #5](https://github.com/OpenTechEvents/opentechevents-spec/issues/5).**
+> Varios de ellos **dejarán de ser válidos** cuando se cierre ese debate (obligatoriedad de `id`/`license`, `source`, `attendanceMode` sin valor por defecto, forma de las fechas, `camelCase` vs. `snake_case`). No los tomes como referencia normativa ni los alinees a mano: el hilo del issue manda.
 
 Ejemplos pensados para acompañar a [../data-model.md](../data-model.md) y cubrir casos distintos:
 

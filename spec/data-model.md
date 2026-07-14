@@ -2,6 +2,16 @@
 
 > ⚠️ **Borrador inicial generado por IA, sin revisión humana todavía.**
 > Este modelo es un **boceto propuesto para ilustrar la idea** y abrir el debate. No está acordado ni validado. Todo (nombres de campos, obligatoriedad, estructura, tipos) es provisional y cambiará.
+>
+> 🗣️ **El núcleo de la v0.1 se está discutiendo en el [issue #5](https://github.com/OpenTechEvents/opentechevents-spec/issues/5) — ese hilo manda sobre este documento.**
+> Este fichero **no** refleja todavía lo que allí se debate. Puntos abiertos que lo afectan directamente:
+>
+> - **`id`, `license` y `source` en el núcleo**: los exige cualquier proceso de ingesta (sin `id` estable, cada relectura duplica; sin `license`, el dato no es republicable como open data). El issue los declaraba fuera de la v0.1.
+> - **`attendanceMode` opcional y sin valor por defecto** (ausente = *desconocido*, nunca `in-person`).
+> - **Fecha y hora en un solo campo ISO 8601** (`startDate`/`endDate`) + `timezone` IANA, en vez de campos de fecha y hora separados.
+> - **Convención de nombres**: `camelCase` (este documento) vs. `snake_case` (propuesta del issue).
+>
+> No edites este documento para alinearlo: llévalo al issue. Ver también el [diseño del agregador](../ecosystem/aggregator.md#lo-que-esto-le-exige-a-la-spec), que es lo que puso estos puntos sobre la mesa.
 
 ## Principios de diseño
 

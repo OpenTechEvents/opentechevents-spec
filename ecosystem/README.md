@@ -16,6 +16,8 @@ Las ideas se agrupan por el ciclo de vida del dato: **crear/validar → ingerir 
 
 ## Ingerir (importar hacia OTE)
 
+> 📄 **[Agregador OTE — diseño del MVP](aggregator.md)**: propuesta concreta (repo aparte, conectores como plugins, alta de fuentes por Issue Form, feed publicado a diario). Arranca por el importador de `.ics`. En discusión.
+
 - **Importadores desde plataformas**: Meetup, Luma, Sessionize, Eventbrite, joind.in… (vía sus APIs).
 - **Extractor de `schema.org`/JSON-LD**: leer la web de un evento y deducir un documento OTE.
 - **Importador iCalendar (.ics)** y **RSS** a OTE.
