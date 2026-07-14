@@ -2,7 +2,9 @@
 
 Gracias por pasarte. OTE Spec está en **fase de diseño**: nada está cerrado y por eso ahora mismo una opinión vale más que un *pull request*. Si organizas eventos, montas un directorio o mantienes una herramienta, tienes justo el contexto que le falta a este proyecto.
 
-> ⚠️ **Aviso importante.** La especificación es un **borrador (0.x) sin revisión humana completa**. El núcleo de la v0.1 se está decidiendo en el **[issue #5](https://github.com/OpenTechEvents/opentechevents-spec/issues/5)**, y ese hilo **manda sobre los documentos del repo**. Antes de proponer un cambio al modelo de datos, pásate por ahí.
+> ⚠️ **Aviso importante.** La especificación vigente es **[OTE Spec v0.1](spec/v0.1/README.md)** y es un **borrador `0.x`: puede romper sin previo aviso**. Se publicó para que existan implementaciones reales y para que rompan lo que esté mal. El debate sigue abierto en los issues [#5 (evento)](https://github.com/OpenTechEvents/opentechevents-spec/issues/5) y [#6 (feed)](https://github.com/OpenTechEvents/opentechevents-spec/issues/6).
+>
+> Los documentos de `spec/data-model.md` y `spec/feed.md` son el **boceto anterior** y **no son normativos**. No los implementes ni los edites.
 
 ## Lo que más falta ahora mismo
 
@@ -24,7 +26,28 @@ En este orden:
 - **Qué se rompe si no se arregla.** ¿Se pierde información? ¿Un importador se inventa un dato? ¿Un evento aparece mal en un directorio?
 - **Cómo lo resuelven otros.** Si iCalendar, schema.org o RSS ya tienen una solución para eso, dilo: la compatibilidad es un principio de diseño, no un extra.
 
-No edites `spec/data-model.md` para alinearlo con lo que se debate: **llévalo al issue**. Los documentos se actualizan cuando el debate se cierra, no al revés.
+**Un caso real vale más que una propuesta de campo.** Si tu evento no cabe en la spec, cuéntalo aunque no traigas solución: eso es exactamente lo que necesitamos.
+
+### Cambiar la especificación
+
+Un cambio en la spec **no es solo editar un `.md`**. La v0.1 tiene cuatro piezas que se validan entre sí, y **van en el mismo PR**:
+
+| Pieza | Fichero |
+| --- | --- |
+| El schema ejecutable | `spec/v0.1/event.schema.json` / `feed.schema.json` |
+| La prosa normativa (lo que un validador no puede comprobar) | `spec/v0.1/README.md` |
+| Los ejemplos, incluidos los que **deben fallar** | `spec/v0.1/examples/` y `examples/invalid/` |
+| Las copias publicadas (los `$id` deben resolver) | `docs/schema/` → `npm run publish-schemas` |
+
+Antes de enviar: `npm run validate`. **Si el cambio no viene con un ejemplo que lo demuestre, no está terminado** — y si relaja una regla, quita el ejemplo de `invalid/` que ya no debe fallar.
+
+**Añadir un campo no requiere cambiar el schema.** Los schemas no prohíben campos adicionales: si tu comunidad necesita `tags` o `cfp` hoy, los pones y tu documento sigue siendo válido. La spec crece con **campos que alguien ya usa de verdad**, no con campos que imaginamos que harán falta. Trae el uso real y hablamos de estandarizarlo.
+
+### Versionado
+
+- **`0.x` puede romper.** No hay compromiso de compatibilidad hasta la 1.0.
+- **Una versión publicada no se toca.** Los cambios que rompen van a un directorio nuevo (`spec/v0.2/`), no encima de `spec/v0.1/`. Es lo que permite que un documento diga `specVersion: "0.1.0"` y alguien sepa dentro de tres años contra qué validarlo.
+- Correcciones que **no** cambian qué documentos son válidos (una errata en la prosa, una descripción) sí van sobre la versión vigente.
 
 ### Adherirse: publicar tus eventos en OTE
 
@@ -33,6 +56,15 @@ Tres pasos, explicados con detalle en [opentechevents.org](https://opentechevent
 1. Publica un archivo JSON con tus eventos en una URL que controles.
 2. Enlázalo desde el `<head>` de tu web para que las herramientas lo descubran solas.
 3. **Abre un issue con la URL de tu feed** para que lo validemos y te listemos en la web.
+
+**Valida tu feed antes de abrir el issue.** Clona este repo y pásale tu fichero:
+
+```bash
+npm install
+npm run validate -- mi-feed.json
+```
+
+Detecta si es un evento suelto o un feed, y te dice qué falta (`data/events/0 must have required property 'timezone'`). Desde código, con el paquete `@opentechevents/schema`: ver [spec/v0.1/README.md](spec/v0.1/README.md#consumir-los-schemas).
 
 > 🗓️ **¿Ya tienes un `.ics` y no quieres escribir JSON?** Da de alta la URL de tu calendario como **fuente del [agregador](ecosystem/aggregator.md)**: él lo convierte a OTE por ti. Es la vía de entrada más barata y no te compromete a nada. El agregador está en construcción y su MVP arranca precisamente por `.ics`.
 
@@ -70,6 +102,16 @@ Para cualquier cosa que toque **la especificación**, abre antes un issue. Un PR
 - Si tocas los **schemas o los ejemplos**, ejecuta `npm run validate` antes de enviar. El CI lo hace igualmente y **falla si un ejemplo deja de validar** — es lo que impide que la spec y sus ejemplos se separen (ya pasó una vez).
 - Si añades o cambias un schema, `npm run publish-schemas` copia la versión publicada a `docs/schema/` (las URLs de los `$id` deben resolver). El validador comprueba que no se hayan separado.
 - Si tocas la **web**, ábrela en local (`cd docs && python3 -m http.server 8000`) y comprueba que no rompes nada.
+
+## Publicar una versión (mantenedores)
+
+Los schemas se publican en npm como [`@opentechevents/schema`](https://www.npmjs.com/package/@opentechevents/schema) y se sirven en `https://opentechevents.org/schema/v0.1/…`.
+
+1. `npm run publish-schemas` — sincroniza las copias que sirve la web.
+2. Sube la versión en `package.json`.
+3. Tag: `git tag schema-v0.1.1 && git push origin schema-v0.1.1`.
+
+El resto lo hace [`publish-schema.yml`](.github/workflows/publish-schema.yml), con dos frenos deliberados: **falla si el tag no coincide con la versión del `package.json`**, y **no publica si los ejemplos no validan** — un schema que rompe sus propios ejemplos no llega a npm. No hay token: npm confía en este repo y en este workflow (*trusted publishing*, OIDC), y el paquete se firma con *provenance*.
 
 ## Idioma
 

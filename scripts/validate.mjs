@@ -16,6 +16,7 @@ import addFormats from "ajv-formats";
 
 const VERSIONS = ["v0.1"];
 const SPEC_DIR = "spec";
+const LATEST = VERSIONS[VERSIONS.length - 1];
 
 let failures = 0;
 const log = (ok, msg) => {
@@ -23,22 +24,46 @@ const log = (ok, msg) => {
   console.log(`${ok ? "  ok  " : "  FAIL"}  ${msg}`);
 };
 
-for (const version of VERSIONS) {
-  const dir = join(SPEC_DIR, version);
-  console.log(`\n${dir}`);
-
+function build(version) {
   // strictRequired off: `anyOf: [{required: [venue]}, …]` is valid JSON Schema, and it is how
   // "at least one of venue / onlineUrl" is expressed. Ajv's strict mode dislikes required
   // living apart from its properties; the spec does not.
   const ajv = new Ajv2020({ strict: true, strictRequired: false, allErrors: true });
   addFormats(ajv);
 
+  const dir = join(SPEC_DIR, version);
   const eventSchema = JSON.parse(readFileSync(join(dir, "event.schema.json"), "utf8"));
   const feedSchema = JSON.parse(readFileSync(join(dir, "feed.schema.json"), "utf8"));
   ajv.addSchema(eventSchema);
 
-  const validateEvent = ajv.compile(eventSchema);
-  const validateFeed = ajv.compile(feedSchema);
+  return { ajv, validateEvent: ajv.compile(eventSchema), validateFeed: ajv.compile(feedSchema) };
+}
+
+// `npm run validate -- my-feed.json` → validate your own documents before opening an issue.
+// A document with an `events` array is a feed; anything else is a single event.
+const args = process.argv.slice(2);
+if (args.length) {
+  const { ajv, validateEvent, validateFeed } = build(LATEST);
+  for (const path of args) {
+    const doc = JSON.parse(readFileSync(path, "utf8"));
+    const isFeed = Array.isArray(doc.events);
+    const validate = isFeed ? validateFeed : validateEvent;
+    const valid = validate(doc);
+    log(
+      valid,
+      `${path} (${isFeed ? "feed" : "event"}, ${LATEST})` +
+        (valid ? "" : "\n" + ajv.errorsText(validate.errors, { separator: "\n" }))
+    );
+  }
+  console.log(failures ? `\n${failures} failure(s)` : "\nValid.");
+  process.exit(failures ? 1 : 0);
+}
+
+for (const version of VERSIONS) {
+  const dir = join(SPEC_DIR, version);
+  console.log(`\n${dir}`);
+
+  const { ajv, validateEvent, validateFeed } = build(version);
   const pick = (file) => (basename(file).startsWith("feed") ? validateFeed : validateEvent);
 
   const examples = join(dir, "examples");
