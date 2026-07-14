@@ -1,5 +1,7 @@
 # Ejemplos — OTE Spec
 
+> ⛔ **Superado por [OTE Spec v0.1](../v0.1/README.md).** Este documento es el boceto previo, no normativo. Se conserva por las ideas que aún no han entrado en la spec.
+
 > ⚠️ **Borrador inicial generado por IA, sin revisión humana todavía.**
 > Ejemplos ilustrativos con **datos semi-inventados** (comunidades, personas, URLs y lugares ficticios o usados como muestra). Sirven solo para visualizar la pinta que tendría un evento en OTE Spec; ni los datos ni el formato son definitivos.
 >

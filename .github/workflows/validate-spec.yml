@@ -1,0 +1,20 @@
+name: Validate spec
+
+on:
+  push:
+    paths: ["spec/**", "scripts/**", "package.json", ".github/workflows/validate-spec.yml"]
+  pull_request:
+    paths: ["spec/**", "scripts/**", "package.json", ".github/workflows/validate-spec.yml"]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run validate

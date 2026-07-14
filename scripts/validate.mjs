@@ -1,0 +1,78 @@
+#!/usr/bin/env node
+/**
+ * Validates every example under spec/<version>/examples/ against the schemas.
+ *
+ * Naming convention drives what each example is checked against:
+ *   event-*.json → event.schema.json   (standalone event: specVersion + license required)
+ *   feed*.json   → feed.schema.json
+ *
+ * Files under spec/<version>/examples/invalid/ MUST fail: they are the guardrails.
+ * A schema that only ever accepts is not a schema.
+ */
+import { readFileSync, readdirSync, existsSync } from "node:fs";
+import { join, basename } from "node:path";
+import Ajv2020 from "ajv/dist/2020.js";
+import addFormats from "ajv-formats";
+
+const VERSIONS = ["v0.1"];
+const SPEC_DIR = "spec";
+
+let failures = 0;
+const log = (ok, msg) => {
+  if (!ok) failures++;
+  console.log(`${ok ? "  ok  " : "  FAIL"}  ${msg}`);
+};
+
+for (const version of VERSIONS) {
+  const dir = join(SPEC_DIR, version);
+  console.log(`\n${dir}`);
+
+  // strictRequired off: `anyOf: [{required: [venue]}, …]` is valid JSON Schema, and it is how
+  // "at least one of venue / onlineUrl" is expressed. Ajv's strict mode dislikes required
+  // living apart from its properties; the spec does not.
+  const ajv = new Ajv2020({ strict: true, strictRequired: false, allErrors: true });
+  addFormats(ajv);
+
+  const eventSchema = JSON.parse(readFileSync(join(dir, "event.schema.json"), "utf8"));
+  const feedSchema = JSON.parse(readFileSync(join(dir, "feed.schema.json"), "utf8"));
+  ajv.addSchema(eventSchema);
+
+  const validateEvent = ajv.compile(eventSchema);
+  const validateFeed = ajv.compile(feedSchema);
+  const pick = (file) => (basename(file).startsWith("feed") ? validateFeed : validateEvent);
+
+  const examples = join(dir, "examples");
+  for (const file of readdirSync(examples).filter((f) => f.endsWith(".json")).sort()) {
+    const path = join(examples, file);
+    const validate = pick(file);
+    const valid = validate(JSON.parse(readFileSync(path, "utf8")));
+    log(valid, `${path}${valid ? "" : "\n" + ajv.errorsText(validate.errors, { separator: "\n" })}`);
+  }
+
+  // Negative cases: these must be rejected, and it must be for the stated reason.
+  const invalid = join(examples, "invalid");
+  if (!existsSync(invalid)) continue;
+  for (const file of readdirSync(invalid).filter((f) => f.endsWith(".json")).sort()) {
+    const path = join(invalid, file);
+    const validate = pick(file);
+    const valid = validate(JSON.parse(readFileSync(path, "utf8")));
+    log(!valid, `${path} — must be rejected${valid ? " BUT WAS ACCEPTED" : ""}`);
+  }
+}
+
+// The schemas' $id points at https://opentechevents.org/schema/<version>/… , so that URL must
+// resolve. GitHub Pages only serves docs/, hence the published copies — and hence this check,
+// which is the only thing keeping them from drifting apart.
+console.log("\npublished copies (docs/schema/)");
+for (const version of VERSIONS) {
+  for (const schema of ["event.schema.json", "feed.schema.json"]) {
+    const src = join(SPEC_DIR, version, schema);
+    const published = join("docs", "schema", version, schema);
+    const same =
+      existsSync(published) && readFileSync(published, "utf8") === readFileSync(src, "utf8");
+    log(same, `${published} is in sync with ${src}${same ? "" : " — run: npm run publish-schemas"}`);
+  }
+}
+
+console.log(failures ? `\n${failures} failure(s)` : "\nAll examples validate.");
+process.exit(failures ? 1 : 0);

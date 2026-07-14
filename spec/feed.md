@@ -1,5 +1,7 @@
 # Feed de eventos — OTE Spec (borrador)
 
+> ⛔ **Superado por [OTE Spec v0.1](v0.1/README.md).** Este documento es el boceto previo, no normativo. Se conserva por las ideas que aún no han entrado en la spec.
+
 > ⚠️ **Borrador inicial generado por IA, sin revisión humana todavía.**
 > Boceto para ilustrar la idea y abrir debate. Nombres, campos y decisiones son provisionales.
 

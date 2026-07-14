@@ -1,5 +1,7 @@
 # Modelo de datos — OTE Spec (borrador)
 
+> ⛔ **Superado por [OTE Spec v0.1](v0.1/README.md).** Este documento es el boceto previo, no normativo. Se conserva por las ideas que aún no han entrado en la spec.
+
 > ⚠️ **Borrador inicial generado por IA, sin revisión humana todavía.**
 > Este modelo es un **boceto propuesto para ilustrar la idea** y abrir el debate. No está acordado ni validado. Todo (nombres de campos, obligatoriedad, estructura, tipos) es provisional y cambiará.
 >

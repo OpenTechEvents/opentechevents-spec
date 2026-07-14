@@ -1,0 +1,14 @@
+{
+  "name": "opentechevents-spec",
+  "private": true,
+  "type": "module",
+  "description": "OTE Spec \u2014 JSON Schemas and example validation",
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "publish-schemas": "mkdir -p docs/schema/v0.1 && cp spec/v0.1/event.schema.json spec/v0.1/feed.schema.json docs/schema/v0.1/"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  }
+}

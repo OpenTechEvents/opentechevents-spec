@@ -1,5 +1,9 @@
 # Especificación — OpenTechEvents (OTE Spec)
 
+> ✅ **La especificación vigente es [`v0.1/`](v0.1/)** — schemas ejecutables, prosa normativa y ejemplos validados en CI.
+>
+> ⚠️ **Los documentos de esta carpeta (`data-model.md`, `feed.md`, `examples/`) son el boceto ANTERIOR**, generado por IA para abrir el debate. Se conservan por su valor histórico y por las ideas que aún no han entrado en la spec (cfp, speakers, offers, tags…). **No son normativos y no deben implementarse.**
+
 > ⚠️ **Borrador inicial generado por IA, sin revisión humana todavía.**
 > Este contenido es un **boceto propuesto** cuyo único objetivo es **ilustrar la idea** y servir de punto de partida para la discusión. No es una especificación acordada ni estable: nombres, campos y decisiones cambiarán tras la revisión de la comunidad.
 

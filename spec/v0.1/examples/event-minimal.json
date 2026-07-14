@@ -1,0 +1,8 @@
+{
+  "specVersion": "0.1.0",
+  "id": "https://pyalmeria.example/eventos/2026-06-async",
+  "name": "PyAlmería — Introducción a async/await",
+  "startDate": "2026-06-11T18:30:00",
+  "timezone": "Europe/Madrid",
+  "license": "CC-BY-4.0"
+}
