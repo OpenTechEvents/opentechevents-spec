@@ -156,6 +156,45 @@
 }</code></pre>
         </figure>
       </div>
+
+      <div class="docs-block">
+        <h3 data-i18n="docs.title">Read the full specification</h3>
+        <p data-i18n="docs.lead">Everything is public and in the open — including what's still undecided. The spec is at version 0.x: expect it to change, and expect your feedback to be what changes it.</p>
+
+        <div class="docs-grid">
+          <a class="doc-card" href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/spec/data-model.md">
+            <span class="doc-icon">📐</span>
+            <span class="doc-name" data-i18n="docs.d1.title">Data model</span>
+            <span class="doc-desc" data-i18n="docs.d1.body">Every field of an event: what's required, what's optional, and how it maps to iCalendar, RSS and schema.org.</span>
+          </a>
+          <a class="doc-card" href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/spec/feed.md">
+            <span class="doc-icon">📡</span>
+            <span class="doc-name" data-i18n="docs.d2.title">Feed format</span>
+            <span class="doc-desc" data-i18n="docs.d2.body">How to group several events into a feed: metadata, pagination, licence and discovery.</span>
+          </a>
+          <a class="doc-card" href="https://github.com/OpenTechEvents/opentechevents-spec/tree/main/spec/examples">
+            <span class="doc-icon">📄</span>
+            <span class="doc-name" data-i18n="docs.d3.title">Examples</span>
+            <span class="doc-desc" data-i18n="docs.d3.body">Complete documents to copy: a minimal event, a meetup, a conference with an open CFP, and a full feed.</span>
+          </a>
+          <a class="doc-card" href="https://github.com/OpenTechEvents/opentechevents-spec/tree/main/research">
+            <span class="doc-icon">🔬</span>
+            <span class="doc-name" data-i18n="docs.d4.title">Research</span>
+            <span class="doc-desc" data-i18n="docs.d4.body">The analysis behind the decisions: existing standards, platforms and directories we studied.</span>
+          </a>
+        </div>
+
+        <aside class="contribute">
+          <div>
+            <h3 data-i18n="docs.contrib.title">Something doesn't fit your community?</h3>
+            <p data-i18n="docs.contrib.body">Then the spec is wrong, not your community. It's still a draft precisely so that organisers can push back before anything is set in stone — a missing field, a format that breaks your case, a name that makes no sense. Say so in an issue.</p>
+          </div>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="https://github.com/OpenTechEvents/opentechevents-spec/issues" data-i18n="docs.contrib.cta">Open an issue</a>
+            <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec#cómo-contribuir" data-i18n="docs.contrib.cta2">How to contribute</a>
+          </div>
+        </aside>
+      </div>
     </div>
   </section>
 
@@ -241,6 +280,18 @@
           </div>
         </li>
       </ol>
+
+      <aside class="shortcut">
+        <p class="shortcut-tag" data-i18n="adopt.ics.tag">Already have an .ics? Skip all of the above.</p>
+        <h3 data-i18n="adopt.ics.title">Give us your calendar and we'll do the conversion</h3>
+        <p data-i18n="adopt.ics.body">If your events already live in a public calendar (Google Calendar, Nextcloud, your own site), you don't have to write a single line of JSON to try this out. Register the <code>.ics</code> URL as a source in the OTE aggregator: it reads your calendar, converts it to OTE and republishes it as a feed — including <code>.ics</code>, RSS and JSON Feed exports.</p>
+        <p data-i18n="adopt.ics.body2">You commit to nothing and you change nothing. It's the cheapest way to see what your events look like in OTE — and if it's not worth it, you walk away having lost one issue.</p>
+        <p class="shortcut-caveat" data-i18n="adopt.ics.caveat">Honest caveat: the aggregator is being built right now, and the MVP starts precisely with <code>.ics</code>. Registering your calendar today means being one of the first sources it ingests — and its first real test.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://github.com/OpenTechEvents/opentechevents-spec/issues/new?title=%5BSource%5D%20&amp;body=Community%3A%20%0A.ics%20URL%3A%20%0AWebsite%3A%20%0A%0AI%20am%20an%20organiser%20of%20this%20community%20and%20I%20allow%20these%20events%20to%20be%20republished%3A%20yes%2Fno%0A" data-i18n="adopt.ics.cta">Register my .ics calendar</a>
+          <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/ecosystem/aggregator.md" data-i18n="adopt.ics.cta2">How the aggregator works</a>
+        </div>
+      </aside>
 
       <aside class="note">
         <strong data-i18n="adopt.help.title">Not comfortable with JSON?</strong>

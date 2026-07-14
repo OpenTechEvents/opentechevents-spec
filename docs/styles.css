@@ -198,6 +198,49 @@ p code, li code {
 .link-arrow { font-weight: 600; font-size: .95rem; }
 .link-arrow::after { content: " →"; }
 
+/* ---------- full spec + contribute ---------- */
+.docs-block { margin-top: 72px; padding-top: 56px; border-top: 1px solid var(--line); }
+.docs-block > p { color: var(--ink-soft); max-width: 44em; margin-bottom: 28px; }
+
+.docs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+.doc-card {
+  display: flex; flex-direction: column; gap: 6px; min-width: 0;
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 20px; color: inherit;
+}
+.doc-card:hover { text-decoration: none; border-color: var(--accent); box-shadow: 0 8px 24px -18px rgba(16,19,26,.5); }
+.doc-icon { font-size: 1.4rem; }
+.doc-name { font-weight: 650; font-size: 1rem; color: var(--accent); }
+.doc-card:hover .doc-name { color: var(--accent-ink); }
+.doc-desc { font-size: .88rem; color: var(--ink-soft); }
+
+.contribute {
+  display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap;
+  margin-top: 32px; padding: 26px 28px;
+  background: #fff; border: 1px solid var(--line); border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.contribute h3 { margin-bottom: .35em; }
+.contribute p { margin: 0; color: var(--ink-soft); font-size: .95rem; max-width: 46em; }
+.contribute .cta-row { margin-top: 0; flex: none; }
+
+/* ---------- .ics shortcut ---------- */
+.shortcut {
+  margin-top: 40px; padding: 30px 32px; border-radius: var(--radius);
+  background: linear-gradient(180deg, #1b2030, #171b25);
+  border: 1px solid var(--accent-ink);
+}
+.shortcut-tag {
+  font: 600 .78rem/1 var(--mono); letter-spacing: .04em; text-transform: uppercase;
+  color: #7fb3ff; margin-bottom: 12px;
+}
+.shortcut h3 { margin-bottom: .5em; }
+.shortcut p { color: #9aa3b4; font-size: .96rem; max-width: 62em; }
+.shortcut-caveat {
+  margin: 18px 0 0; padding: 14px 16px; border-radius: 8px;
+  background: #10131a; border: 1px dashed #3a4152; font-size: .9rem !important;
+}
+
 /* ---------- steps ---------- */
 .steps { list-style: none; counter-reset: s; padding: 0; margin: 0; display: grid; gap: 34px; }
 .steps > li {

@@ -59,6 +59,21 @@
     }
   },
 
+  "docs": {
+    "title": "Consulta la especificación completa",
+    "lead": "Todo es público y está a la vista, incluido lo que aún no está decidido. La spec va por la versión 0.x: da por hecho que cambiará, y da por hecho que tu opinión es lo que la cambiará.",
+    "d1": { "title": "Modelo de datos", "body": "Todos los campos de un evento: qué es obligatorio, qué es opcional y cómo se mapea a iCalendar, RSS y schema.org." },
+    "d2": { "title": "Formato de feed", "body": "Cómo agrupar varios eventos en un feed: metadatos, paginación, licencia y descubrimiento." },
+    "d3": { "title": "Ejemplos", "body": "Documentos completos para copiar: un evento mínimo, un meetup, una conferencia con CFP abierto y un feed entero." },
+    "d4": { "title": "Investigación", "body": "El análisis detrás de las decisiones: los estándares, plataformas y directorios que estudiamos." },
+    "contrib": {
+      "title": "¿Algo no encaja con tu comunidad?",
+      "body": "Entonces la que está mal es la spec, no tu comunidad. Sigue en borrador precisamente para que quien organiza pueda protestar antes de que nada quede grabado en piedra: un campo que falta, un formato que rompe tu caso, un nombre que no tiene sentido. Dilo en un issue.",
+      "cta": "Abrir un issue",
+      "cta2": "Cómo contribuir"
+    }
+  },
+
   "benefits": {
     "title": "Qué ganas tú",
     "lead": "Adherirte a OTE son un par de horas de trabajo, una sola vez. Esto es lo que te da a cambio.",
@@ -80,6 +95,15 @@
       "body": "Abre un issue con la URL de tu feed. Lo validamos, listamos tu comunidad en esta página y los agregadores empezarán a recoger tus eventos.",
       "cta": "Registrar mi feed",
       "cta2": "Copiar un ejemplo que funciona"
+    },
+    "ics": {
+      "tag": "¿Ya tienes un .ics? Sáltate todo lo anterior.",
+      "title": "Danos tu calendario y la conversión la hacemos nosotros",
+      "body": "Si tus eventos ya viven en un calendario público (Google Calendar, Nextcloud, tu propia web), no necesitas escribir ni una línea de JSON para probar esto. Registra la URL del <code>.ics</code> como fuente en el agregador OTE: lee tu calendario, lo convierte a OTE y lo republica como feed — con sus exportaciones a <code>.ics</code>, RSS y JSON Feed.",
+      "body2": "No te comprometes a nada y no cambias nada de lo que ya haces. Es la forma más barata de ver qué pinta tienen tus eventos en OTE — y si no te compensa, te vas habiendo perdido un issue.",
+      "caveat": "Aviso honesto: el agregador se está construyendo ahora mismo, y el MVP arranca justamente por <code>.ics</code>. Registrar hoy tu calendario significa ser una de las primeras fuentes que ingiere — y su primera prueba real.",
+      "cta": "Registrar mi calendario .ics",
+      "cta2": "Cómo funciona el agregador"
     },
     "help": {
       "title": "¿No te manejas con JSON?",

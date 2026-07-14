@@ -59,6 +59,21 @@
     }
   },
 
+  "docs": {
+    "title": "Read the full specification",
+    "lead": "Everything is public and in the open — including what's still undecided. The spec is at version 0.x: expect it to change, and expect your feedback to be what changes it.",
+    "d1": { "title": "Data model", "body": "Every field of an event: what's required, what's optional, and how it maps to iCalendar, RSS and schema.org." },
+    "d2": { "title": "Feed format", "body": "How to group several events into a feed: metadata, pagination, licence and discovery." },
+    "d3": { "title": "Examples", "body": "Complete documents to copy: a minimal event, a meetup, a conference with an open CFP, and a full feed." },
+    "d4": { "title": "Research", "body": "The analysis behind the decisions: existing standards, platforms and directories we studied." },
+    "contrib": {
+      "title": "Something doesn't fit your community?",
+      "body": "Then the spec is wrong, not your community. It's still a draft precisely so that organisers can push back before anything is set in stone — a missing field, a format that breaks your case, a name that makes no sense. Say so in an issue.",
+      "cta": "Open an issue",
+      "cta2": "How to contribute"
+    }
+  },
+
   "benefits": {
     "title": "What you get out of it",
     "lead": "Adopting OTE is a couple of hours of work, once. Here's what it buys you.",
@@ -80,6 +95,15 @@
       "body": "Open an issue with your feed URL. We'll validate it, list your community on this page, and aggregators will start picking up your events.",
       "cta": "Register my feed",
       "cta2": "Copy a working example"
+    },
+    "ics": {
+      "tag": "Already have an .ics? Skip all of the above.",
+      "title": "Give us your calendar and we'll do the conversion",
+      "body": "If your events already live in a public calendar (Google Calendar, Nextcloud, your own site), you don't have to write a single line of JSON to try this out. Register the <code>.ics</code> URL as a source in the OTE aggregator: it reads your calendar, converts it to OTE and republishes it as a feed — including <code>.ics</code>, RSS and JSON Feed exports.",
+      "body2": "You commit to nothing and you change nothing. It's the cheapest way to see what your events look like in OTE — and if it's not worth it, you walk away having lost one issue.",
+      "caveat": "Honest caveat: the aggregator is being built right now, and the MVP starts precisely with <code>.ics</code>. Registering your calendar today means being one of the first sources it ingests — and its first real test.",
+      "cta": "Register my .ics calendar",
+      "cta2": "How the aggregator works"
     },
     "help": {
       "title": "Not comfortable with JSON?",
