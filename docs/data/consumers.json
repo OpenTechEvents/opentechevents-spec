@@ -1,0 +1,7 @@
+{
+  "_comment": "Directories, aggregators, apps and individuals consuming OTE feeds. Fields: name (required), url, logo, desc {en,es}, kind {en,es} (e.g. Directory / Aggregator / Newsletter).",
+  "consumers": [],
+
+  "_comment_testimonials": "Quotes from adopters or consumers. Fields: quote {en,es}, name, role {en,es}, avatar (URL), url.",
+  "testimonials": []
+}

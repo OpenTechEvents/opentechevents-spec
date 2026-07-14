@@ -1,0 +1,4 @@
+{
+  "_comment": "Communities/events publishing their data in OTE format. Add yours via PR or issue. Fields: name (required), url, feed, logo (path or URL; falls back to initials), desc {en,es}.",
+  "adopters": []
+}

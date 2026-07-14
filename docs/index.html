@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenTechEvents — OTE Spec</title>
+<meta name="description" content="An open specification to describe, publish and share tech community events. Publish once, be everywhere.">
+<link rel="canonical" href="https://opentechevents.org/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opentechevents.org/">
+<meta property="og:title" content="OpenTechEvents — OTE Spec">
+<meta property="og:description" content="An open specification to describe, publish and share tech community events. Publish once, be everywhere.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
+</head>
+<body>
+
+<a class="skip" href="#main" data-i18n="a11y.skip">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark">OTE</span>
+      <span class="brand-name">OpenTechEvents</span>
+    </a>
+    <nav class="nav">
+      <a href="#problem" data-i18n="nav.problem">Problem</a>
+      <a href="#spec" data-i18n="nav.spec">Spec</a>
+      <a href="#benefits" data-i18n="nav.benefits">Benefits</a>
+      <a href="#adopt" data-i18n="nav.adopt">Adopt it</a>
+      <a href="#adopters" data-i18n="nav.adopters">Who uses it</a>
+      <a href="#tools" data-i18n="nav.tools">Tools</a>
+      <a class="nav-repo" href="https://github.com/OpenTechEvents/opentechevents-spec">GitHub</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en">EN</button>
+      <button type="button" data-lang="es">ES</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow" data-i18n="hero.eyebrow">Open specification · Draft 0.1</p>
+        <h1 data-i18n="hero.title">Publish your event once. Let it show up everywhere.</h1>
+        <p class="lead" data-i18n="hero.lead">OpenTechEvents (OTE) is an open, free specification to describe tech community events — meetups, conferences, workshops, online or in person — in a single format that directories, calendars and tools can read automatically.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#adopt" data-i18n="hero.ctaPrimary">Adopt the spec</a>
+          <a class="btn btn-ghost" href="#spec" data-i18n="hero.ctaSecondary">See the format</a>
+        </div>
+        <p class="hero-note" data-i18n="hero.note">No platform to sign up for. No tool to install. It's just a file you publish.</p>
+      </div>
+
+      <figure class="hero-code">
+        <figcaption><span class="dot"></span><span class="dot"></span><span class="dot"></span> <code>events.json</code></figcaption>
+        <pre><code>{
+  <k>"specVersion"</k>: <s>"0.1.0"</s>,
+  <k>"id"</k>: <s>"https://pyalmeria.dev/2026-06-async"</s>,
+  <k>"name"</k>: <s>"PyAlmería — Intro to async/await"</s>,
+  <k>"startDate"</k>: <s>"2026-06-11T18:30:00"</s>,
+  <k>"timezone"</k>: <s>"Europe/Madrid"</s>,
+  <k>"attendanceMode"</k>: <s>"hybrid"</s>,
+  <k>"location"</k>: {
+    <k>"venue"</k>: { <k>"name"</k>: <s>"El Cable"</s>, <k>"city"</k>: <s>"Almería"</s> },
+    <k>"online"</k>: { <k>"url"</k>: <s>"https://meet.example/pyalmeria"</s> }
+  },
+  <k>"tags"</k>: [<s>"python"</s>, <s>"async"</s>]
+}</code></pre>
+      </figure>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="section" id="problem">
+    <div class="wrap">
+      <h2 data-i18n="problem.title">You already know the problem</h2>
+      <p class="section-lead" data-i18n="problem.lead">You organise one event. Then you announce it five times, by hand, in five different formats — and you still miss half the people who would have come.</p>
+
+      <div class="cards cards-3">
+        <article class="card">
+          <div class="card-icon">📋</div>
+          <h3 data-i18n="problem.c1.title">The same event, typed again and again</h3>
+          <p data-i18n="problem.c1.body">Meetup, Eventbrite, LinkedIn, your own website, a community directory, three WhatsApp groups. Same data, six forms, six chances to make a typo.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">🕳️</div>
+          <h3 data-i18n="problem.c2.title">Directories can't find you</h3>
+          <p data-i18n="problem.c2.body">Event directories want to list you. But they'd have to scrape your site or wait for you to open a pull request. So most of the time, they just don't.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">🔁</div>
+          <h3 data-i18n="problem.c3.title">Every change means doing it all over</h3>
+          <p data-i18n="problem.c3.body">Venue moved. Speaker cancelled. New date. Now go update every single platform — or live with the stale copies out there.</p>
+        </article>
+      </div>
+
+      <p class="pull" data-i18n="problem.pull">There is no shortage of information about your events. What's missing is <strong>interoperability</strong>.</p>
+    </div>
+  </section>
+
+  <!-- SPEC / HOW IT WORKS -->
+  <section class="section section-alt" id="spec">
+    <div class="wrap">
+      <h2 data-i18n="spec.title">One file. That's the whole idea.</h2>
+      <p class="section-lead" data-i18n="spec.lead">You describe your events in a simple JSON file and publish it at a stable URL. Anything that speaks OTE — directories, calendars, bots, websites — can then read it without asking you for anything.</p>
+
+      <div class="flow">
+        <div class="flow-step">
+          <span class="flow-num">1</span>
+          <h3 data-i18n="spec.s1.title">You publish</h3>
+          <p data-i18n="spec.s1.body">A feed with your events at a URL you control, e.g. <code>tucomunidad.dev/events.json</code>.</p>
+        </div>
+        <div class="flow-arrow" aria-hidden="true">→</div>
+        <div class="flow-step">
+          <span class="flow-num">2</span>
+          <h3 data-i18n="spec.s2.title">Tools read it</h3>
+          <p data-i18n="spec.s2.body">Aggregators, directories and converters pick it up automatically — and turn it into RSS, iCalendar or schema.org.</p>
+        </div>
+        <div class="flow-arrow" aria-hidden="true">→</div>
+        <div class="flow-step">
+          <span class="flow-num">3</span>
+          <h3 data-i18n="spec.s3.title">People find you</h3>
+          <p data-i18n="spec.s3.body">Attendees subscribe by topic or city and get your events in the tools they already use — no extra platform.</p>
+        </div>
+      </div>
+
+      <div class="spec-detail">
+        <div class="spec-detail-text">
+          <h3 data-i18n="spec.min.title">The minimum is genuinely minimal</h3>
+          <p data-i18n="spec.min.body">A valid event needs little more than a name, a start date, a time zone and where it happens. Everything else — CFP deadlines, languages, tags, price, community — is optional and there when you need it.</p>
+          <ul class="ticks">
+            <li data-i18n="spec.min.b1">Plain JSON. No SDK, no account, no server required — a static file is enough.</li>
+            <li data-i18n="spec.min.b2">Designed to map cleanly onto RSS, iCalendar and schema.org/Event.</li>
+            <li data-i18n="spec.min.b3">Works the same for a recurring meetup, a multi-day conference or an online workshop.</li>
+            <li data-i18n="spec.min.b4">Open licence, no usage restrictions — in the spirit of RSS and iCal.</li>
+          </ul>
+          <a class="link-arrow" href="https://github.com/OpenTechEvents/opentechevents-spec/tree/main/spec" data-i18n="spec.min.link">Read the data model</a>
+        </div>
+        <figure class="code-block">
+          <figcaption data-i18n="spec.min.caption">Minimal valid event</figcaption>
+          <pre><code>{
+  <k>"specVersion"</k>: <s>"0.1.0"</s>,
+  <k>"id"</k>: <s>"https://pyalmeria.dev/2026-06-async"</s>,
+  <k>"name"</k>: <s>"PyAlmería — Intro to async/await"</s>,
+  <k>"startDate"</k>: <s>"2026-06-11T18:30:00"</s>,
+  <k>"timezone"</k>: <s>"Europe/Madrid"</s>,
+  <k>"attendanceMode"</k>: <s>"online"</s>,
+  <k>"location"</k>: {
+    <k>"online"</k>: { <k>"url"</k>: <s>"https://meet.example/pyalmeria"</s> }
+  }
+}</code></pre>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFITS -->
+  <section class="section" id="benefits">
+    <div class="wrap">
+      <h2 data-i18n="benefits.title">What you get out of it</h2>
+      <p class="section-lead" data-i18n="benefits.lead">Adopting OTE is a couple of hours of work, once. Here's what it buys you.</p>
+
+      <div class="cards cards-2">
+        <article class="card">
+          <div class="card-icon">⏱️</div>
+          <h3 data-i18n="benefits.b1.title">Stop doing data entry</h3>
+          <p data-i18n="benefits.b1.body">Write the event once. Let tooling push it to directories, calendars and feeds instead of you copy-pasting it into yet another form.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">📣</div>
+          <h3 data-i18n="benefits.b2.title">Reach beyond your own bubble</h3>
+          <p data-i18n="benefits.b2.body">Directories and aggregators can pick up your events the moment you publish them. Your meetup shows up where people are actually looking.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">🔓</div>
+          <h3 data-i18n="benefits.b3.title">Own your data</h3>
+          <p data-i18n="benefits.b3.body">Your events live at your URL, in an open format. If a platform shuts down, changes its API or its pricing, your history and your feed are still yours.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">🧩</div>
+          <h3 data-i18n="benefits.b4.title">Free integrations, forever</h3>
+          <p data-i18n="benefits.b4.body">Every new tool built on OTE — an .ics export, a website widget, a Telegram bot — works for you without you lifting a finger.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">✅</div>
+          <h3 data-i18n="benefits.b5.title">Accurate everywhere</h3>
+          <p data-i18n="benefits.b5.body">Change the date in one place and every consumer that re-reads your feed gets the correction. No more zombie listings with the old venue.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">🌱</div>
+          <h3 data-i18n="benefits.b6.title">Shape the standard</h3>
+          <p data-i18n="benefits.b6.body">The spec is in draft. Early adopters decide what it looks like — if something doesn't fit your community, it can still be changed.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADOPT -->
+  <section class="section section-dark" id="adopt">
+    <div class="wrap">
+      <h2 data-i18n="adopt.title">How to adopt it</h2>
+      <p class="section-lead" data-i18n="adopt.lead">Three steps. The first one is the only one that takes real work, and it's a text file.</p>
+
+      <ol class="steps">
+        <li>
+          <h3><span class="step-num">1</span> <span data-i18n="adopt.s1.title">Publish an OTE feed</span></h3>
+          <p data-i18n="adopt.s1.body">Create a JSON file with your events and host it anywhere you already publish — your site, GitHub Pages, a gist. If your events live in a Google Calendar or Meetup, a converter can generate the feed for you.</p>
+          <figure class="code-block code-block-sm">
+            <figcaption><code>https://tucomunidad.dev/events.json</code></figcaption>
+            <pre><code>{
+  <k>"specVersion"</k>: <s>"0.1.0"</s>,
+  <k>"kind"</k>: <s>"feed"</s>,
+  <k>"title"</k>: <s>"PyAlmería events"</s>,
+  <k>"feedUrl"</k>: <s>"https://tucomunidad.dev/events.json"</s>,
+  <k>"updatedAt"</k>: <s>"2026-05-29T08:00:00Z"</s>,
+  <k>"events"</k>: [ <c>/* your events here */</c> ]
+}</code></pre>
+          </figure>
+        </li>
+        <li>
+          <h3><span class="step-num">2</span> <span data-i18n="adopt.s2.title">Make it discoverable</span></h3>
+          <p data-i18n="adopt.s2.body">Add one line to the <code>&lt;head&gt;</code> of your website so tools can find the feed on their own — the same way RSS readers do.</p>
+          <figure class="code-block code-block-sm">
+            <figcaption data-i18n="adopt.s2.caption">In your site's &lt;head&gt;</figcaption>
+            <pre><code><t>&lt;link</t> <k>rel</k>=<s>"alternate"</s>
+      <k>type</k>=<s>"application/ote+json"</s>
+      <k>href</k>=<s>"https://tucomunidad.dev/events.json"</s><t>&gt;</t></code></pre>
+          </figure>
+        </li>
+        <li>
+          <h3><span class="step-num">3</span> <span data-i18n="adopt.s3.title">Tell us, and get listed</span></h3>
+          <p data-i18n="adopt.s3.body">Open an issue with your feed URL. We'll validate it, list your community on this page, and aggregators will start picking up your events.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="https://github.com/OpenTechEvents/opentechevents-spec/issues/new?title=%5BAdopter%5D%20&amp;body=Community%3A%20%0AFeed%20URL%3A%20%0AWebsite%3A%20" data-i18n="adopt.s3.cta">Register my feed</a>
+            <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/tree/main/spec/examples" data-i18n="adopt.s3.cta2">Copy a working example</a>
+          </div>
+        </li>
+      </ol>
+
+      <aside class="note">
+        <strong data-i18n="adopt.help.title">Not comfortable with JSON?</strong>
+        <span data-i18n="adopt.help.body">That's fine — open an issue anyway and tell us where your events live today. Helping the first communities get on board is exactly what this stage of the project is for.</span>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ADOPTERS -->
+  <section class="section" id="adopters">
+    <div class="wrap">
+      <h2 data-i18n="adopters.title">Who publishes in OTE</h2>
+      <p class="section-lead" data-i18n="adopters.lead">Communities and events already exposing their data in this format.</p>
+      <div id="adopters-list" class="logo-grid"></div>
+      <div class="empty-cta" id="adopters-empty" hidden>
+        <p data-i18n="adopters.empty">The spec is brand new, so this list is still short. Be one of the first — early adopters get a say in what the standard becomes.</p>
+        <a class="btn btn-primary" href="#adopt" data-i18n="adopters.emptyCta">Be the first</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONSUMERS -->
+  <section class="section section-alt" id="consumers">
+    <div class="wrap">
+      <h2 data-i18n="consumers.title">Who consumes OTE data</h2>
+      <p class="section-lead" data-i18n="consumers.lead">Directories, aggregators and people reusing feeds published in this format. Every one of them is a place your events can reach for free.</p>
+      <div id="consumers-list" class="logo-grid"></div>
+      <div class="empty-cta" id="consumers-empty" hidden>
+        <p data-i18n="consumers.empty">Building a directory, a newsletter or a bot? Consume OTE feeds and get listed here.</p>
+        <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/issues/new?title=%5BConsumer%5D%20" data-i18n="consumers.emptyCta">Add your project</a>
+      </div>
+
+      <div id="testimonials" class="testimonials"></div>
+    </div>
+  </section>
+
+  <!-- TOOLS -->
+  <section class="section" id="tools">
+    <div class="wrap">
+      <h2 data-i18n="tools.title">Ecosystem of tools</h2>
+      <p class="section-lead" data-i18n="tools.lead">What exists today, and what's up for grabs. Claim one by opening an issue.</p>
+
+      <div class="tools-filters" role="group" aria-label="Filter tools">
+        <button type="button" class="chip is-active" data-filter="all" data-i18n="tools.f.all">All</button>
+        <button type="button" class="chip" data-filter="working" data-i18n="tools.f.working">Working</button>
+        <button type="button" class="chip" data-filter="wip" data-i18n="tools.f.wip">In progress</button>
+        <button type="button" class="chip" data-filter="proposed" data-i18n="tools.f.proposed">Proposed</button>
+      </div>
+
+      <div id="tools-list" class="tools-grid"></div>
+
+      <div class="cta-row cta-center">
+        <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/ecosystem/README.md" data-i18n="tools.cta">Propose or claim a tool</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section section-alt" id="faq">
+    <div class="wrap wrap-narrow">
+      <h2 data-i18n="faq.title">Frequently asked questions</h2>
+      <div id="faq-list" class="faq"></div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final-cta">
+    <div class="wrap">
+      <h2 data-i18n="final.title">A standard is worth exactly as much as the number of people using it</h2>
+      <p data-i18n="final.body">Every community that publishes an OTE feed makes the format more useful for every other community — and for everyone trying to find your events.</p>
+      <div class="cta-row cta-center">
+        <a class="btn btn-primary" href="#adopt" data-i18n="final.cta">Publish your first feed</a>
+        <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec" data-i18n="final.cta2">Join the discussion</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div>
+      <p class="footer-brand">OpenTechEvents · OTE Spec</p>
+      <p class="footer-note" data-i18n="footer.note">An initiative by Community Builders. Draft specification — the name, scope and licence are still provisional.</p>
+    </div>
+    <nav class="footer-links">
+      <a href="https://github.com/OpenTechEvents/opentechevents-spec">GitHub</a>
+      <a href="https://github.com/OpenTechEvents/opentechevents-spec/tree/main/spec" data-i18n="footer.spec">Specification</a>
+      <a href="https://github.com/OpenTechEvents/opentechevents-spec/issues" data-i18n="footer.issues">Issues</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

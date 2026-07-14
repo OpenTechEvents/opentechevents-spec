@@ -1,0 +1,156 @@
+{
+  "meta": {
+    "title": "OpenTechEvents — una especificación abierta para eventos tech",
+    "description": "Una especificación abierta para describir, publicar y compartir eventos de comunidades tecnológicas. Publica una vez, aparece en todas partes."
+  },
+  "a11y": { "skip": "Saltar al contenido" },
+
+  "nav": {
+    "problem": "Problema",
+    "spec": "Especificación",
+    "benefits": "Beneficios",
+    "adopt": "Adhiérete",
+    "adopters": "Quién la usa",
+    "tools": "Herramientas"
+  },
+
+  "hero": {
+    "eyebrow": "Especificación abierta · Borrador 0.1",
+    "title": "Publica tu evento una vez. Que aparezca en todas partes.",
+    "lead": "OpenTechEvents (OTE) es una especificación abierta y libre para describir eventos de comunidades tecnológicas —meetups, conferencias, talleres, online o presenciales— en un único formato que directorios, calendarios y herramientas pueden leer automáticamente.",
+    "ctaPrimary": "Adherirme a la spec",
+    "ctaSecondary": "Ver el formato",
+    "note": "Ninguna plataforma en la que registrarse. Ninguna herramienta que instalar. Es un archivo que publicas."
+  },
+
+  "problem": {
+    "title": "El problema ya lo conoces",
+    "lead": "Organizas un evento. Después lo anuncias cinco veces, a mano, en cinco formatos distintos — y aun así no llega a la mitad de la gente que habría venido.",
+    "c1": {
+      "title": "El mismo evento, tecleado una y otra vez",
+      "body": "Meetup, Eventbrite, LinkedIn, tu web, un directorio de comunidades, tres grupos de WhatsApp. Los mismos datos, seis formularios, seis ocasiones de colar una errata."
+    },
+    "c2": {
+      "title": "Los directorios no te encuentran",
+      "body": "Los directorios de eventos quieren listarte. Pero tendrían que rascar tu web o esperar a que tú abras un pull request. Así que, casi siempre, no lo hacen."
+    },
+    "c3": {
+      "title": "Cada cambio significa repetirlo todo",
+      "body": "Cambia el sitio. Se cae un ponente. Nueva fecha. Toca actualizar plataforma por plataforma — o convivir con copias desactualizadas por ahí sueltas."
+    },
+    "pull": "No falta información sobre tus eventos. Lo que falta es <strong>interoperabilidad</strong>."
+  },
+
+  "spec": {
+    "title": "Un archivo. Esa es toda la idea.",
+    "lead": "Describes tus eventos en un JSON sencillo y lo publicas en una URL estable. A partir de ahí, cualquier cosa que hable OTE —directorios, calendarios, bots, webs— puede leerlo sin pedirte nada.",
+    "s1": { "title": "Tú publicas", "body": "Un feed con tus eventos en una URL que controlas, p. ej. <code>tucomunidad.dev/events.json</code>." },
+    "s2": { "title": "Las herramientas lo leen", "body": "Agregadores, directorios y conversores lo recogen solos — y lo transforman a RSS, iCalendar o schema.org." },
+    "s3": { "title": "La gente te encuentra", "body": "Quien asiste se suscribe por tema o ciudad y recibe tus eventos en las herramientas que ya usa, sin plataformas extra." },
+    "min": {
+      "title": "El mínimo es de verdad mínimo",
+      "body": "Un evento válido necesita poco más que un nombre, una fecha de inicio, una zona horaria y dónde ocurre. Todo lo demás —cierre de CFP, idiomas, etiquetas, precio, comunidad— es opcional y está ahí cuando lo necesites.",
+      "b1": "JSON plano. Sin SDK, sin cuenta, sin servidor: basta con un archivo estático.",
+      "b2": "Diseñada para mapearse limpiamente a RSS, iCalendar y schema.org/Event.",
+      "b3": "Sirve igual para un meetup recurrente, una conferencia de varios días o un taller online.",
+      "b4": "Licencia abierta, sin restricciones de uso — en la línea de RSS o iCal.",
+      "link": "Leer el modelo de datos",
+      "caption": "Evento mínimo válido"
+    }
+  },
+
+  "benefits": {
+    "title": "Qué ganas tú",
+    "lead": "Adherirte a OTE son un par de horas de trabajo, una sola vez. Esto es lo que te da a cambio.",
+    "b1": { "title": "Se acabó meter datos a mano", "body": "Escribe el evento una vez. Que sean las herramientas las que lo lleven a directorios, calendarios y feeds, en vez de tú copiando y pegando en un formulario más." },
+    "b2": { "title": "Llega más allá de tu burbuja", "body": "Directorios y agregadores pueden recoger tus eventos en cuanto los publicas. Tu meetup aparece donde la gente lo está buscando de verdad." },
+    "b3": { "title": "Tus datos son tuyos", "body": "Tus eventos viven en tu URL y en formato abierto. Si una plataforma cierra, cambia su API o sus precios, tu histórico y tu feed siguen siendo tuyos." },
+    "b4": { "title": "Integraciones gratis, para siempre", "body": "Cada herramienta nueva construida sobre OTE —una exportación .ics, un widget para la web, un bot de Telegram— funciona para ti sin que muevas un dedo." },
+    "b5": { "title": "Información correcta en todas partes", "body": "Cambias la fecha en un sitio y todo el que relea tu feed recibe la corrección. Se acabaron los anuncios zombi con la dirección antigua." },
+    "b6": { "title": "Da forma al estándar", "body": "La spec está en borrador. Quien se adhiere pronto decide cómo queda: si algo no encaja con tu comunidad, todavía se puede cambiar." }
+  },
+
+  "adopt": {
+    "title": "Cómo adherirte",
+    "lead": "Tres pasos. El primero es el único con trabajo real, y es un archivo de texto.",
+    "s1": { "title": "Publica un feed OTE", "body": "Crea un archivo JSON con tus eventos y alójalo donde ya publiques: tu web, GitHub Pages, un gist. Si tus eventos viven en un Google Calendar o en Meetup, un conversor puede generarte el feed." },
+    "s2": { "title": "Hazlo descubrible", "body": "Añade una línea al <code>&lt;head&gt;</code> de tu web para que las herramientas encuentren el feed solas — igual que hacen los lectores de RSS.", "caption": "En el &lt;head&gt; de tu web" },
+    "s3": {
+      "title": "Avísanos y aparece en la lista",
+      "body": "Abre un issue con la URL de tu feed. Lo validamos, listamos tu comunidad en esta página y los agregadores empezarán a recoger tus eventos.",
+      "cta": "Registrar mi feed",
+      "cta2": "Copiar un ejemplo que funciona"
+    },
+    "help": {
+      "title": "¿No te manejas con JSON?",
+      "body": "No pasa nada: abre un issue igualmente y cuéntanos dónde viven hoy tus eventos. Ayudar a las primeras comunidades a subirse es justo para lo que existe esta fase del proyecto."
+    }
+  },
+
+  "adopters": {
+    "title": "Quién publica en OTE",
+    "lead": "Comunidades y eventos que ya exponen sus datos en este formato.",
+    "empty": "La spec acaba de nacer, así que esta lista todavía es corta. Sé de los primeros: quien llega pronto decide en qué se convierte el estándar.",
+    "emptyCta": "Ser de los primeros"
+  },
+
+  "consumers": {
+    "title": "Quién consume datos OTE",
+    "lead": "Directorios, agregadores y personas que reutilizan feeds publicados en este formato. Cada uno de ellos es un sitio más al que tus eventos llegan gratis.",
+    "empty": "¿Estás montando un directorio, una newsletter o un bot? Consume feeds OTE y aparece aquí.",
+    "emptyCta": "Añadir mi proyecto"
+  },
+
+  "tools": {
+    "title": "Ecosistema de herramientas",
+    "lead": "Lo que ya existe y lo que está por hacer. Reclama una abriendo un issue.",
+    "f": { "all": "Todas", "working": "Funcionando", "wip": "En desarrollo", "proposed": "Propuesta" },
+    "status": { "working": "Funcionando", "wip": "En desarrollo", "proposed": "Propuesta" },
+    "cta": "Proponer o reclamar una herramienta",
+    "linkRepo": "Ver repositorio",
+    "linkIdea": "Discutir la idea"
+  },
+
+  "faq": {
+    "title": "Preguntas frecuentes",
+    "items": [
+      {
+        "q": "¿Compite con Meetup, Eventbrite o Luma?",
+        "a": "No. OTE es un formato de datos, no una plataforma. La idea es interoperar con ellas: describir el evento una vez y poder publicarlo o transformarlo hacia las plataformas que ya usas."
+      },
+      {
+        "q": "¿Tengo que dejar mis herramientas actuales?",
+        "a": "No, justo al contrario. El objetivo es que tus datos fluyan hacia las plataformas y herramientas con las que ya trabajas, en vez de reescribirlos en cada una."
+      },
+      {
+        "q": "¿Sustituye a RSS o iCalendar?",
+        "a": "No. OTE está diseñada para ser convertible a ellos. Un feed OTE puede exportarse a RSS, JSON Feed o iCal para que la gente lo consuma en su lector de feeds o su app de calendario."
+      },
+      {
+        "q": "¿Cuánto trabajo es esto realmente?",
+        "a": "Para una comunidad pequeña: escribir un archivo JSON y añadir una etiqueta link a tu web. Si ya generas tu página de eventos a partir de datos, normalmente es cuestión de emitir un archivo más."
+      },
+      {
+        "q": "¿La especificación es estable?",
+        "a": "Todavía no. Estamos en versión 0.x y todo —nombre, campos, licencia, gobernanza— está abierto a debate. Precisamente por eso merece la pena entrar ahora: quien se adhiere pronto da forma al formato."
+      },
+      {
+        "q": "¿Quién está detrás?",
+        "a": "La propuesta nace de Community Builders (ComBuildersES) y se desarrolla ya en casa propia, la organización <a href=\"https://github.com/OpenTechEvents\">OpenTechEvents</a> en GitHub, con vocación internacional. Aún no es un estándar oficial: es un diseño abierto y comunitario, y necesita a organizadores como tú para llegar a serlo."
+      }
+    ]
+  },
+
+  "final": {
+    "title": "Un estándar vale exactamente lo que vale la gente que lo usa",
+    "body": "Cada comunidad que publica un feed OTE hace el formato más útil para todas las demás — y para toda la gente que intenta encontrar tus eventos.",
+    "cta": "Publicar mi primer feed",
+    "cta2": "Unirme a la conversación"
+  },
+
+  "footer": {
+    "note": "Una iniciativa de Community Builders. Especificación en borrador: el nombre, el alcance y la licencia son provisionales.",
+    "spec": "Especificación",
+    "issues": "Issues"
+  }
+}
