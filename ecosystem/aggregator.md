@@ -184,7 +184,7 @@ El conector `ics` implementa esto. Es, además, el **inverso** del mapeo que ya 
 | `LOCATION` (si parsea como URL) | `location.online.url` | Emisores que meten el enlace de la sala ahí. |
 | `CONFERENCE` (RFC 7986) | `location.online.url` | La propiedad **estándar**… que casi nadie emite. |
 | `X-GOOGLE-CONFERENCE`, `X-MICROSOFT-SKYPETEAMSMEETINGURL` | `location.online.url` | Propiedades propietarias. En la práctica, la fuente real del dato. |
-| `GEO` | `location.venue.geo` | Raro en la práctica. |
+| `GEO` | `location.geo` | Raro en la práctica. `location.geo` (no `venue.geo`: en la spec `venue` es una cadena). Normativo desde v0.2. |
 | `CATEGORIES` | `tags` | Se unen con los `defaults.tags` de la fuente. |
 | `STATUS` | `status` | `CONFIRMED`→`scheduled`, `CANCELLED`→`cancelled`, `TENTATIVE`→`postponed`. |
 | `LAST-MODIFIED` / `DTSTAMP` | `updatedAt` | |

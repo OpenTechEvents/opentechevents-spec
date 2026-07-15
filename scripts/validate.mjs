@@ -16,7 +16,7 @@ import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 import { fieldsOf, loadSchemas } from "./schema-model.mjs";
 
-const VERSIONS = ["v0.1"];
+const VERSIONS = ["v0.1", "v0.2"];
 const SPEC_DIR = "spec";
 const LATEST = VERSIONS[VERSIONS.length - 1];
 

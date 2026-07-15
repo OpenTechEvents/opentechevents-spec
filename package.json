@@ -1,6 +1,6 @@
 {
   "name": "@opentechevents/schema",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "JSON Schemas for OTE Spec — an open specification for tech community events",
   "type": "module",
   "license": "MIT",
@@ -33,13 +33,15 @@
     "index.js",
     "index.d.ts",
     "spec/v0.1/*.json",
-    "spec/v0.1/README.md"
+    "spec/v0.1/README.md",
+    "spec/v0.2/*.json",
+    "spec/v0.2/README.md"
   ],
   "scripts": {
     "dev": "node scripts/serve.mjs",
     "validate": "node scripts/validate.mjs",
     "build-reference": "node scripts/build-reference.mjs",
-    "publish-schemas": "mkdir -p docs/schema/v0.1 && cp spec/v0.1/event.schema.json spec/v0.1/feed.schema.json docs/schema/v0.1/",
+    "publish-schemas": "mkdir -p docs/schema/v0.1 docs/schema/v0.2 && cp spec/v0.1/event.schema.json spec/v0.1/feed.schema.json docs/schema/v0.1/ && cp spec/v0.2/event.schema.json spec/v0.2/feed.schema.json docs/schema/v0.2/",
     "prepublishOnly": "npm run validate"
   },
   "devDependencies": {

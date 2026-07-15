@@ -1,5 +1,5 @@
 {
-  "specVersion": "0.1.0",
+  "specVersion": "0.2.0",
   "languages": [
     "en",
     "es"
@@ -18,10 +18,10 @@
       "fields": [
         {
           "path": "specVersion",
-          "type": "const: \"0.1.0\"",
+          "type": "const: \"0.2.0\"",
           "required": true,
           "examples": [
-            "0.1.0"
+            "0.2.0"
           ],
           "description": {
             "en": "Version of OTE Spec this document adheres to.",
@@ -176,6 +176,40 @@
           }
         },
         {
+          "path": "location.geo",
+          "type": "object",
+          "required": false,
+          "examples": [],
+          "description": {
+            "en": "Coordinates of the physical venue (WGS-84 decimal degrees). Independent of venue, which is free text — a point, not a name. Maps to iCal GEO and schema.org Place.geo (GeoCoordinates).",
+            "es": "Coordenadas de la sede física (grados decimales WGS-84). Independiente de `venue`, que es texto libre: un punto, no un nombre. Mapea a `GEO` de iCal y a `Place.geo` (GeoCoordinates) de schema.org."
+          }
+        },
+        {
+          "path": "location.geo.lat",
+          "type": "number",
+          "required": true,
+          "examples": [
+            40.4168
+          ],
+          "description": {
+            "en": "Latitude in decimal degrees.",
+            "es": "Latitud en grados decimales."
+          }
+        },
+        {
+          "path": "location.geo.lon",
+          "type": "number",
+          "required": true,
+          "examples": [
+            -3.7038
+          ],
+          "description": {
+            "en": "Longitude in decimal degrees.",
+            "es": "Longitud en grados decimales."
+          }
+        },
+        {
           "path": "attendanceMode",
           "type": "enum: in-person | online | hybrid",
           "required": false,
@@ -205,6 +239,25 @@
           "description": {
             "en": "BCP 47 tags, e.g. [\"es\",\"en\"]. No default: absent means unknown.",
             "es": "Etiquetas BCP 47, p. ej. `[\"es\",\"en\"]`. Sin valor por defecto: ausente significa desconocido."
+          }
+        },
+        {
+          "path": "tags",
+          "type": "string[]",
+          "required": false,
+          "examples": [
+            [
+              "rust",
+              "wasm"
+            ],
+            [
+              "python",
+              "async"
+            ]
+          ],
+          "description": {
+            "en": "Free-form topic tags. Maps to iCal CATEGORIES and schema.org keywords. A controlled vocabulary may layer on top later; the field itself stays free. No default: absent means unknown.",
+            "es": "Etiquetas temáticas de forma libre. Mapea a `CATEGORIES` de iCal y a `keywords` de schema.org. Más adelante podría superponerse un vocabulario controlado; el campo en sí sigue siendo libre. Sin valor por defecto: ausente significa desconocido."
           }
         },
         {
@@ -285,6 +338,18 @@
             "en": "When the data was fetched.",
             "es": "Cuándo se obtuvo el dato."
           }
+        },
+        {
+          "path": "updatedAt",
+          "type": "string",
+          "required": false,
+          "examples": [
+            "2026-06-10T18:00:00Z"
+          ],
+          "description": {
+            "en": "Instant the event's DATA last changed — equivalent to iCal LAST-MODIFIED, not DTSTAMP (which marks generation and changes on every export). Lets a consumer sync incrementally: fetch only what changed since its last read. Absent means unknown, not 'never changed'.",
+            "es": "Instante en que los DATOS del evento cambiaron por última vez — equivalente a `LAST-MODIFIED` de iCal, no a `DTSTAMP` (que marca la generación y cambia en cada exportación). Permite a un consumidor sincronizar de forma incremental: traer solo lo que cambió desde su última lectura. Ausente significa desconocido, no «nunca cambió»."
+          }
         }
       ]
     },
@@ -301,10 +366,10 @@
       "fields": [
         {
           "path": "specVersion",
-          "type": "const: \"0.1.0\"",
+          "type": "const: \"0.2.0\"",
           "required": true,
           "examples": [
-            "0.1.0"
+            "0.2.0"
           ],
           "description": {
             "en": "Version of OTE Spec this feed adheres to. Applies to every event in it.",

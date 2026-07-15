@@ -8,7 +8,7 @@
   },
   "draft": {
     "pill": "Draft 0.x",
-    "body": "The spec is not stable yet: fields can still change, be renamed or be dropped. The core of v0.1 is being decided right now.",
+    "body": "The spec is not stable yet: fields can still change, be renamed or be dropped. The core is being decided right now.",
     "link": "Follow the discussion"
   },
   "nav": {

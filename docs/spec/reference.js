@@ -16,7 +16,7 @@
       navReference: "Reference",
       navTools: "Tools",
       title: "Field reference",
-      lead: "Every field of OTE Spec v0.1. This page is generated from the JSON Schemas, so it cannot drift from what the validator actually enforces.",
+      lead: "Every field of OTE Spec v0.2. This page is generated from the JSON Schemas, so it cannot drift from what the validator actually enforces.",
       rules: "Rules a validator can't check",
       raw: "Raw JSON Schema",
       footerNote: "Generated from the schemas. Draft specification — fields may change.",
@@ -34,7 +34,7 @@
       navReference: "Referencia",
       navTools: "Herramientas",
       title: "Referencia de campos",
-      lead: "Todos los campos de OTE Spec v0.1. Esta página se genera a partir de los JSON Schema, así que no puede separarse de lo que el validador exige de verdad.",
+      lead: "Todos los campos de OTE Spec v0.2. Esta página se genera a partir de los JSON Schema, así que no puede separarse de lo que el validador exige de verdad.",
       rules: "Reglas que un validador no ve",
       raw: "JSON Schema en crudo",
       footerNote: "Generado a partir de los schemas. Especificación en borrador: los campos pueden cambiar.",
@@ -80,7 +80,7 @@
   function render() {
     var t = UI[state.lang];
     document.documentElement.lang = state.lang;
-    document.title = t.title + " — OTE Spec v0.1";
+    document.title = t.title + " — OTE Spec v0.2";
 
     document.querySelectorAll("[data-t]").forEach(function (node) {
       var value = t[node.getAttribute("data-t")];

@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentechevents.org/schema/v0.2/feed.schema.json",
+  "title": "OTE Feed",
+  "description": "A collection of OTE events published at a stable URL. An exchange format, not an API.",
+  "type": "object",
+  "required": [
+    "specVersion",
+    "title",
+    "license",
+    "updatedAt",
+    "events"
+  ],
+  "properties": {
+    "specVersion": {
+      "description": "Version of OTE Spec this feed adheres to. Applies to every event in it.",
+      "const": "0.2.0",
+      "examples": [
+        "0.2.0"
+      ]
+    },
+    "title": {
+      "description": "Human-readable name of the feed.",
+      "type": "string",
+      "minLength": 1,
+      "examples": [
+        "Eventos de PyAlmería"
+      ]
+    },
+    "description": {
+      "description": "Short description of the feed.",
+      "type": "string",
+      "examples": [
+        "Meetups mensuales de Python en Almería."
+      ]
+    },
+    "url": {
+      "description": "Canonical URL of the community, directory or organisation publishing the feed.",
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://",
+      "examples": [
+        "https://pyalmeria.example"
+      ]
+    },
+    "license": {
+      "description": "License for the feed's contents. Acts as the DEFAULT for every event that does not declare its own. SPDX identifier or URL.",
+      "$ref": "https://opentechevents.org/schema/v0.2/event.schema.json#/$defs/license",
+      "examples": [
+        "CC-BY-4.0",
+        "CC0-1.0"
+      ]
+    },
+    "licenseUrl": {
+      "description": "URL of the full license text.",
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://",
+      "examples": [
+        "https://creativecommons.org/licenses/by/4.0/"
+      ]
+    },
+    "updatedAt": {
+      "description": "When this feed was generated.",
+      "$ref": "https://opentechevents.org/schema/v0.2/event.schema.json#/$defs/instant",
+      "examples": [
+        "2026-07-06T10:00:00Z"
+      ]
+    },
+    "events": {
+      "description": "Events in this feed. Each one inherits the feed's specVersion and license unless it declares its own.",
+      "type": "array",
+      "items": {
+        "$ref": "https://opentechevents.org/schema/v0.2/event.schema.json#/$defs/event"
+      }
+    }
+  }
+}

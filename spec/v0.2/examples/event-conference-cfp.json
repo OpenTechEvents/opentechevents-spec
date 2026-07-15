@@ -1,0 +1,38 @@
+{
+  "specVersion": "0.2.0",
+  "id": "https://devfest-levante.example/2026",
+  "url": "https://devfest-levante.example/2026",
+  "name": "DevFest Levante 2026",
+  "description": "Conferencia de desarrollo del sureste, edición 2026. Dos días, tres tracks.",
+  "startDate": "2026-10-16",
+  "endDate": "2026-10-17",
+  "timezone": "Europe/Madrid",
+  "attendanceMode": "in-person",
+  "location": {
+    "venue": "Las Naves, Carrer de Joan Verdeguer 16, València"
+  },
+  "languages": ["es", "en"],
+  "status": "scheduled",
+  "tags": ["cloud", "ai", "web"],
+  "license": "CC-BY-4.0",
+
+  "_comment_extensions": "Campos EN DISCUSIÓN (issue #5), no normativos en la v0.2. El documento es válido igualmente porque el schema no prohíbe campos adicionales. El CFP es el caso que más se pide: si lo necesitas, dilo en el issue.",
+  "community": {
+    "uri": "https://gdglevante.example",
+    "name": "GDG Levante"
+  },
+  "cfp": {
+    "url": "https://devfest-levante.example/2026/cfp",
+    "opensAt": "2026-05-01T00:00:00",
+    "closesAt": "2026-07-15T23:59:59",
+    "timezone": "Europe/Madrid",
+    "coversTravel": true,
+    "coversAccommodation": true
+  },
+  "offers": {
+    "isFree": false,
+    "price": 45,
+    "currency": "EUR",
+    "registrationUrl": "https://devfest-levante.example/2026/entradas"
+  }
+}

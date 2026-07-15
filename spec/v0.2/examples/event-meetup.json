@@ -1,0 +1,33 @@
+{
+  "specVersion": "0.2.0",
+  "id": "https://rustmadrid.example/meetups/2026-06",
+  "url": "https://rustmadrid.example/meetups/2026-06",
+  "name": "Rust Madrid — Meetup de junio",
+  "description": "Charlas sobre WASM y tooling de Rust.\n\n18:30 Puertas · 19:00 Charlas · 20:30 Networking",
+  "startDate": "2026-06-26T19:00:00",
+  "endDate": "2026-06-26T21:00:00",
+  "timezone": "Europe/Madrid",
+  "attendanceMode": "hybrid",
+  "location": {
+    "venue": "Campus Madrid, Calle de Moreno Nieto 2, Madrid",
+    "onlineUrl": "https://meet.example/rust-madrid",
+    "geo": { "lat": 40.4081, "lon": -3.7188 }
+  },
+  "languages": ["es"],
+  "tags": ["rust", "wasm"],
+  "status": "scheduled",
+  "updatedAt": "2026-06-10T18:00:00Z",
+  "license": "CC-BY-4.0",
+
+  "_comment_extensions": "Lo que sigue NO está en la v0.2: son campos EN DISCUSIÓN (issue #5). El schema no prohíbe campos adicionales, así que este documento es válido igualmente y un consumidor puede ignorarlos sin miedo. Si los usas y te sirven, dilo en el issue: la spec crece con campos que alguien ya usa de verdad.",
+  "image": "https://rustmadrid.example/img/2026-06.png",
+  "community": {
+    "uri": "https://rustmadrid.example",
+    "name": "Rust Madrid"
+  },
+  "offers": {
+    "isFree": true,
+    "registrationUrl": "https://rustmadrid.example/meetups/2026-06#registro",
+    "capacity": 80
+  }
+}

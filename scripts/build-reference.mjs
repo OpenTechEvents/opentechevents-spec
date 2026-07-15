@@ -17,7 +17,7 @@ import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { fieldsOf, loadSchemas } from "./schema-model.mjs";
 
-const VERSION = "v0.1";
+const VERSION = "v0.2";
 const BASE_LANG = "en"; // the schema's own `description` fields
 const check = process.argv.includes("--check");
 
@@ -32,7 +32,7 @@ if (existsSync(i18nDir)) {
 
 /** The model both renderers consume. One source, many outputs. */
 const model = {
-  specVersion: "0.1.0",
+  specVersion: "0.2.0",
   languages: Object.keys(locales),
   schemas: [
     { name: "event", schema: event },

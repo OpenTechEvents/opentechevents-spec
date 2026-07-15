@@ -8,7 +8,7 @@
   },
   "draft": {
     "pill": "Borrador 0.x",
-    "body": "La spec todavía no es estable: los campos pueden cambiar, renombrarse o desaparecer. El núcleo de la v0.1 se está decidiendo ahora mismo.",
+    "body": "La spec todavía no es estable: los campos pueden cambiar, renombrarse o desaparecer. El núcleo se está decidiendo ahora mismo.",
     "link": "Sigue la discusión"
   },
   "nav": {
