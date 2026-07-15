@@ -16,7 +16,7 @@ Las ideas se agrupan por el ciclo de vida del dato: **crear/validar → ingerir 
 
 ## Ingerir (importar hacia OTE)
 
-> 📄 **[Agregador OTE — diseño del MVP](aggregator.md)**: propuesta concreta (repo aparte, conectores como plugins, alta de fuentes por Issue Form, feed publicado a diario). Arranca por el importador de `.ics`. En discusión.
+> 📄 **[Agregador OTE](https://github.com/OpenTechEvents/opentechevents-data)** (repo `opentechevents-data`, **en construcción**): conectores como plugins, alta de fuentes por Issue Form, feed publicado a diario. Arranca por el importador de `.ics`. El [diseño del MVP](aggregator.md) documenta las decisiones.
 >
 > 🧩 **[Extensión de navegador — captura de eventos a OTE](browser-extension.md)**: propuesta concreta. Lee el `schema.org/Event` que Meetup, Eventbrite o Luma ya exponen, lo mapea a OTE y prerrellena el alta — **solo si eres el organizador o tienes permiso**, y siempre con revisión humana de los datos antes de enviar. En discusión.
 

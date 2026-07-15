@@ -9,7 +9,7 @@
         "es": "Ingiere eventos de fuentes externas (empezando por .ics), los normaliza a OTE y publica un feed combinado a diario. Diseño del MVP en discusión."
       },
       "category": { "en": "Ingest", "es": "Ingesta" },
-      "url": "https://github.com/OpenTechEvents/opentechevents-spec/blob/main/ecosystem/aggregator.md"
+      "url": "https://github.com/OpenTechEvents/opentechevents-data"
     },
     {
       "status": "proposed",
