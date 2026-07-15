@@ -68,6 +68,25 @@
     return node;
   }
 
+  // "Required" on a field means required *within its parent object*. A field is only required
+  // in a minimal valid document if that field AND every ancestor object are required — e.g.
+  // `location.geo.lat` is required inside `geo`, but `geo` (and `location`) are optional, so a
+  // minimal document needs none of them. The "only required" filter uses this stricter notion.
+  function isDocRequired(fields, f) {
+    if (!f.required) return false;
+    var parts = f.path.split(".");
+    var prefix = "";
+    for (var i = 0; i < parts.length - 1; i++) {
+      prefix = prefix ? prefix + "." + parts[i] : parts[i];
+      var ancestor = null;
+      for (var j = 0; j < fields.length; j++) {
+        if (fields[j].path === prefix) { ancestor = fields[j]; break; }
+      }
+      if (ancestor && !ancestor.required) return false;
+    }
+    return true;
+  }
+
   // Field descriptions come from the schema and may name other fields in `backticks`.
   function withCode(text) {
     var frag = document.createDocumentFragment();
@@ -115,7 +134,7 @@
       section.appendChild(el("p", "ref-schema-desc", schema.description[state.lang]));
 
       schema.fields
-        .filter(function (f) { return !state.onlyRequired || f.required; })
+        .filter(function (f) { return !state.onlyRequired || isDocRequired(schema.fields, f); })
         .forEach(function (f) {
           var card = el("article", "field" + (f.required ? " field-required" : ""));
           card.id = schema.name + "-" + f.path;
