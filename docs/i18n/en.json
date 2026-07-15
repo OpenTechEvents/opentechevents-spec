@@ -202,6 +202,10 @@
         "a": "No. OTE is designed to be convertible to them. An OTE feed can be exported to RSS, JSON Feed or iCal so attendees consume it in their feed reader or calendar app."
       },
       {
+        "q": "How is this different from schema.org/Event?",
+        "a": "schema.org/Event isn't a rival to OTE, it's a mapping target: OTE serialises to JSON-LD almost 1:1 and can be exported to schema.org so Google and aggregators like dev.events pick you up. The difference is that schema.org describes <em>one</em> event embedded in <em>one</em> HTML page — there's no notion of a feed: you can't subscribe to «all of a community's events» or consume them without scraping HTML — its vocabulary is huge and almost entirely optional, and it ships no validation. OTE fills those gaps: a subscribable feed (one URL, N events, with an <code>updatedAt</code>) as a plain JSON file, a small <strong>validatable</strong> core, and online/hybrid and CFP as first-class fields. In one line: OTE = schema.org's data model + RSS/iCal's distribution model, without making you choose."
+      },
+      {
         "q": "How much work is this really?",
         "a": "For a small community: writing one JSON file and adding a link tag to your site. If you already generate your events page from data, it's usually a matter of emitting one more file."
       },
