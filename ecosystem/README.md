@@ -8,6 +8,8 @@ Las ideas se agrupan por el ciclo de vida del dato: **crear/validar → ingerir 
 
 ## Crear y validar
 
+> 🧰 **[Kit del organizador](organizer-template.md)** (repos [`ote-template`](https://github.com/OpenTechEvents/ote-template) y [`ote-tools`](https://github.com/OpenTechEvents/ote-tools), **en construcción**): repositorio plantilla para forkear — feed OTE + exports ICS/RSS publicados en GitHub Pages, editor web (flujo issue→PR), importadores y *cheat sheets* de difusión. La lógica vive en `ote-tools`; el fork del organizador solo lleva sus datos y configuración. El [diseño](organizer-template.md) documenta las decisiones.
+
 - **Validador de esquema** (JSON Schema): CLI, versión web y *GitHub Action* para validar en CI los eventos de un repo.
 - **Linter** de buenas prácticas (avisos más allá del esquema: fechas coherentes, zona horaria presente, enlaces vivos…).
 - **Editor / generador de eventos**: formulario web que produce el JSON/YAML OTE válido (para quien no quiera escribir a mano).

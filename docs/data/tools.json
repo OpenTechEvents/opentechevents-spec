@@ -3,158 +3,279 @@
   "tools": [
     {
       "status": "wip",
-      "name": { "en": "OTE aggregator", "es": "Agregador OTE" },
+      "name": {
+        "en": "OTE aggregator",
+        "es": "Agregador OTE"
+      },
       "desc": {
         "en": "Ingests events from external sources (starting with .ics), normalises them to OTE and publishes a combined feed daily. MVP design under discussion.",
         "es": "Ingiere eventos de fuentes externas (empezando por .ics), los normaliza a OTE y publica un feed combinado a diario. Diseño del MVP en discusión."
       },
-      "category": { "en": "Ingest", "es": "Ingesta" },
+      "category": {
+        "en": "Ingest",
+        "es": "Ingesta"
+      },
       "url": "https://github.com/OpenTechEvents/opentechevents-data"
     },
     {
-      "status": "proposed",
-      "name": { "en": "Schema validator", "es": "Validador de esquema" },
+      "status": "wip",
+      "name": {
+        "en": "Organizer kit",
+        "es": "Kit del organizador"
+      },
+      "desc": {
+        "en": "Fork a template, set three values, and your community publishes an OTE feed with ICS/RSS exports on GitHub Pages. The logic (validation, exports, web editor) lives in the ote-tools monorepo the template consumes pinned to a version.",
+        "es": "Forkeas una plantilla, configuras tres valores y tu comunidad publica un feed OTE con exports ICS/RSS en GitHub Pages. La lógica (validación, exports, editor web) vive en el monorepo ote-tools, que la plantilla consume fijado a versión."
+      },
+      "category": {
+        "en": "Create & validate",
+        "es": "Crear y validar"
+      },
+      "url": "https://github.com/OpenTechEvents/ote-template"
+    },
+    {
+      "status": "wip",
+      "name": {
+        "en": "Schema validator",
+        "es": "Validador de esquema"
+      },
       "desc": {
         "en": "JSON Schema validator as a CLI, a web page and a GitHub Action, so a community can check its feed in CI.",
         "es": "Validador JSON Schema como CLI, versión web y GitHub Action, para que una comunidad valide su feed en CI."
       },
-      "category": { "en": "Create & validate", "es": "Crear y validar" }
+      "category": {
+        "en": "Create & validate",
+        "es": "Crear y validar"
+      },
+      "url": "https://github.com/OpenTechEvents/ote-tools/tree/main/packages/validate"
     },
     {
       "status": "proposed",
-      "name": { "en": "Event editor / generator", "es": "Editor / generador de eventos" },
+      "name": {
+        "en": "Event editor / generator",
+        "es": "Editor / generador de eventos"
+      },
       "desc": {
         "en": "A web form that produces valid OTE JSON, for organisers who would rather not write it by hand.",
         "es": "Formulario web que produce JSON OTE válido, para quien no quiera escribirlo a mano."
       },
-      "category": { "en": "Create & validate", "es": "Crear y validar" }
+      "category": {
+        "en": "Create & validate",
+        "es": "Crear y validar"
+      }
     },
     {
       "status": "proposed",
-      "name": { "en": "Conversational bot", "es": "Bot conversacional" },
+      "name": {
+        "en": "Conversational bot",
+        "es": "Bot conversacional"
+      },
       "desc": {
         "en": "Describe your event in plain language on Telegram; the bot drafts the OTE document and replies with a URL to finish it off.",
         "es": "Cuentas el evento en lenguaje natural por Telegram; el bot genera el borrador OTE y responde con una URL para terminar de concretarlo."
       },
-      "category": { "en": "Create & validate", "es": "Crear y validar" }
+      "category": {
+        "en": "Create & validate",
+        "es": "Crear y validar"
+      }
     },
     {
       "status": "proposed",
-      "name": { "en": "Browser extension", "es": "Extensión de navegador" },
+      "name": {
+        "en": "Browser extension",
+        "es": "Extensión de navegador"
+      },
       "desc": {
         "en": "On your event's page in Meetup, Eventbrite or Luma, it reads the schema.org data the page already exposes, maps it to OTE and pre-fills the registration — only if you are the organiser or have permission, and you review the data before anything is sent. It can also hand you the events.json to publish on your own site.",
         "es": "En la página de tu evento en Meetup, Eventbrite o Luma, lee los datos schema.org que la página ya expone, los mapea a OTE y prerrellena el alta — solo si eres el organizador o tienes permiso, y revisas los datos antes de enviar nada. También te da el events.json para publicarlo en tu propia web."
       },
-      "category": { "en": "Ingest", "es": "Ingesta" },
+      "category": {
+        "en": "Ingest",
+        "es": "Ingesta"
+      },
       "url": "https://github.com/OpenTechEvents/opentechevents-spec/blob/main/ecosystem/browser-extension.md"
     },
     {
       "status": "proposed",
-      "name": { "en": "Platform importers", "es": "Importadores de plataformas" },
+      "name": {
+        "en": "Platform importers",
+        "es": "Importadores de plataformas"
+      },
       "desc": {
         "en": "Pull events from Meetup, Luma, Sessionize, Eventbrite or joind.in via their APIs and turn them into OTE.",
         "es": "Traen eventos de Meetup, Luma, Sessionize, Eventbrite o joind.in vía sus APIs y los convierten a OTE."
       },
-      "category": { "en": "Ingest", "es": "Ingesta" }
+      "category": {
+        "en": "Ingest",
+        "es": "Ingesta"
+      }
     },
     {
       "status": "proposed",
-      "name": { "en": "iCalendar / RSS importer", "es": "Importador de iCalendar / RSS" },
+      "name": {
+        "en": "iCalendar / RSS importer",
+        "es": "Importador de iCalendar / RSS"
+      },
       "desc": {
         "en": "Turn an existing .ics calendar or RSS feed into an OTE feed — the shortest path to adoption for many communities.",
         "es": "Convierte un calendario .ics o un feed RSS existente en un feed OTE — el camino más corto a la adopción para muchas comunidades."
       },
-      "category": { "en": "Ingest", "es": "Ingesta" }
+      "category": {
+        "en": "Ingest",
+        "es": "Ingesta"
+      }
     },
     {
       "status": "proposed",
-      "name": { "en": "schema.org / JSON-LD extractor", "es": "Extractor de schema.org / JSON-LD" },
+      "name": {
+        "en": "schema.org / JSON-LD extractor",
+        "es": "Extractor de schema.org / JSON-LD"
+      },
       "desc": {
         "en": "Read an event's web page and derive an OTE document from its structured data.",
         "es": "Lee la web de un evento y deduce un documento OTE a partir de sus datos estructurados."
       },
-      "category": { "en": "Ingest", "es": "Ingesta" }
+      "category": {
+        "en": "Ingest",
+        "es": "Ingesta"
+      }
     },
     {
-      "status": "proposed",
-      "name": { "en": "OTE → iCalendar", "es": "OTE → iCalendar" },
+      "status": "wip",
+      "name": {
+        "en": "OTE → iCalendar",
+        "es": "OTE → iCalendar"
+      },
       "desc": {
         "en": "Export a feed as .ics so attendees can subscribe to your events from their calendar app.",
         "es": "Exporta un feed como .ics para que la gente se suscriba a tus eventos desde su app de calendario."
       },
-      "category": { "en": "Transform", "es": "Transformar" }
+      "category": {
+        "en": "Transform",
+        "es": "Transformar"
+      },
+      "url": "https://github.com/OpenTechEvents/ote-tools/tree/main/packages/export-ics"
     },
     {
-      "status": "proposed",
-      "name": { "en": "OTE → RSS / JSON Feed", "es": "OTE → RSS / JSON Feed" },
+      "status": "wip",
+      "name": {
+        "en": "OTE → RSS / JSON Feed",
+        "es": "OTE → RSS / JSON Feed"
+      },
       "desc": {
         "en": "Export to feed readers, the format people have been subscribing with for twenty years.",
         "es": "Exporta a lectores de feeds, el formato con el que la gente lleva veinte años suscribiéndose."
       },
-      "category": { "en": "Transform", "es": "Transformar" }
+      "category": {
+        "en": "Transform",
+        "es": "Transformar"
+      },
+      "url": "https://github.com/OpenTechEvents/ote-tools/tree/main/packages/export-rss"
     },
     {
       "status": "proposed",
-      "name": { "en": "OTE → schema.org/Event", "es": "OTE → schema.org/Event" },
+      "name": {
+        "en": "OTE → schema.org/Event",
+        "es": "OTE → schema.org/Event"
+      },
       "desc": {
         "en": "A JSON-LD snippet to embed in your event page: better SEO and automatic detection by aggregators.",
         "es": "Snippet JSON-LD para incrustar en la web del evento: mejor SEO y detección automática por agregadores."
       },
-      "category": { "en": "Transform", "es": "Transformar" }
+      "category": {
+        "en": "Transform",
+        "es": "Transformar"
+      }
     },
     {
       "status": "proposed",
-      "name": { "en": "Auto-publisher", "es": "Auto-publicador" },
+      "name": {
+        "en": "Auto-publisher",
+        "es": "Auto-publicador"
+      },
       "desc": {
         "en": "Push your events to Meetup, LinkedIn or Eventbrite automatically, instead of filling in each form yourself.",
         "es": "Publica tus eventos en Meetup, LinkedIn o Eventbrite automáticamente, en vez de rellenar cada formulario a mano."
       },
-      "category": { "en": "Publish", "es": "Publicar" }
+      "category": {
+        "en": "Publish",
+        "es": "Publicar"
+      }
     },
     {
       "status": "proposed",
-      "name": { "en": "Pull request bot", "es": "Bot de pull requests" },
+      "name": {
+        "en": "Pull request bot",
+        "es": "Bot de pull requests"
+      },
       "desc": {
         "en": "Submit your events to directories that accept PRs (confs.tech, developers.events, EventosWiki…) without touching git.",
         "es": "Envía tus eventos a directorios que aceptan PRs (confs.tech, developers.events, EventosWiki…) sin tocar git."
       },
-      "category": { "en": "Publish", "es": "Publicar" }
+      "category": {
+        "en": "Publish",
+        "es": "Publicar"
+      }
     },
     {
       "status": "proposed",
-      "name": { "en": "Subscriptions & notifications", "es": "Suscripciones y notificaciones" },
+      "name": {
+        "en": "Subscriptions & notifications",
+        "es": "Suscripciones y notificaciones"
+      },
       "desc": {
         "en": "Attendees set conditions (topic, city, mode, distance) and get alerts by email, Telegram or webhook.",
         "es": "Quien asiste fija condiciones (tema, ciudad, modalidad, distancia) y recibe avisos por email, Telegram o webhook."
       },
-      "category": { "en": "Consume", "es": "Consumir" }
+      "category": {
+        "en": "Consume",
+        "es": "Consumir"
+      }
     },
     {
       "status": "proposed",
-      "name": { "en": "Embeddable widget", "es": "Widget embebible" },
+      "name": {
+        "en": "Embeddable widget",
+        "es": "Widget embebible"
+      },
       "desc": {
         "en": "A web component that renders an OTE feed as an events list on any website.",
         "es": "Web component que pinta un feed OTE como listado de eventos en cualquier web."
       },
-      "category": { "en": "Consume", "es": "Consumir" }
+      "category": {
+        "en": "Consume",
+        "es": "Consumir"
+      }
     },
     {
       "status": "proposed",
-      "name": { "en": "\"Subscribe\" badge", "es": "Badge de suscripción" },
+      "name": {
+        "en": "\"Subscribe\" badge",
+        "es": "Badge de suscripción"
+      },
       "desc": {
         "en": "The RSS button of OTE: a logo linking to your feed URL, so visitors and tools discover it at a glance.",
         "es": "El botón RSS de OTE: un logo que enlaza a la URL de tu feed, para que visitantes y herramientas lo descubran de un vistazo."
       },
-      "category": { "en": "Consume", "es": "Consumir" }
+      "category": {
+        "en": "Consume",
+        "es": "Consumir"
+      }
     },
     {
       "status": "proposed",
-      "name": { "en": "Reference SDKs", "es": "SDKs de referencia" },
+      "name": {
+        "en": "Reference SDKs",
+        "es": "SDKs de referencia"
+      },
       "desc": {
         "en": "Libraries (JS/TS, Python…) to read, write and validate OTE, plus an online playground.",
         "es": "Librerías (JS/TS, Python…) para leer, escribir y validar OTE, más un playground online."
       },
-      "category": { "en": "Libraries", "es": "Librerías" }
+      "category": {
+        "en": "Libraries",
+        "es": "Librerías"
+      }
     }
   ]
 }
