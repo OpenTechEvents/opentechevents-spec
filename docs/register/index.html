@@ -30,6 +30,7 @@
       <a href="/#spec" data-nav="spec" data-t="navSpec">How it works</a>
       <a href="/#adopt" data-nav="adopt" data-t="navAdopt">Adopt it</a>
       <a href="/spec/" data-nav="reference" data-t="navReference">Reference</a>
+      <a href="/developers/" data-nav="developers" data-t="navDevelopers">Developers</a>
       <a href="/#tools" data-nav="tools" data-t="navTools">Tools</a>
       <a class="nav-repo" href="https://github.com/OpenTechEvents/opentechevents-spec">GitHub</a>
     </nav>
@@ -64,6 +65,7 @@
       <label for="reg-feed" data-t="feedLabel">OTE feed URL</label>
       <input id="reg-feed" name="feed" type="url" placeholder="https://yourcommunity.dev/events.json" required>
       <p class="hint" data-t="feedHint">The public URL of your <code>events.json</code>. No feed yet? <a href="/#adopt">See how to publish one</a>.</p>
+      <p class="feed-status" id="reg-feed-status" hidden aria-live="polite"></p>
     </div>
 
     <p class="form-error" id="reg-error" hidden data-t="formError">Fill in the community name and the feed URL (a full URL, starting with https://).</p>

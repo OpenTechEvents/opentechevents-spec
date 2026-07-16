@@ -1,0 +1,43 @@
+# Daily health check of the registered adopter feeds. scripts/check-feeds.mjs does
+# the work (fetch + validate + issue management); this workflow only persists the
+# consecutive-failure state between runs by committing .github/feed-health.json.
+name: Check adopter feeds
+
+on:
+  schedule:
+    - cron: "23 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+
+      - name: Check feeds
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          FEED_FAILURE_THRESHOLD: "3"
+        run: node scripts/check-feeds.mjs
+
+      - name: Persist failure counters
+        run: |
+          if git diff --quiet .github/feed-health.json 2>/dev/null && ! git status --porcelain .github/feed-health.json | grep -q .; then
+            echo "Health state unchanged."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/feed-health.json
+          git commit -m "chore(health): update feed failure counters [skip ci]"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin HEAD:"${GITHUB_REF_NAME}"

@@ -10,6 +10,7 @@
 
   var REPO = "OpenTechEvents/opentechevents-spec";
   var ISSUE_TEMPLATE = "adopter.yml";
+  var SCHEMA_BASE = "../schema/v0.2/"; // published copies — same origin, no CORS
 
   /* ---------- linking sources (pluggable) ----------
      A source turns an external community directory into a flat list of
@@ -46,6 +47,7 @@
       navSpec: "How it works",
       navAdopt: "Adopt it",
       navReference: "Reference",
+      navDevelopers: "Developers",
       navTools: "Tools",
       title: "Register your community",
       lead: "Your community already publishes an OTE feed? Tell us. We validate the feed, list you on this site, and aggregators start picking up your events.",
@@ -59,6 +61,15 @@
       submit: "Open the registration issue",
       note: "This opens a prefilled issue on GitHub for you to review before sending — nothing is submitted behind your back. You need a GitHub account.",
       matched: "Found in {source} — your registration will be linked to that entry ({id}).",
+      feedChecking: "Checking the feed…",
+      feedValid: "The feed parses and has the core OTE fields. Full validation runs when your issue is reviewed.",
+      feedInvalid: "This doesn't look like a valid OTE feed: {errors}",
+      feedCors: "Couldn't verify the feed from the browser (the server doesn't allow cross-origin reads). No problem — it will be validated when your issue is reviewed.",
+      errHttp: "the URL answered HTTP {status}",
+      errJson: "the URL doesn't return JSON",
+      errNoEvents: "no `events` array — is this an OTE feed?",
+      errMissing: "missing required field {field}",
+      errEventMissing: "events[{i}] is missing required field {field}",
       footerNote: "Registrations are reviewed by hand. Draft specification — fields may change.",
     },
     es: {
@@ -68,6 +79,7 @@
       navSpec: "Cómo funciona",
       navAdopt: "Adhiérete",
       navReference: "Referencia",
+      navDevelopers: "Desarrolladores",
       navTools: "Herramientas",
       title: "Registra tu comunidad",
       lead: "¿Tu comunidad ya publica un feed OTE? Cuéntanoslo. Validamos el feed, te listamos en este sitio y los agregadores empiezan a recoger tus eventos.",
@@ -81,11 +93,25 @@
       submit: "Abrir el issue de registro",
       note: "Esto abre un issue prefillado en GitHub para que lo revises antes de enviarlo — no se manda nada a tus espaldas. Necesitas una cuenta de GitHub.",
       matched: "Encontrada en {source}: tu registro quedará vinculado a esa entrada ({id}).",
+      feedChecking: "Comprobando el feed…",
+      feedValid: "El feed parsea y tiene los campos OTE básicos. La validación completa se hace al revisar tu issue.",
+      feedInvalid: "Esto no parece un feed OTE válido: {errors}",
+      feedCors: "No se pudo verificar el feed desde el navegador (el servidor no permite lecturas cross-origin). No pasa nada: se validará al revisar tu issue.",
+      errHttp: "la URL responde HTTP {status}",
+      errJson: "la URL no devuelve JSON",
+      errNoEvents: "no hay array `events` — ¿es un feed OTE?",
+      errMissing: "falta el campo obligatorio {field}",
+      errEventMissing: "a events[{i}] le falta el campo obligatorio {field}",
       footerNote: "Los registros se revisan a mano. Especificación en borrador: los campos pueden cambiar.",
     },
   };
 
-  var state = { lang: FALLBACK, entries: [], loaded: false, match: null };
+  var state = {
+    lang: FALLBACK, entries: [], loaded: false, match: null,
+    // Last feed check: url it ran against, status (checking|valid|invalid|cors)
+    // and errors as {key, vars} pairs so a language switch can re-render them.
+    feed: { url: "", status: "idle", errors: [] },
+  };
 
   /* ---------- language (same logic as the rest of the site) ---------- */
 
@@ -115,6 +141,7 @@
       btn.setAttribute("aria-pressed", String(btn.dataset.lang === state.lang));
     });
     renderMatch(); // the "linked to directory" line is localised too
+    renderFeedStatus(); // …and so is the feed-check result
   }
 
   /* ---------- directory autocomplete ---------- */
@@ -184,6 +211,117 @@
   nameInput.addEventListener("focus", loadSources, { once: true });
   nameInput.addEventListener("input", findMatch);
 
+  /* ---------- feed check (best-effort, in the browser) ----------
+     Honest about its limits: this is a sanity check — the URL answers, it's JSON,
+     and the required fields of the published schemas are there. The authoritative
+     Ajv validation runs in the adopter-issue workflow, where CORS doesn't exist.
+     A fetch the browser can't make (no CORS on the feed's host) therefore warns
+     but never blocks. */
+
+  var feedStatus = document.getElementById("reg-feed-status");
+  var requiredFields = null; // { feed: [...], event: [...] } from the published schemas
+
+  function loadRequired() {
+    if (requiredFields) return Promise.resolve(requiredFields);
+    return Promise.all([
+      fetch(SCHEMA_BASE + "feed.schema.json").then(function (r) { return r.json(); }),
+      fetch(SCHEMA_BASE + "event.schema.json").then(function (r) { return r.json(); }),
+    ]).then(function (schemas) {
+      requiredFields = {
+        feed: schemas[0].required || [],
+        event: (schemas[1].$defs && schemas[1].$defs.event && schemas[1].$defs.event.required) || [],
+      };
+      return requiredFields;
+    }).catch(function () {
+      // Schemas unreachable (offline dev?): degrade to the structural checks only.
+      requiredFields = { feed: [], event: [] };
+      return requiredFields;
+    });
+  }
+
+  function structuralErrors(doc, req) {
+    var errors = [];
+    req.feed.forEach(function (field) {
+      if (doc[field] === undefined) errors.push({ key: "errMissing", vars: { field: field } });
+    });
+    if (!Array.isArray(doc.events)) {
+      // A missing `events` is already reported by the required-fields loop when
+      // the schema lists it; only flag it here when present-but-not-an-array.
+      if (doc.events !== undefined || req.feed.indexOf("events") === -1) {
+        errors.push({ key: "errNoEvents", vars: {} });
+      }
+      return errors;
+    }
+    doc.events.forEach(function (event, i) {
+      req.event.forEach(function (field) {
+        if (event && event[field] === undefined) {
+          errors.push({ key: "errEventMissing", vars: { i: String(i), field: field } });
+        }
+      });
+    });
+    return errors.slice(0, 6); // enough to act on, not a wall
+  }
+
+  function checkFeed() {
+    var url = feedInput.value.trim();
+    if (state.feed.url === url && state.feed.status !== "idle") return; // already checked
+    if (!/^https?:\/\/.+/.test(url)) {
+      state.feed = { url: url, status: "idle", errors: [] };
+      renderFeedStatus();
+      return;
+    }
+
+    state.feed = { url: url, status: "checking", errors: [] };
+    renderFeedStatus();
+
+    var done = function (status, errors) {
+      if (state.feed.url !== url) return; // the field changed while we fetched
+      state.feed = { url: url, status: status, errors: errors || [] };
+      renderFeedStatus();
+    };
+
+    Promise.all([fetch(url), loadRequired()]).then(function (results) {
+      var res = results[0], req = results[1];
+      if (!res.ok) return done("invalid", [{ key: "errHttp", vars: { status: String(res.status) } }]);
+      return res.json().then(function (doc) {
+        var errors = structuralErrors(doc, req);
+        done(errors.length ? "invalid" : "valid", errors);
+      }, function () {
+        done("invalid", [{ key: "errJson", vars: {} }]);
+      });
+    }).catch(function () {
+      done("cors"); // network error or CORS — indistinguishable from here, and neither blocks
+    });
+  }
+
+  function renderFeedStatus() {
+    var t = UI[state.lang];
+    var f = state.feed;
+    feedStatus.className = "feed-status";
+    if (f.status === "idle") {
+      feedStatus.hidden = true;
+      return;
+    }
+    feedStatus.hidden = false;
+    if (f.status === "checking") {
+      feedStatus.textContent = t.feedChecking;
+    } else if (f.status === "valid") {
+      feedStatus.classList.add("feed-status-ok");
+      feedStatus.textContent = t.feedValid;
+    } else if (f.status === "cors") {
+      feedStatus.classList.add("feed-status-warn");
+      feedStatus.textContent = t.feedCors;
+    } else {
+      feedStatus.classList.add("feed-status-err");
+      var errors = f.errors.map(function (e) {
+        return t[e.key].replace(/\{(\w+)\}/g, function (m, k) { return e.vars[k] || m; });
+      });
+      feedStatus.textContent = t.feedInvalid.replace("{errors}", errors.join("; ") + ".");
+    }
+  }
+
+  feedInput.addEventListener("change", checkFeed);
+
   /* ---------- submit: prefilled issue via URL params ---------- */
 
   document.getElementById("reg-form").addEventListener("submit", function (event) {
@@ -194,6 +332,12 @@
     var valid = name && /^https?:\/\/.+/.test(feed);
     errorLine.hidden = !!valid;
     if (!valid) return;
+
+    // An invalid feed blocks; the fix is right there in the status line. A check
+    // still in flight blocks too — clicking again once it lands keeps the
+    // window.open inside a user gesture, so no popup blocker heuristics.
+    checkFeed();
+    if (state.feed.status === "invalid" || state.feed.status === "checking") return;
 
     // Keys must match the field ids in .github/ISSUE_TEMPLATE/adopter.yml.
     var params = new URLSearchParams({

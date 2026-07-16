@@ -1,0 +1,78 @@
+# Adopter registration pipeline: an issue opened from the register form (or the
+# adopter.yml template by hand) gets its feed validated with the real schemas and,
+# if it passes, a PR adding the community to docs/data/adopters.json. The issue is
+# transport; the PR is the human review gate — merging it is the approval.
+#
+# Editing the issue re-runs everything: the branch is force-pushed, so an existing
+# PR simply updates. Note: PRs opened with GITHUB_TOKEN don't trigger other
+# workflows, so `Validate spec` won't run on them — the validation here is the
+# same code, run before the PR even exists.
+name: Adopter registration
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  register:
+    # Match on the form's own section heading, not only on the label: labels can
+    # be missing (deleted, or the template's label not yet created in the repo).
+    if: >-
+      contains(github.event.issue.labels.*.name, 'adopter') ||
+      contains(github.event.issue.body, '### OTE feed URL')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: adopter-issue-${{ github.event.issue.number }}
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+
+      - name: Validate feed and update registry
+        id: register
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          REPORT_PATH: ${{ runner.temp }}/adopter-report.md
+        run: node scripts/register-adopter.mjs
+
+      - name: Report back on the issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue comment "${{ github.event.issue.number }}" --body-file "${{ runner.temp }}/adopter-report.md"
+
+      - name: Open or update the registration PR
+        if: steps.register.outputs.valid == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMBER: ${{ github.event.issue.number }}
+          NAME: ${{ steps.register.outputs.name }}
+        run: |
+          if git diff --quiet docs/data/adopters.json; then
+            echo "Registry already up to date — nothing to PR."
+            exit 0
+          fi
+          BRANCH="adopter/issue-${NUMBER}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$BRANCH"
+          git add docs/data/adopters.json
+          git commit -m "feat(adopters): register ${NAME} (#${NUMBER})"
+          git push -f origin "$BRANCH"
+          # Force-pushing the branch already refreshed an existing PR.
+          if [ -z "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
+            gh pr create \
+              --head "$BRANCH" \
+              --title "Register adopter: ${NAME}" \
+              --body "Adds **${NAME}** to the adopters registry. Feed validated against OTE Spec v0.2 by the [adopter registration workflow](../actions/workflows/adopter-issue.yml).
+
+          Closes #${NUMBER}."
+          fi
