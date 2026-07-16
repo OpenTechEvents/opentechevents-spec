@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Register your community — OpenTechEvents</title>
+<meta name="description" content="Register your community as an OTE adopter: we validate your feed and list you on opentechevents.org.">
+<link rel="canonical" href="https://opentechevents.org/register/">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="register.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
+</head>
+<body>
+
+<div class="draft-bar">
+  <div class="wrap">
+    <span class="draft-pill" data-t="pill">Draft 0.x</span>
+    <span data-t="draft">The spec is not stable yet: fields can still change, be renamed or be dropped.</span>
+    <a href="https://github.com/OpenTechEvents/opentechevents-spec/issues/5" data-t="follow">Follow the discussion</a>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark">OTE</span>
+      <span class="brand-name">OpenTechEvents</span>
+    </a>
+    <nav class="nav">
+      <a href="/#spec" data-nav="spec" data-t="navSpec">How it works</a>
+      <a href="/#adopt" data-nav="adopt" data-t="navAdopt">Adopt it</a>
+      <a href="/spec/" data-nav="reference" data-t="navReference">Reference</a>
+      <a href="/#tools" data-nav="tools" data-t="navTools">Tools</a>
+      <a class="nav-repo" href="https://github.com/OpenTechEvents/opentechevents-spec">GitHub</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en">EN</button>
+      <button type="button" data-lang="es">ES</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap wrap-narrow reg-main">
+  <h1 data-t="title">Register your community</h1>
+  <p class="lead" data-t="lead">Your community already publishes an OTE feed? Tell us. We validate the feed, list you on this site, and aggregators start picking up your events.</p>
+
+  <form id="reg-form" novalidate>
+    <div class="field">
+      <label for="reg-name" data-t="nameLabel">Community name</label>
+      <input id="reg-name" name="community" type="text" list="reg-name-options"
+             autocomplete="off" spellcheck="false" required>
+      <datalist id="reg-name-options"></datalist>
+      <p class="hint" data-t="nameHint">Start typing — we try to match your community against known directories.</p>
+      <p class="match match-yes" id="reg-match" hidden></p>
+    </div>
+
+    <div class="field">
+      <label for="reg-web" data-t="webLabel">Website</label>
+      <input id="reg-web" name="website" type="url" placeholder="https://" autocomplete="url">
+      <p class="hint" data-t="webHint">Optional. Filled in automatically when we find your community in a directory.</p>
+    </div>
+
+    <div class="field">
+      <label for="reg-feed" data-t="feedLabel">OTE feed URL</label>
+      <input id="reg-feed" name="feed" type="url" placeholder="https://yourcommunity.dev/events.json" required>
+      <p class="hint" data-t="feedHint">The public URL of your <code>events.json</code>. No feed yet? <a href="/#adopt">See how to publish one</a>.</p>
+    </div>
+
+    <p class="form-error" id="reg-error" hidden data-t="formError">Fill in the community name and the feed URL (a full URL, starting with https://).</p>
+
+    <div class="cta-row">
+      <button type="submit" class="btn btn-primary" data-t="submit">Open the registration issue</button>
+    </div>
+    <p class="hint reg-note" data-t="note">This opens a prefilled issue on GitHub for you to review before sending — nothing is submitted behind your back. You need a GitHub account.</p>
+  </form>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p class="footer-note" data-t="footerNote">Registrations are reviewed by hand. Draft specification — fields may change.</p>
+    <nav class="footer-links">
+      <a href="../">opentechevents.org</a>
+      <a href="https://github.com/OpenTechEvents/opentechevents-spec">GitHub</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="register.js"></script>
+</body>
+</html>

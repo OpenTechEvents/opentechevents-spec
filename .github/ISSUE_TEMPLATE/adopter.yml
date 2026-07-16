@@ -1,0 +1,54 @@
+name: Register as an adopter
+description: My community publishes an OTE feed — validate it and list it on opentechevents.org.
+title: "[Adopter] "
+labels: ["adopter"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for adopting OTE! We'll validate your feed, list your community on
+        [opentechevents.org](https://opentechevents.org) and aggregators will start
+        picking up your events.
+
+        Tip: the [registration form](https://opentechevents.org/register/) prefills
+        this issue for you — including the directory link, if your community is
+        listed in one.
+  - type: input
+    id: community
+    attributes:
+      label: Community name
+      placeholder: PyAlmería
+    validations:
+      required: true
+  - type: input
+    id: website
+    attributes:
+      label: Website
+      placeholder: https://pyalmeria.example
+    validations:
+      required: false
+  - type: input
+    id: feed
+    attributes:
+      label: OTE feed URL
+      description: Public URL of your `events.json` feed.
+      placeholder: https://pyalmeria.example/events.json
+    validations:
+      required: true
+  - type: input
+    id: directory
+    attributes:
+      label: Community directory ID
+      description: >-
+        Filled automatically by the registration form when your community is matched
+        in a linked directory (e.g. `combuilders:42`). Leave empty if you don't know it.
+      placeholder: "combuilders:42"
+    validations:
+      required: false
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmation
+      options:
+        - label: I am an organiser of this community and I want its feed listed as an OTE adopter.
+          required: true
