@@ -15,6 +15,7 @@
     "spec": "Cómo funciona",
     "adopt": "Adhiérete",
     "reference": "Referencia",
+    "developers": "Desarrolladores",
     "tools": "Herramientas"
   },
   "hero": {
@@ -161,13 +162,15 @@
     "title": "Quién publica en OTE",
     "lead": "Comunidades y eventos que ya exponen sus datos en este formato.",
     "empty": "La spec acaba de nacer, así que esta lista todavía es corta. Sé de los primeros: quien llega pronto decide en qué se convierte el estándar.",
-    "emptyCta": "Ser de los primeros"
+    "emptyCta": "Ser de los primeros",
+    "machine": "Esta lista es datos, no HTML: pinta <a href=\"/data/adopters.json\"><code>adopters.json</code></a>, un registro machine-readable sobre el que puedes construir. Mira la <a href=\"/developers/\">documentación para desarrolladores</a>."
   },
   "consumers": {
     "title": "Quién consume datos OTE",
     "lead": "Directorios, agregadores y personas que reutilizan feeds publicados en este formato. Cada uno de ellos es un sitio más al que tus eventos llegan gratis.",
     "empty": "¿Estás montando un directorio, una newsletter o un bot? Consume feeds OTE y aparece aquí.",
-    "emptyCta": "Añadir mi proyecto"
+    "emptyCta": "Añadir mi proyecto",
+    "devDocs": "Docs para desarrolladores"
   },
   "tools": {
     "title": "Ecosistema de herramientas",

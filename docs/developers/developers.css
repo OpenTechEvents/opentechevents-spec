@@ -1,0 +1,42 @@
+/* Developer docs — extends styles.css with the table and category badge this
+   page needs. */
+
+.dev-main { padding: 64px 24px 96px; max-width: 880px; }
+.dev-main h1 { margin-bottom: .4em; }
+.dev-main .lead { margin-bottom: 8px; }
+
+.dev-section { margin-top: 56px; }
+.dev-section h2 { margin-bottom: .4em; }
+.dev-section > p { color: var(--ink-soft); max-width: 56em; }
+
+/* Stable-URLs table. Wide content scrolls inside its own container. */
+.dev-table-wrap { overflow-x: auto; margin-top: 20px; }
+.dev-table {
+  width: 100%; border-collapse: collapse; font-size: .92rem;
+}
+.dev-table th {
+  text-align: left; font-size: .78rem; text-transform: uppercase; letter-spacing: .05em;
+  color: var(--ink-faint); font-weight: 650;
+  padding: 0 16px 10px 0; border-bottom: 2px solid var(--line);
+}
+.dev-table td {
+  vertical-align: top; padding: 14px 16px 14px 0;
+  border-bottom: 1px solid var(--line); color: var(--ink-soft);
+}
+.dev-table td:first-child { white-space: nowrap; }
+.dev-table code {
+  font-family: var(--mono); font-size: .82em;
+  background: var(--accent-soft); color: var(--accent-ink);
+  padding: 2px 6px; border-radius: 5px;
+}
+
+.dev-section .code-block { margin: 24px 0; }
+.dev-license { margin-top: 20px; }
+
+/* Category tag on tool cards (the landing hides it; here it's the point). */
+.tool-cat {
+  font: 500 .72rem/1 var(--mono); color: var(--ink-faint);
+  text-transform: uppercase; letter-spacing: .05em;
+}
+
+#dev-tools { margin-bottom: 32px; }

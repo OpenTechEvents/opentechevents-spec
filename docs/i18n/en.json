@@ -15,6 +15,7 @@
     "spec": "How it works",
     "adopt": "Adopt it",
     "reference": "Reference",
+    "developers": "Developers",
     "tools": "Tools"
   },
   "hero": {
@@ -161,13 +162,15 @@
     "title": "Who publishes in OTE",
     "lead": "Communities and events already exposing their data in this format.",
     "empty": "The spec is brand new, so this list is still short. Be one of the first — early adopters get a say in what the standard becomes.",
-    "emptyCta": "Be the first"
+    "emptyCta": "Be the first",
+    "machine": "This list is data, not markup: it renders <a href=\"/data/adopters.json\"><code>adopters.json</code></a>, a machine-readable registry you can build on. See the <a href=\"/developers/\">developer docs</a>."
   },
   "consumers": {
     "title": "Who consumes OTE data",
     "lead": "Directories, aggregators and people reusing feeds published in this format. Every one of them is a place your events can reach for free.",
     "empty": "Building a directory, a newsletter or a bot? Consume OTE feeds and get listed here.",
-    "emptyCta": "Add your project"
+    "emptyCta": "Add your project",
+    "devDocs": "Developer docs"
   },
   "tools": {
     "title": "Ecosystem of tools",

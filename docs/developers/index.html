@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build on OTE — developer docs</title>
+<meta name="description" content="Consume OTE data: stable URLs for the adopter registry, JSON Schemas and the aggregated feed, plus the tools to integrate with.">
+<link rel="canonical" href="https://opentechevents.org/developers/">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="developers.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
+</head>
+<body>
+
+<div class="draft-bar">
+  <div class="wrap">
+    <span class="draft-pill" data-t="pill">Draft 0.x</span>
+    <span data-t="draft">The spec is not stable yet: fields can still change, be renamed or be dropped.</span>
+    <a href="https://github.com/OpenTechEvents/opentechevents-spec/issues/5" data-t="follow">Follow the discussion</a>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark">OTE</span>
+      <span class="brand-name">OpenTechEvents</span>
+    </a>
+    <nav class="nav">
+      <a href="/#spec" data-nav="spec" data-t="navSpec">How it works</a>
+      <a href="/#adopt" data-nav="adopt" data-t="navAdopt">Adopt it</a>
+      <a href="/spec/" data-nav="reference" data-t="navReference">Reference</a>
+      <a href="/developers/" data-nav="developers" aria-current="true" data-t="navDevelopers">Developers</a>
+      <a href="/#tools" data-nav="tools" data-t="navTools">Tools</a>
+      <a class="nav-repo" href="https://github.com/OpenTechEvents/opentechevents-spec">GitHub</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en">EN</button>
+      <button type="button" data-lang="es">ES</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap dev-main">
+  <h1 data-t="title">Build on OTE</h1>
+  <p class="lead" data-t="lead">A directory, an app, a bot, a newsletter? Everything the project publishes is plain JSON at stable URLs, with an explicit license. Integrate once — every new adopter feeds your tool for free.</p>
+
+  <!-- Stable URLs -->
+  <section class="dev-section">
+    <h2 data-t="urls.title">The data, at stable URLs</h2>
+    <p data-t="urls.lead">These URLs are contracts: they survive any reorganisation of the repos. Start with the registry — it's the feed-discovery entry point.</p>
+    <div class="dev-table-wrap">
+      <table class="dev-table">
+        <thead>
+          <tr><th>URL</th><th data-t="urls.what">What it is</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="/data/adopters.json"><code>opentechevents.org/data/adopters.json</code></a></td>
+            <td data-t="urls.adopters">The adopter registry: every community publishing an OTE feed — name, website, feed URL, and its ID in linked community directories. It's what renders the <a href="/#adopters">adopters section</a>, and your entry point to discover feeds. Updated by reviewed PR via the <a href="/register/">registration pipeline</a>, with a daily health check on every feed.</td>
+          </tr>
+          <tr>
+            <td><a href="/schema/v0.2/feed.schema.json"><code>opentechevents.org/schema/v0.2/feed.schema.json</code></a><br><a href="/schema/v0.2/event.schema.json"><code>…/event.schema.json</code></a></td>
+            <td data-t="urls.schemas">The canonical JSON Schemas (these are the <code>$id</code> URLs). Validate anything you ingest or produce with any standard JSON Schema validator.</td>
+          </tr>
+          <tr>
+            <td><a href="https://data.opentechevents.org/feed.json"><code>data.opentechevents.org/feed.json</code></a></td>
+            <td data-t="urls.aggregated">The <a href="https://github.com/OpenTechEvents/opentechevents-data">aggregated feed</a>: events from every registered source, unified into one OTE feed with per-event provenance and license. Also exported as <a href="https://data.opentechevents.org/feed.ics"><code>feed.ics</code></a>.</td>
+          </tr>
+          <tr>
+            <td><a href="https://www.npmjs.com/package/@opentechevents/schema"><code>npm: @opentechevents/schema</code></a></td>
+            <td data-t="urls.npm">The same schemas as a package, for validating in CI or at build time.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Consume -->
+  <section class="dev-section">
+    <h2 data-t="consume.title">Consuming feeds is three lines</h2>
+    <p data-t="consume.lead">No SDK, no API key, no rate-limit negotiation: fetch the registry, fetch the feeds. Every feed validates against the published schema, so your parser has exactly one format to care about.</p>
+    <figure class="code-block">
+      <figcaption><span class="dot"></span><span class="dot"></span><span class="dot"></span> <code>discover.mjs</code></figcaption>
+      <pre><code><c>// 1. Who publishes OTE? The registry knows.</c>
+<t>const</t> { adopters } = <t>await</t> fetch(<s>"https://opentechevents.org/data/adopters.json"</s>)
+  .then((res) => res.json());
+
+<c>// 2. Every entry carries its feed URL.</c>
+<t>for</t> (<t>const</t> adopter <t>of</t> adopters) {
+  <t>const</t> feed = <t>await</t> fetch(adopter.feed).then((res) => res.json());
+  console.log(adopter.name, feed.events.length, <s>"events"</s>, feed.license);
+}</code></pre>
+    </figure>
+    <p class="dev-license" data-t="consume.license">One obligation: <strong>respect the license</strong>. Every feed (and optionally every event) declares one — <code>CC-BY-4.0</code> means attributing the community, and each entry tells you whom.</p>
+    <p data-t="consume.discovery">Feeds in the wild announce themselves like RSS does — a <code>&lt;link rel="alternate" type="application/ote+json"&gt;</code> in the community's site — so your crawler can discover feeds that haven't registered yet.</p>
+  </section>
+
+  <!-- Tools -->
+  <section class="dev-section">
+    <h2 data-t="tools.title">Tools to integrate with — or to claim</h2>
+    <p data-t="tools.lead">The ecosystem catalogue, sliced by what each piece does with the data. Most of it is proposed and up for grabs: if your integration needs a converter or an SDK that doesn't exist, claiming it in an issue is how it gets prioritised.</p>
+
+    <div class="tools-filters" id="dev-cats" role="group" aria-label="Filter tools by category"></div>
+    <div id="dev-tools" class="tools-grid"></div>
+
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://github.com/OpenTechEvents/opentechevents-spec/issues/new?title=%5BConsumer%5D%20" data-t="tools.ctaConsumer">List your project as a consumer</a>
+      <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/ecosystem/README.md" data-t="tools.ctaPropose">Propose or claim a tool</a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p class="footer-note" data-t="footerNote">Everything on this page is served from this repository — if a URL here breaks, that's a bug.</p>
+    <nav class="footer-links">
+      <a href="../">opentechevents.org</a>
+      <a href="https://github.com/OpenTechEvents/opentechevents-spec">GitHub</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="developers.js"></script>
+</body>
+</html>

@@ -314,6 +314,8 @@ p > code, li > code {
   text-align: center; padding: 44px 24px; border: 1px dashed var(--line);
   border-radius: var(--radius); background: #fff;
 }
+/* "This list is machine-readable" pointer under the adopters grid. */
+.data-note { margin: 20px 0 0; font-size: .88rem; color: var(--ink-faint); }
 .empty-cta p { color: var(--ink-soft); max-width: 42em; margin: 0 auto 6px; }
 .section-alt .empty-cta { background: #fff; }
 
