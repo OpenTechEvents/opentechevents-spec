@@ -46,7 +46,7 @@ Una vez estabilizada la especificación, el objetivo es construir un ecosistema 
 - **Exportar / transformar** a RSS, iCalendar y otros formatos compatibles.
 - **Automatizar la publicación** en múltiples destinos: Meetup, LinkedIn, Eventbrite, repositorios de GitHub que aceptan *Pull Requests*, webs con formularios de alta, etc.
 
-👉 Lista abierta de ideas concretas de herramientas en [ecosystem/](ecosystem/README.md).
+👉 El catálogo vivo de herramientas se mantiene en la [web](https://opentechevents.org/#tools) desde [`docs/data/tools.json`](docs/data/tools.json).
 
 ## La especificación
 
@@ -73,9 +73,9 @@ https://opentechevents.org/schema/v0.1/feed.schema.json
 
 1. ✅ **Investigación inicial** — análisis de estándares existentes (RSS, iCalendar, schema.org/Event…), plataformas y casos de uso reales. → [research/](research/README.md)
 2. ✅ **v0.1 de la especificación** — modelo de datos mínimo, JSON Schema ejecutable y ejemplos. → [spec/v0.1/](spec/v0.1/README.md)
-3. 🔜 **Validación con implementaciones reales** — el [agregador](ecosystem/aggregator.md) y su importador de `.ics` son el banco de pruebas: si el modelo no soporta una ingesta real, el modelo está mal. De ahí saldrá la v0.2.
+3. 🔜 **Validación con implementaciones reales** — el [agregador](https://github.com/OpenTechEvents/opentechevents-data) y su importador de `.ics` son el banco de pruebas: si el modelo no soporta una ingesta real, el modelo está mal. De ahí saldrá la v0.2.
 4. 🔜 **Adopción** — comunidades publicando feeds y directorios consumiéndolos. Sin datos reales, el estándar es teoría.
-5. 🔜 **Ecosistema de herramientas** — ingesta, transformación y publicación automatizada. → [ecosystem/](ecosystem/README.md)
+5. 🔜 **Ecosistema de herramientas** — ingesta, transformación y publicación automatizada. → [catálogo en la web](https://opentechevents.org/#tools)
 
 ## Estructura del repositorio
 
@@ -85,7 +85,7 @@ https://opentechevents.org/schema/v0.1/feed.schema.json
 - `CONTRIBUTING.md` — cómo participar en el diseño de la especificación.
 - `research/` — resultados de la investigación inicial: análisis de plataformas, directorios y estándares.
 - `spec/` — la especificación. Por ahora un **borrador inicial** del modelo de datos para ilustrar la idea.
-- `ecosystem/` — ideas de herramientas que podrían construirse sobre el estándar.
+- `docs/data/` — datos que alimentan la web pública: adoptantes, consumidores y catálogo de herramientas.
 
 ## De qué depende el éxito
 

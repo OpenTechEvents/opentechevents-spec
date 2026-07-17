@@ -154,10 +154,18 @@
   function renderTools() {
     var container = document.getElementById('tools-list');
     var tools = (state.data.tools && state.data.tools.tools) || [];
+    var statusOrder = { working: 0, wip: 1, proposed: 2 };
     container.replaceChildren();
+    renderToolFilterCounts(tools);
 
     tools
-      .filter(function (tool) { return state.filter === 'all' || tool.status === state.filter; })
+      .filter(function (tool) {
+        return state.filter === 'all' || (tool.audience || []).indexOf(state.filter) !== -1;
+      })
+      .slice()
+      .sort(function (a, b) {
+        return (statusOrder[a.status] || 99) - (statusOrder[b.status] || 99);
+      })
       .forEach(function (tool) {
         var card = el('article', 'tool');
 
@@ -181,6 +189,23 @@
 
         container.appendChild(card);
       });
+  }
+
+  function renderToolFilterCounts(tools) {
+    var counts = tools.reduce(function (acc, tool) {
+      acc.all += 1;
+      (tool.audience || []).forEach(function (audience) {
+        acc[audience] = (acc[audience] || 0) + 1;
+      });
+      return acc;
+    }, { all: 0 });
+
+    document.querySelectorAll('.tools-filters .chip[data-filter]').forEach(function (chip) {
+      var filter = chip.dataset.filter;
+      var label = get(state.dict, chip.getAttribute('data-i18n')) || chip.textContent.trim();
+      chip.replaceChildren(document.createTextNode(label + ' '));
+      chip.appendChild(el('span', 'chip-count', String(counts[filter] || 0)));
+    });
   }
 
   function renderFaq() {

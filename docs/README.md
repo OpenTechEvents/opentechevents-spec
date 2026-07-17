@@ -51,4 +51,4 @@ Adding yourself is a one-entry PR:
 
 `logo` is optional — entries without one fall back to their initials.
 
-Keep `data/tools.json` in sync with [`ecosystem/README.md`](../ecosystem/README.md), which stays the canonical list of ideas.
+[`data/tools.json`](data/tools.json) is the canonical tools catalogue rendered by the website and developer docs.

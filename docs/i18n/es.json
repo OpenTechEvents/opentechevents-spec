@@ -177,9 +177,9 @@
     "lead": "Lo que ya existe y lo que está por hacer. Reclama una abriendo un issue.",
     "f": {
       "all": "Todas",
-      "working": "Funcionando",
-      "wip": "En desarrollo",
-      "proposed": "Propuesta"
+      "organizers": "Organizadores",
+      "attendees": "Asistentes",
+      "developers": "Desarrolladores"
     },
     "status": {
       "working": "Funcionando",

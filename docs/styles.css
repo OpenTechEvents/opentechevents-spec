@@ -339,6 +339,13 @@ p > code, li > code {
 }
 .chip:hover { border-color: var(--ink-faint); }
 .chip.is-active { background: var(--ink); border-color: var(--ink); color: #fff; }
+.chip-count {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 1.5em; height: 1.5em; margin-left: 5px; padding: 0 5px;
+  border-radius: 999px; background: var(--wash); color: var(--ink-soft);
+  font-size: .78em; line-height: 1;
+}
+.chip.is-active .chip-count { background: rgba(255,255,255,.16); color: #fff; }
 
 .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
 .tool {

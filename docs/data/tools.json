@@ -1,8 +1,9 @@
 {
-  "_comment": "Ecosystem tools. status: working | wip | proposed. Mirrors ecosystem/README.md. Fields: name {en,es}, desc {en,es}, status, category {en,es}, url (repo or issue), linkKind ('app' → 'Open the tool' for a live app URL; 'npm' → 'View npm package' for a single-package URL; 'npm-scope' → 'View npm packages' for an org/scope URL; omit for a repo URL → 'View repository').",
+  "_comment": "Canonical ecosystem tools catalogue. status: working | wip | proposed. audience: organizers | attendees | developers. Fields: name {en,es}, desc {en,es}, status, audience, category {en,es}, url (repo or issue), linkKind ('app' → 'Open the tool' for a live app URL; 'npm' → 'View npm package' for a single-package URL; 'npm-scope' → 'View npm packages' for an org/scope URL; omit for a repo URL → 'View repository' unless status is proposed → 'Discuss the idea').",
   "tools": [
     {
       "status": "wip",
+      "audience": ["developers"],
       "name": {
         "en": "OTE aggregator",
         "es": "Agregador OTE"
@@ -19,6 +20,7 @@
     },
     {
       "status": "wip",
+      "audience": ["organizers"],
       "name": {
         "en": "Organizer kit",
         "es": "Kit del organizador"
@@ -35,6 +37,7 @@
     },
     {
       "status": "working",
+      "audience": ["organizers", "developers"],
       "name": {
         "en": "Schema validator",
         "es": "Validador de esquema"
@@ -52,6 +55,7 @@
     },
     {
       "status": "working",
+      "audience": ["organizers"],
       "name": {
         "en": "Event editor / generator",
         "es": "Editor / generador de eventos"
@@ -69,21 +73,24 @@
     },
     {
       "status": "proposed",
+      "audience": ["organizers"],
       "name": {
         "en": "Conversational bot",
         "es": "Bot conversacional"
       },
       "desc": {
-        "en": "Describe your event in plain language on Telegram; the bot drafts the OTE document and replies with a URL to finish it off.",
-        "es": "Cuentas el evento en lenguaje natural por Telegram; el bot genera el borrador OTE y responde con una URL para terminar de concretarlo."
+        "en": "Describe an event in plain language; the bot drafts the OTE fields, lets you pick one of your usual target repos and sends you to the editor to review, complete and submit it.",
+        "es": "Cuentas un evento en lenguaje natural; el bot prepara los campos OTE, te deja elegir uno de tus repos destino habituales y te manda al editor para revisar, completar y enviarlo."
       },
       "category": {
         "en": "Create & validate",
         "es": "Crear y validar"
-      }
+      },
+      "url": "https://github.com/OpenTechEvents/opentechevents-spec/issues/9"
     },
     {
       "status": "proposed",
+      "audience": ["organizers"],
       "name": {
         "en": "Browser extension",
         "es": "Extensión de navegador"
@@ -96,25 +103,11 @@
         "en": "Ingest",
         "es": "Ingesta"
       },
-      "url": "https://github.com/OpenTechEvents/opentechevents-spec/blob/main/ecosystem/browser-extension.md"
-    },
-    {
-      "status": "proposed",
-      "name": {
-        "en": "Platform importers",
-        "es": "Importadores de plataformas"
-      },
-      "desc": {
-        "en": "Pull events from Meetup, Luma, Sessionize, Eventbrite or joind.in via their APIs and turn them into OTE.",
-        "es": "Traen eventos de Meetup, Luma, Sessionize, Eventbrite o joind.in vía sus APIs y los convierten a OTE."
-      },
-      "category": {
-        "en": "Ingest",
-        "es": "Ingesta"
-      }
+      "url": "https://github.com/OpenTechEvents/opentechevents-spec/issues/8"
     },
     {
       "status": "working",
+      "audience": ["organizers", "developers"],
       "name": {
         "en": "iCalendar (.ics) importer",
         "es": "Importador de iCalendar (.ics)"
@@ -132,6 +125,7 @@
     },
     {
       "status": "working",
+      "audience": ["organizers", "developers"],
       "name": {
         "en": "schema.org / JSON-LD extractor",
         "es": "Extractor de schema.org / JSON-LD"
@@ -149,6 +143,7 @@
     },
     {
       "status": "working",
+      "audience": ["organizers", "developers"],
       "name": {
         "en": "OTE → iCalendar",
         "es": "OTE → iCalendar"
@@ -166,6 +161,7 @@
     },
     {
       "status": "working",
+      "audience": ["organizers", "developers"],
       "name": {
         "en": "OTE → RSS / JSON Feed",
         "es": "OTE → RSS / JSON Feed"
@@ -183,96 +179,109 @@
     },
     {
       "status": "proposed",
+      "audience": ["organizers", "developers"],
       "name": {
         "en": "OTE → schema.org/Event",
         "es": "OTE → schema.org/Event"
       },
       "desc": {
-        "en": "A JSON-LD snippet to embed in your event page: better SEO and automatic detection by aggregators.",
-        "es": "Snippet JSON-LD para incrustar en la web del evento: mejor SEO y detección automática por agregadores."
+        "en": "Generate a schema.org/Event JSON-LD snippet from an OTE event, ready to paste into an event page for better SEO and interoperability with existing crawlers.",
+        "es": "Genera un snippet JSON-LD schema.org/Event desde un evento OTE, listo para pegar en la página del evento y mejorar SEO e interoperabilidad con crawlers existentes."
       },
       "category": {
         "en": "Transform",
         "es": "Transformar"
-      }
+      },
+      "url": "https://github.com/OpenTechEvents/opentechevents-spec/issues/11"
     },
     {
       "status": "proposed",
+      "audience": ["organizers"],
       "name": {
-        "en": "Auto-publisher",
-        "es": "Auto-publicador"
+        "en": "Publishing assistant",
+        "es": "Asistente de publicación"
       },
       "desc": {
-        "en": "Push your events to Meetup, LinkedIn or Eventbrite automatically, instead of filling in each form yourself.",
-        "es": "Publica tus eventos en Meetup, LinkedIn o Eventbrite automáticamente, en vez de rellenar cada formulario a mano."
+        "en": "Turn an OTE event into organiser-reviewed outputs for non-OTE channels: copy-paste cheat sheets, email text, contact-form fields, issue links or pull request drafts.",
+        "es": "Convierte un evento OTE en salidas revisadas por el organizador para canales que no usan OTE: chuletas de copy-paste, texto de email, campos de formulario, enlaces a issues o borradores de pull request."
       },
       "category": {
         "en": "Publish",
         "es": "Publicar"
-      }
+      },
+      "url": "https://github.com/OpenTechEvents/opentechevents-spec/issues/12"
     },
     {
       "status": "proposed",
+      "audience": ["attendees"],
       "name": {
-        "en": "Pull request bot",
-        "es": "Bot de pull requests"
+        "en": "Natural-language event discovery bot",
+        "es": "Bot de consulta de eventos"
       },
       "desc": {
-        "en": "Submit your events to directories that accept PRs (confs.tech, developers.events, EventosWiki…) without touching git.",
-        "es": "Envía tus eventos a directorios que aceptan PRs (confs.tech, developers.events, EventosWiki…) sin tocar git."
-      },
-      "category": {
-        "en": "Publish",
-        "es": "Publicar"
-      }
-    },
-    {
-      "status": "proposed",
-      "name": {
-        "en": "Subscriptions & notifications",
-        "es": "Suscripciones y notificaciones"
-      },
-      "desc": {
-        "en": "Attendees set conditions (topic, city, mode, distance) and get alerts by email, Telegram or webhook.",
-        "es": "Quien asiste fija condiciones (tema, ciudad, modalidad, distancia) y recibe avisos por email, Telegram o webhook."
+        "en": "Ask in plain language for upcoming events by technology, city, date, language, mode or CFP status; the bot searches OTE feeds and returns matching events with source links.",
+        "es": "Pregunta en lenguaje natural por próximos eventos según tecnología, ciudad, fecha, idioma, modalidad o CFP; el bot consulta feeds OTE y devuelve eventos relevantes con enlaces a la fuente."
       },
       "category": {
         "en": "Consume",
         "es": "Consumir"
-      }
+      },
+      "url": "https://github.com/OpenTechEvents/opentechevents-spec/issues/10"
     },
     {
       "status": "proposed",
+      "audience": ["attendees"],
+      "name": {
+        "en": "Event subscriptions & reminders",
+        "es": "Suscripciones y recordatorios de eventos"
+      },
+      "desc": {
+        "en": "RSS-reader-like tools for OTE feeds: subscribe to communities, conferences or topics, save filters and receive event, CFP or ticket reminders.",
+        "es": "Herramientas tipo lector RSS para feeds OTE: suscribirse a comunidades, conferencias o temas, guardar filtros y recibir recordatorios de eventos, CFPs o entradas."
+      },
+      "category": {
+        "en": "Consume",
+        "es": "Consumir"
+      },
+      "url": "https://github.com/OpenTechEvents/opentechevents-spec/issues/13"
+    },
+    {
+      "status": "proposed",
+      "audience": ["organizers", "developers"],
       "name": {
         "en": "Embeddable widget",
         "es": "Widget embebible"
       },
       "desc": {
-        "en": "A web component that renders an OTE feed as an events list on any website.",
-        "es": "Web component que pinta un feed OTE como listado de eventos en cualquier web."
+        "en": "Embeddable event views for one or more OTE feeds, with configurable layouts such as list or calendar and optional filters by topic, place, mode or date.",
+        "es": "Vistas embebibles para uno o varios feeds OTE, con layouts configurables como lista o calendario y filtros opcionales por tema, lugar, modalidad o fecha."
       },
       "category": {
         "en": "Consume",
         "es": "Consumir"
-      }
+      },
+      "url": "https://github.com/OpenTechEvents/opentechevents-spec/issues/14"
     },
     {
       "status": "proposed",
+      "audience": ["organizers", "attendees"],
       "name": {
-        "en": "\"Subscribe\" badge",
-        "es": "Badge de suscripción"
+        "en": "OTE badges & share buttons",
+        "es": "Badges y botones OTE"
       },
       "desc": {
-        "en": "The RSS button of OTE: a logo linking to your feed URL, so visitors and tools discover it at a glance.",
-        "es": "El botón RSS de OTE: un logo que enlaza a la URL de tu feed, para que visitantes y herramientas lo descubran de un vistazo."
+        "en": "Badges and buttons that make OTE feeds visible: subscribe to a community's feed, open it in compatible tools or copy an embeddable widget for another website.",
+        "es": "Badges y botones para hacer visibles los feeds OTE: suscribirse al feed de una comunidad, abrirlo en herramientas compatibles o copiar un widget embebible para otra web."
       },
       "category": {
         "en": "Consume",
         "es": "Consumir"
-      }
+      },
+      "url": "https://github.com/OpenTechEvents/opentechevents-spec/issues/15"
     },
     {
       "status": "working",
+      "audience": ["developers"],
       "name": {
         "en": "Reference SDKs",
         "es": "SDKs de referencia"

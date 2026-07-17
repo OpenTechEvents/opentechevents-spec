@@ -307,7 +307,7 @@
         <p class="shortcut-caveat" data-i18n="adopt.ics.caveat">Honest caveat: the aggregator is being built right now, and the MVP starts precisely with <code>.ics</code>. Registering your calendar today means being one of the first sources it ingests — and its first real test.</p>
         <div class="cta-row">
           <a class="btn btn-primary" href="https://github.com/OpenTechEvents/opentechevents-spec/issues/new?title=%5BSource%5D%20&amp;body=Community%3A%20%0A.ics%20URL%3A%20%0AWebsite%3A%20%0A%0AI%20am%20an%20organiser%20of%20this%20community%20and%20I%20allow%20these%20events%20to%20be%20republished%3A%20yes%2Fno%0A" data-i18n="adopt.ics.cta">Register my URL</a>
-          <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/ecosystem/aggregator.md" data-i18n="adopt.ics.cta2">How the aggregator works</a>
+          <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-data" data-i18n="adopt.ics.cta2">How the aggregator works</a>
         </div>
       </aside>
 
@@ -356,17 +356,17 @@
       <h2 data-i18n="tools.title">Ecosystem of tools</h2>
       <p class="section-lead" data-i18n="tools.lead">What exists today, and what's up for grabs. Claim one by opening an issue.</p>
 
-      <div class="tools-filters" role="group" aria-label="Filter tools">
+      <div class="tools-filters" role="group" aria-label="Filter tools by audience">
         <button type="button" class="chip is-active" data-filter="all" data-i18n="tools.f.all">All</button>
-        <button type="button" class="chip" data-filter="working" data-i18n="tools.f.working">Working</button>
-        <button type="button" class="chip" data-filter="wip" data-i18n="tools.f.wip">In progress</button>
-        <button type="button" class="chip" data-filter="proposed" data-i18n="tools.f.proposed">Proposed</button>
+        <button type="button" class="chip" data-filter="organizers" data-i18n="tools.f.organizers">Organizers</button>
+        <button type="button" class="chip" data-filter="attendees" data-i18n="tools.f.attendees">Attendees</button>
+        <button type="button" class="chip" data-filter="developers" data-i18n="tools.f.developers">Developers</button>
       </div>
 
       <div id="tools-list" class="tools-grid"></div>
 
       <div class="cta-row cta-center">
-        <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/ecosystem/README.md" data-i18n="tools.cta">Propose or claim a tool</a>
+        <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/issues/new?title=%5BTool%5D%20" data-i18n="tools.cta">Propose or claim a tool</a>
       </div>
     </div>
   </section>

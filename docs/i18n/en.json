@@ -177,9 +177,9 @@
     "lead": "What exists today, and what's up for grabs. Claim one by opening an issue.",
     "f": {
       "all": "All",
-      "working": "Working",
-      "wip": "In progress",
-      "proposed": "Proposed"
+      "organizers": "Organizers",
+      "attendees": "Attendees",
+      "developers": "Developers"
     },
     "status": {
       "working": "Working",
