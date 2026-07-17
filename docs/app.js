@@ -158,6 +158,9 @@
     function rank(tool) {
       return statusOrder[tool.status] !== undefined ? statusOrder[tool.status] : 99;
     }
+    function order(tool) {
+      return tool.order !== undefined ? tool.order : 999;
+    }
     container.replaceChildren();
     renderToolFilterCounts(tools);
 
@@ -167,7 +170,7 @@
       })
       .slice()
       .sort(function (a, b) {
-        return rank(a) - rank(b);
+        return rank(a) - rank(b) || order(a) - order(b);
       })
       .forEach(function (tool) {
         var card = el('article', 'tool');
