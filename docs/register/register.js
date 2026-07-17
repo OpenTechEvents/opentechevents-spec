@@ -353,6 +353,30 @@
     window.open("https://github.com/" + REPO + "/issues/new?" + params.toString(), "_blank", "noopener");
   });
 
+  /* ---------- prefill from query params ----------
+     Lets other tools (the organizer kit, docs, emails) deep-link a half-filled
+     form: /register/?name=…&url=…&feed=…  ("website" works as an alias of
+     "url"). Prefilled values go through the same paths as typed ones: the
+     feed gets checked, the name gets matched against directories. */
+
+  function prefillFromQuery() {
+    var qs = new URLSearchParams(location.search);
+    var name = (qs.get("name") || "").trim();
+    var website = (qs.get("url") || qs.get("website") || "").trim();
+    var feed = (qs.get("feed") || "").trim();
+
+    if (name) nameInput.value = name;
+    if (website) webInput.value = website;
+    if (feed) {
+      feedInput.value = feed;
+      checkFeed();
+    }
+    if (name) {
+      loadSources(); // fetch directories now — findMatch() re-runs when they arrive
+      findMatch();
+    }
+  }
+
   /* ---------- boot ---------- */
 
   document.querySelectorAll(".lang button").forEach(function (btn) {
@@ -365,4 +389,5 @@
 
   state.lang = pickLang();
   applyDict();
+  prefillFromQuery();
 })();
