@@ -10,9 +10,9 @@ Las ideas se agrupan por el ciclo de vida del dato: **crear/validar → ingerir 
 
 > 🧰 **[Kit del organizador](organizer-template.md)** (repos [`ote-template`](https://github.com/OpenTechEvents/ote-template) y [`ote-tools`](https://github.com/OpenTechEvents/ote-tools), **en construcción**): repositorio plantilla para forkear — feed OTE + exports ICS/RSS publicados en GitHub Pages, editor web (flujo issue→PR), importadores y *cheat sheets* de difusión. La lógica vive en `ote-tools`; el fork del organizador solo lleva sus datos y configuración. El [diseño](organizer-template.md) documenta las decisiones.
 
-- **Validador de esquema** (JSON Schema): CLI, versión web y *GitHub Action* para validar en CI los eventos de un repo.
+- **Validador de esquema** (JSON Schema) ✅ — publicado como `@opentechevents/validate`: funciones puras + CLI `ote-validate`, reutilizado por el editor (validación en vivo) y el workflow de CI del kit.
 - **Linter** de buenas prácticas (avisos más allá del esquema: fechas coherentes, zona horaria presente, enlaces vivos…).
-- **Editor / generador de eventos**: formulario web que produce el JSON/YAML OTE válido (para quien no quiera escribir a mano).
+- **Editor / generador de eventos**: cubierto por el [editor del kit del organizador](organizer-template.md) (`apps/editor/` en [`ote-tools`](https://github.com/OpenTechEvents/ote-tools)). Con `?repo=owner/name` lee el preset del repo y propone cambios por issue→PR; **sin repo** funciona como generador suelto — formulario que produce JSON OTE válido para copiar o descargar (para quien no quiera escribir a mano o aún no haya forkeado la plantilla).
 - **Bot conversacional (Telegram o similar)** _(propuesto por [@qwor01](https://github.com/qwor01))_: el dinamizador "suelta" la idea de un evento en lenguaje natural; el bot genera el borrador en formato OTE Spec y responde con una **URL** donde terminar de concretarlo (completar campos, revisar, publicar).
 - **Soporte en editores**: esquema para autocompletado y validación en VS Code (JSON/YAML).
 
@@ -23,14 +23,14 @@ Las ideas se agrupan por el ciclo de vida del dato: **crear/validar → ingerir 
 > 🧩 **[Extensión de navegador — captura de eventos a OTE](browser-extension.md)**: propuesta concreta. Lee el `schema.org/Event` que Meetup, Eventbrite o Luma ya exponen, lo mapea a OTE y prerrellena el alta — **solo si eres el organizador o tienes permiso**, y siempre con revisión humana de los datos antes de enviar. En discusión.
 
 - **Importadores desde plataformas**: Meetup, Luma, Sessionize, Eventbrite, joind.in… (vía sus APIs).
-- **Extractor de `schema.org`/JSON-LD**: leer la web de un evento y deducir un documento OTE.
-- **Importador iCalendar (.ics)** y **RSS** a OTE.
+- **Extractor de `schema.org`/JSON-LD** ✅ *en el [editor del kit](organizer-template.md)*: pega el HTML de la web de un evento y deduce un documento OTE (paquete `@opentechevents/import-jsonld`).
+- **Importador iCalendar (.ics)** ✅ *en el [editor del kit](organizer-template.md)*: sube o pega un `.ics` y precarga el formulario (paquete `@opentechevents/import-ics`). El **importador RSS→OTE** sigue pendiente.
 - **Adaptadores de directorios**: confs.tech, developers.events, EventosWiki, TechConf.Directory…
 
 ## Transformar / exportar
 
-- **OTE → iCalendar** (`.ics`/`VCALENDAR`) para suscripción en apps de calendario.
-- **OTE → RSS / JSON Feed** para lectores de feeds.
+- **OTE → iCalendar** (`.ics`/`VCALENDAR`) para suscripción en apps de calendario ✅ — paquete `@opentechevents/export-ics`; el kit lo sirve como `feed.ics`.
+- **OTE → RSS / JSON Feed** para lectores de feeds ✅ — paquete `@opentechevents/export-rss`; el kit lo sirve como `feed.xml`.
 - **OTE → JSON-LD `schema.org/Event`**: *snippet* para incrustar en la web del evento (SEO + detección automática por agregadores como dev.events).
 - **OTE → Markdown**: lista/tabla para los directorios basados en README.
 

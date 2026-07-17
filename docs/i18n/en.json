@@ -188,7 +188,10 @@
     },
     "cta": "Propose or claim a tool",
     "linkRepo": "View repository",
-    "linkIdea": "Discuss the idea"
+    "linkIdea": "Discuss the idea",
+    "linkOpen": "Open the tool",
+    "linkPkg": "View npm package",
+    "linkPkgs": "View npm packages"
   },
   "faq": {
     "title": "Frequently asked questions",

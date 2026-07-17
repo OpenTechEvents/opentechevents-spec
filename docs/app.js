@@ -170,7 +170,9 @@
         card.appendChild(el('p', null, t(tool.desc)));
 
         if (tool.url) {
-          var link = el('a', 'tool-link', get(state.dict, tool.status === 'proposed' ? 'tools.linkIdea' : 'tools.linkRepo'));
+          var linkKeyByKind = { app: 'tools.linkOpen', npm: 'tools.linkPkg', 'npm-scope': 'tools.linkPkgs' };
+          var linkKey = tool.status === 'proposed' ? 'tools.linkIdea' : (linkKeyByKind[tool.linkKind] || 'tools.linkRepo');
+          var link = el('a', 'tool-link', get(state.dict, linkKey));
           link.href = tool.url;
           link.target = '_blank';
           link.rel = 'noopener';

@@ -188,7 +188,10 @@
     },
     "cta": "Proponer o reclamar una herramienta",
     "linkRepo": "Ver repositorio",
-    "linkIdea": "Discutir la idea"
+    "linkIdea": "Discutir la idea",
+    "linkOpen": "Abrir la herramienta",
+    "linkPkg": "Ver paquete npm",
+    "linkPkgs": "Ver paquetes npm"
   },
   "faq": {
     "title": "Preguntas frecuentes",
