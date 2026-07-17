@@ -26,8 +26,8 @@
         "es": "Kit del organizador"
       },
       "desc": {
-        "en": "Fork a template, set three values, and your community publishes an OTE feed with ICS/RSS exports on GitHub Pages. The logic (validation, exports, web editor) lives in the ote-tools monorepo the template consumes pinned to a version.",
-        "es": "Forkeas una plantilla, configuras tres valores y tu comunidad publica un feed OTE con exports ICS/RSS en GitHub Pages. La lógica (validación, exports, editor web) vive en el monorepo ote-tools, que la plantilla consume fijado a versión."
+        "en": "The quickest way to start: use a ready-made GitHub repository to host your OTE feed, collaborate with others and register your community without building tooling from scratch.",
+        "es": "La forma más rápida de empezar: usa un repositorio GitHub preparado para alojar tu feed OTE, colaborar con otras personas y registrar tu comunidad sin crear herramientas desde cero."
       },
       "category": {
         "en": "Create & validate",
