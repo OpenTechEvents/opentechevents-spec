@@ -37,7 +37,7 @@
     },
     {
       "status": "working",
-      "audience": ["organizers", "developers"],
+      "audience": ["developers"],
       "name": {
         "en": "Schema validator",
         "es": "Validador de esquema"
@@ -107,7 +107,7 @@
     },
     {
       "status": "working",
-      "audience": ["organizers", "developers"],
+      "audience": ["developers"],
       "name": {
         "en": "iCalendar (.ics) importer",
         "es": "Importador de iCalendar (.ics)"
@@ -125,7 +125,7 @@
     },
     {
       "status": "working",
-      "audience": ["organizers", "developers"],
+      "audience": ["developers"],
       "name": {
         "en": "schema.org / JSON-LD extractor",
         "es": "Extractor de schema.org / JSON-LD"
@@ -143,7 +143,7 @@
     },
     {
       "status": "working",
-      "audience": ["organizers", "developers"],
+      "audience": ["developers"],
       "name": {
         "en": "OTE → iCalendar",
         "es": "OTE → iCalendar"
@@ -161,7 +161,7 @@
     },
     {
       "status": "working",
-      "audience": ["organizers", "developers"],
+      "audience": ["developers"],
       "name": {
         "en": "OTE → RSS / JSON Feed",
         "es": "OTE → RSS / JSON Feed"
