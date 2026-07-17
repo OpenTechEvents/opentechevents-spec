@@ -68,7 +68,7 @@
       "tools.ctaConsumer": "Lista tu proyecto como consumidor",
       "tools.ctaPropose": "Propón o reclama una herramienta",
       all: "Todas",
-      status: { working: "Funciona", wip: "En curso", proposed: "Propuesta" },
+      status: { working: "Funcionando", wip: "En desarrollo", proposed: "Propuesta" },
       linkRepo: "Ver repositorio",
       linkIdea: "Discutir la idea",
       footerNote: "Todo lo de esta página se sirve desde este repositorio — si una URL de aquí se rompe, es un bug.",
@@ -152,11 +152,19 @@
   function renderTools() {
     var dict = UI[state.lang];
     var container = document.getElementById("dev-tools");
+    var statusOrder = { working: 0, wip: 1, proposed: 2 };
+    function rank(tool) {
+      return statusOrder[tool.status] !== undefined ? statusOrder[tool.status] : 99;
+    }
     container.replaceChildren();
 
     state.tools
       .filter(function (tool) {
         return state.category === "all" || (tool.category && tool.category.en === state.category);
+      })
+      .slice()
+      .sort(function (a, b) {
+        return rank(a) - rank(b);
       })
       .forEach(function (tool) {
         var card = el("article", "tool");

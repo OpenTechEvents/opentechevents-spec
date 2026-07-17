@@ -155,6 +155,9 @@
     var container = document.getElementById('tools-list');
     var tools = (state.data.tools && state.data.tools.tools) || [];
     var statusOrder = { working: 0, wip: 1, proposed: 2 };
+    function rank(tool) {
+      return statusOrder[tool.status] !== undefined ? statusOrder[tool.status] : 99;
+    }
     container.replaceChildren();
     renderToolFilterCounts(tools);
 
@@ -164,7 +167,7 @@
       })
       .slice()
       .sort(function (a, b) {
-        return (statusOrder[a.status] || 99) - (statusOrder[b.status] || 99);
+        return rank(a) - rank(b);
       })
       .forEach(function (tool) {
         var card = el('article', 'tool');
