@@ -218,6 +218,7 @@
     {
       "status": "proposed",
       "audience": ["attendees"],
+      "order": 20,
       "name": {
         "en": "Natural-language event discovery bot",
         "es": "Bot de consulta de eventos"
@@ -235,6 +236,7 @@
     {
       "status": "proposed",
       "audience": ["attendees"],
+      "order": 10,
       "name": {
         "en": "Event subscriptions & reminders",
         "es": "Suscripciones y recordatorios de eventos"
@@ -269,7 +271,7 @@
     },
     {
       "status": "proposed",
-      "audience": ["organizers", "attendees"],
+      "audience": ["organizers", "developers"],
       "order": 50,
       "name": {
         "en": "OTE badges & share buttons",
