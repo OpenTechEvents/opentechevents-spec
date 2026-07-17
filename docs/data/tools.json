@@ -26,8 +26,8 @@
         "es": "Kit del organizador"
       },
       "desc": {
-        "en": "The quickest way to start: use a ready-made GitHub repository to host your OTE feed, collaborate with others and register your community without building tooling from scratch.",
-        "es": "La forma más rápida de empezar: usa un repositorio GitHub preparado para alojar tu feed OTE, colaborar con otras personas y registrar tu comunidad sin crear herramientas desde cero."
+        "en": "The quickest way to start: use a ready-made GitHub repository to publish your community meetups from scratch in minutes, with three free subscribable feeds: OTE, ICS and RSS.",
+        "es": "La forma más rápida de empezar: usa un repositorio GitHub preparado para publicar los encuentros de tu comunidad desde cero y en minutos, con tres feeds gratuitos y suscribibles: OTE, ICS y RSS."
       },
       "category": {
         "en": "Create & validate",
