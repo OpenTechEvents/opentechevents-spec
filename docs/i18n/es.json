@@ -19,24 +19,24 @@
     "tools": "Herramientas"
   },
   "hero": {
-    "eyebrow": "Especificación abierta · Borrador 0.1",
+    "eyebrow": "Especificación abierta · Borrador 0.x",
     "title": "Publica tu evento una vez. Que aparezca en todas partes.",
-    "lead": "OpenTechEvents (OTE) es una especificación abierta y libre para describir eventos de comunidades tecnológicas —meetups, conferencias, talleres, online o presenciales— en un único formato que directorios, calendarios y herramientas pueden leer automáticamente.",
+    "lead": "OpenTechEvents (OTE) es una especificación abierta y libre para describir eventos de comunidades tecnológicas —meetups, conferencias, talleres, online o presenciales— en un único formato que directorios, calendarios y herramientas pueden leer automáticamente. Une lo mejor de iCalendar, RSS y schema.org/Event, y es compatible con todos ellos: escribes una vez y te ayudamos a exportarlo automáticamente a los tres. Cuatro formatos por el precio de uno.",
     "ctaPrimary": "Adherirme a la spec",
     "ctaSecondary": "Ver el formato",
     "note": "Ninguna plataforma en la que registrarse. Ninguna herramienta que instalar: un archivo que publicas, o una línea en el &lt;head&gt; de tu web.",
-    "shortcut": "¿Ya usas Meetup, Luma o un calendario? Te lo convertimos →"
+    "shortcut": "¿Ya usas Meetup, Luma, Eventbrite…? Te ayudamos a importarlo sin tener que abandonarlo →"
   },
   "problem": {
     "title": "El problema ya lo conoces",
-    "lead": "Organizas un evento. Después lo anuncias cinco veces, a mano, en cinco formatos distintos — y aun así no llega a la mitad de la gente que habría venido.",
+    "lead": "Organizas un evento. Después lo anuncias una y otra vez, a mano, en varias redes cuyos algoritmos deciden a quién se lo muestran. En plena economía de la atención, tu mensaje compite contra todo el ruido — y aun así no llega ni a la mitad de la gente que habría venido.",
     "c1": {
-      "title": "El mismo evento, tecleado una y otra vez",
-      "body": "Meetup, Eventbrite, LinkedIn, tu web, un directorio de comunidades, tres grupos de WhatsApp. Los mismos datos, seis formularios, seis ocasiones de colar una errata."
+      "title": "El mismo evento, anunciado una y otra vez",
+      "body": "Tu web, Meetup, LinkedIn, Instagram, X, varios grupos de WhatsApp y Telegram… La misma información en plataformas donde el contenido puede pasar fácilmente desapercibido."
     },
     "c2": {
       "title": "Los directorios no te encuentran",
-      "body": "Los directorios de eventos quieren listarte. Pero tendrían que rascar tu web o esperar a que tú abras un pull request. Así que, casi siempre, no lo hacen."
+      "body": "Los directorios de eventos quieren listarte. Pero tendrían que encontrar tu evento, o esperar a que tú envíes un formulario, abras un pull request, envíes un email, etc… Así que, casi nunca lo hacen."
     },
     "c3": {
       "title": "Cada cambio significa repetirlo todo",
@@ -49,15 +49,19 @@
     "lead": "Describes tus eventos en un JSON sencillo y lo publicas en una URL estable. A partir de ahí, cualquier cosa que hable OTE —directorios, calendarios, bots, webs— puede leerlo sin pedirte nada.",
     "s1": {
       "title": "Tú publicas",
-      "body": "Un feed con tus eventos en una URL que controlas, p. ej. <code>tucomunidad.dev/events.json</code>."
+      "body": "Un feed con tus eventos en una URL que controlas, p. ej. <code>tucomunidad.dev/events.json</code>. Y puedes <a href=\"/register/\">darte de alta en nuestro directorio</a> para que te encuentren."
     },
     "s2": {
       "title": "Las herramientas lo leen",
-      "body": "Agregadores, directorios y conversores lo recogen solos — y lo transforman a RSS, iCalendar o schema.org."
+      "body": "Agregadores, directorios y conversores podrán recogerlo solos — y transformarlo a RSS, iCalendar o schema.org."
     },
     "s3": {
-      "title": "La gente te encuentra",
-      "body": "Quien asiste se suscribe por tema o ciudad y recibe tus eventos en las herramientas que ya usa, sin plataformas extra."
+      "title": "Cada quien elige su herramienta y sus filtros",
+      "body": "Cada persona elige la herramienta que prefiere —calendario, email, RSS, un bot de Telegram o WhatsApp— y los filtros que le interesan."
+    },
+    "s4": {
+      "title": "Te encuentra la gente adecuada",
+      "body": "No es solo que te encuentren: te encuentra quien de verdad quiere ir. Con esos filtros llegas a quien le interesa el evento, no a un feed genérico."
     },
     "min": {
       "title": "El mínimo es de verdad mínimo",
@@ -99,22 +103,22 @@
   },
   "benefits": {
     "title": "Qué ganas tú",
-    "lead": "Adherirte a OTE son un par de horas de trabajo, una sola vez. Esto es lo que te da a cambio.",
+    "lead": "Adherirte a OTE es menos de una hora de trabajo la primera vez. Después, un par de minutos por cada evento que publiques. Esto es lo que te da a cambio.",
     "b1": {
       "title": "Se acabó meter datos a mano",
       "body": "Escribe el evento una vez. Que sean las herramientas las que lo lleven a directorios, calendarios y feeds, en vez de tú copiando y pegando en un formulario más."
     },
     "b2": {
       "title": "Llega más allá de tu burbuja",
-      "body": "Directorios y agregadores pueden recoger tus eventos en cuanto los publicas. Tu meetup aparece donde la gente lo está buscando de verdad."
+      "body": "Directorios y agregadores podrán recoger tus eventos en cuanto los publicas, y llegar a cada persona en el canal que ya usa —no en el que tú elijas—. Tu meetup podrá aparecer donde la gente lo busca de verdad."
     },
     "b3": {
       "title": "Tus datos son tuyos",
       "body": "Tus eventos viven en tu URL y en formato abierto. Si una plataforma cierra, cambia su API o sus precios, tu histórico y tu feed siguen siendo tuyos."
     },
     "b4": {
-      "title": "Integraciones gratis, para siempre",
-      "body": "Cada herramienta nueva construida sobre OTE —una exportación .ics, un widget para la web, un bot de Telegram— funciona para ti sin que muevas un dedo."
+      "title": "Un ecosistema abierto, de la comunidad",
+      "body": "Al ser una especificación abierta que pertenece a la propia comunidad, tiene el potencial de un ecosistema entero de integraciones libres y gratuitas. Cada herramienta nueva construida sobre OTE —una exportación .ics, un widget para la web, un bot de Telegram— trabaja para ti sin que muevas un dedo."
     },
     "b5": {
       "title": "Información correcta en todas partes",
@@ -130,7 +134,7 @@
     "lead": "Tres pasos. El primero es el único con trabajo real, y es un archivo de texto.",
     "s1": {
       "title": "Publica un feed OTE",
-      "body": "Crea un archivo JSON con tus eventos y alójalo donde ya publiques: tu web, GitHub Pages, un gist. Si tus eventos viven en un Google Calendar o en Meetup, un conversor puede generarte el feed."
+      "body": "Crea un archivo JSON con tus eventos y alójalo donde ya publiques: tu web, GitHub Pages, un gist. ¿La vía más rápida? El <a href=\"https://github.com/OpenTechEvents/ote-template\">kit del organizador</a>: un repositorio listo para publicar en minutos, con feeds OTE, ICS y RSS ya montados. Y si tus eventos viven en un Google Calendar o en Meetup, te ayudamos a importarlos para generar el feed."
     },
     "s2": {
       "title": "Hazlo descubrible",
@@ -139,23 +143,15 @@
     },
     "s3": {
       "title": "Avísanos y aparece en la lista",
-      "body": "Abre un issue con la URL de tu feed. Lo validamos, listamos tu comunidad en esta página y los agregadores empezarán a recoger tus eventos.",
+      "body": "Abre un issue con la URL de tu feed. Lo validamos y listamos tu comunidad en esta página; y, a medida que aparezcan agregadores, empezarán a recoger tus eventos.",
       "cta": "Registrar mi feed",
       "cta2": "Copiar un ejemplo que funciona"
     },
     "ics": {
-      "tag": "¿No quieres adherirte a nada? Lee esto primero.",
-      "title": "Danos la URL que ya tienes. La conversión la hacemos nosotros.",
-      "body": "Si tus eventos ya viven en algún sitio con dirección pública —un calendario (Google Calendar, Nextcloud, tu propio <code>.ics</code>), un feed RSS, una página de Meetup o Luma—, no necesitas escribir ni una línea de JSON, ni cambiar de herramienta, ni cambiar nada de lo que haces hoy. Registra esa URL como fuente en el agregador OTE: la lee, la convierte a OTE y la republica como feed, con sus exportaciones a <code>.ics</code>, RSS y JSON Feed.",
-      "body2": "No te comprometes a nada. Es la forma más barata de ver qué pinta tienen tus eventos en OTE — y si no te compensa, te vas habiendo perdido un issue. Adherirte de verdad, en tu propia URL, siempre es mejor destino: es lo que hace que los datos sean tuyos. Pero no tiene por qué ser el primer paso.",
-      "discovery": "La conversión rescata lo que el origen trae: fecha, nombre, lugar, enlace. Lo que rara vez viaja son los metadatos de descubrimiento —temas (<code>tags</code>), modalidad (presencial/online/híbrido), idioma, coordenadas—: o el formato de origen no tiene ese campo, o el calendario no lo rellena. Y son justo esos datos los que dejan que alguien filtre, encuentre y se suscriba a lo que le interesa. Publicar tu propio feed OTE es lo que te deja rellenarlos: el evento pasa de <em>visible</em> a <em>descubrible</em>.",
-      "caveat": "Aviso honesto: el agregador se está construyendo ahora mismo, y el MVP arranca por <code>.ics</code> — las demás fuentes vienen después. Registrar hoy tu URL significa ser una de las primeras fuentes que ingiere, y su primera prueba real.",
-      "cta": "Registrar mi URL",
-      "cta2": "Cómo funciona el agregador"
-    },
-    "help": {
-      "title": "¿No te manejas con JSON?",
-      "body": "No pasa nada: abre un issue igualmente y cuéntanos dónde viven hoy tus eventos. Ayudar a las primeras comunidades a subirse es justo para lo que existe esta fase del proyecto."
+      "tag": "¿Tienes dudas de si merecerá la pena el esfuerzo? Lee esto primero.",
+      "title": "Sigue usando lo que ya tienes, impórtalo fácilmente, mejóralo un poco y obtén grandes beneficios.",
+      "body": "No tienes que escribir JSON ni cambiar de herramienta: tus eventos de Meetup, tu <code>.ics</code>, Eventbrite… te ayudamos a importarlos tal cual. Con solo añadir unos pocos datos más —temas (<code>tags</code>), modalidad, idioma, coordenadas— multiplicas su alcance.",
+      "discovery": "Son los que dejan que alguien filtre por tags, modalidad o coordenadas; y al ser un estándar abierto y gratuito —y como tampoco es una plataforma concreta ni con APIs restringidas, sino una especificación al estilo RSS pero diseñada específicamente para resolver los problemas de la comunidad y los eventos técnicos—, es mucho más fácil que te encuentren y se suscriban a lo que les interesa, igual que otros directorios que podrán dar visibilidad a tu evento sin esfuerzo."
     }
   },
   "adopters": {
@@ -167,7 +163,7 @@
   },
   "consumers": {
     "title": "Quién consume datos OTE",
-    "lead": "Directorios, agregadores y personas que reutilizan feeds publicados en este formato. Cada uno de ellos es un sitio más al que tus eventos llegan gratis.",
+    "lead": "Directorios, agregadores y personas que reutilizan feeds publicados en este formato. Cada uno de ellos es un sitio más al que tus eventos podrán llegar gratis.",
     "empty": "¿Estás montando un directorio, una newsletter o un bot? Consume feeds OTE y aparece aquí.",
     "emptyCta": "Añadir mi proyecto",
     "devDocs": "Docs para desarrolladores"
@@ -202,11 +198,15 @@
       },
       {
         "q": "¿Tengo que dejar mis herramientas actuales?",
-        "a": "No, justo al contrario. El objetivo es que tus datos fluyan hacia las plataformas y herramientas con las que ya trabajas, en vez de reescribirlos en cada una."
+        "a": "No, para nada. El objetivo es que tus datos fluyan fácilmente a muchas más plataformas, y si usas varias, acelerarte el trabajo de reescribirlos en cada una."
       },
       {
         "q": "¿Sustituye a RSS o iCalendar?",
         "a": "No. OTE está diseñada para ser convertible a ellos. Un feed OTE puede exportarse a RSS, JSON Feed o iCal para que la gente lo consuma en su lector de feeds o su app de calendario."
+      },
+      {
+        "q": "¿Cómo se suscribe quien asiste?",
+        "a": "Como prefiera. Unas personas quieren los eventos en su calendario, otras por email, otras en un grupo de WhatsApp o Telegram, otras en un lector de RSS o en sus redes. Al ser una especificación abierta, cada herramienta del ecosistema puede cubrir una preferencia distinta: nadie tiene que adaptarse a la app de una plataforma concreta. Tú publicas una vez; cada quien elige su canal."
       },
       {
         "q": "¿En qué se diferencia de schema.org/Event?",
@@ -222,18 +222,18 @@
       },
       {
         "q": "¿Quién está detrás?",
-        "a": "La propuesta nace de Community Builders (ComBuildersES) y se desarrolla ya en casa propia, la organización <a href=\"https://github.com/OpenTechEvents\">OpenTechEvents</a> en GitHub, con vocación internacional. Aún no es un estándar oficial: es un diseño abierto y comunitario, y necesita a organizadores como tú para llegar a serlo."
+        "a": "La propuesta nace de <a href=\"https://combuilderses.github.io/\">Community Builders (ComBuildersES)</a> y se desarrolla ya en casa propia, la organización <a href=\"https://github.com/OpenTechEvents\">OpenTechEvents</a> en GitHub, con vocación internacional. Aún no es un estándar oficial: es un diseño abierto y comunitario, y necesita a organizadores como tú para llegar a serlo."
       }
     ]
   },
   "final": {
-    "title": "Un estándar vale exactamente lo que vale la gente que lo usa",
+    "title": "Un estándar vale exactamente tanto como el número de personas que lo usan",
     "body": "Cada comunidad que publica un feed OTE hace el formato más útil para todas las demás — y para toda la gente que intenta encontrar tus eventos.",
     "cta": "Publicar mi primer feed",
     "cta2": "Unirme a la conversación"
   },
   "footer": {
-    "note": "Una iniciativa de Community Builders. Especificación en borrador: el nombre, el alcance y la licencia son provisionales.",
+    "note": "Una iniciativa de <a href=\"https://combuilderses.github.io/\">Community Builders</a>. Especificación en borrador: el nombre, el alcance y la licencia son provisionales.",
     "spec": "Especificación",
     "issues": "Issues"
   }

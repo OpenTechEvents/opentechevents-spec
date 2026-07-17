@@ -53,14 +53,14 @@
   <section class="hero" id="top">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <p class="eyebrow" data-i18n="hero.eyebrow">Open specification · Draft 0.1</p>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Open specification · Draft 0.x</p>
         <h1 data-i18n="hero.title">Publish your event once. Let it show up everywhere.</h1>
-        <p class="lead" data-i18n="hero.lead">OpenTechEvents (OTE) is an open, free specification to describe tech community events — meetups, conferences, workshops, online or in person — in a single format that directories, calendars and tools can read automatically.</p>
+        <p class="lead" data-i18n="hero.lead">OpenTechEvents (OTE) is an open, free specification to describe tech community events — meetups, conferences, workshops, online or in person — in a single format that directories, calendars and tools can read automatically. It brings together the best of iCalendar, RSS and schema.org/Event, and stays compatible with all of them: write it once and we help you export it automatically to all three. Four formats for the price of one.</p>
         <div class="cta-row">
           <a class="btn btn-primary" href="#adopt" data-i18n="hero.ctaPrimary">Adopt the spec</a>
           <a class="btn btn-ghost" href="#spec" data-i18n="hero.ctaSecondary">See the format</a>
         </div>
-        <p class="hero-note"><span data-i18n="hero.note">No platform to sign up for. No tool to install: a file you publish, or a link in your site's &lt;head&gt;.</span> <a href="#shortcut" data-i18n="hero.shortcut">Already use Meetup, Luma or a calendar? We'll convert it for you →</a></p>
+        <p class="hero-note"><span data-i18n="hero.note">No platform to sign up for. No tool to install: a file you publish, or a link in your site's &lt;head&gt;.</span> <a href="#shortcut" data-i18n="hero.shortcut">Already use Meetup, Luma, Eventbrite…? We'll help you import it without leaving it →</a></p>
       </div>
 
       <figure class="hero-code">
@@ -90,18 +90,18 @@
   <section class="section" id="problem">
     <div class="wrap">
       <h2 data-i18n="problem.title">You already know the problem</h2>
-      <p class="section-lead" data-i18n="problem.lead">You organise one event. Then you announce it five times, by hand, in five different formats — and you still miss half the people who would have come.</p>
+      <p class="section-lead" data-i18n="problem.lead">You organise one event. Then you announce it over and over, by hand, across several networks whose algorithms decide who even sees it. In today's attention economy, your message competes against all the noise — and you still miss half the people who would have come.</p>
 
       <div class="cards cards-3">
         <article class="card">
           <div class="card-icon">📋</div>
-          <h3 data-i18n="problem.c1.title">The same event, typed again and again</h3>
-          <p data-i18n="problem.c1.body">Meetup, Eventbrite, LinkedIn, your own website, a community directory, three WhatsApp groups. Same data, six forms, six chances to make a typo.</p>
+          <h3 data-i18n="problem.c1.title">The same event, announced again and again</h3>
+          <p data-i18n="problem.c1.body">Your website, Meetup, LinkedIn, Instagram, X, several WhatsApp and Telegram groups… The same information on platforms where content can easily go unnoticed.</p>
         </article>
         <article class="card">
           <div class="card-icon">🕳️</div>
           <h3 data-i18n="problem.c2.title">Directories can't find you</h3>
-          <p data-i18n="problem.c2.body">Event directories want to list you. But they'd have to scrape your site or wait for you to open a pull request. So most of the time, they just don't.</p>
+          <p data-i18n="problem.c2.body">Event directories want to list you. But they'd have to find your event, or wait for you to submit a form, open a pull request, send an email, and so on… So they almost never do.</p>
         </article>
         <article class="card">
           <div class="card-icon">🔁</div>
@@ -124,19 +124,25 @@
         <div class="flow-step">
           <span class="flow-num">1</span>
           <h3 data-i18n="spec.s1.title">You publish</h3>
-          <p data-i18n="spec.s1.body">A feed with your events at a URL you control, e.g. <code>tucomunidad.dev/events.json</code>.</p>
+          <p data-i18n="spec.s1.body">A feed with your events at a URL you control, e.g. <code>tucomunidad.dev/events.json</code>. And you can <a href="/register/">list yourself in our directory</a> so people find you.</p>
         </div>
         <div class="flow-arrow" aria-hidden="true">→</div>
         <div class="flow-step">
           <span class="flow-num">2</span>
           <h3 data-i18n="spec.s2.title">Tools read it</h3>
-          <p data-i18n="spec.s2.body">Aggregators, directories and converters pick it up automatically — and turn it into RSS, iCalendar or schema.org.</p>
+          <p data-i18n="spec.s2.body">Aggregators, directories and converters can pick it up on their own — and turn it into RSS, iCalendar or schema.org.</p>
         </div>
         <div class="flow-arrow" aria-hidden="true">→</div>
         <div class="flow-step">
           <span class="flow-num">3</span>
-          <h3 data-i18n="spec.s3.title">People find you</h3>
-          <p data-i18n="spec.s3.body">Attendees subscribe by topic or city and get your events in the tools they already use — no extra platform.</p>
+          <h3 data-i18n="spec.s3.title">Each person picks their tool and filters</h3>
+          <p data-i18n="spec.s3.body">Each person chooses the tool they prefer — calendar, email, RSS, a Telegram or WhatsApp bot — and the filters they care about.</p>
+        </div>
+        <div class="flow-arrow" aria-hidden="true">→</div>
+        <div class="flow-step">
+          <span class="flow-num">4</span>
+          <h3 data-i18n="spec.s4.title">The right people find you</h3>
+          <p data-i18n="spec.s4.body">It's not just that people find you: the right people do. With those filters you reach whoever is interested in the event, not a generic feed.</p>
         </div>
       </div>
 
@@ -211,7 +217,7 @@
   <section class="section" id="benefits">
     <div class="wrap">
       <h2 data-i18n="benefits.title">What you get out of it</h2>
-      <p class="section-lead" data-i18n="benefits.lead">Adopting OTE is a couple of hours of work, once. Here's what it buys you.</p>
+      <p class="section-lead" data-i18n="benefits.lead">Adopting OTE is under an hour of work the first time. After that, a couple of minutes per event you publish. Here's what it buys you.</p>
 
       <div class="cards cards-2">
         <article class="card">
@@ -222,7 +228,7 @@
         <article class="card">
           <div class="card-icon">📣</div>
           <h3 data-i18n="benefits.b2.title">Reach beyond your own bubble</h3>
-          <p data-i18n="benefits.b2.body">Directories and aggregators can pick up your events the moment you publish them. Your meetup shows up where people are actually looking.</p>
+          <p data-i18n="benefits.b2.body">Directories and aggregators will be able to pick up your events the moment you publish them, and reach each person in the channel they already use — not the one you happen to pick. Your meetup can show up where people are actually looking.</p>
         </article>
         <article class="card">
           <div class="card-icon">🔓</div>
@@ -231,8 +237,8 @@
         </article>
         <article class="card">
           <div class="card-icon">🧩</div>
-          <h3 data-i18n="benefits.b4.title">Free integrations, forever</h3>
-          <p data-i18n="benefits.b4.body">Every new tool built on OTE — an .ics export, a website widget, a Telegram bot — works for you without you lifting a finger.</p>
+          <h3 data-i18n="benefits.b4.title">An open, community-owned ecosystem</h3>
+          <p data-i18n="benefits.b4.body">Because OTE is an open spec owned by the community itself, it has the potential for a whole ecosystem of free, open integrations. Every new tool built on it — an .ics export, a website widget, a Telegram bot — works for you without you lifting a finger.</p>
         </article>
         <article class="card">
           <div class="card-icon">✅</div>
@@ -257,7 +263,7 @@
       <ol class="steps">
         <li>
           <h3><span class="step-num">1</span> <span data-i18n="adopt.s1.title">Publish an OTE feed</span></h3>
-          <p data-i18n="adopt.s1.body">Create a JSON file with your events and host it anywhere you already publish — your site, GitHub Pages, a gist. If your events live in a Google Calendar or Meetup, a converter can generate the feed for you.</p>
+          <p data-i18n="adopt.s1.body">Create a JSON file with your events and host it anywhere you already publish — your site, GitHub Pages, a gist. The fastest path? The <a href="https://github.com/OpenTechEvents/ote-template">organizer kit</a>: a ready-made repository to publish in minutes, with OTE, ICS and RSS feeds already wired up. And if your events live in a Google Calendar or Meetup, we'll help you import them to generate the feed.</p>
           <figure class="code-block code-block-sm">
             <figcaption><code>https://tucomunidad.dev/events.json</code></figcaption>
             <pre data-ote="feed"><code>{
@@ -290,7 +296,7 @@
         </li>
         <li>
           <h3><span class="step-num">3</span> <span data-i18n="adopt.s3.title">Tell us, and get listed</span></h3>
-          <p data-i18n="adopt.s3.body">Open an issue with your feed URL. We'll validate it, list your community on this page, and aggregators will start picking up your events.</p>
+          <p data-i18n="adopt.s3.body">Open an issue with your feed URL. We'll validate it and list your community on this page; and as aggregators come online, they'll start picking up your events.</p>
           <div class="cta-row">
             <a class="btn btn-primary" href="/register/" data-i18n="adopt.s3.cta">Register my feed</a>
             <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/tree/main/spec/v0.2/examples" data-i18n="adopt.s3.cta2">Copy a working example</a>
@@ -299,21 +305,10 @@
       </ol>
 
       <aside class="shortcut" id="shortcut">
-        <p class="shortcut-tag" data-i18n="adopt.ics.tag">Don't want to adopt anything? Read this first.</p>
-        <h3 data-i18n="adopt.ics.title">Give us the URL you already have. We do the conversion.</h3>
-        <p data-i18n="adopt.ics.body">If your events already live in a public calendar (Google Calendar, Nextcloud, your own site), you don't have to write a single line of JSON to try this out. Register the <code>.ics</code> URL as a source in the OTE aggregator: it reads your calendar, converts it to OTE and republishes it as a feed — including <code>.ics</code>, RSS and JSON Feed exports.</p>
-        <p data-i18n="adopt.ics.body2">You commit to nothing and you change nothing. It's the cheapest way to see what your events look like in OTE — and if it's not worth it, you walk away having lost one issue.</p>
-        <p data-i18n="adopt.ics.discovery">Conversion rescues what the source carries: date, name, place, link. What rarely survives are the discovery metadata — topics (<code>tags</code>), attendance mode (in-person/online/hybrid), language, coordinates —: either the source format has no such field, or the calendar never fills it. And those are exactly the fields that let someone filter, find and subscribe to what interests them. Publishing your own OTE feed is what lets you fill them in: the event goes from <em>visible</em> to <em>discoverable</em>.</p>
-        <p class="shortcut-caveat" data-i18n="adopt.ics.caveat">Honest caveat: the aggregator is being built right now, and the MVP starts precisely with <code>.ics</code>. Registering your calendar today means being one of the first sources it ingests — and its first real test.</p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="https://github.com/OpenTechEvents/opentechevents-spec/issues/new?title=%5BSource%5D%20&amp;body=Community%3A%20%0A.ics%20URL%3A%20%0AWebsite%3A%20%0A%0AI%20am%20an%20organiser%20of%20this%20community%20and%20I%20allow%20these%20events%20to%20be%20republished%3A%20yes%2Fno%0A" data-i18n="adopt.ics.cta">Register my URL</a>
-          <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-data" data-i18n="adopt.ics.cta2">How the aggregator works</a>
-        </div>
-      </aside>
-
-      <aside class="note">
-        <strong data-i18n="adopt.help.title">Not comfortable with JSON?</strong>
-        <span data-i18n="adopt.help.body">That's fine — open an issue anyway and tell us where your events live today. Helping the first communities get on board is exactly what this stage of the project is for.</span>
+        <p class="shortcut-tag" data-i18n="adopt.ics.tag">Not sure it's worth the effort? Read this first.</p>
+        <h3 data-i18n="adopt.ics.title">Keep using what you already have, import it easily, improve it a little and get big benefits.</h3>
+        <p data-i18n="adopt.ics.body">No JSON to write, no tool to change: your events from Meetup, your <code>.ics</code>, Eventbrite… we help you import them as they are. By adding just a few more fields — topics (<code>tags</code>), attendance mode, language, coordinates — you multiply their reach.</p>
+        <p data-i18n="adopt.ics.discovery">Those are the fields that let someone filter by tags, attendance mode or coordinates; and because it's an open, free standard —and because it isn't a specific platform or one with restricted APIs, but an RSS-style specification designed specifically to solve the problems of tech communities and events—, it's far easier for people to find you and subscribe to what interests them, just as other directories can give your event visibility with no effort.</p>
       </aside>
     </div>
   </section>
@@ -336,7 +331,7 @@
   <section class="section section-alt" id="consumers">
     <div class="wrap">
       <h2 data-i18n="consumers.title">Who consumes OTE data</h2>
-      <p class="section-lead" data-i18n="consumers.lead">Directories, aggregators and people reusing feeds published in this format. Every one of them is a place your events can reach for free.</p>
+      <p class="section-lead" data-i18n="consumers.lead">Directories, aggregators and people reusing feeds published in this format. Every one of them is another place your events will be able to reach for free.</p>
       <div id="consumers-list" class="logo-grid"></div>
       <div class="empty-cta" id="consumers-empty" hidden>
         <p data-i18n="consumers.empty">Building a directory, a newsletter or a bot? Consume OTE feeds and get listed here.</p>
@@ -382,7 +377,7 @@
   <!-- FINAL CTA -->
   <section class="final-cta">
     <div class="wrap">
-      <h2 data-i18n="final.title">A standard is worth exactly as much as the number of people using it</h2>
+      <h2 data-i18n="final.title">A standard is worth exactly as much as the number of people who use it</h2>
       <p data-i18n="final.body">Every community that publishes an OTE feed makes the format more useful for every other community — and for everyone trying to find your events.</p>
       <div class="cta-row cta-center">
         <a class="btn btn-primary" href="#adopt" data-i18n="final.cta">Publish your first feed</a>
@@ -397,7 +392,7 @@
   <div class="wrap footer-inner">
     <div>
       <p class="footer-brand">OpenTechEvents · OTE Spec</p>
-      <p class="footer-note" data-i18n="footer.note">An initiative by Community Builders. Draft specification — the name, scope and licence are still provisional.</p>
+      <p class="footer-note" data-i18n="footer.note">An initiative by <a href="https://combuilderses.github.io/">Community Builders</a>. Draft specification — the name, scope and licence are still provisional.</p>
     </div>
     <nav class="footer-links">
       <a href="https://github.com/OpenTechEvents/opentechevents-spec">GitHub</a>

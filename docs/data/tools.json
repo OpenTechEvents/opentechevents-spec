@@ -5,12 +5,12 @@
       "status": "wip",
       "audience": ["developers"],
       "name": {
-        "en": "OTE aggregator",
-        "es": "Agregador OTE"
+        "en": "OTE event discovery index",
+        "es": "Índice de descubrimiento de eventos OTE"
       },
       "desc": {
-        "en": "Ingests events from external sources (starting with .ics), normalises them to OTE and publishes a combined feed daily. MVP design under discussion.",
-        "es": "Ingiere eventos de fuentes externas (empezando por .ics), los normaliza a OTE y publica un feed combinado a diario. Diseño del MVP en discusión."
+        "en": "Indexes registered OTE feeds so tools can discover communities and conferences by the events they actually publish: topic, place, date, language, mode, CFP status and activity.",
+        "es": "Indexa feeds OTE registrados para que las herramientas descubran comunidades y conferencias por los eventos que publican: tema, lugar, fecha, idioma, modalidad, CFP y actividad."
       },
       "category": {
         "en": "Ingest",
