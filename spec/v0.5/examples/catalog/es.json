@@ -120,7 +120,8 @@
         "Sin `attendanceMode`, porque iCalendar no sabe expresarlo. Callarse y decir `in-person` son afirmaciones distintas, y solo una es honesta.",
         "Falta `location.address`, y el checker avisa: un `.ics` trae `LOCATION` como una línea de texto libre, sin partes en las que separarla. El aviso dice qué le falta al evento, no de quién es la culpa.",
         "`source` es obligatoria cuando el evento se importó o agregó. Es ortogonal a `organizers`: quién hace el evento frente a de dónde salieron los datos.",
-        "`source.license` (lo que permite la fuente) y `license` (lo que permite este documento) son campos distintos. Declarar una licencia no concede derechos que la fuente nunca dio."
+        "`source.license` (lo que permite la fuente) y `license` (lo que permite este documento) son campos distintos. Declarar una licencia no concede derechos que la fuente nunca dio.",
+        "El `DESCRIPTION` de la fuente venía en HTML —que es lo que escribe Google Calendar y lo que un importador se encuentra de verdad—. Aquí llega ya convertido: el `<a>` a enlace Markdown, el `<br>` a salto de línea, las entidades a su carácter. `description` dice texto plano o Markdown, y copiar el marcado tal cual habría validado rompiendo esa promesa."
       ]
     },
     "feed-community.json": {
@@ -167,6 +168,16 @@
         "`alternates` es la forma en JSON de un `<link rel=\"alternate\">` de HTML, para feeds servidos como endpoint suelto.",
         "Es INFORMATIVO: un consumidor no debe asumir que el RSS/iCal enlazado está sincronizado con este feed; quien publica debería generarlos de la misma fuente.",
         "`feed.contributing` aquí es una dirección `mailto:` de rol — la forma que usa dev.events para correcciones."
+      ]
+    },
+    "feed-covers.json": {
+      "title": "Un agregador que poda su historia, y lo dice",
+      "summary": "Un feed de años que ya no publica su archivo entero — `covers` es lo que hace que podar lo viejo sea honesto en vez de silencioso.",
+      "points": [
+        "`covers` dice sobre qué afirma el feed ser COMPLETO. De 2026-01-01 en adelante, que falte un evento significa que no se celebra; antes de esa fecha el feed no afirma nada y quien lo consume no puede deducir que se eliminó.",
+        "Sin él, la propia regla de la spec —un evento cancelado se queda publicado, nunca se borra— hace que la ausencia signifique eliminación, así que podar 2025 afirmaría que aquellos eventos nunca ocurrieron.",
+        "Sin `to`, que es la forma normal: un feed sigue siendo completo hacia el futuro y solo recorta su pasado.",
+        "Un feed de agregador no lleva `organizers` ni `textLanguage`: no organiza lo que publica, y sus eventos no comparten idioma, así que cada uno declara el suyo."
       ]
     },
     "event-recording.json": {

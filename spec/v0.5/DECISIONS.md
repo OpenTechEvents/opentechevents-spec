@@ -686,6 +686,136 @@ This is deliberately a **warning, not a validity error** — added to `event.rec
 
 ---
 
+### D034 — The recommended profile asks `url`/`image` of the whole event, not of each of its parts
+
+**Status:** Decided 2026-11-03. Raised by publishing a real multi-part conference (BiznagaFest 2026: one conference document plus 17 talk documents, all `specVersion: "0.5.0"`), not by the schema.org audit — hence no `CHANGES.log` P-number.
+
+**Context.** `event.recommended.schema.json` asked for `url`, `description`, `image`, `organizers`, `attendanceMode`, `location`, `tags`, `languages` and `updatedAt` in one flat `required` list, with no regard for whether the document stood alone. A talk inside a one-day conference has neither a page nor a poster of its own: both live on the conference, which is exactly where `partOf` points. So each of the 17 talk documents carried a permanent `must have required property 'url'; 'image'` warning that no amount of correct publishing could clear — the only way to clear it was to invent a per-talk URL and a per-talk image, which is the one thing this spec refuses to cause (see D025's framing and the indexed decision on `offers`/`cfp`/`eligibility` deliberately not being recommended). Worse, `README.md` asks for precisely this modelling — in a multi-part conference the speakers of a given talk live on that talk's document — so the profile was marking the spec's own recommended shape as low quality.
+
+**Decision.** `url` and `image` left the flat list and became two conditional rules in the same profile:
+- **No `partOf`** → `url` and `image` are recommended, unchanged from before. A document that is not part of anything is the whole event; nothing else can carry them.
+- **`partOf` present and no own `url`** → `partOf.url` is recommended instead. The reason `url` was recommended at all is that it is the only link RSS/Atom has for an item; `partOf.url` keeps that guarantee for a part, pointing at the page where the part is actually announced. A part that *does* have its own page should still publish it in `url` — the rule stops short of satisfying `url`, it never forbids it. `image` is not asked of a part at all.
+
+Expressed as plain declarative `if`/`then`, no custom keyword, same technique as D025 and for the same reason. The reference generator already walks conditional branches (the `endDate` precedent, D-era `recommendedOf`), so `partOf.url` shows up as recommended in the field reference without any generator change.
+
+**Why `tags` stays required of a part.** It was the third warning on those 17 documents and it is the one that is *right*: what a talk is about is the talk's own property, not the conference's, and it is what somebody filters by when looking for a talk. Dropping it would make a multi-part conference unfilterable below the conference level — the opposite of why parts get their own documents.
+
+**Why the recommended tier and not the base schema.** Nothing here changes validity: a part with no `url` and no `image` was valid before and is valid now. This only changes which of two correct documents gets warned at.
+
+**Alternatives considered.** (1) *Exempt `url` whenever `partOf` exists, without asking for `partOf.url`*: rejected — it silences the warning by giving up the RSS/Atom link guarantee entirely, so an exporter emitting a part as a feed item has nothing to link to. (2) *Let `partOf.url` satisfy `url` by making the parent's URL the event's `url` at import time*: rejected — it makes 17 documents claim a page that describes none of them specifically, and breaks `url`'s documented meaning ("where the event is described today"). (3) *Keep the warning and document that parts are expected to carry it*: rejected — a warning everyone is told to ignore trains producers to ignore all of them, the same reasoning that kept `offers`/`cfp`/`eligibility` out of the recommended tier. (4) *Also exempt `location`, `attendanceMode`, `languages`, `updatedAt` for parts*: rejected, no evidence — the real corpus that raised this carried all four on every talk, because a talk genuinely has its own room, its own language and its own last-modified time. (5) *A `partsInherit`-style keyword listing which fields a part may inherit from its parent*: rejected as a much larger mechanism than the two fields of evidence justify, and `x-inheritsFrom` already covers feed→event inheritance, which is a different relationship.
+
+**Compatibility impact.** Strictly fewer warnings; nothing that passed the profile before fails it now, and no document's validity changes. Only `spec/v0.5/` is touched: `v0.1`–`v0.4` are frozen, so a consumer validating a 0.4 part against the 0.4 profile keeps seeing the old warnings, which is what a frozen version means.
+
+**Revisit if:** a real producer is found that needs the opposite — a part with a genuine page of its own where the parent's URL would be the wrong link — in which case this becomes a question about `url` precedence for parts, not about the profile; or if evidence appears that parts routinely carry their own artwork, which would bring `image` back for parts that do.
+
+---
+
+### D035 — `multipart` describes one event in several parts, not a gap between dates
+
+**Status:** Decided 2026-11-03. Same BiznagaFest 2026 publishing session that produced D034.
+
+**Context.** `partOf.type`'s own description, in the schema and in `README.md`, defined `multipart` as "parts of ONE event held on non-consecutive dates", with a three-session study jam as the only example. Read literally that excludes the commonest multi-part event there is — a one-day conference whose parts are its talks — and a publisher reading only that sentence has no value left to use for it. The sentence also contradicted its own paragraph two lines later ("`multipart` says nothing about time that `series` doesn't; what it changes is who owns the price"), and contradicted the repo's own corpus: `feed-multipart-pricing.json` has both parts on the same day and `feed-conference-tracks.json` spans two consecutive days, both `type: "multipart"`.
+
+**Decision.** The description — in `event.schema.json`, in `spec/v0.5/i18n/es.json` and in `README.md` — now says what the value actually distinguishes: parts of one event, published one document per part because each part has its own date, time or room, not attended or cancelled separately, with one registration for the whole. The distance between dates decides nothing, stated explicitly, and a single conference day of talks is named as an example alongside the study jam. No enum value, no keyword and no constraint changed: this is the description catching up with what the schema, D032's pricing rule and the examples already did.
+
+**Alternatives considered.** (1) *Add a third value for the same-day case*: rejected — there is no third behaviour to name; the translation (`Event` with `subEvent` parts) and the pricing ownership are identical whatever the gap is. (2) *Leave the wording and let the examples carry the meaning*: rejected — an importer or an agent reads the field description, which is what shipped in the schema, long before it reads the corpus; this is precisely how the gap was found. (3) *Keep "non-consecutive" as the typical case while allowing others*: rejected as the same trap in softer words — "typically non-consecutive" still reads as a hint that a one-day conference belongs somewhere else.
+
+**Compatibility impact.** None mechanical: no document's validity changes and no exporter's output changes. It widens what publishers understand `multipart` to cover, which is what the schema always enforced.
+
+**Revisit if:** a real need appears to distinguish same-day parts from spread-out parts in a destination's mapping — that would be a new field about scheduling, not a redefinition of this one.
+
+---
+
+### D036 — Discovery settled: `<link rel="alternate">` first, `application/ote+json`, well-known optional, embedded out
+
+**Status:** Decided 2026-11-03. Closes [#33](https://github.com/OpenTechEvents/opentechevents-spec/issues/33), which had been tracked against #6 — the umbrella "define the Feed Schema" issue — so nothing was actually tracking the decision.
+
+**Context.** The spec described one way to find a feed from a website, inside *Open questions*, and three things were widely assumed but never settled: the `/.well-known/ote-feed` path, a feed embedded in the page as `<script type=…>`, and which media type a feed carries. The reference implementation (`@opentechevents/discover-feed`) had already implemented well-known and embedded behind flags that are **off by default**, and matched media types laxly, accepting both candidate types — precisely because the spec had not chosen. An undecided question with an implementation already shipped is the shape of a de-facto standard forming without anybody deciding it, and each of the three would have been breaking to settle after 1.0.
+
+**Decision.**
+
+1. **`<link rel="alternate">` in the page `<head>` is the primary mechanism, SHOULD.** It mirrors twenty years of RSS, and it is the only mechanism available to whoever publishes at a path whose domain they do not control — a project GitHub Pages site, a page inside a corporate domain, somebody else's CMS. That population is the one the spec exists to serve, so the primary mechanism has to be theirs.
+2. **The media type is `application/ote+json`.** A consumer meeting `application/feed+json` on what does turn out to be an OTE feed SHOULD accept it and SHOULD warn.
+3. **`/.well-known/ote-feed` is a MAY**, resolving to the feed or redirecting to it.
+4. **A feed embedded in the page is out of scope**, slot reserved.
+
+**Why a dedicated media type and not `application/feed+json`.** That type belongs to JSON Feed. A document serving under it claims to *be* a JSON Feed, which an OTE feed is not: a generic reader that follows the link fetches a document it cannot parse, and the failure presents as a broken feed rather than a different format — the worst of both outcomes, because it damages the publisher's apparent reliability for a mislabelling. Accepting the wrong type with a warning keeps real feeds working without writing the ambiguity into the spec, which is what the lax match was doing silently. A dedicated type is also what makes the IANA well-known registration coherent; `+json` follows RFC 6839's structured-syntax suffix.
+
+**Why well-known is MAY and not SHOULD.** A SHOULD would warn the exact publishers the primary mechanism exists for: whoever cannot write to `/.well-known/` because their hosting does not let them. A conformance level a publisher cannot reach is a defect in the spec, not in the publisher.
+
+**Why embedding stays out, and what blocks it.** Not caution: **the document has no discriminator**. A feed is recognised today by being what the link points at, plus carrying `events[]`. Inside a page, next to other `<script>` blocks, it would have to say what it is — and the field that would say so does not exist. (The example previously carried in *Open questions* even used a `"kind": "feed"` member, which is in no schema of any version.) Adding it is a model change with consequences for every document, not a serialisation detail, and doing it under time pressure before 1.0 is how a field nobody wants ends up permanent. Reserving the slot costs nothing: if embedding is adopted, it arrives as an equivalent serialisation of the same document, announced by that discriminator, and nothing published meanwhile becomes invalid.
+
+**Alternatives considered.** (1) *Accept both media types as equally canonical*: rejected — it writes the current lax match into the spec and guarantees that two consumers disagree about what to send in `Accept`. (2) *`application/ote+json` with a `profile` parameter carrying the version*: rejected, `specVersion` is inside the document, where a consumer that has already fetched it can see it; a parameter duplicates it in a place that can disagree. (3) *Make well-known the primary mechanism*: rejected for the hosting reason above. (4) *Specify embedding now with `events[]` as the discriminator*: rejected — `events[]` distinguishes a feed from an event, not an OTE document from any other JSON on the page. (5) *Leave all three open until a 1.0 that needs them*: rejected, this is the decision #33 exists to force, and every month undecided is another month of implementations converging on an unofficial answer.
+
+**Compatibility impact.** No schema changes and no document becomes invalid. For tooling it is additive: `discover-feed` can turn its flags on and replace the lax media-type match with an answer plus a warning. A publisher already serving `application/feed+json` keeps working, now with a defined expectation rather than an accident.
+
+**Revisit if:** a CMS-shaped population turns out to be blocked on embedding specifically — in which case the first question is the discriminator, not the `<script>` tag; or if IANA declines the `ote-feed` registration, which would make the well-known path a squat and is reason to reconsider offering it at all.
+
+---
+
+### D037 — Large feeds: no pagination, ever; `covers` instead, and archiving reserved
+
+**Status:** Decided 2026-11-03. Closes [#48](https://github.com/OpenTechEvents/opentechevents-spec/issues/48), which recorded the first real pressure on the "interchange format, not an API" rule and asked for a second data point before deciding. Measuring produced it.
+
+**Context.** One registered adopter feed (`eventos.wiki`) is 553 KB and answers in ~24 s. It forced the daily health check's timeout to 60 s with retries, the online validator gives up before it finishes, and every consumer re-downloads all of it to learn that one event changed. The issue framed the question as "should feeds have a way to be served in parts" and listed four options, the sharpest being an RFC 5005 / JSON Feed style `next` link.
+
+**The measurement changed the question.** Taken across all four registered feeds on 2026-11-03:
+
+| Feed | Size | Server compression | Revalidation | TTFB | Total |
+| --- | --- | --- | --- | --- | --- |
+| Community Builders | 75 KB | gzip | `ETag` + `Last-Modified` | 476 ms | 484 ms |
+| Sarao | 321 KB | brotli | `ETag` + `Last-Modified` | 253 ms | 276 ms |
+| CoruñaJUG | 10 KB | gzip | `ETag` + `Last-Modified` | 386 ms | 387 ms |
+| eventos.wiki | 553 KB | **none** | **none** | **23.9 s** | 24.2 s |
+
+Three facts follow, and none of them is "the format needs pagination":
+
+1. **Size is not the problem.** Sarao is 58% of eventos.wiki's size and arrives **88× faster**. A 300 KB feed served properly is a non-event.
+2. **The 24 s is the origin, not the bytes.** 23.9 s of 24.2 s is time to first byte; the half-megabyte itself moves in ~0.4 s. Splitting the document into N parts would turn one slow request into N slow requests.
+3. **What is uncontrolled is history, not size per se.** 473 of eventos.wiki's 485 events are in the past — 97.5% of the payload is archive, and archives only grow.
+
+Also measured: gzipping that feed takes it from 568 KB to 108 KB (5.2×), and it serves no `ETag`, so no consumer can ever get a `304`.
+
+**Decision, in three parts.**
+
+1. **The HTTP response gets documented** — a new *Serving the feed* section: `Access-Control-Allow-Origin: *` (which the spec had never stated either, despite the health check reporting it since H008), `Content-Encoding`, and an `ETag`/`Last-Modified` so a poll that finds nothing new costs a few hundred bytes. All server configuration, all free on a static host, and together they cover the actual pain.
+2. **`covers`**, a new optional feed field: a date window the feed claims completeness for. Inside it, absence means the event is not happening; outside it, the feed asserts nothing. Omitted, the pre-v0.5 meaning is unchanged.
+3. **Pagination is ruled out permanently**, and archiving is reserved as the shape any future splitting will take.
+
+**Why `covers` is the right field, and not a size feature.** It closes a correctness hole that exists today at any size. The spec says a cancelled event stays published and is never deleted, so absence means deletion — which makes every publisher who prunes old events assert, silently, that those events never happened. There was no way to say "I keep two years". `covers` turns a practice people already follow into a statement a consumer can act on, and it is also the only lever that actually shrinks eventos.wiki: dropping 473 past events takes it from 553 KB to roughly 15 KB, which no amount of compression or paging approaches.
+
+**Why pagination is refused rather than deferred.** A `next` link breaks the one promise that makes this format cheap: *download the file and you have everything*. A consumer that ignores the link gets a subset **and cannot tell** — the failure is silent and the data is wrong, not merely incomplete, which inverts the spec's standing rule that incomplete is acceptable and false is not. RFC 5005 drew exactly this line for Atom in 2007, recommending paging only for feeds not meant to be archived; JSON Feed's `next_url` inherited the hazard. And it would not have helped the one feed that prompted the question, whose cost is origin latency. Saying "no, and here is why" also protects the near future: an undecided question with a known shape is an invitation to implement it as an extension, which is how it would arrive anyway.
+
+**What is reserved.** If splitting ever becomes genuinely necessary, it is RFC 5005's *other* half: the document at the published URL stays complete for what it covers, and links to **immutable** archive documents for what it no longer does. A consumer that ignores the link still gets correct data for the window — additive by construction, which is why reserving it now costs nothing and adding it later breaks nobody.
+
+**Alternatives considered.** (1) *Do nothing, raise timeouts*: rejected — it leaves both the correctness hole and the publisher without an answer, and the timeout is already at 60 s. (2) *A non-normative "one feed per year plus an index" convention*: rejected — a convention with adoption becomes normative without ever being decided, and it needs the same window semantics `covers` provides, so it is `covers` plus an unspecified index. (3) *An optional `next` link*: rejected, above. (4) *Add the archive link now*: rejected — one publisher is not evidence for a linking mechanism, whereas the completeness hole `covers` closes is independent of how many large feeds exist. (5) *Make compression and `ETag` normative MUSTs*: rejected — the spec describes a document, and a publisher on hosting they do not control cannot be made non-conformant by their CDN; the health check reports it, which is the right instrument.
+
+**Compatibility impact.** `covers` is additive and optional: every existing feed stays valid and keeps its current meaning. The new validator rule (`orderedCoverage`) can only fire on a field that did not exist. No tooling is required to understand it — a consumer that ignores `covers` behaves exactly as it does today, which is the pre-v0.5 assumption.
+
+**Revisit if:** a second feed shows the same shape *after* compression and pruning, which would mean a community genuinely needs more than one document — then the archive mechanism is designed, as archiving and not as paging; or if a consumer is found that actively needs to distinguish "not in this feed" from "not covered" in some way `covers` cannot express.
+
+---
+
+### D038 — `speakers[].affiliation` enters the core, as a bare string
+
+**Status:** Decided 2026-11-03. Closes [#52](https://github.com/OpenTechEvents/opentechevents-spec/issues/52), raised while publishing BiznagaFest 2026.
+
+**Context.** v0.5 shipped `speakers` deliberately small — "a name, and where to find them" — with `affiliation`, `jobTitle`, `bio` and `image` left in the suggested-extensions registry to graduate on measured adoption. Then the first real agenda hit it: BiznagaFest announces speakers as "Martí Cristobal, Bettatech", which is how essentially every conference agenda in the world writes them. With no field, the second half goes into `name`.
+
+**Decision.** `speakers[].affiliation`, an optional non-blank string: the organisation the speaker appears as. A proper noun, never translated, the same discipline as `organizers[].name`. Meaningless and ignored on `type: "organization"`, where `name` already is the organisation. Maps to schema.org `Person.affiliation` as `{ "@type": "Organization", "name": … }`. It leaves the suggested-extensions registry in the same change — a field documented in two places with two different statuses is how a producer ends up emitting the wrong shape.
+
+**Why this one jumps the graduation queue, when measured adoption is zero.** The honest answer is that the graduation rule was not written for this case. That rule asks "do ≥3 producers emit it?" and exists to stop the spec growing on imagined need — but it assumes the cost of waiting is zero, and here it is not: **the absence of this field actively corrupts a field that already exists**. With nowhere to put the employer, producers put it in `name`, and "Martí Cristobal, Bettatech" matches that person nowhere else, forever, in every consumer that tries to de-duplicate speakers. That is the same damage putting a speaker in `organizers` did before v0.5 — the failure `speakers` was added to prevent — reappearing one level down. Waiting for three producers to emit a field they have no way to emit would, in practice, mean waiting for three producers to corrupt `name` first. Of the four speaker enrichments, this is also the only one with no translation cost (a proper noun), which is why it is the only one moving: `jobTitle`, `bio` and `image` stay in the registry, where their graduation questions still make sense.
+
+**Why a bare string and not an object.** The next shape anyone reaches for is `{ name, url }`. Rejected: an organisation worth describing — with a link, a logo, a role — is an **organizer or a sponsor**, and both of those have (or will have) their own field. `affiliation` is a label on a person, and keeping it a string is what stops `speakers` from quietly growing into a second organisation model. The same reasoning that kept `speakers` itself small applies to its members.
+
+**Alternatives considered.** (1) *Leave it in the registry and wait for ≥3 producers*: rejected, above — the cost of waiting is paid in corrupted `name` values that no later fix recovers. (2) *Write a rule saying `name` is the person only, with no field to redirect to*: rejected — it names the mistake without offering the alternative, which is exactly the position v0.4 was in with speakers and `organizers`. (3) *Declare affiliation out of scope*: defensible on "OTE describes events, not people", but it contradicts the registry already documenting the field and leaves the corruption unaddressed. (4) *An object with an optional `url`*: rejected, above. (5) *Allow translations*: rejected — a company name is a proper noun; the same call `organizers[].name` and a locality's spelling already make.
+
+**Compatibility impact.** Purely additive and optional: every 0.5 document stays valid, and a consumer that ignores `affiliation` behaves exactly as before. The unprefixed-extension caveat applies in principle — a producer already shipping `speakers[].affiliation` with a different shape — but measured adoption is zero across all registered feeds, and none of them is even on 0.5 yet.
+
+**Revisit if:** real producers turn out to need more than one affiliation per speaker (a co-appointment), or an affiliation with its own URL — in which case the question is whether that is still `affiliation` or has become `sponsors`.
+
+---
+
 ## Indexed decisions
 
 Already argued in full in `README.md`; summarized here for discoverability.

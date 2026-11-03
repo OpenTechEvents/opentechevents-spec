@@ -156,7 +156,9 @@
           "type": "string",
           "format": "iri",
           "pattern": "^https?://",
-          "not": {"pattern": "^https?://[^/?#]*@"},
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
           "examples": [
             "https://pyalmeria.example/eventos/2026-06-async",
             "https://eventos.wiki/events/2025/pycamp-españa",
@@ -169,7 +171,9 @@
           "type": "string",
           "format": "iri",
           "pattern": "^https?://",
-          "not": {"pattern": "^https?://[^/?#]*@"},
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
           "examples": [
             "https://pyalmeria.example/eventos/2026-06-async"
           ]
@@ -184,7 +188,7 @@
           ]
         },
         "description": {
-          "description": "Short description. Plain text or Markdown.",
+          "description": "Short description. Plain text or Markdown — never HTML: an importer whose source carries markup (Google Calendar writes DESCRIPTION with <a> and <br>) converts links to Markdown, tags to line breaks, entities to characters, and drops the rest. See README.",
           "type": "string",
           "examples": [
             "Charla introductoria a la programación asíncrona en Python, con ejemplos en vivo."
@@ -2406,7 +2410,9 @@
         {
           "format": "iri",
           "pattern": "^https?://",
-          "not": {"pattern": "^https?://[^/?#]*@"}
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          }
         }
       ]
     },
@@ -2669,7 +2675,9 @@
           "type": "string",
           "format": "iri",
           "pattern": "^https?://",
-          "not": {"pattern": "^https?://[^/?#]*@"},
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
           "examples": [
             "https://pyalmeria.example",
             "https://www.meetup.com/pyalmeria/"
@@ -2699,7 +2707,7 @@
       }
     },
     "speakers": {
-      "description": "Who gives the talk(s). Kept deliberately small, like organizers: a name, and where to find them.",
+      "description": "Who gives the talk(s). Kept deliberately small, like organizers: a name, where they are from, and where to find them.",
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,
@@ -2712,7 +2720,7 @@
       "required": [
         "name"
       ],
-      "$comment": "sameAs is HTTP(S) only, not a DID / AT-URI / acct: handle: schema.org sameAs is a Web-page URL, and a decentralised identifier is an identifier, not a page — emit the public profile URL instead. speakers is deliberately NOT in the recommended profile: an .ics importer never has speaker data, and most events in a community feed are meetups whose speaker is often the organiser anyway.",
+      "$comment": "sameAs is HTTP(S) only, not a DID / AT-URI / acct: handle: schema.org sameAs is a Web-page URL, and a decentralised identifier is an identifier, not a page — emit the public profile URL instead. affiliation is a bare string on purpose: the alternative shape people reach for is an object with a url, which is a second organisation to describe and that is organizers/sponsors territory. speakers is deliberately NOT in the recommended profile: an .ics importer never has speaker data, and most events in a community feed are meetups whose speaker is often the organiser anyway.",
       "properties": {
         "name": {
           "description": "Display name of the speaker. A proper noun: never translated.",
@@ -2724,12 +2732,24 @@
             "Grace Hopper"
           ]
         },
+        "affiliation": {
+          "description": "The organisation this speaker is there as — ONE display name, the way an agenda writes it (\"Martí Cristobal, Bettatech\"). It exists so that the company does NOT end up inside name: name is the person, and a name carrying an employer stops matching the same person anywhere else. A proper noun, never translated, same discipline as organizers[].name. Deliberately a string and not an object: this is a label on the speaker, not a second organisation to describe — if it needs a URL of its own it is probably an organizer or a sponsor. Meaningless and ignored on type: organization, where name already IS the organisation. Maps to schema.org Person.affiliation.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "Bettatech",
+            "Igalia"
+          ]
+        },
         "url": {
           "description": "The speaker's canonical page — their own site, or their main profile. One URL. Same rules as organizers[].url. Other profiles go in sameAs.",
           "type": "string",
           "format": "iri",
           "pattern": "^https?://",
-          "not": {"pattern": "^https?://[^/?#]*@"},
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
           "examples": [
             "https://ada.example"
           ]
@@ -2743,7 +2763,9 @@
             "type": "string",
             "format": "iri",
             "pattern": "^https?://",
-            "not": {"pattern": "^https?://[^/?#]*@"}
+            "not": {
+              "pattern": "^https?://[^/?#]*@"
+            }
           },
           "examples": [
             [
@@ -2773,7 +2795,9 @@
         {
           "format": "iri",
           "pattern": "^https?://",
-          "not": {"pattern": "^https?://[^/?#]*@"}
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          }
         },
         {
           "pattern": "^mailto:[^\\s?@,#/\\[\\]]+@[^\\s?@,#/\\[\\]]+$"
@@ -2797,7 +2821,9 @@
           "type": "string",
           "format": "iri",
           "pattern": "^https?://",
-          "not": {"pattern": "^https?://[^/?#]*@"},
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
           "examples": [
             "https://rustmadrid.example/meetups",
             "https://pyalmeria.example/study-jams/2026-testing"
@@ -2818,13 +2844,15 @@
           "type": "string",
           "format": "iri",
           "pattern": "^https?://",
-          "not": {"pattern": "^https?://[^/?#]*@"},
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
           "examples": [
             "https://rustmadrid.example/meetups"
           ]
         },
         "type": {
-          "description": "series: independent occurrences that share an identity (a monthly meetup). multipart: parts of ONE event held on non-consecutive dates (a three-session study jam on non-consecutive Saturdays, one registration). series is the tolerant choice, and the choice changes the translation: a series becomes schema.org EventSeries, a multi-part event becomes an Event whose parts are its subEvent.",
+          "description": "series: independent occurrences that share an identity (a monthly meetup). multipart: parts of ONE event, published as one document per part because each part has its own date, time or room — the three sessions of a study jam on non-consecutive Saturdays, and equally the seventeen talks of a single conference day. What makes it multipart is that the parts are not attended or cancelled independently and there is one registration for the whole; the distance between the dates decides nothing. series is the tolerant choice, and the choice changes the translation: a series becomes schema.org EventSeries, a multi-part event becomes an Event whose parts are its subEvent.",
           "enum": [
             "series",
             "multipart"
@@ -2904,7 +2932,9 @@
           "type": "string",
           "format": "iri",
           "pattern": "^https?://",
-          "not": {"pattern": "^https?://[^/?#]*@"},
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
           "examples": [
             "https://meet.example/pyalmeria"
           ]
@@ -3042,7 +3072,9 @@
           "type": "string",
           "format": "iri",
           "pattern": "^https?://",
-          "not": {"pattern": "^https?://[^/?#]*@"},
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
           "examples": [
             "https://rustgirona.example/join"
           ]
@@ -3092,7 +3124,9 @@
             "type": "string",
             "format": "iri",
             "pattern": "^https?://",
-            "not": {"pattern": "^https?://[^/?#]*@"}
+            "not": {
+              "pattern": "^https?://[^/?#]*@"
+            }
           },
           {
             "$ref": "#/$defs/imageEntry"
@@ -3112,7 +3146,9 @@
           "type": "string",
           "format": "iri",
           "pattern": "^https?://",
-          "not": {"pattern": "^https?://[^/?#]*@"},
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
           "examples": [
             "https://rustmadrid.example/img/2026-06-16x9.png"
           ]
@@ -3188,7 +3224,9 @@
             "type": "string",
             "format": "iri",
             "pattern": "^https?://",
-            "not": {"pattern": "^https?://[^/?#]*@"}
+            "not": {
+              "pattern": "^https?://[^/?#]*@"
+            }
           },
           {
             "$ref": "#/$defs/recordingEntry"
@@ -3208,7 +3246,9 @@
           "type": "string",
           "format": "iri",
           "pattern": "^https?://",
-          "not": {"pattern": "^https?://[^/?#]*@"},
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
           "examples": [
             "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
           ]
@@ -3327,7 +3367,9 @@
           "type": "string",
           "format": "iri",
           "pattern": "^https?://",
-          "not": {"pattern": "^https?://[^/?#]*@"},
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
           "examples": [
             "https://devfest-levante.example/2026/entradas"
           ]
@@ -3348,7 +3390,9 @@
           "type": "string",
           "format": "iri",
           "pattern": "^https?://",
-          "not": {"pattern": "^https?://[^/?#]*@"},
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
           "examples": [
             "https://devfest-levante.example/2026/lista-espera"
           ]
@@ -3454,7 +3498,9 @@
           "type": "string",
           "format": "iri",
           "pattern": "^https?://",
-          "not": {"pattern": "^https?://[^/?#]*@"},
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
           "examples": [
             "https://devfest-levante.example/2026/cfp"
           ]
@@ -3521,7 +3567,9 @@
           "type": "string",
           "format": "iri",
           "pattern": "^https?://",
-          "not": {"pattern": "^https?://[^/?#]*@"},
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
           "examples": [
             "https://calendar.example/ics/rust-madrid"
           ]

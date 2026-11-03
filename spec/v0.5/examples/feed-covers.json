@@ -1,0 +1,42 @@
+{
+  "specVersion": "0.5.0",
+  "title": "Eventos de eventos.example",
+  "description": "Agregador de eventos tech de habla hispana.",
+  "url": "https://eventos.example",
+
+  "_comment_organizers": "Feed de agregador: NO lleva organizers, porque no organiza lo que publica, y por lo mismo NO declara textLanguage — sus eventos no comparten idioma y heredarlo les atribuiría uno que puede no ser el suyo (D031). Cada evento declara el suyo.",
+
+  "license": "CC-BY-4.0",
+  "updatedAt": "2026-11-03T06:00:00Z",
+
+  "_comment_covers": "Este agregador lleva años funcionando y ya no publica su archivo completo: poda todo lo anterior a 2026 para que el fichero siga siendo pequeño y rápido. `covers` es lo que hace legítima esa poda. Sin él, la regla de la spec —un evento cancelado se queda publicado, nunca se borra— significa que la ausencia de un evento es su eliminación: quien consume el feed deduciría que los eventos de 2025 nunca ocurrieron. Con él, el feed dice exactamente qué afirma: de 2026-01-01 en adelante está completo y la ausencia significa algo; antes de esa fecha no afirma nada y la ausencia no significa nada. No hay `to`, que es el caso normal: el feed sigue siendo completo hacia el futuro.",
+
+  "covers": { "from": "2026-01-01" },
+
+  "events": [
+    {
+      "id": "https://eventos.example/e/2026-11-07-biznagafest",
+      "url": "https://eventos.example/e/2026-11-07-biznagafest",
+      "name": "BiznagaFest 2026",
+      "description": "Encuentro de comunidades técnicas en Málaga.",
+      "image": ["https://eventos.example/img/2026-11-07-biznagafest.png"],
+      "organizers": [
+        { "name": "GDG Málaga", "url": "https://gdg.community.dev/gdg-malaga/" }
+      ],
+      "startDate": "2026-11-07T09:00",
+      "endDate": "2026-11-07T21:00",
+      "timezone": "Europe/Madrid",
+      "attendanceMode": "in-person",
+      "location": { "venue": "FYCMA, Málaga" },
+      "tags": ["comunidad", "ia"],
+      "languages": ["es"],
+      "textLanguage": "es",
+      "source": {
+        "name": "BiznagaFest",
+        "url": "https://www.biznagafest.com/",
+        "retrievedAt": "2026-11-03T05:00:00Z"
+      },
+      "updatedAt": "2026-11-03T05:30:00Z"
+    }
+  ]
+}

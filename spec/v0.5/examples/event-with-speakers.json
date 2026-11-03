@@ -11,14 +11,15 @@
     { "name": "PyAlmería", "url": "https://pyalmeria.example" }
   ],
 
-  "_comment_speakers": "speakers NO es organizers: quien da la charla no la organiza. Es una lista porque un panel es lo normal. `url` es la página canónica de cada ponente; `sameAs` son sus otros perfiles. speakers no está en el perfil recomendado: quien importa un .ics nunca lo tiene.",
+  "_comment_speakers": "speakers NO es organizers: quien da la charla no la organiza. Es una lista porque un panel es lo normal. `url` es la página canónica de cada ponente; `sameAs` son sus otros perfiles. `affiliation` es la empresa por la que viene, y existe para que NO acabe dentro de `name`: \"Ada Lovelace, Analytical Engines\" en `name` ya no casa con esa misma persona en ningún otro sitio. La tercera entrada es una organización, así que no lleva `affiliation`: su `name` YA es la organización. speakers no está en el perfil recomendado: quien importa un .ics nunca lo tiene.",
   "speakers": [
     {
       "name": "Ada Lovelace",
+      "affiliation": "Analytical Engines",
       "url": "https://ada.example",
       "sameAs": ["https://fosstodon.org/@ada", "https://www.linkedin.com/in/ada-lovelace"]
     },
-    { "name": "Grace Hopper" },
+    { "name": "Grace Hopper", "affiliation": "US Navy" },
     { "type": "organization", "name": "El equipo de anyio" }
   ],
   "startDate": "2026-09-24T19:00",

@@ -274,7 +274,8 @@
         "No `attendanceMode`, because iCalendar cannot express it. Staying silent and saying `in-person` are different claims, and only one is honest.",
         "`location.address` is missing, and the checker says so — an `.ics` carries `LOCATION` as one free-text line, with no parts to split it into. The warning names what the event lacks, not who is to blame for it.",
         "`source` is required when the event was imported or aggregated. It is orthogonal to `organizers`: who runs the event vs. where the data came from.",
-        "`source.license` (what the origin allows) and `license` (what this document allows) are different fields. Declaring a licence does not grant rights the origin never gave."
+        "`source.license` (what the origin allows) and `license` (what this document allows) are different fields. Declaring a licence does not grant rights the origin never gave.",
+        "The source's `DESCRIPTION` was HTML — which is what Google Calendar writes, and what an importer actually meets. It arrives here converted: `<a>` to a Markdown link, `<br>` to a line break, entities to their character. `description` says plain text or Markdown, and copying the markup through would validate while breaking that promise."
       ]
     },
     {
@@ -372,6 +373,25 @@
         "`alternates` is the JSON form of an HTML `<link rel=\"alternate\">`, for feeds served as a bare endpoint.",
         "It is INFORMATIONAL: a consumer must not assume the linked RSS/iCal is in sync with this feed; a producer should generate them from the same source.",
         "`feed.contributing` here is a `mailto:` role address — the form dev.events uses for corrections."
+      ]
+    },
+    {
+      "file": "feed-covers.json",
+      "cases": [
+        "feed"
+      ],
+      "fields": [
+        "feed.covers",
+        "feed.covers.from",
+        "event.source"
+      ],
+      "title": "An aggregator that prunes its history, and says so",
+      "summary": "A long-running feed that no longer publishes its whole archive — `covers` is what makes dropping the old events honest instead of silent.",
+      "points": [
+        "`covers` says what the feed claims to be COMPLETE about. From 2026-01-01 onwards an absent event means it is not happening; before that date the feed asserts nothing and a consumer must not infer removal.",
+        "Without it, the spec's own rule — a cancelled event stays published, never deleted — makes absence mean deletion, so pruning 2025 would assert that those events never happened.",
+        "No `to`, which is the normal shape: a feed stays complete into the future and only trims its past.",
+        "An aggregator feed carries no `organizers` and no `textLanguage`: it does not organise what it publishes, and its events do not share a language, so each declares its own."
       ]
     },
     {
