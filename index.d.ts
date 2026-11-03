@@ -1,5 +1,5 @@
 /** The spec version these schemas describe. Matches the `specVersion` field of a document. */
-export declare const specVersion: "0.4.0";
+export declare const specVersion: "0.5.0";
 
 /** JSON Schema (draft 2020-12) of a single OTE event. */
 export declare const eventSchema: Record<string, unknown>;
@@ -24,16 +24,31 @@ export declare const feedRecommendedSchema: Record<string, unknown>;
 export declare const recommendedSchemas: Record<string, unknown>[];
 
 /**
+ * The ajv options these schemas compile under — the ONE set this package tests against.
+ * Pass it whole; a consumer who assembles their own set is on their own:
+ *
+ *   const ajv = new Ajv2020({ ...ajvOptions, allErrors: true });
+ *
+ * `strictRequired: false` is not a concession, it is the point: the schemas express three rules
+ * (`anyOf` of `required`, an `if` that only triggers on a field, a `required` about a nested
+ * object) as valid draft 2020-12 that ajv's strict mode nonetheless refuses to compile. No OTE
+ * schema, in any version from v0.1 on, has ever compiled under a bare `strict: true`.
+ * Everything else stays strict on purpose: an unknown keyword or an unregistered format is a
+ * real mistake, which is what `annotationKeywords`/`customFormats`/`customKeywords` are for.
+ */
+export declare const ajvOptions: { strict: true; strictRequired: false };
+
+/**
  * Annotation keywords the schemas carry, with the meta-schema each one's value obeys.
  * They constrain nothing — a validator that ignores them accepts exactly the same documents.
  * `x-inheritsFrom` names the FEED field an event field falls back to when it omits its own.
- * Ajv in `strict: true` refuses to compile a schema carrying one, so register them first:
+ * Ajv under `ajvOptions` refuses to compile a schema carrying one, so register them first:
  * `for (const kw of annotationKeywords) ajv.addKeyword(kw);`
  */
 export declare const annotationKeywords: { keyword: string; metaSchema: Record<string, unknown> }[];
 
 /**
- * Formats the schemas use beyond what ajv-formats provides. Ajv in `strict: true` refuses to
+ * Formats the schemas use beyond what ajv-formats provides. Ajv under `ajvOptions` refuses to
  * compile a schema referencing an unregistered format, so register them first:
  * `for (const f of customFormats) ajv.addFormat(f.name, f.validate);`
  */
@@ -41,7 +56,7 @@ export declare const customFormats: { name: string; validate: (value: string) =>
 
 /**
  * Keywords the schemas use that DO restrict which documents pass — unlike `annotationKeywords`.
- * Ajv in `strict: true` refuses to compile a schema referencing an unregistered keyword, so
+ * Ajv under `ajvOptions` refuses to compile a schema referencing an unregistered keyword, so
  * register them first: `for (const kw of customKeywords) ajv.addKeyword(kw);`
  */
 export declare const customKeywords: {

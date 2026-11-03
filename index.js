@@ -28,13 +28,35 @@ export const feedRecommendedSchema = require("./spec/v0.5/feed.recommended.schem
 export const recommendedSchemas = [eventRecommendedSchema, feedRecommendedSchema];
 
 /**
+ * The ajv options these schemas compile under — the ONE set this package tests against.
+ * Pass it whole; a consumer who assembles their own set is on their own:
+ *
+ *   const ajv = new Ajv2020({ ...ajvOptions, allErrors: true });
+ *
+ * `strictRequired: false` is not a concession, it is the point. Ajv's strict mode dislikes
+ * `required` living apart from the `properties` that declare the field, and the schemas express
+ * three rules exactly that way, because JSON Schema has no other way to say them:
+ *
+ *   anyOf: [{ required: ["venue"] }, { required: ["onlineUrl"] }]   "at least one of the two"
+ *   if: { required: ["translations"] }, then: { required: ["textLanguage"] }   a trigger
+ *   then: { properties: { partOf: { required: ["offers"] } } }   a rule about a nested object
+ *
+ * All three are valid draft 2020-12 and unambiguous. Under a bare `strict: true` ajv refuses to
+ * compile them — which is to say no OTE schema, in any version from v0.1 on, has ever compiled
+ * under a bare `strict: true`. Everything else here stays strict on purpose: an unknown keyword
+ * or an unregistered format is a real mistake, and `annotationKeywords`, `customFormats` and
+ * `customKeywords` exist precisely so strict mode can stay on while the schemas keep theirs.
+ */
+export const ajvOptions = { strict: true, strictRequired: false };
+
+/**
  * Annotation keywords the schemas carry, with the meta-schema each one's value obeys.
  * They constrain nothing — a validator that ignores them accepts exactly the same documents.
  * `x-inheritsFrom` names the FEED field an event field falls back to when it omits its own
  * (`event.license` → `feed.license`), which no standard keyword can say: the default is not a
  * literal, it is whatever the enclosing feed declared.
  *
- * JSON Schema allows unknown keywords, so most validators need nothing. Ajv in `strict: true`
+ * JSON Schema allows unknown keywords, so most validators need nothing. Ajv under `ajvOptions`
  * refuses to compile a schema carrying one, so register them first:
  *
  *   for (const kw of annotationKeywords) ajv.addKeyword(kw);
@@ -146,7 +168,7 @@ function isIri(value) {
 }
 
 /**
- * Formats the schemas use beyond what ajv-formats provides. Ajv's strict mode refuses to
+ * Formats the schemas use beyond what ajv-formats provides. Ajv under `ajvOptions` refuses to
  * compile a schema referencing an unregistered format, so register these before compiling —
  * the same requirement `annotationKeywords` already has, for the same reason:
  *
@@ -186,8 +208,10 @@ function parseInstant(value) {
 }
 
 /**
- * A `translations` map's own constraint, shared by every keyword that walks the same five nested
- * locations (`distinctTranslationLanguages`, `eventsRespectInheritedTextLanguage`; P009/P015/P026):
+ * A `translations` map's own constraint, shared by every keyword that walks the same seven nested
+ * locations — the event's own map, plus `eligibility`, `partOf`, `offers[]`, `image[]`, and the two
+ * v0.5 added, `recordings[]` and `partOf.offers[]`
+ * (`distinctTranslationLanguages`, `eventsRespectInheritedTextLanguage`; P009/P015/P026):
  * no key may equal the primary language, and no two keys of the SAME map may be that language
  * written with different case. RFC 5646 §2.1.1 compares BCP 47 tags case-insensitively, so
  * "en-US" and "EN-us" are one language wearing two keys — the same contradiction the
@@ -233,6 +257,25 @@ export const customKeywords = [
     validate: (schemaValue, data) =>
       !schemaValue || typeof data.endDate !== "string" || data.endDate >= data.startDate,
     error: { message: "endDate must not be earlier than startDate" },
+  },
+  {
+    /**
+     * `feed.covers`' own constraint: `to`, when both bounds exist, must not be earlier than
+     * `from`. A window that ends before it begins covers nothing, and the field's whole purpose
+     * is to tell a consumer what the feed is complete about — an impossible window would make
+     * every event in the feed "outside the window", silently turning the claim off. Both are
+     * `$defs.date` values, fixed-width and zero-padded, so string comparison is already
+     * chronological, the same reasoning `orderedDates` uses.
+     */
+    keyword: "orderedCoverage",
+    type: "object",
+    schemaType: "boolean",
+    validate: (schemaValue, data) =>
+      !schemaValue ||
+      typeof data.from !== "string" ||
+      typeof data.to !== "string" ||
+      data.to >= data.from,
+    error: { message: "covers.to must not be earlier than covers.from" },
   },
   {
     keyword: "orderedInstants",
@@ -364,7 +407,9 @@ export const customKeywords = [
      * against its EFFECTIVE language, `event.textLanguage ?? feed.textLanguage`
      * (`x-inheritsFrom`), which only the feed root can compute. This single keyword covers both
      * halves of that check for every embedded event: the effective language must exist wherever a
-     * translations map does (event's own, or nested in eligibility, partOf, offers[], image[], recordings[] or partOf.offers[] — same five locations as `distinctTranslationLanguages`), and no such map's key may
+     * translations map does (the event's own, or nested in eligibility, partOf, offers[], image[],
+     * recordings[] or partOf.offers[] — the same seven locations `distinctTranslationLanguages`
+     * walks), and no such map's key may
      * equal it, case-insensitively (RFC 5646 §2.1.1) — nor may two keys of the SAME map name that
      * effective language in different case (P026): the inherited case is exactly as capable of
      * this contradiction as the local one `distinctTranslationLanguages` already covers, and

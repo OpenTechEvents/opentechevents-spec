@@ -20,7 +20,7 @@ import { spawnSync } from "node:child_process";
 import { join, basename } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
-import { annotationKeywords, customFormats, customKeywords } from "../index.js";
+import { ajvOptions, annotationKeywords, customFormats, customKeywords, specVersion } from "../index.js";
 import { fieldsOf, loadSchemas } from "./schema-model.mjs";
 
 const VERSIONS = ["v0.1", "v0.2", "v0.3", "v0.4", "v0.5"];
@@ -39,10 +39,12 @@ const warn = (msg) => {
 };
 
 function build(version) {
-  // strictRequired off: `anyOf: [{required: [venue]}, …]` is valid JSON Schema, and it is how
-  // "at least one of venue / onlineUrl" is expressed. Ajv's strict mode dislikes required
-  // living apart from its properties; the spec does not.
-  const ajv = new Ajv2020({ strict: true, strictRequired: false, allErrors: true });
+  // `ajvOptions` comes from index.js, the package's own export, rather than being spelled out
+  // here: a consumer who follows the published guidance must end up with the SAME compiler this
+  // build exercises. Spelling it twice is how the two drifted before — the package documented a
+  // bare `strict: true`, under which no version ever compiled, while CI quietly passed on the
+  // working set. The options themselves are explained where they are declared.
+  const ajv = new Ajv2020({ ...ajvOptions, allErrors: true });
   addFormats(ajv);
   // The schemas carry annotations strict mode would otherwise refuse to compile. They constrain
   // nothing: registering them changes which SCHEMAS load, never which documents pass.
@@ -198,6 +200,67 @@ if (args.length) {
   process.exit(failures ? 1 : 0);
 }
 
+// What the package PROMISES a consumer, checked against what it ships. The examples below
+// already exercise the compiler, but they fail with whatever ajv threw and only ever on the
+// path the examples happen to take; these two checks name the broken promise instead.
+console.log("\npackage contract");
+for (const version of VERSIONS) {
+  // All four schemas of every version, compiled under the exported `ajvOptions` — the set
+  // index.js tells consumers to use. A schema that only compiles under some other set is
+  // unusable to whoever followed the docs, however valid it is on its own.
+  try {
+    build(version);
+    log(true, `${version} schemas compile under the exported ajvOptions`);
+  } catch (err) {
+    log(false, `${version} schemas do not compile under the exported ajvOptions — ${err.message}`);
+  }
+}
+// The pages that describe the CURRENT spec, and the scripts that render them. Their data is
+// generated, their prose and their version-pinned links are hand-written, and the two drift
+// silently: /spec/ announced v0.4 while rendering v0.5's 99 fields, /examples/ put "v0.4" in its
+// eyebrow above a link to v0.3's README, /developers/ linked v0.4's schema. A reader has no way
+// to tell which half is lying, so no file here may name a version other than the latest.
+//
+// Deliberately NOT in this list: the per-version pages under docs/spec/v0.*/ (generated, and
+// naming an old version is their whole job), /prior-art/, and anything under docs/schema|llms|data.
+const CURRENT_SPEC_PAGES = [
+  join("docs", "index.html"),
+  join("docs", "spec", "index.html"),
+  join("docs", "spec", "reference.js"),
+  join("docs", "examples", "index.html"),
+  join("docs", "examples", "examples.js"),
+  join("docs", "developers", "index.html"),
+  join("docs", "extensions", "index.html"),
+  join("docs", "extensions", "extensions.js"),
+];
+// Comments are stripped before scanning: a version named in a comment is a note about history
+// ("this page used to announce v0.4"), not something a reader ever sees. Only what reaches the
+// page counts. Crude but sufficient — these are our own files, with no regex literals or
+// strings carrying "//" next to a version number.
+const withoutComments = (source) =>
+  source
+    .replace(/<!--[\s\S]*?-->/g, "")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "");
+
+for (const page of CURRENT_SPEC_PAGES) {
+  const stale = [...new Set(withoutComments(readFileSync(page, "utf8")).match(/v0\.\d+/g) ?? [])].filter(
+    (v) => v !== LATEST
+  );
+  log(stale.length === 0, `${page} speaks only of ${LATEST}${stale.length ? ` — also mentions ${stale.join(", ")}` : ""}`);
+}
+// index.d.ts types `specVersion` as a literal, so a stale one is a lie TypeScript enforces on
+// the consumer. It sat at "0.4.0" through the 0.5.0 release; nothing was checking.
+{
+  const declared = /export declare const specVersion: "([^"]+)"/.exec(readFileSync("index.d.ts", "utf8"))?.[1];
+  const packaged = JSON.parse(readFileSync("package.json", "utf8")).version;
+  const agree = declared === specVersion && specVersion === packaged;
+  log(
+    agree,
+    `specVersion agrees across index.js (${specVersion}), index.d.ts (${declared}) and package.json (${packaged})`
+  );
+}
+
 for (const version of VERSIONS) {
   const dir = join(SPEC_DIR, version);
   console.log(`\n${dir}`);
@@ -297,6 +360,30 @@ console.log("\ndocs/index.html code samples");
     const valid = validate(doc);
     log(valid, `${kind} sample${valid ? "" : "\n" + ajv.errorsText(validate.errors, { separator: "\n" })}`);
     if (valid) checkFieldOrder(`${kind} sample`, doc, order);
+  }
+}
+
+// The suggested-extensions registry, which /extensions/ renders. Whether the adoption counts
+// are STALE can only be answered by fetching the real feeds, so that check lives in the daily
+// job (scripts/scan-extensions.mjs, wired into check-feeds.yml) — putting it here would make
+// every pull request depend on four third-party servers staying up, which is the failure mode
+// ote-tools#70 already documents. What a PR can check offline is the shape: a hand-edited entry
+// that the page cannot render, or a Spanish translation that quietly lost a field.
+console.log("\nsuggested extensions (docs/data/)");
+{
+  const registry = JSON.parse(readFileSync(join("docs", "data", "suggested-extensions.json"), "utf8"));
+  const PROSE = ["purpose", "shape", "graduationQuestion"];
+  for (const ext of registry.extensions) {
+    const missing = [
+      ...["name", "scope", "status", ...PROSE].filter((key) => !ext[key]),
+      ...(ext.observedAdoption && typeof ext.observedAdoption.feeds === "number" ? [] : ["observedAdoption.feeds"]),
+    ];
+    log(missing.length === 0, `${ext.name ?? "(unnamed)"} is complete${missing.length ? ` — missing ${missing.join(", ")}` : ""}`);
+    // A partial translation is worse than none: the card would render half in each language.
+    for (const [lang, translated] of Object.entries(ext.translations ?? {})) {
+      const gaps = PROSE.filter((key) => !translated[key]);
+      log(gaps.length === 0, `${ext.name} translation (${lang}) is complete${gaps.length ? ` — missing ${gaps.join(", ")}` : ""}`);
+    }
   }
 }
 
