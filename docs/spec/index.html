@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OTE Spec v0.4 — field reference</title>
-<meta name="description" content="Field reference for OTE Spec v0.4, generated from the JSON Schemas.">
+<title>OTE Spec v0.5 — field reference</title>
+<meta name="description" content="Field reference for OTE Spec v0.5, generated from the JSON Schemas.">
 <link rel="canonical" href="https://opentechevents.org/spec/">
 <link rel="stylesheet" href="../styles.css">
 <link rel="stylesheet" href="reference.css">
@@ -16,7 +16,7 @@
   <div class="wrap">
     <span class="draft-pill" data-t="pill">Draft 0.x</span>
     <span data-t="draft">Fields can still change, be renamed or be dropped.</span>
-    <a href="https://github.com/OpenTechEvents/opentechevents-spec/issues/5" data-t="follow">Follow the discussion</a>
+    <a href="https://github.com/OpenTechEvents/opentechevents-spec/issues/54" data-t="follow">Follow the discussion</a>
   </div>
 </div>
 
@@ -34,6 +34,7 @@
       <a href="/developers/" data-nav="developers" data-t="navDevelopers">Developers</a>
       <a href="/#tools" data-nav="tools" data-t="navTools">Tools</a>
       <a href="/prior-art/" data-nav="prior-art" data-t="navPriorArt">Prior art</a>
+      <a href="/extensions/" data-nav="extensions" data-t="navExtensions">Extensions</a>
       <a class="nav-repo" href="https://github.com/OpenTechEvents/opentechevents-spec">GitHub</a>
     </nav>
     <div class="lang" role="group" aria-label="Language">
@@ -49,13 +50,19 @@
 <main class="ref-main">
   <div class="wrap ref-intro">
     <h1 data-t="title">Field reference</h1>
-    <p class="lead" data-t="lead">Every field of OTE Spec v0.4. This page is generated from the JSON Schemas, so it cannot drift from what the validator actually enforces.</p>
+    <p class="lead" data-t="lead">Every field of OTE Spec v0.5. This page is generated from the JSON Schemas, so it cannot drift from what the validator actually enforces.</p>
 
     <div class="cta-row">
-      <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/spec/v0.4/README.md" data-t="rules">Rules a validator can't check</a>
-      <a class="btn btn-ghost" href="../schema/v0.4/event.schema.json" data-t="raw">Raw JSON Schema</a>
+      <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/spec/v0.5/README.md" data-v-href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/spec/{version}/README.md" data-t="rules">Rules a validator can't check</a>
+      <a class="btn btn-ghost" href="../schema/v0.5/event.schema.json" data-v-href="../schema/{version}/event.schema.json" data-t="raw">Raw JSON Schema</a>
       <a class="btn btn-ghost" href="/examples/" data-t="examplesCta">Practical examples</a>
     </div>
+
+    <p class="version-pick">
+      <label for="spec-version" data-t="versionLabel">Spec version</label>
+      <select id="spec-version"></select>
+      <span class="version-note" data-t="versionNote">Older versions are frozen: what they say is what a document declaring them was validated against.</span>
+    </p>
   </div>
 
   <div class="wrap ref-layout">
@@ -112,8 +119,8 @@
         <p class="ref-ext-promise"><strong data-t="extPromise">OTE will never mint a field name containing a colon.</strong> <span data-t="extPromiseBody">That reservation is what makes the second column safe — and what lets OTE connect to other specifications without being coupled to them.</span></p>
 
         <div class="cta-row">
-          <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/spec/v0.4/README.md#extensiones" data-t="extMore">Full extension rules</a>
-          <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/issues/5" data-t="extIssue">Tell us what you're using</a>
+          <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/spec/v0.5/README.md#extensiones" data-v-href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/spec/{version}/README.md#extensiones" data-t="extMore">Full extension rules</a>
+          <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/issues/54" data-t="extIssue">Tell us what you're using</a>
         </div>
       </section>
     </div>

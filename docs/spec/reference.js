@@ -19,9 +19,13 @@
       navDevelopers: "Developers",
       navTools: "Tools",
       navPriorArt: "Prior art",
+      navExtensions: "Extensions",
       navMenu: "Menu",
       title: "Field reference",
-      lead: "Every field of OTE Spec v0.4. This page is generated from the JSON Schemas, so it cannot drift from what the validator actually enforces.",
+      lead: "Every field of OTE Spec {version}. This page is generated from the JSON Schemas, so it cannot drift from what the validator actually enforces.",
+      versionLabel: "Spec version",
+      versionNote: "Older versions are frozen: what they say is what a document declaring them was validated against.",
+      versionCurrent: "{version} — current",
       rules: "Rules a validator can't check",
       raw: "Raw JSON Schema",
       examplesCta: "Practical examples",
@@ -92,9 +96,13 @@
       navDevelopers: "Desarrolladores",
       navTools: "Herramientas",
       navPriorArt: "Trabajo previo",
+      navExtensions: "Extensiones",
       navMenu: "Menú",
       title: "Referencia de campos",
-      lead: "Todos los campos de OTE Spec v0.4. Esta página se genera a partir de los JSON Schema, así que no puede separarse de lo que el validador exige de verdad.",
+      lead: "Todos los campos de OTE Spec {version}. Esta página se genera a partir de los JSON Schema, así que no puede separarse de lo que el validador exige de verdad.",
+      versionLabel: "Versión de la spec",
+      versionNote: "Las versiones anteriores están congeladas: lo que dicen es contra lo que se validó un documento que las declara.",
+      versionCurrent: "{version} — actual",
       rules: "Reglas que un validador no ve",
       raw: "JSON Schema en crudo",
       examplesCta: "Ejemplos prácticos",
@@ -627,15 +635,73 @@
     if (!any) dom.toc.appendChild(el("p", "toc-empty", t.noMatch));
   }
 
+  /**
+   * The spec version this page is showing, as the "v0.5" form used in paths and prose, read from
+   * the data the table is built from. Hardcoding it here is how the page came to announce v0.4
+   * while rendering v0.5's 99 fields: the fields were generated, the version label was not.
+   * Empty string before the model loads — the static HTML already carries the right label, so
+   * nothing flickers to a wrong one.
+   */
+  /**
+   * Which version's data this page renders, and where to fetch it from. /spec/ has no pin and
+   * shows the latest; /spec/v0.4/ carries <meta name="ote-spec-version"> and sits one directory
+   * deeper, so its data path gains a ../ . The pages are generated from this one, so the only
+   * thing that distinguishes them is that meta tag.
+   */
+  var PINNED = (document.querySelector('meta[name="ote-spec-version"]') || {}).content || "";
+  var DATA_URL = PINNED ? "../../data/reference-" + PINNED + ".json" : "../data/reference.json";
+
+  /**
+   * The version picker, filled from the data rather than from a hand-kept list: a version that
+   * exists in docs/data/ is a version with a page, and one that does not cannot be offered.
+   * Absolute hrefs because /spec/ and /spec/v0.4/ sit at different depths and the target is the
+   * same either way.
+   */
+  function renderVersions(t) {
+    var select = document.getElementById("spec-version");
+    if (!select || !state.model || !state.model.versions) return;
+    var current = "v" + state.model.specVersion.split(".").slice(0, 2).join(".");
+    var latest = state.model.versions[state.model.versions.length - 1];
+    select.replaceChildren();
+    state.model.versions
+      .slice()
+      .reverse()
+      .forEach(function (version) {
+        var option = el("option", null, version === latest ? t.versionCurrent.replace("{version}", version) : version);
+        option.value = version === latest ? "/spec/" : "/spec/" + version + "/";
+        option.selected = version === current;
+        select.appendChild(option);
+      });
+    select.onchange = function () {
+      location.assign(select.value);
+    };
+  }
+
+  function specLabel() {
+    var version = state.model && state.model.specVersion;
+    return version ? "v" + version.split(".").slice(0, 2).join(".") : "";
+  }
+
   function render() {
     var t = UI[state.lang];
+    var version = specLabel();
+    var withVersion = function (text) {
+      return version ? text.replace(/\{version\}/g, version) : text.replace(/ \{version\}/g, "");
+    };
     document.documentElement.lang = state.lang;
-    document.title = t.title + " — OTE Spec v0.4";
+    document.title = t.title + " — OTE Spec" + (version ? " " + version : "");
 
     document.querySelectorAll("[data-t]").forEach(function (node) {
       var value = t[node.getAttribute("data-t")];
-      if (value) node.textContent = value;
+      if (value) node.textContent = withVersion(value);
     });
+    // Links that point INTO a version (the raw schema, the normative README). Same reason as the
+    // prose: the template lives in the HTML, the version comes from the data.
+    if (version) {
+      document.querySelectorAll("[data-v-href]").forEach(function (node) {
+        node.setAttribute("href", node.getAttribute("data-v-href").replace(/\{version\}/g, version));
+      });
+    }
     document.querySelectorAll("[data-t-placeholder]").forEach(function (node) {
       node.placeholder = t[node.getAttribute("data-t-placeholder")];
     });
@@ -645,6 +711,8 @@
     document.querySelectorAll(".lang button").forEach(function (btn) {
       btn.setAttribute("aria-pressed", String(btn.dataset.lang === state.lang));
     });
+
+    renderVersions(t);
 
     dom.reference.replaceChildren();
     if (!state.model) return;
@@ -954,7 +1022,7 @@
   state.onlyRequired = dom.required.checked;
   render();
 
-  fetch("../data/reference.json")
+  fetch(DATA_URL)
     .then(function (res) { return res.json(); })
     .then(function (model) {
       state.model = model;

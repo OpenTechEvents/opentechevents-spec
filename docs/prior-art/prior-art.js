@@ -23,6 +23,7 @@
       navDevelopers: "Developers",
       navTools: "Tools",
       navPriorArt: "Prior art",
+      navExtensions: "Extensions",
       navMenu: "Menu",
 
       title: "Prior art",
@@ -142,6 +143,7 @@
       navDevelopers: "Desarrolladores",
       navTools: "Herramientas",
       navPriorArt: "Trabajo previo",
+      navExtensions: "Extensiones",
       navMenu: "Menú",
 
       title: "Trabajo previo",

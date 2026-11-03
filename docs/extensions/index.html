@@ -6,53 +6,84 @@
 <title>OTE Spec — suggested extensions</title>
 <meta name="description" content="Candidate fields not yet in the OTE core: a recommended shape to copy, and a measured adoption count. Using one is the evidence that graduates it.">
 <link rel="canonical" href="https://opentechevents.org/extensions/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://opentechevents.org/extensions/">
+<meta property="og:title" content="OTE Spec — suggested extensions">
+<meta property="og:description" content="Candidate fields not yet in the OTE core: a recommended shape to copy, and a measured adoption count.">
 <link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="extensions.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
-<style>
-  main.wrap { max-width: 780px; margin: 0 auto; padding: 2rem 1rem 5rem; }
-  .ext { border: 1px solid var(--border, #ddd); border-radius: 8px; padding: 1rem 1.2rem; margin: 1rem 0; }
-  .ext h2 { margin: 0 0 .3rem; font-family: ui-monospace, Menlo, monospace; font-size: 1.05rem; }
-  .ext .meta { font-size: .8rem; color: var(--muted, #666); margin-bottom: .6rem; }
-  .ext .count { font-weight: 600; }
-  .ext dt { font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted, #666); margin-top: .6rem; }
-  .ext dd { margin: .15rem 0 0; }
-  .ext code, .ext .shape { font-family: ui-monospace, Menlo, monospace; font-size: .85em; }
-  .status { display: inline-block; font-size: .7rem; padding: 1px 6px; border: 1px solid currentColor; border-radius: 3px; }
-</style>
 </head>
 <body>
-<main class="wrap" id="main">
-  <p><a href="/">← OpenTechEvents</a></p>
-  <h1>Suggested extensions</h1>
-  <p>Fields that are <strong>not</strong> in the OTE core (yet). The schemas do not forbid additional
-  fields, so you can use any of these today and your document stays valid. Each has a
-  <strong>recommended shape</strong> so early adopters converge, and an <strong>adoption count</strong>
-  measured automatically from the <a href="/#adopt">registered adopter feeds</a> — never edited by hand.
-  A field graduates to the core through a normal proposal once its graduation question is answered.</p>
-  <p id="asof" class="meta"></p>
-  <div id="list"></div>
+
+<a class="skip" href="#main" data-t="skip">Skip to content</a>
+
+<div class="draft-bar">
+  <div class="wrap">
+    <span class="draft-pill" data-t="pill">Draft 0.x</span>
+    <span data-t="draft">Fields can still change, be renamed or be dropped.</span>
+    <a href="https://github.com/OpenTechEvents/opentechevents-spec/issues/54" data-t="follow">Follow the discussion</a>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark">OTE</span>
+      <span class="brand-name">OpenTechEvents</span>
+    </a>
+    <nav class="nav" id="site-nav">
+      <a href="/#spec" data-nav="spec" data-t="navSpec">How it works</a>
+      <a href="/#adopt" data-nav="adopt" data-t="navAdopt">Adopt it</a>
+      <a href="/examples/" data-nav="examples" data-t="navExamples">Examples</a>
+      <a href="/spec/" data-nav="reference" data-t="navReference">Reference</a>
+      <a href="/developers/" data-nav="developers" data-t="navDevelopers">Developers</a>
+      <a href="/#tools" data-nav="tools" data-t="navTools">Tools</a>
+      <a href="/prior-art/" data-nav="prior-art" data-t="navPriorArt">Prior art</a>
+      <a href="/extensions/" data-nav="extensions" aria-current="page" data-t="navExtensions">Extensions</a>
+      <a class="nav-repo" href="https://github.com/OpenTechEvents/opentechevents-spec">GitHub</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en">EN</button>
+      <button type="button" data-lang="es">ES</button>
+    </div>
+    <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="site-nav" data-t-aria="navMenu" aria-label="Menu">
+      <span class="nav-toggle-bar"></span>
+    </button>
+  </div>
+</header>
+
+<main id="main" class="ext-main">
+  <div class="wrap ext-intro">
+    <p class="eyebrow" data-t="eyebrow">Suggested extensions</p>
+    <h1 data-t="title">Fields that are not in the core — yet</h1>
+    <p class="lead" data-t="lead">The schemas do not forbid extra fields, on purpose: you can use any of these today and your document stays valid. Each one has a <strong>recommended shape</strong> so that early adopters converge instead of each inventing their own, and an <strong>adoption count</strong> measured from the registered adopter feeds.</p>
+    <p class="ext-promise" data-t="promise">The counts are written by a script that reads the real feeds, never by hand. A field graduates into the core through a normal proposal, once its graduation question has an answer — and using it is what produces that answer.</p>
+
+    <div class="cta-row">
+      <a class="btn btn-ghost" href="/spec/" data-t="ctaReference">Field reference</a>
+      <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/spec/v0.5/README.md#extensions" data-t="ctaRules">The two kinds of extension</a>
+    </div>
+
+    <p id="asof" class="ext-asof"></p>
+  </div>
+
+  <div class="wrap ext-list" id="list"></div>
 </main>
-<script>
-fetch("../data/suggested-extensions.json").then(r => r.json()).then(reg => {
-  const list = document.getElementById("list");
-  let asOf = null;
-  for (const e of reg.extensions) {
-    asOf = e.observedAdoption.asOf || asOf;
-    const el = document.createElement("section");
-    el.className = "ext";
-    el.innerHTML = `
-      <h2>${e.name}</h2>
-      <p class="meta"><span class="status">${e.status}</span> · ${e.scope} ·
-        <span class="count">${e.observedAdoption.feeds}</span> adopter feed(s)</p>
-      <p>${e.purpose}</p>
-      <dl>
-        <dt>Recommended shape</dt><dd class="shape">${e.shape}</dd>
-        <dt>Graduates when</dt><dd>${e.graduationQuestion}</dd>
-      </dl>`;
-    list.appendChild(el);
-  }
-  if (asOf) document.getElementById("asof").textContent = "Adoption counts as of " + asOf + ".";
-});
-</script>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p class="footer-note" data-t="footerNote">Adoption counts are measured from the registered feeds. Draft specification — fields may change.</p>
+    <nav class="footer-links">
+      <a href="../">opentechevents.org</a>
+      <a href="/spec/" data-t="navReference">Reference</a>
+      <a href="https://github.com/OpenTechEvents/opentechevents-spec">GitHub</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="extensions.js"></script>
+<script src="../nav.js"></script>
+<script src="../ask-ai.js"></script>
 </body>
 </html>

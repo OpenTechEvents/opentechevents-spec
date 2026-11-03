@@ -1,0 +1,68 @@
+/* Suggested-extensions registry. Builds on styles.css — only what that file doesn't already have. */
+
+.ext-main { padding-bottom: 90px; }
+
+.ext-intro { padding: 48px 24px 8px; max-width: 900px; }
+.ext-intro .lead { max-width: 40em; }
+
+.ext-promise {
+  margin: 22px 0 0; padding: 14px 16px;
+  border-left: 3px solid var(--ok); border-radius: 0 8px 8px 0;
+  background: #eaf7f1; color: #0b5c41; font-size: .92rem;
+  max-width: 48em;
+}
+
+.ext-asof {
+  margin: 18px 0 0;
+  font-size: .82rem; color: var(--ink-faint);
+}
+
+/* ---------- one card per candidate field ---------- */
+
+.ext-list { padding: 10px 24px 0; max-width: 900px; }
+
+.ext {
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 18px 20px; margin: 16px 0;
+  background: var(--bg);
+}
+/* The heading IS the field path — monospace, because that is what you type. */
+.ext h2 {
+  margin: 0 0 6px;
+  font: 600 1.02rem/1.3 var(--mono);
+  overflow-wrap: anywhere;
+}
+
+.ext-meta {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px;
+  margin: 0 0 10px;
+  font-size: .82rem; color: var(--ink-faint);
+}
+.status {
+  display: inline-block;
+  font: 600 .7rem/1.5 var(--sans); letter-spacing: .04em;
+  padding: 1px 7px; border: 1px solid currentColor; border-radius: 3px;
+  color: var(--warn);
+}
+.ext-count strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+/* Zero is the normal state here, not a failure: say it plainly, don't alarm. */
+.ext-count-zero { font-style: italic; }
+
+.ext-purpose { margin: 0; max-width: 46em; }
+
+.ext dl { margin: 12px 0 0; }
+.ext dt {
+  margin-top: 10px;
+  font: 600 .72rem/1.4 var(--sans); letter-spacing: .06em; text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.ext dd { margin: 3px 0 0; max-width: 46em; }
+.ext dd.shape { font-family: var(--mono); font-size: .85em; overflow-wrap: anywhere; }
+.ext code { font-family: var(--mono); font-size: .88em; }
+
+.ext-failed { color: var(--warn); }
+
+@media (max-width: 640px) {
+  .ext-intro { padding-top: 32px; }
+  .ext { padding: 14px 15px; }
+}

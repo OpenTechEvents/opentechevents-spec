@@ -36,7 +36,7 @@ const SECTIONS = [
       { file: "README.md", as: "overview.md", lead: "What OTE is, who it is for, and how a community adopts it." },
       {
         file: join("spec", VERSION, "README.md"),
-        as: "spec-v0.4.md",
+        as: `spec-${VERSION}.md`,
         lead: `The specification itself for ${VERSION}: every field, and the rules a validator cannot check — why an id must never change, why a cancelled event stays published.`,
       },
       {

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="ote-spec-version" content="v0.3">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OTE Spec v0.3 — field reference</title>
+<meta name="description" content="Field reference for OTE Spec v0.3, generated from the JSON Schemas.">
+<link rel="canonical" href="https://opentechevents.org/spec/v0.3/">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../reference.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
+</head>
+<body>
+
+<div class="draft-bar">
+  <div class="wrap">
+    <span class="draft-pill" data-t="pill">Draft 0.x</span>
+    <span data-t="draft">Fields can still change, be renamed or be dropped.</span>
+    <a href="https://github.com/OpenTechEvents/opentechevents-spec/issues/54" data-t="follow">Follow the discussion</a>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark">OTE</span>
+      <span class="brand-name">OpenTechEvents</span>
+    </a>
+    <nav class="nav" id="site-nav">
+      <a href="/#spec" data-nav="spec" data-t="navSpec">How it works</a>
+      <a href="/#adopt" data-nav="adopt" data-t="navAdopt">Adopt it</a>
+      <a href="/examples/" data-nav="examples" data-t="navExamples">Examples</a>
+      <a href="/spec/" data-nav="reference" data-t="navReference">Reference</a>
+      <a href="/developers/" data-nav="developers" data-t="navDevelopers">Developers</a>
+      <a href="/#tools" data-nav="tools" data-t="navTools">Tools</a>
+      <a href="/prior-art/" data-nav="prior-art" data-t="navPriorArt">Prior art</a>
+      <a href="/extensions/" data-nav="extensions" data-t="navExtensions">Extensions</a>
+      <a class="nav-repo" href="https://github.com/OpenTechEvents/opentechevents-spec">GitHub</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en">EN</button>
+      <button type="button" data-lang="es">ES</button>
+    </div>
+    <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="site-nav" data-t-aria="navMenu" aria-label="Menu">
+      <span class="nav-toggle-bar"></span>
+    </button>
+  </div>
+</header>
+
+<main class="ref-main">
+  <div class="wrap ref-intro">
+    <h1 data-t="title">Field reference</h1>
+    <p class="lead" data-t="lead">Every field of OTE Spec v0.3. This page is generated from the JSON Schemas, so it cannot drift from what the validator actually enforces.</p>
+
+    <div class="cta-row">
+      <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/spec/v0.3/README.md" data-v-href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/spec/{version}/README.md" data-t="rules">Rules a validator can't check</a>
+      <a class="btn btn-ghost" href="../../schema/v0.3/event.schema.json" data-v-href="../../schema/{version}/event.schema.json" data-t="raw">Raw JSON Schema</a>
+      <a class="btn btn-ghost" href="/examples/" data-t="examplesCta">Practical examples</a>
+    </div>
+
+    <p class="version-pick">
+      <label for="spec-version" data-t="versionLabel">Spec version</label>
+      <select id="spec-version"></select>
+      <span class="version-note" data-t="versionNote">Older versions are frozen: what they say is what a document declaring them was validated against.</span>
+    </p>
+  </div>
+
+  <div class="wrap ref-layout">
+    <!-- Table of contents: built from the same model as the fields, so it can't fall out of sync. -->
+    <aside class="ref-side">
+      <button type="button" class="toc-toggle" id="toc-toggle" aria-expanded="false" aria-controls="toc-panel">
+        <span data-t="tocTitle">On this page</span>
+        <span class="toc-chevron" aria-hidden="true"></span>
+      </button>
+      <nav class="toc-panel" id="toc-panel" aria-labelledby="toc-toggle"></nav>
+    </aside>
+
+    <div class="ref-body">
+      <!-- Sticky: keeps "where am I" and "find a field" reachable from anywhere in the page. -->
+      <div class="ref-toolbar">
+        <a class="toolbar-here" id="toolbar-here" href="#event" hidden><code></code></a>
+        <div class="toolbar-search">
+          <input type="search" id="field-search" autocomplete="off" spellcheck="false"
+                 data-t-placeholder="searchPlaceholder" placeholder="Filter fields…"
+                 data-t-aria="searchLabel" aria-label="Filter fields">
+          <kbd class="search-hint" aria-hidden="true">/</kbd>
+        </div>
+        <label class="req-toggle">
+          <input type="checkbox" id="only-required">
+          <span class="req-long" data-t="onlyRequired">Only required</span>
+          <span class="req-short" data-t="onlyRequiredShort">Req.</span>
+        </label>
+      </div>
+      <p class="ref-count" id="ref-count" role="status" aria-live="polite"></p>
+
+      <div id="reference"></div>
+
+      <!-- Hand-written, unlike everything above it: the schemas cannot state a promise about
+           names they will never mint. Sits AFTER the fields because that is where the question
+           appears — you scanned the table, what you needed is not in it. -->
+      <section class="ref-ext" id="extensions">
+        <p class="ref-ext-tag" data-t="extTag">Not generated from the schemas</p>
+        <h2 data-t="extTitle">The field you need isn't here</h2>
+        <p data-t="extLead">Add it. OTE's schemas do not forbid extra fields, on purpose: your document stays valid, and a consumer that doesn't understand them can ignore them safely. This is how the spec grows — through fields someone already uses, not fields we imagine will be needed.</p>
+
+        <div class="ref-ext-grid">
+          <div class="ref-ext-card">
+            <h3 data-t="extCoreTitle">Candidate for the core</h3>
+            <p data-t="extCoreBody">A generic field that could become part of OTE. Write it without a prefix. If enough people need it, it gets standardised — and your local meaning gives way to the normative one.</p>
+            <code>"capacity": 80</code>
+          </div>
+          <div class="ref-ext-card">
+            <h3 data-t="extVocabTitle">Someone else's vocabulary</h3>
+            <p data-t="extVocabBody">A field whose meaning is defined by another project, and that will never belong to OTE. Write it with a prefix. It cannot collide with a core field, today or at 1.0.</p>
+            <code>"combuilders:communityId": "gdg-madrid"</code>
+          </div>
+        </div>
+
+        <p class="ref-ext-promise"><strong data-t="extPromise">OTE will never mint a field name containing a colon.</strong> <span data-t="extPromiseBody">That reservation is what makes the second column safe — and what lets OTE connect to other specifications without being coupled to them.</span></p>
+
+        <div class="cta-row">
+          <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/spec/v0.3/README.md#extensiones" data-v-href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/spec/{version}/README.md#extensiones" data-t="extMore">Full extension rules</a>
+          <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/issues/54" data-t="extIssue">Tell us what you're using</a>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p class="footer-note" data-t="footerNote">Generated from the schemas. Draft specification — fields may change.</p>
+    <nav class="footer-links">
+      <a href="../../">opentechevents.org</a>
+      <a href="https://github.com/OpenTechEvents/opentechevents-spec">GitHub</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="../../json-code.js"></script>
+<script src="../reference.js"></script>
+<script src="../../nav.js"></script>
+<script src="../../ask-ai.js"></script>
+</body>
+</html>

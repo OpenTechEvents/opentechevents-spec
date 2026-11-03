@@ -13,11 +13,25 @@
  *   spec/<version>/reference.<lang>.md   → for people reading the repo
  *   docs/data/reference.json             → for the website, which renders it in both languages
  */
-import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
+import { spawnSync } from "node:child_process";
 import { constraintsOf, fieldsOf, loadSchemas, recommendedOf } from "./schema-model.mjs";
 
-const VERSION = "v0.5";
+/**
+ * Every published version gets its own data file, so the website can show the reference for the
+ * version a reader actually has a document in — /spec/ alone could only ever show one, and it
+ * showed whichever was latest while its own prose said something else.
+ *
+ * One process per version, re-spawning this same script with OTE_SPEC_VERSION set, rather than
+ * looping in-process: the whole script is written around one version's schemas, locales and
+ * missing-translation tally living at module scope, and a loop would have to thread all of it
+ * through by hand. The orchestrator branch at the bottom is the only part that knows about more
+ * than one version.
+ */
+const VERSIONS = ["v0.1", "v0.2", "v0.3", "v0.4", "v0.5"];
+const LATEST = VERSIONS[VERSIONS.length - 1];
+const VERSION = process.env.OTE_SPEC_VERSION || LATEST;
 const BASE_LANG = "en"; // the schema's own `description` fields
 const check = process.argv.includes("--check");
 
@@ -161,7 +175,14 @@ const model = {
 }
 
 // Merge translations, and refuse to ship a half-translated reference.
+/**
+ * Untranslated keys. Enforced only for the version under development: a published version is
+ * frozen, so a gap in v0.2's Spanish (it has one, in a rule note) can never be fixed there — and
+ * it must not hold the build hostage either. Its page falls back to the schema's own English for
+ * that one string, which is what a frozen version means in practice.
+ */
 const missing = [];
+const enforceTranslations = VERSION === LATEST;
 for (const [lang, dict] of Object.entries(locales)) {
   if (!dict) continue;
   for (const schema of model.schemas) {
@@ -304,16 +325,83 @@ const md = (lang) => {
   return lines.join("\n");
 };
 
+model.versions = VERSIONS;
+
+// The markdown lives in the version's own directory and a published version is frozen forever,
+// so only the version under development regenerates it. The JSON is the website's, not the
+// spec's: it is regenerated for every version, including the frozen ones, because the page that
+// renders it is not frozen — a fix to the renderer must reach v0.1's table too.
 const outputs = [
-  ...Object.keys(locales).map((lang) => [join("spec", VERSION, `reference.${lang}.md`), md(lang)]),
-  [join("docs", "data", "reference.json"), JSON.stringify(model, null, 2) + "\n"],
+  ...(VERSION === LATEST
+    ? Object.keys(locales).map((lang) => [join("spec", VERSION, `reference.${lang}.md`), md(lang)])
+    : []),
+  [join("docs", "data", `reference-${VERSION}.json`), JSON.stringify(model, null, 2) + "\n"],
+  // Kept at its old name as well: it is what /spec/ has fetched since before versions were
+  // selectable, and what anything else pointing at docs/data/ expects to find.
+  ...(VERSION === LATEST ? [[join("docs", "data", "reference.json"), JSON.stringify(model, null, 2) + "\n"]] : []),
 ];
+
+/**
+ * Orchestrator: no OTE_SPEC_VERSION in the environment means "do the whole site". It runs this
+ * same script once per version and then writes the per-version pages, which are copies of
+ * /spec/index.html — the one hand-written page — with the three things that must differ per
+ * version rewritten: the canonical URL, the version label, and the relative depth of its assets.
+ * Copies are generated rather than hand-kept for the obvious reason: five hand-kept pages are
+ * five pages to forget.
+ */
+function versionPages() {
+  const template = readFileSync(join("docs", "spec", "index.html"), "utf8");
+  return VERSIONS.filter((version) => version !== LATEST).map((version) => {
+    const html = template
+      // One level deeper than /spec/, so every relative asset gains a ../ .
+      .replace(/(href|src)="\.\.\//g, '$1="../../')
+      .replace(/(href|src)="(reference\.(?:css|js))"/g, '$1="../$2"')
+      .replace(
+        '<link rel="canonical" href="https://opentechevents.org/spec/">',
+        `<link rel="canonical" href="https://opentechevents.org/spec/${version}/">`
+      )
+      // The static label a crawler or a curl reads before any JavaScript runs; the live page
+      // relabels itself from the data, but a fetcher never gets that far.
+      .replace(new RegExp(LATEST.replace(".", "\\."), "g"), version)
+      // Which data file this page loads, read back by reference.js. Absent on /spec/, which
+      // means "the latest one".
+      .replace("<head>", `<head>\n<meta name="ote-spec-version" content="${version}">`);
+    return [join("docs", "spec", version, "index.html"), html];
+  });
+}
+
+if (!process.env.OTE_SPEC_VERSION) {
+  const runs = VERSIONS.map((version) =>
+    spawnSync(process.execPath, [import.meta.filename, ...process.argv.slice(2)], {
+      stdio: "inherit",
+      env: { ...process.env, OTE_SPEC_VERSION: version },
+    })
+  );
+  const pages = versionPages();
+  let pageFailures = 0;
+  if (check) {
+    for (const [path, html] of pages) {
+      if (!existsSync(path) || readFileSync(path, "utf8") !== html) {
+        console.log(`  FAIL  ${path} is stale — run: npm run build-reference`);
+        pageFailures++;
+      }
+    }
+    if (!pageFailures) console.log(`  ok    ${pages.length} per-version page(s) match /spec/index.html`);
+  } else {
+    for (const [path, html] of pages) {
+      mkdirSync(join(path, ".."), { recursive: true });
+      writeFileSync(path, html);
+      console.log(`  wrote ${path}`);
+    }
+  }
+  process.exit(runs.some((run) => run.status) || pageFailures ? 1 : 0);
+}
 
 if (check) {
   const stale = outputs.filter(([path, content]) => !existsSync(path) || readFileSync(path, "utf8") !== content);
   for (const [path] of stale) console.log(`  FAIL  ${path} is stale — run: npm run build-reference`);
-  for (const key of missing) console.log(`  FAIL  missing translation → ${key}`);
-  if (stale.length || missing.length) process.exit(1);
+  for (const key of missing) console.log(`  ${enforceTranslations ? "FAIL" : "warn"}  missing translation → ${key} (${VERSION})`);
+  if (stale.length || (missing.length && enforceTranslations)) process.exit(1);
   console.log(`  ok    reference is generated from the schemas and fully translated (${model.languages.join(", ")})`);
 } else {
   for (const [path, content] of outputs) {
@@ -321,8 +409,8 @@ if (check) {
     console.log(`  wrote ${path}`);
   }
   if (missing.length) {
-    console.log(`\n${missing.length} missing translation(s):`);
+    console.log(`\n${missing.length} missing translation(s) in ${VERSION}:`);
     for (const key of missing) console.log(`  - ${key}`);
-    process.exit(1);
+    if (enforceTranslations) process.exit(1);
   }
 }

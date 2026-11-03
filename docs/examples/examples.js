@@ -19,8 +19,9 @@
       navDevelopers: "Developers",
       navTools: "Tools",
       navPriorArt: "Prior art",
+      navExtensions: "Extensions",
       navMenu: "Menu",
-      eyebrow: "Practical examples · OTE Spec v0.4",
+      eyebrow: "Practical examples · OTE Spec {version}",
       title: "One example per real case",
       lead: "The reference tells you what each field is. This page shows you whole documents: what a small meetup looks like, what changes when it repeats every month, and what to do with a study jam spread over three non-consecutive Saturdays. Copy any of them.",
       promise: "Every document here is read straight from the repository and validated in CI against the JSON Schemas. If one stopped validating, the build would fail — so what you copy is what the validator accepts.",
@@ -60,8 +61,9 @@
       navDevelopers: "Desarrolladores",
       navTools: "Herramientas",
       navPriorArt: "Trabajo previo",
+      navExtensions: "Extensiones",
       navMenu: "Menú",
-      eyebrow: "Ejemplos prácticos · OTE Spec v0.4",
+      eyebrow: "Ejemplos prácticos · OTE Spec {version}",
       title: "Un ejemplo por cada caso real",
       lead: "La referencia te dice qué es cada campo. Esta página te enseña documentos enteros: cómo se ve un meetup pequeño, qué cambia cuando se repite todos los meses, y qué hacer con un study jam repartido en tres sábados no consecutivos. Cópialos.",
       promise: "Cada documento se lee tal cual del repositorio y se valida en CI contra los JSON Schema. Si alguno dejara de validar, el build fallaría — así que lo que copias es lo que el validador acepta.",
@@ -138,16 +140,35 @@
 
   /* ---------- rendering ---------- */
 
+  /**
+   * The spec version these examples are built from, as the "v0.5" form used in paths and prose,
+   * read from the data rather than written here. Hardcoding it is how this page came to announce
+   * v0.4 in its eyebrow and link v0.3's README from the same screen.
+   */
+  function specLabel() {
+    var version = state.model && state.model.specVersion;
+    return version ? "v" + version.split(".").slice(0, 2).join(".") : "";
+  }
+
   function applyUi() {
     var ui = UI[state.lang];
+    var version = specLabel();
+    var withVersion = function (value) {
+      return version ? value.replace(/\{version\}/g, version) : value.replace(/ \{version\}/g, "");
+    };
     document.documentElement.lang = state.lang;
     document.title = ui.title + " — OTE Spec";
 
     document.querySelectorAll("[data-t]").forEach(function (node) {
       var value = ui[node.getAttribute("data-t")];
       // Only our own strings land here, and a couple of them carry inline <code>.
-      if (value) node.innerHTML = value;
+      if (value) node.innerHTML = withVersion(value);
     });
+    if (version) {
+      document.querySelectorAll("[data-v-href]").forEach(function (node) {
+        node.setAttribute("href", node.getAttribute("data-v-href").replace(/\{version\}/g, version));
+      });
+    }
     document.querySelectorAll("[data-t-aria]").forEach(function (node) {
       node.setAttribute("aria-label", ui[node.getAttribute("data-t-aria")]);
     });
