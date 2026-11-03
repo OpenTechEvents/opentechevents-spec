@@ -7422,6 +7422,12 @@ Source: docs/data/adopters.json — Communities publishing an OTE feed today.
       "feed": "https://corunajug.org/feed.json",
       "logo": "https://corunajug.org/img/corunajug-logo.png",
       "directory": "combuilders:114"
+    },
+    {
+      "name": "Sarao",
+      "url": "https://saraoia.com/",
+      "feed": "https://saraoia.com/eventos-ote.json",
+      "logo": "https://github-production-user-asset-6210df.s3.amazonaws.com/826965/693622407-515f4570-aaa1-4915-aaf5-484ea0ce4007.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261103T150336Z&X-Amz-Expires=300&X-Amz-Signature=c8b37b616d177431ddb9a79663bea980a283cf15600db18ad9de001d890afb35&X-Amz-SignedHeaders=host&response-content-type=image%2Fpng"
     }
   ]
 }
