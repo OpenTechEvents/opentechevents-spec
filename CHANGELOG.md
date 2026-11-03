@@ -11,14 +11,48 @@ and under its own `$id` (`https://opentechevents.org/schema/vX.Y/…`). A docume
 which one it adheres to with `specVersion`, so **nothing breaks when a new
 version is published**: `0.1.0` documents keep validating against `spec/v0.1/`.
 
-## [0.5.0] — 2026-09-01
+## [0.5.0] — 2026-11-03
 
 **BREAKING** (deliberately — the spec is `0.x` and says it can break without
-warning). Six new fields, and one model that reshapes how multi-part events
+warning). Eight new fields, and one model that reshapes how multi-part events
 carry a price.
+
+> The bulk of this version was written on 2026-09-01 and published as files under
+> `spec/v0.5/`, but it was never released: no `schema-v0.5.0` tag, nothing on npm,
+> and no adopter feed declaring `0.5.0`. On 2026-11-03 it took `feed.covers`,
+> `speakers[].affiliation` and the decisions that close #18, #33, #48 and #52,
+> and the date moved with the content. From the tag onwards, a published version
+> is frozen and the next change opens `0.6.0`.
 
 ### Added
 
+- **`speakers[].affiliation`** (`string`) — the organisation a speaker appears as,
+  so that "Martí Cristobal, Bettatech" does not end up inside `name` and stop
+  matching that person anywhere else. A bare string, never translated; ignored on
+  `type: "organization"`. Maps to schema.org `Person.affiliation`. It leaves the
+  suggested-extensions registry in the same change. See DECISIONS.md D038.
+
+- **`feed.covers`** (`object`, `{ from?, to? }`, at least one) — the date window a
+  feed claims to be **complete** for. Inside it, a missing event is not
+  happening; outside it the feed asserts nothing. Omitting it keeps the previous
+  meaning exactly, so it is additive. New validator rule `orderedCoverage`:
+  `to` must not precede `from`. See DECISIONS.md D037.
+- **Discovery is now normative** (DECISIONS.md D036): `<link rel="alternate">` in
+  the page `<head>` is the primary mechanism (SHOULD), the media type is
+  **`application/ote+json`** (a consumer meeting `application/feed+json` SHOULD
+  accept it and warn), `/.well-known/ote-feed` is a MAY, and a feed embedded in
+  the page is deliberately out of scope — it would need a document discriminator
+  the model does not have. No schema change.
+- **A "Serving the feed" section**: `Access-Control-Allow-Origin: *`,
+  `Content-Encoding`, and an `ETag`/`Last-Modified` so a poll that finds nothing
+  new costs a `304`. **The feed does not paginate and will not** — if splitting
+  ever becomes necessary it will be RFC 5005-style archiving, which is additive.
+  See DECISIONS.md D037.
+- **Importer rules for two things the source cannot give** (closes #18): what to
+  put in `timezone` when an all-day `.ics` has no zone to offer — `X-WR-TIMEZONE`,
+  then a zone known from the publisher, then `UTC`, and never geocode `LOCATION`
+  — and what to do when `DESCRIPTION` arrives as HTML, which is what Google
+  Calendar emits: convert it, never copy it through.
 - **`speakers`** (`array`, min. 1) on the event — who gives the talk(s), a list
   of `{ name, url?, sameAs?, type? }`, modelled on `organizers`. `url` is one
   canonical page; `sameAs` is the list of other profile URLs, mapping to
@@ -58,7 +92,11 @@ carry a price.
   `alternates`, `partOf.offers` and `offers[].scope` now have a normative
   meaning. A producer already shipping any of those exact keys as an unprefixed
   extension with a *different* shape must adjust — this is why `0.5.0` is a MAJOR
-  bump within `0.x`.
+  bump within `0.x`. **All three registered adopter feeds have now been checked
+  and none carries any of the six keys**, so no registered adopter is affected.
+  (`eventos.wiki` was unverified at release time because it timed out; rechecked
+  on 2026-11-03 — slow, not unreachable: 568 KB in 23,7 s, of which 23,6 s is
+  time to first byte.)
 
 ### Migration from 0.4.0
 
