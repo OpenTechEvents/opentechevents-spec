@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://opentechevents.org/schema/v0.5/event.recommended.schema.json",
+  "$id": "https://opentechevents.org/schema/v0.6/event.recommended.schema.json",
   "title": "OTE Event — recommended profile",
   "description": "A quality profile, NOT a validity profile. An event that fails this schema is still a valid OTE event: event.schema.json decides what is valid, and it is deliberately permissive because most published .ics files carry neither URL nor description. This schema decides something else — whether the event can actually be discovered, filtered and subscribed to. Tools SHOULD report failures here as warnings and MUST NOT reject a document for them. It applies both to a standalone event and to one inside a feed: it references #/$defs/event, so it never asks for specVersion or license.",
   "type": "object",
   "languagesCoveredByText": true,
   "allOf": [
     {
-      "$ref": "https://opentechevents.org/schema/v0.5/event.schema.json#/$defs/event"
+      "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/event"
     },
     {
       "description": "Without these, the event is published but not findable: description is what every destination shows, organizers is who is trusted for it, attendanceMode and location answer 'can I go?', tags and languages are what someone filters by, and updatedAt is what lets a subscriber sync incrementally instead of refetching everything. url and image are asked for separately below, because where they live depends on whether the document is a part of a larger event.",
@@ -100,7 +100,7 @@
         ],
         "properties": {
           "startDate": {
-            "$ref": "https://opentechevents.org/schema/v0.5/event.schema.json#/$defs/dateTime"
+            "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/dateTime"
           }
         }
       },
@@ -118,7 +118,7 @@
         "license": {
           "anyOf": [
             {
-              "$ref": "https://opentechevents.org/schema/v0.5/event.schema.json#/$defs/dataLicense"
+              "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/dataLicense"
             },
             {
               "type": "string",

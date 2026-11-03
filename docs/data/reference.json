@@ -1,5 +1,5 @@
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "languages": [
     "en",
     "es"
@@ -412,11 +412,11 @@
       "fields": [
         {
           "path": "specVersion",
-          "type": "const: \"0.5.0\"",
+          "type": "const: \"0.6.0\"",
           "required": true,
           "recommended": false,
           "examples": [
-            "0.5.0"
+            "0.6.0"
           ],
           "inheritsFrom": "feed.specVersion",
           "description": {
@@ -2225,11 +2225,11 @@
       "fields": [
         {
           "path": "specVersion",
-          "type": "const: \"0.5.0\"",
+          "type": "const: \"0.6.0\"",
           "required": true,
           "recommended": false,
           "examples": [
-            "0.5.0"
+            "0.6.0"
           ],
           "description": {
             "en": "Version of OTE Spec this feed adheres to. Applies to every event in it.",
@@ -2545,6 +2545,7 @@
     "v0.2",
     "v0.3",
     "v0.4",
-    "v0.5"
+    "v0.5",
+    "v0.6"
   ]
 }

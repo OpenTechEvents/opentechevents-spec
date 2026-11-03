@@ -1,5 +1,5 @@
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "id": "https://trgcon.example/2026/workshops/testing",
   "url": "https://trgcon.example/2026/workshops/testing",
   "name": "TRG Conf 2026 — Taller de testing en Python",

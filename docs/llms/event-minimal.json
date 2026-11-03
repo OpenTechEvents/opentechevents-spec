@@ -1,5 +1,5 @@
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "id": "https://pyalmeria.example/eventos/2026-06-async",
   "name": "PyAlmería — Introducción a async/await",
   "startDate": "2026-06-11T18:30",

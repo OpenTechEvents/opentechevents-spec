@@ -1,5 +1,5 @@
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "id": "https://pyalmeria.example/talks/2026-09-async",
   "url": "https://pyalmeria.example/talks/2026-09-async",
   "name": "PyAlmería — Panel: el futuro de async en Python",

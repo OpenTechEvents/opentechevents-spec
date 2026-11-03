@@ -4,7 +4,7 @@
 > conferences, workshops, online or in person — in one format that directories, calendars and
 > tools can read automatically. It is compatible with iCalendar, RSS and schema.org/Event.
 
-The spec is a draft (0.x): fields can still change. Current version: v0.5.
+The spec is a draft (0.x): fields can still change. Current version: v0.6.
 
 Everything below in a single file: https://opentechevents.org/llms-full.txt (large — fetch it only if you can hold it,
 otherwise fetch the pieces you need from the list).
@@ -12,8 +12,8 @@ otherwise fetch the pieces you need from the list).
 ## Start here
 
 - [overview.md](https://opentechevents.org/llms/overview.md): What OTE is, who it is for, and how a community adopts it.
-- [spec-v0.5.md](https://opentechevents.org/llms/spec-v0.5.md): The specification itself for v0.5: every field, and the rules a validator cannot check — why an id must never change, why a cancelled event stays published.
-- [reference-v0.5.md](https://opentechevents.org/llms/reference-v0.5.md): Field reference table generated from the schemas: type, required or recommended, allowed values, examples.
+- [spec-v0.6.md](https://opentechevents.org/llms/spec-v0.6.md): The specification itself for v0.6: every field, and the rules a validator cannot check — why an id must never change, why a cancelled event stays published.
+- [reference-v0.6.md](https://opentechevents.org/llms/reference-v0.6.md): Field reference table generated from the schemas: type, required or recommended, allowed values, examples.
 
 ## Versions
 

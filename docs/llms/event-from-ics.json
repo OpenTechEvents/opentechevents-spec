@@ -1,5 +1,5 @@
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "id": "https://calendar.example/ics/rust-madrid#a1b2c3d4-uid-from-the-ics",
   "name": "Rust Madrid — June meetup",
   "_comment_description": "El DESCRIPTION del .ics venía en HTML, como lo escribe Google Calendar: 'Talks on WASM and Rust tooling.<br><br>Apúntate en <a href=\"https://rustmadrid.example/junio\">la web</a>&nbsp;&mdash; aforo limitado.' Aquí está ya convertido: el <a> a enlace Markdown, el <br> a salto de línea, las entidades a su carácter. Copiarlo tal cual habría validado igual y habría roto lo que el campo promete.",

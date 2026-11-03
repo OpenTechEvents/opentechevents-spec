@@ -201,6 +201,14 @@ If a community moves from a platform to its own domain, `url` changes and **`id`
 
 Nobody should be typing an `id` by hand: tools derive it from the event's canonical URL (its own, or the platform's), or mint it as `<domain>/events/<community>/<date>-<slug>` when the event has no page of its own.
 
+**When the source gives nothing to derive from — an `.ics` with no `URL` property — mint under a domain the community controls**, in this order:
+
+1. **The community's own site or main platform profile**, even when this particular event has no page there: `https://rustmadrid.example/events/2026-06-26-async`. The community controls that domain, so the `id` survives them changing calendar provider.
+2. **Only if there is no such domain at all**, the originating calendar: `<ics-url>#<UID>`. It is stable and it works, and it is a last resort because it ties the event's permanent identity to a platform the community does not own.
+
+**The fallback is sticky, and that is the whole reason the order matters.** An `id` is minted once and never changes — that is what lets a consumer update an event instead of duplicating it. So an importer that minted `<ics-url>#<UID>` and *later* discovers the community's own domain **must not** re-mint: every consumer that already stored the old `id` would get a second copy of the same event, with no way to tell they are the same. Choosing well the first time is cheap; choosing badly is permanent.
+
+
 No URL field in the schema (`id`, `url`, `location.onlineUrl`, `organizers[].url`, `offers[].url`, etc.) accepts credentials embedded in the authority (`https://user:pass@...`): these are public discovery links, not authenticated channels, and publishing a secret there leaks it to whoever reads the feed. Detail in [DECISIONS.md, D026](DECISIONS.md#d026--https-url-fields-must-not-carry-embedded-userinfo-credentials).
 
 **Within a single feed, two events cannot share an `id`** — the validator checks it (exact string equality, with no URI normalisation). This is not the heuristic deduplication across sources that the spec leaves out of scope ([further down](#what-v03-does-not-solve)): it is a single source contradicting, in the same document, the identity it minted itself. Detail in [DECISIONS.md, D011](DECISIONS.md#d011--no-two-events-in-a-feed-may-share-an-id-compared-by-exact-string-equality).
@@ -438,6 +446,8 @@ A **cancelled, postponed or moved event must stay in the feed**. Deleting it sil
 **The recommended profile warns (without invalidating) if `license` carries a clause that can block a directory or aggregator**: *NonCommercial* rules out any commercial directory outright, *NoDerivatives* blocks the reformatting/translation any aggregator does, and *ShareAlike* (including `ODbL`) is "viral" for a combined database — mixing your event with others could force the entire aggregated feed to adopt your licence. Copyleft software licences (GPL and family) are not in the recommended set either: their mechanics are written for "distributing the Program", which is legally ambiguous applied to a JSON document, and that ambiguity alone is reason enough for a directory's legal team to decline rather than take the risk. None of this invalidates the document — only `CC0-1.0`, `CC-BY-*` (without NC/ND/SA), `PDDL-1.0` and `ODC-By-1.0` escape the warning.
 
 **Compatibility between the licences of different events in the same feed is the responsibility of whoever aggregates**, not something this spec checks or imposes: each event is an independent work, and `license` can be overridden per event precisely because not every community wants the same terms. Anyone building an aggregator who wants to combine or redistribute the whole feed as a single thing has to look at **each event's** licence, not only the feed's — inheritance (`x-inheritsFrom`) gives a default, not a guarantee that every event shares a licence.
+
+**`license` stays required on a standalone event, and that is settled** (v0.6). It was an open question — whether one mandatory line is too high a barrier for somebody who just wants to publish their meetup — and the answer is no, for the same reason `feed.license` cannot be silently absent: a document whose redistribution terms are unknown is a legal risk to every directory that might carry it, not merely an under-documented one, and the publisher is the only party who can answer it. The cost is one line, written once, and inside a feed it is written once for every event. The alternative — a default — would be worse in both directions: assume permissive and the spec grants rights no author gave; assume restrictive and every importer must drop events whose author would happily have shared them.
 
 `source` is **required when the event was imported or aggregated** from somewhere else (an `.ics`, Meetup, another directory). It is omitted when whoever organises describes their own event: they **are** the source.
 
@@ -938,6 +948,23 @@ That is why the event schema has two layers: `$defs/event` (the common part) and
 
 The feed is an **interchange format, not an API**: no pagination, no filtering, no authentication, no federation.
 
+### The document is JSON. YAML is for writing, not for publishing
+
+Settled in v0.6. **A published OTE document is JSON** — that is what `application/ote+json` means, what every `$ref` in these schemas assumes, and what a consumer is entitled to receive.
+
+YAML is welcome as an **authoring** format: it maps 1:1 onto this model, it is pleasant to hand-write, and the issues in this repo use it. Convert it to JSON before publishing. What a publisher must not do is serve YAML at the feed URL.
+
+**This is not a preference, it is a correctness problem**, and two of it land squarely on fields this spec defines. YAML 1.1 — still what many popular parsers implement by default — resolves unquoted `no` and `NO` to the boolean `false`:
+
+| Written in YAML | What a 1.1 parser yields | What OTE means |
+| --- | --- | --- |
+| `country: NO` | `false` | **Norway**, an ISO 3166-1 code in `location.address.country`'s enum |
+| `textLanguage: no` | `false` | **Norwegian**, a valid BCP 47 subtag |
+
+A Norwegian community publishing a Norwegian-language event is the exact case that breaks, and it breaks silently: the document still parses, it just stopped saying what its author wrote. The rest of the hazard is the same shape — sexagesimals, dates auto-coerced into objects, `on`/`off`/`yes` — plus two things JSON structurally cannot do: **duplicate keys**, which many YAML parsers accept and which every `translations` map here assumes are impossible, and **anchors and aliases**, which make a public feed an amplification vector for any aggregator that fetches it.
+
+So: write YAML if you like it, publish JSON. A tool that accepts YAML input is doing its users a favour; a tool that *emits* YAML as a feed is publishing something no consumer is required to read.
+
 ### Discovery: how a feed is found from a website
 
 Settled in v0.5 ([#33](https://github.com/OpenTechEvents/opentechevents-spec/issues/33)); the mechanisms are not mutually exclusive.
@@ -1103,10 +1130,17 @@ It does not solve **a locality's spellings** either: `location.address.locality`
 
 The goal is to describe **the event**, not the record in a database.
 
+## What a `1.0.0` will and will not freeze
+
+Decided in v0.6, before the cut rather than during it, because a stability promise whose scope is vague is not one.
+
+**Frozen: validity.** `event.schema.json`, `feed.schema.json` and the normative prose here. From `1.0.0`, a document that validates keeps validating: no field is removed, no field's meaning changes, nothing optional becomes required. That is the promise, and breaking it requires a `2.0.0`.
+
+**Not frozen: the recommended profiles.** `event.recommended.schema.json` and `feed.recommended.schema.json` decide whether a document is any *good* at being found and subscribed to, never whether it is valid — their failures are warnings and MUST NOT cause a rejection. They keep evolving after 1.0, and they have to: v0.5's profile asked `url` and `image` of every document, so each talk in a multi-part conference carried a warning that correct publishing could not clear (D034). A frozen profile would have made that unfixable until 2.0 — a permanent wrong answer, for no gain in safety, since nothing about validity depended on it.
+
+The duty this puts on a consumer is explicit: **the set of warnings is not a stable interface.** A quality dashboard built on it may see a warning disappear, or a new one appear, in a minor version. If you need a frozen set, pin the profile file for the version you tested against — they stay published per version, like everything else.
+
 ## Open questions
 
 - **Audience and level.** [`eligibility`](#eligibility-who-can-get-in--and-why-it-is-not-a-tag) solves the **door** ("will they let me in?") and takes that axis out of `tags`. What remains is the other one that also sneaks in there today: "is it for me?" — "beginners", "students", "senior". It is a **recommendation, not permission**, and that is why it does not fit in `eligibility`. A `level` with an enum (`beginner` / `intermediate` / `advanced`) would be filterable and real conferences do tag it; a free-text `audience`, copied from schema.org, would only move the problem elsewhere. It does not get in until there is a real producer: in the meantime, `tags` keeps accepting it, with everything that costs.
 - **`eligibility` per ticket tier.** The axis exists — the student rate asks for a card — and the slot is reserved: `offers[].eligibility`, reusing the same enum, as soon as somebody really emits it.
-- **The `id` of an event imported from an `.ics` with no URL.** Today the examples use `<ics-url>#<UID>`. It works and it is stable, but it ties the `id` to the originating calendar: if the community moves, the `id` the importer minted is no longer under a domain they control.
-- **Serialisation.** The schema is JSON. YAML is convenient for writing by hand (the issues use YAML) and maps 1:1. Are both declared normative?
-- **`license` required on a standalone event**: is it too high a barrier to entry for somebody who just wants to publish their meetup?

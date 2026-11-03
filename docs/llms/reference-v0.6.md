@@ -1,4 +1,4 @@
-# Field reference — OTE Spec 0.5.0
+# Field reference — OTE Spec 0.6.0
 
 > 🤖 Generated from the schemas — do not edit by hand. Run `npm run build-reference`.
 >
@@ -16,7 +16,7 @@ A single tech community event. See https://opentechevents.org for the normative 
 
 | Field | Type | Level | Default | Description | Examples |
 | --- | --- | :---: | :---: | --- | --- |
-| `specVersion` | const: "0.5.0" | **required** | the feed's `specVersion` | Version of OTE Spec this document adheres to. | `"0.5.0"` |
+| `specVersion` | const: "0.6.0" | **required** | the feed's `specVersion` | Version of OTE Spec this document adheres to. | `"0.6.0"` |
 | `id` | string (iri) | **required** | | Stable, globally unique identifier: an HTTP(S) IRI under a domain the publisher controls — not necessarily one they own; a canonical page on a platform they use (Meetup, GitHub Pages, LinkedIn) works exactly as well, since what matters is that the address is stable and nobody else can end up with that same one. Non-ASCII characters are allowed exactly as published (`pycamp-españa` is not rewritten to `pycamp-espa%C3%B1a`). Minted once, never rewritten — this is what lets consumers update an event instead of duplicating it. | `"https://pyalmeria.example/eventos/2026-06-async"`<br>`"https://eventos.wiki/events/2025/pycamp-españa"`<br>`"https://calendar.example/ics/rust-madrid#a1b2c3d4-uid"`<br>`"https://www.meetup.com/pyalmeria/events/123456789/"` |
 | `url` | string (iri) | _recommended_ | | Canonical URL where the event is described today. May change over time; id may not. | `"https://pyalmeria.example/eventos/2026-06-async"` |
 | `name` | string | **required** | | Display name of the event. | `"PyAlmería — Introducción a async/await"` |
@@ -154,7 +154,7 @@ A collection of OTE events published at a stable URL. An exchange format, not an
 
 | Field | Type | Level | Default | Description | Examples |
 | --- | --- | :---: | :---: | --- | --- |
-| `specVersion` | const: "0.5.0" | **required** | → every event that omits it | Version of OTE Spec this feed adheres to. Applies to every event in it. | `"0.5.0"` |
+| `specVersion` | const: "0.6.0" | **required** | → every event that omits it | Version of OTE Spec this feed adheres to. Applies to every event in it. | `"0.6.0"` |
 | `title` | string | **required** | | Human-readable name of the feed. | `"Eventos de PyAlmería"` |
 | `description` | string | _recommended_ | | Short description of the feed. | `"Meetups mensuales de Python en Almería."` |
 | `url` | string (iri) | _recommended_ | | Canonical URL of the community, directory or organisation publishing the feed. | `"https://pyalmeria.example"` |

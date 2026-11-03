@@ -50,7 +50,7 @@ Once the specification stabilises, the goal is to build an ecosystem that solves
 
 ## The specification
 
-👉 **[OTE Spec v0.4](spec/v0.4/README.md)** — executable schemas (JSON Schema 2020-12), normative prose and examples validated in CI. [v0.1](spec/v0.1/README.md), [v0.2](spec/v0.2/README.md) and [v0.3](spec/v0.3/README.md) are frozen; what changed is in the [CHANGELOG](CHANGELOG.md).
+👉 **[OTE Spec v0.6](spec/v0.6/README.md)** — executable schemas (JSON Schema 2020-12), normative prose and examples validated in CI. [v0.1](spec/v0.1/README.md), [v0.2](spec/v0.2/README.md) and [v0.3](spec/v0.3/README.md) are frozen; what changed is in the [CHANGELOG](CHANGELOG.md).
 
 📄 **[Practical examples](https://opentechevents.org/examples/)** — a whole document for every real case: small and recurring meetups, conferences, online and hybrid events, multi-part events, hackathons, co-organised events and feeds. They all come from [`spec/v0.4/examples/`](spec/v0.4/examples/) and are validated in CI, so they can be copied as they are.
 
@@ -59,8 +59,8 @@ npm install @opentechevents/schema
 ```
 
 ```text
-https://opentechevents.org/schema/v0.4/event.schema.json
-https://opentechevents.org/schema/v0.4/feed.schema.json
+https://opentechevents.org/schema/v0.6/event.schema.json
+https://opentechevents.org/schema/v0.6/feed.schema.json
 ```
 
 > 🚧 **`0.x` can break without warning.** It is published so that real implementations exist — starting with the `.ics` importer — and so they break whatever is wrong. The debate is still open in issues [#5](https://github.com/OpenTechEvents/opentechevents-spec/issues/5) and [#6](https://github.com/OpenTechEvents/opentechevents-spec/issues/6).
@@ -71,7 +71,7 @@ Got a feed and want to check it? `npm run validate -- my-feed.json`.
 
 ## Project status
 
-🚧 **Early stage.** There is an **implementable v0.4**, and the work is now focused on **building on top of it** (the aggregator and its `.ics` importer) to find out what is wrong. The name, the scope and the governance are all still provisional and open to debate; the [licence](#licence) is already settled.
+🚧 **Early stage.** There is an **implementable v0.6**, and the work is now focused on **building on top of it** (the aggregator and its `.ics` importer) to find out what is wrong. The name, the scope and the governance are all still provisional and open to debate; the [licence](#licence) is already settled.
 
 ## Roadmap
 

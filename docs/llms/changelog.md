@@ -11,6 +11,54 @@ and under its own `$id` (`https://opentechevents.org/schema/vX.Y/…`). A docume
 which one it adheres to with `specVersion`, so **nothing breaks when a new
 version is published**: `0.1.0` documents keep validating against `spec/v0.1/`.
 
+## [0.6.0] — 2026-11-03
+
+No schema change at all: every 0.5.0 document is a valid 0.6.0 document after
+changing `specVersion`. This version exists to carry four decisions that were
+the last long-standing *Open questions*, settled before any `1.0.0` because
+each one is breaking to settle afterwards.
+
+### Decided
+
+- **JSON is the published format; YAML is for authoring** (D039). Not a
+  preference: YAML 1.1 resolves unquoted `no`/`NO` to boolean `false`, and both
+  collide with fields this spec defines — `NO` is Norway in `country`'s enum,
+  `no` is Norwegian in `textLanguage`. A Norwegian community publishing a
+  Norwegian-language event breaks silently. Plus duplicate keys, which every
+  `translations` map assumes cannot exist, and anchors/aliases, which make a
+  public feed an amplification vector.
+- **An imported event's `id` is minted under a domain the community controls**
+  (D040) — their own site or platform profile first, `<ics-url>#<UID>` only
+  when there is no such domain. The fallback is sticky: an `id` is minted once
+  and re-minting duplicates the event for every consumer that stored the old
+  one, which is why the order is load-bearing and not a style note.
+- **`license` stays required on a standalone event** (D041). A document with
+  unknown redistribution terms is a legal risk to every directory that might
+  carry it, and a default would be worse in both directions.
+- **What a `1.0.0` will freeze** (D042): validity — the two base schemas and the
+  normative prose. The recommended profiles keep evolving, because they are
+  warnings that never reject, and freezing them would have made D034
+  unfixable until 2.0. The duty this creates is stated: the set of warnings is
+  not a stable interface, and a consumer that needs one pins the profile file.
+
+### Fixed (tooling, not the spec)
+
+- `update-timezones.mjs`, `update-currencies.mjs` and `update-countries.mjs` had
+  their target path **hardcoded to `spec/v0.4`**, so running them rewrote a
+  frozen version with whatever upstream had released since, and never touched
+  the version under development. Only `update-licenses.mjs` resolved correctly.
+  All four now share one resolver, and the list of published versions is read
+  from the filesystem instead of being hand-kept in four places.
+- Forking v0.6 therefore ran the enum integrity check of `AGENTS.md` for real
+  for the first time on three of the four enums: regenerated against IANA tzdata
+  2026f, ISO 4217 (2026-09-17) and ISO 3166-1, **no enum value changed** — only
+  the provenance `$comment`s, which now record the releases actually verified.
+
+### Migration from 0.5.0
+
+Change `specVersion` to `"0.6.0"`. Nothing else: no field was added, removed or
+redefined.
+
 ## [0.5.0] — 2026-11-03
 
 **BREAKING** (deliberately — the spec is `0.x` and says it can break without

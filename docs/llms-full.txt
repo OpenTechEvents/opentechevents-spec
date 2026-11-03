@@ -1,7 +1,7 @@
 # OpenTechEvents (OTE Spec) — full corpus
 
 Generated from the repository. Source of truth: https://github.com/OpenTechEvents/opentechevents-spec
-Spec version: v0.5. The spec is a draft (0.x) and fields can still change.
+Spec version: v0.6. The spec is a draft (0.x) and fields can still change.
 
 Each section below is a verbatim file from the repo, in the order a reader new to OTE should
 meet them. Answer from these files and say which one you used; if something is not here, say so
@@ -68,7 +68,7 @@ Once the specification stabilises, the goal is to build an ecosystem that solves
 
 ## The specification
 
-👉 **[OTE Spec v0.4](spec/v0.4/README.md)** — executable schemas (JSON Schema 2020-12), normative prose and examples validated in CI. [v0.1](spec/v0.1/README.md), [v0.2](spec/v0.2/README.md) and [v0.3](spec/v0.3/README.md) are frozen; what changed is in the [CHANGELOG](CHANGELOG.md).
+👉 **[OTE Spec v0.6](spec/v0.6/README.md)** — executable schemas (JSON Schema 2020-12), normative prose and examples validated in CI. [v0.1](spec/v0.1/README.md), [v0.2](spec/v0.2/README.md) and [v0.3](spec/v0.3/README.md) are frozen; what changed is in the [CHANGELOG](CHANGELOG.md).
 
 📄 **[Practical examples](https://opentechevents.org/examples/)** — a whole document for every real case: small and recurring meetups, conferences, online and hybrid events, multi-part events, hackathons, co-organised events and feeds. They all come from [`spec/v0.4/examples/`](spec/v0.4/examples/) and are validated in CI, so they can be copied as they are.
 
@@ -77,8 +77,8 @@ npm install @opentechevents/schema
 ```
 
 ```text
-https://opentechevents.org/schema/v0.4/event.schema.json
-https://opentechevents.org/schema/v0.4/feed.schema.json
+https://opentechevents.org/schema/v0.6/event.schema.json
+https://opentechevents.org/schema/v0.6/feed.schema.json
 ```
 
 > 🚧 **`0.x` can break without warning.** It is published so that real implementations exist — starting with the `.ics` importer — and so they break whatever is wrong. The debate is still open in issues [#5](https://github.com/OpenTechEvents/opentechevents-spec/issues/5) and [#6](https://github.com/OpenTechEvents/opentechevents-spec/issues/6).
@@ -89,7 +89,7 @@ Got a feed and want to check it? `npm run validate -- my-feed.json`.
 
 ## Project status
 
-🚧 **Early stage.** There is an **implementable v0.4**, and the work is now focused on **building on top of it** (the aggregator and its `.ics` importer) to find out what is wrong. The name, the scope and the governance are all still provisional and open to debate; the [licence](#licence) is already settled.
+🚧 **Early stage.** There is an **implementable v0.6**, and the work is now focused on **building on top of it** (the aggregator and its `.ics` importer) to find out what is wrong. The name, the scope and the governance are all still provisional and open to debate; the [licence](#licence) is already settled.
 
 ## Roadmap
 
@@ -218,9 +218,9 @@ Two licences, both permissive. The detail and the reasoning are in [LICENSE](LIC
 **The licence of your data is a separate matter** and you choose it, in the `license` field of each event or feed. The spec recommends **`CC-BY-4.0`** (it covers the EU *sui generis* database right, which 3.0 does not) or **`CC0-1.0`**. It advises against *share-alike* licences (`CC-BY-SA`, `ODbL`): they spread the obligation to any aggregated feed that includes your events and stop other directories from reusing them.
 ```
 
-## spec-v0.5.md
+## spec-v0.6.md
 
-Source: spec/v0.5/README.md — The specification itself for v0.5: every field, and the rules a validator cannot check — why an id must never change, why a cancelled event stays published.
+Source: spec/v0.6/README.md — The specification itself for v0.6: every field, and the rules a validator cannot check — why an id must never change, why a cancelled event stays published.
 
 ```markdown
 # OTE Spec v0.5.0
@@ -425,6 +425,14 @@ For your feed it is a **suggestion, not a rule**: publishing in a different orde
 If a community moves from a platform to its own domain, `url` changes and **`id` cannot change**: it is what lets a consumer *update* the event it already had instead of creating a duplicate. An `id` is minted once, under a domain whoever publishes controls (DNS already guarantees uniqueness: no central registry needed), and it is never rewritten. "Controlling the domain" does not require owning it: a canonical page on a platform you use (Meetup, GitHub Pages, LinkedIn) works just as well — what is needed is for that URL to be stable and for nobody else to be able to end up with the same one. That is why `id`, like `url`, has to be an HTTP(S) URL: an identifier of another kind (`urn:`, `mailto:`) does not give that guarantee of uniqueness without a registry, and the validator rejects it. Detail in [DECISIONS.md, D020](DECISIONS.md#d020--id-and-partofid-must-be-an-https-url-not-any-uri-scheme).
 
 Nobody should be typing an `id` by hand: tools derive it from the event's canonical URL (its own, or the platform's), or mint it as `<domain>/events/<community>/<date>-<slug>` when the event has no page of its own.
+
+**When the source gives nothing to derive from — an `.ics` with no `URL` property — mint under a domain the community controls**, in this order:
+
+1. **The community's own site or main platform profile**, even when this particular event has no page there: `https://rustmadrid.example/events/2026-06-26-async`. The community controls that domain, so the `id` survives them changing calendar provider.
+2. **Only if there is no such domain at all**, the originating calendar: `<ics-url>#<UID>`. It is stable and it works, and it is a last resort because it ties the event's permanent identity to a platform the community does not own.
+
+**The fallback is sticky, and that is the whole reason the order matters.** An `id` is minted once and never changes — that is what lets a consumer update an event instead of duplicating it. So an importer that minted `<ics-url>#<UID>` and *later* discovers the community's own domain **must not** re-mint: every consumer that already stored the old `id` would get a second copy of the same event, with no way to tell they are the same. Choosing well the first time is cheap; choosing badly is permanent.
+
 
 No URL field in the schema (`id`, `url`, `location.onlineUrl`, `organizers[].url`, `offers[].url`, etc.) accepts credentials embedded in the authority (`https://user:pass@...`): these are public discovery links, not authenticated channels, and publishing a secret there leaks it to whoever reads the feed. Detail in [DECISIONS.md, D026](DECISIONS.md#d026--https-url-fields-must-not-carry-embedded-userinfo-credentials).
 
@@ -663,6 +671,8 @@ A **cancelled, postponed or moved event must stay in the feed**. Deleting it sil
 **The recommended profile warns (without invalidating) if `license` carries a clause that can block a directory or aggregator**: *NonCommercial* rules out any commercial directory outright, *NoDerivatives* blocks the reformatting/translation any aggregator does, and *ShareAlike* (including `ODbL`) is "viral" for a combined database — mixing your event with others could force the entire aggregated feed to adopt your licence. Copyleft software licences (GPL and family) are not in the recommended set either: their mechanics are written for "distributing the Program", which is legally ambiguous applied to a JSON document, and that ambiguity alone is reason enough for a directory's legal team to decline rather than take the risk. None of this invalidates the document — only `CC0-1.0`, `CC-BY-*` (without NC/ND/SA), `PDDL-1.0` and `ODC-By-1.0` escape the warning.
 
 **Compatibility between the licences of different events in the same feed is the responsibility of whoever aggregates**, not something this spec checks or imposes: each event is an independent work, and `license` can be overridden per event precisely because not every community wants the same terms. Anyone building an aggregator who wants to combine or redistribute the whole feed as a single thing has to look at **each event's** licence, not only the feed's — inheritance (`x-inheritsFrom`) gives a default, not a guarantee that every event shares a licence.
+
+**`license` stays required on a standalone event, and that is settled** (v0.6). It was an open question — whether one mandatory line is too high a barrier for somebody who just wants to publish their meetup — and the answer is no, for the same reason `feed.license` cannot be silently absent: a document whose redistribution terms are unknown is a legal risk to every directory that might carry it, not merely an under-documented one, and the publisher is the only party who can answer it. The cost is one line, written once, and inside a feed it is written once for every event. The alternative — a default — would be worse in both directions: assume permissive and the spec grants rights no author gave; assume restrictive and every importer must drop events whose author would happily have shared them.
 
 `source` is **required when the event was imported or aggregated** from somewhere else (an `.ics`, Meetup, another directory). It is omitted when whoever organises describes their own event: they **are** the source.
 
@@ -1163,6 +1173,23 @@ That is why the event schema has two layers: `$defs/event` (the common part) and
 
 The feed is an **interchange format, not an API**: no pagination, no filtering, no authentication, no federation.
 
+### The document is JSON. YAML is for writing, not for publishing
+
+Settled in v0.6. **A published OTE document is JSON** — that is what `application/ote+json` means, what every `$ref` in these schemas assumes, and what a consumer is entitled to receive.
+
+YAML is welcome as an **authoring** format: it maps 1:1 onto this model, it is pleasant to hand-write, and the issues in this repo use it. Convert it to JSON before publishing. What a publisher must not do is serve YAML at the feed URL.
+
+**This is not a preference, it is a correctness problem**, and two of it land squarely on fields this spec defines. YAML 1.1 — still what many popular parsers implement by default — resolves unquoted `no` and `NO` to the boolean `false`:
+
+| Written in YAML | What a 1.1 parser yields | What OTE means |
+| --- | --- | --- |
+| `country: NO` | `false` | **Norway**, an ISO 3166-1 code in `location.address.country`'s enum |
+| `textLanguage: no` | `false` | **Norwegian**, a valid BCP 47 subtag |
+
+A Norwegian community publishing a Norwegian-language event is the exact case that breaks, and it breaks silently: the document still parses, it just stopped saying what its author wrote. The rest of the hazard is the same shape — sexagesimals, dates auto-coerced into objects, `on`/`off`/`yes` — plus two things JSON structurally cannot do: **duplicate keys**, which many YAML parsers accept and which every `translations` map here assumes are impossible, and **anchors and aliases**, which make a public feed an amplification vector for any aggregator that fetches it.
+
+So: write YAML if you like it, publish JSON. A tool that accepts YAML input is doing its users a favour; a tool that *emits* YAML as a feed is publishing something no consumer is required to read.
+
 ### Discovery: how a feed is found from a website
 
 Settled in v0.5 ([#33](https://github.com/OpenTechEvents/opentechevents-spec/issues/33)); the mechanisms are not mutually exclusive.
@@ -1328,21 +1355,28 @@ It does not solve **a locality's spellings** either: `location.address.locality`
 
 The goal is to describe **the event**, not the record in a database.
 
+## What a `1.0.0` will and will not freeze
+
+Decided in v0.6, before the cut rather than during it, because a stability promise whose scope is vague is not one.
+
+**Frozen: validity.** `event.schema.json`, `feed.schema.json` and the normative prose here. From `1.0.0`, a document that validates keeps validating: no field is removed, no field's meaning changes, nothing optional becomes required. That is the promise, and breaking it requires a `2.0.0`.
+
+**Not frozen: the recommended profiles.** `event.recommended.schema.json` and `feed.recommended.schema.json` decide whether a document is any *good* at being found and subscribed to, never whether it is valid — their failures are warnings and MUST NOT cause a rejection. They keep evolving after 1.0, and they have to: v0.5's profile asked `url` and `image` of every document, so each talk in a multi-part conference carried a warning that correct publishing could not clear (D034). A frozen profile would have made that unfixable until 2.0 — a permanent wrong answer, for no gain in safety, since nothing about validity depended on it.
+
+The duty this puts on a consumer is explicit: **the set of warnings is not a stable interface.** A quality dashboard built on it may see a warning disappear, or a new one appear, in a minor version. If you need a frozen set, pin the profile file for the version you tested against — they stay published per version, like everything else.
+
 ## Open questions
 
 - **Audience and level.** [`eligibility`](#eligibility-who-can-get-in--and-why-it-is-not-a-tag) solves the **door** ("will they let me in?") and takes that axis out of `tags`. What remains is the other one that also sneaks in there today: "is it for me?" — "beginners", "students", "senior". It is a **recommendation, not permission**, and that is why it does not fit in `eligibility`. A `level` with an enum (`beginner` / `intermediate` / `advanced`) would be filterable and real conferences do tag it; a free-text `audience`, copied from schema.org, would only move the problem elsewhere. It does not get in until there is a real producer: in the meantime, `tags` keeps accepting it, with everything that costs.
 - **`eligibility` per ticket tier.** The axis exists — the student rate asks for a card — and the slot is reserved: `offers[].eligibility`, reusing the same enum, as soon as somebody really emits it.
-- **The `id` of an event imported from an `.ics` with no URL.** Today the examples use `<ics-url>#<UID>`. It works and it is stable, but it ties the `id` to the originating calendar: if the community moves, the `id` the importer minted is no longer under a domain they control.
-- **Serialisation.** The schema is JSON. YAML is convenient for writing by hand (the issues use YAML) and maps 1:1. Are both declared normative?
-- **`license` required on a standalone event**: is it too high a barrier to entry for somebody who just wants to publish their meetup?
 ```
 
-## reference-v0.5.md
+## reference-v0.6.md
 
-Source: spec/v0.5/reference.en.md — Field reference table generated from the schemas: type, required or recommended, allowed values, examples.
+Source: spec/v0.6/reference.en.md — Field reference table generated from the schemas: type, required or recommended, allowed values, examples.
 
 ```markdown
-# Field reference — OTE Spec 0.5.0
+# Field reference — OTE Spec 0.6.0
 
 > 🤖 Generated from the schemas — do not edit by hand. Run `npm run build-reference`.
 >
@@ -1360,7 +1394,7 @@ A single tech community event. See https://opentechevents.org for the normative 
 
 | Field | Type | Level | Default | Description | Examples |
 | --- | --- | :---: | :---: | --- | --- |
-| `specVersion` | const: "0.5.0" | **required** | the feed's `specVersion` | Version of OTE Spec this document adheres to. | `"0.5.0"` |
+| `specVersion` | const: "0.6.0" | **required** | the feed's `specVersion` | Version of OTE Spec this document adheres to. | `"0.6.0"` |
 | `id` | string (iri) | **required** | | Stable, globally unique identifier: an HTTP(S) IRI under a domain the publisher controls — not necessarily one they own; a canonical page on a platform they use (Meetup, GitHub Pages, LinkedIn) works exactly as well, since what matters is that the address is stable and nobody else can end up with that same one. Non-ASCII characters are allowed exactly as published (`pycamp-españa` is not rewritten to `pycamp-espa%C3%B1a`). Minted once, never rewritten — this is what lets consumers update an event instead of duplicating it. | `"https://pyalmeria.example/eventos/2026-06-async"`<br>`"https://eventos.wiki/events/2025/pycamp-españa"`<br>`"https://calendar.example/ics/rust-madrid#a1b2c3d4-uid"`<br>`"https://www.meetup.com/pyalmeria/events/123456789/"` |
 | `url` | string (iri) | _recommended_ | | Canonical URL where the event is described today. May change over time; id may not. | `"https://pyalmeria.example/eventos/2026-06-async"` |
 | `name` | string | **required** | | Display name of the event. | `"PyAlmería — Introducción a async/await"` |
@@ -1498,7 +1532,7 @@ A collection of OTE events published at a stable URL. An exchange format, not an
 
 | Field | Type | Level | Default | Description | Examples |
 | --- | --- | :---: | :---: | --- | --- |
-| `specVersion` | const: "0.5.0" | **required** | → every event that omits it | Version of OTE Spec this feed adheres to. Applies to every event in it. | `"0.5.0"` |
+| `specVersion` | const: "0.6.0" | **required** | → every event that omits it | Version of OTE Spec this feed adheres to. Applies to every event in it. | `"0.6.0"` |
 | `title` | string | **required** | | Human-readable name of the feed. | `"Eventos de PyAlmería"` |
 | `description` | string | _recommended_ | | Short description of the feed. | `"Meetups mensuales de Python en Almería."` |
 | `url` | string (iri) | _recommended_ | | Canonical URL of the community, directory or organisation publishing the feed. | `"https://pyalmeria.example"` |
@@ -1547,13 +1581,15 @@ Source: spec/README.md — Which spec versions exist and what stability each one
 ```markdown
 # Specification — OpenTechEvents (OTE Spec)
 
-> ✅ **The current specification is [`v0.4/`](v0.4/)** — executable schemas, normative prose and examples validated in CI. [`v0.1/`](v0.1/), [`v0.2/`](v0.2/) and [`v0.3/`](v0.3/) are frozen. What changed: [CHANGELOG](../CHANGELOG.md).
+> ✅ **The current specification is [`v0.6/`](v0.6/)** — executable schemas, normative prose and examples validated in CI. [`v0.1/`](v0.1/) through [`v0.5/`](v0.5/) are frozen. What changed: [CHANGELOG](../CHANGELOG.md).
 
 Each published version lives frozen in its own folder and under its own `$id`. A document declares which one it adheres to with `specVersion`, so **nothing breaks when a new version is published**.
 
 | Version | Status |
 | --- | --- |
-| [`v0.4/`](v0.4/README.md) | **Current.** Schemas, normative prose, recommended-field profiles and examples. |
+| [`v0.6/`](v0.6/README.md) | **Current.** Schemas, normative prose, recommended-field profiles and examples. |
+| [`v0.5/`](v0.5/README.md) | Frozen — `schema-v0.5.0`, on npm. |
+| [`v0.4/`](v0.4/README.md) | Frozen. |
 | [`v0.3/`](v0.3/README.md) | Frozen. |
 | [`v0.2/`](v0.2/README.md) | Frozen. |
 | [`v0.1/`](v0.1/README.md) | Frozen. |
@@ -1576,12 +1612,12 @@ SECTION: Schemas
 
 ## event.schema.json
 
-Source: spec/v0.5/event.schema.json — JSON Schema for a single event — the normative source for validity.
+Source: spec/v0.6/event.schema.json — JSON Schema for a single event — the normative source for validity.
 
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://opentechevents.org/schema/v0.5/event.schema.json",
+  "$id": "https://opentechevents.org/schema/v0.6/event.schema.json",
   "title": "OTE Event",
   "description": "A single tech community event. See https://opentechevents.org for the normative prose.",
   "allOf": [
@@ -1727,9 +1763,9 @@ Source: spec/v0.5/event.schema.json — JSON Schema for a single event — the n
         "specVersion": {
           "description": "Version of OTE Spec this document adheres to.",
           "x-inheritsFrom": "feed.specVersion",
-          "const": "0.5.0",
+          "const": "0.6.0",
           "examples": [
-            "0.5.0"
+            "0.6.0"
           ]
         },
         "id": {
@@ -2464,7 +2500,7 @@ Source: spec/v0.5/event.schema.json — JSON Schema for a single event — the n
             "America/Bogota",
             "UTC"
           ],
-          "$comment": "Generated by scripts/update-timezones.mjs from IANA tzdata 2026c (https://www.iana.org/time-zones). Every Zone and Link (alias), so a historical rename (e.g. Europe/Kiev → Europe/Kyiv, 2022) never invalidates a document that used the old name."
+          "$comment": "Generated by scripts/update-timezones.mjs from IANA tzdata 2026f (https://www.iana.org/time-zones). Every Zone and Link (alias), so a historical rename (e.g. Europe/Kiev → Europe/Kyiv, 2022) never invalidates a document that used the old name."
         },
         "attendanceMode": {
           "description": "What the organiser says this event is. Absent never means in-person.",
@@ -2995,7 +3031,7 @@ Source: spec/v0.5/event.schema.json — JSON Schema for a single event — the n
         "ZMW",
         "ZWG"
       ],
-      "$comment": "Generated by scripts/update-currencies.mjs from the official ISO 4217 active-currency list published by SIX Group (list-one.xml, published 2026-01-01) — not from Intl.supportedValuesOf('currency'), which lags the real registry. See docs/history/CHANGES.log #P004."
+      "$comment": "Generated by scripts/update-currencies.mjs from the official ISO 4217 active-currency list published by SIX Group (list-one.xml, published 2026-09-17) — not from Intl.supportedValuesOf('currency'), which lags the real registry. See docs/history/CHANGES.log #P004."
     },
     "country": {
       "type": "string",
@@ -5177,12 +5213,12 @@ Source: spec/v0.5/event.schema.json — JSON Schema for a single event — the n
 
 ## feed.schema.json
 
-Source: spec/v0.5/feed.schema.json — JSON Schema for a feed of events.
+Source: spec/v0.6/feed.schema.json — JSON Schema for a feed of events.
 
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://opentechevents.org/schema/v0.5/feed.schema.json",
+  "$id": "https://opentechevents.org/schema/v0.6/feed.schema.json",
   "title": "OTE Feed",
   "description": "A collection of OTE events published at a stable URL. An exchange format, not an API.",
   "type": "object",
@@ -5195,9 +5231,9 @@ Source: spec/v0.5/feed.schema.json — JSON Schema for a feed of events.
   "properties": {
     "specVersion": {
       "description": "Version of OTE Spec this feed adheres to. Applies to every event in it.",
-      "const": "0.5.0",
+      "const": "0.6.0",
       "examples": [
-        "0.5.0"
+        "0.6.0"
       ]
     },
     "title": {
@@ -5230,7 +5266,7 @@ Source: spec/v0.5/feed.schema.json — JSON Schema for a feed of events.
     },
     "textLanguage": {
       "description": "Language this feed's own free text is written in — title and description — and the default every event inherits when it omits its own. What makes it cheap: a monolingual publisher declares it once for the whole file and no event repeats it. Not the same as organizers: an aggregator whose events don't share one language must leave this out, exactly as it must leave out organizers, so each event states its own instead of inheriting the wrong one. Absent means unknown, never English and never the language of the HTTP response.",
-      "$ref": "https://opentechevents.org/schema/v0.5/event.schema.json#/$defs/languageTag",
+      "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/languageTag",
       "examples": [
         "es",
         "ca"
@@ -5238,7 +5274,7 @@ Source: spec/v0.5/feed.schema.json — JSON Schema for a feed of events.
     },
     "organizers": {
       "description": "Who runs the events in this feed. Not the same as title/url, which name whoever publishes the feed: an aggregator publishes events it does not organise, and must leave this out so each event states its own.",
-      "$ref": "https://opentechevents.org/schema/v0.5/event.schema.json#/$defs/organizers",
+      "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/organizers",
       "examples": [
         [
           {
@@ -5250,7 +5286,7 @@ Source: spec/v0.5/feed.schema.json — JSON Schema for a feed of events.
     },
     "license": {
       "description": "License for the feed's contents, and the default every event inherits when it omits its own. Optional only for an aggregator whose events carry different licenses: if this is absent, every event in the feed must declare its own license — no valid OTE document, standalone or inside any feed, may resolve to an unknown license. SPDX identifier (full list at https://spdx.org/licenses/) or URL.",
-      "$ref": "https://opentechevents.org/schema/v0.5/event.schema.json#/$defs/license",
+      "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/license",
       "examples": [
         "CC-BY-4.0",
         "CC0-1.0"
@@ -5270,14 +5306,14 @@ Source: spec/v0.5/feed.schema.json — JSON Schema for a feed of events.
     },
     "updatedAt": {
       "description": "When this feed was generated. Never earlier than any event's own updatedAt — a feed cannot contain a revision that, by its own timestamps, didn't exist yet when it was generated.",
-      "$ref": "https://opentechevents.org/schema/v0.5/event.schema.json#/$defs/instant",
+      "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/instant",
       "examples": [
         "2026-07-06T10:00:00Z"
       ]
     },
     "translations": {
       "description": "This feed's own title and description in other languages. Its EVENTS are not translated here: each one carries its own translations, and unlike license or textLanguage this field is never inherited — a feed's title is not an event's name. Requires textLanguage, like an event's translations do — see the document's constraints.",
-      "$ref": "https://opentechevents.org/schema/v0.5/event.schema.json#/$defs/feedTranslations",
+      "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/feedTranslations",
       "examples": [
         {
           "en": {
@@ -5295,14 +5331,14 @@ Source: spec/v0.5/feed.schema.json — JSON Schema for a feed of events.
       "properties": {
         "from": {
           "description": "First day the feed claims completeness for. Absent means unbounded into the past.",
-          "$ref": "https://opentechevents.org/schema/v0.5/event.schema.json#/$defs/date",
+          "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/date",
           "examples": [
             "2026-01-01"
           ]
         },
         "to": {
           "description": "Last day the feed claims completeness for, INCLUSIVE — the same convention as an all-day endDate. Absent means unbounded into the future, which is the usual case: a feed normally claims everything from some date onwards.",
-          "$ref": "https://opentechevents.org/schema/v0.5/event.schema.json#/$defs/date",
+          "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/date",
           "examples": [
             "2027-12-31"
           ]
@@ -5337,7 +5373,7 @@ Source: spec/v0.5/feed.schema.json — JSON Schema for a feed of events.
     },
     "contributing": {
       "description": "New in v0.5. URL for reporting or proposing a data change in this feed's records — the default every event inherits when it omits its own (default-value inheritance, like license: a declared scalar replaces the inherited one). It exists because an aggregator must leave organizers out, and source points upstream, not at the aggregator's copy. Accepts an HTTP(S) IRI or a mailto: role address; see event.contributing and DECISIONS.md.",
-      "$ref": "https://opentechevents.org/schema/v0.5/event.schema.json#/$defs/contributing",
+      "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/contributing",
       "examples": [
         "https://github.com/pyalmeria/eventos/issues/new"
       ]
@@ -5346,7 +5382,7 @@ Source: spec/v0.5/feed.schema.json — JSON Schema for a feed of events.
       "description": "Events in this feed. Each one inherits the feed's specVersion and license unless it declares its own. No two may share an id — see the document's constraints.",
       "type": "array",
       "items": {
-        "$ref": "https://opentechevents.org/schema/v0.5/event.schema.json#/$defs/event"
+        "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/event"
       }
     }
   },
@@ -5446,19 +5482,19 @@ Source: spec/v0.5/feed.schema.json — JSON Schema for a feed of events.
 
 ## event.recommended.schema.json
 
-Source: spec/v0.5/event.recommended.schema.json — Profile: what makes an event findable and filterable. Failing it is a warning, never an error.
+Source: spec/v0.6/event.recommended.schema.json — Profile: what makes an event findable and filterable. Failing it is a warning, never an error.
 
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://opentechevents.org/schema/v0.5/event.recommended.schema.json",
+  "$id": "https://opentechevents.org/schema/v0.6/event.recommended.schema.json",
   "title": "OTE Event — recommended profile",
   "description": "A quality profile, NOT a validity profile. An event that fails this schema is still a valid OTE event: event.schema.json decides what is valid, and it is deliberately permissive because most published .ics files carry neither URL nor description. This schema decides something else — whether the event can actually be discovered, filtered and subscribed to. Tools SHOULD report failures here as warnings and MUST NOT reject a document for them. It applies both to a standalone event and to one inside a feed: it references #/$defs/event, so it never asks for specVersion or license.",
   "type": "object",
   "languagesCoveredByText": true,
   "allOf": [
     {
-      "$ref": "https://opentechevents.org/schema/v0.5/event.schema.json#/$defs/event"
+      "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/event"
     },
     {
       "description": "Without these, the event is published but not findable: description is what every destination shows, organizers is who is trusted for it, attendanceMode and location answer 'can I go?', tags and languages are what someone filters by, and updatedAt is what lets a subscriber sync incrementally instead of refetching everything. url and image are asked for separately below, because where they live depends on whether the document is a part of a larger event.",
@@ -5551,7 +5587,7 @@ Source: spec/v0.5/event.recommended.schema.json — Profile: what makes an event
         ],
         "properties": {
           "startDate": {
-            "$ref": "https://opentechevents.org/schema/v0.5/event.schema.json#/$defs/dateTime"
+            "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/dateTime"
           }
         }
       },
@@ -5569,7 +5605,7 @@ Source: spec/v0.5/event.recommended.schema.json — Profile: what makes an event
         "license": {
           "anyOf": [
             {
-              "$ref": "https://opentechevents.org/schema/v0.5/event.schema.json#/$defs/dataLicense"
+              "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/dataLicense"
             },
             {
               "type": "string",
@@ -5756,17 +5792,17 @@ Source: spec/v0.5/event.recommended.schema.json — Profile: what makes an event
 
 ## feed.recommended.schema.json
 
-Source: spec/v0.5/feed.recommended.schema.json — Profile: what makes a feed subscribable.
+Source: spec/v0.6/feed.recommended.schema.json — Profile: what makes a feed subscribable.
 
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://opentechevents.org/schema/v0.5/feed.recommended.schema.json",
+  "$id": "https://opentechevents.org/schema/v0.6/feed.recommended.schema.json",
   "title": "OTE Feed — recommended profile",
   "description": "A quality profile, NOT a validity profile. A feed that fails this schema is still a valid OTE feed. Tools SHOULD report failures here as warnings and MUST NOT reject a document for them. Deliberately short: a feed's job is to carry events, so nearly all of the quality lives in event.recommended.schema.json — which a checker applies to each entry of `events` separately.",
   "allOf": [
     {
-      "$ref": "https://opentechevents.org/schema/v0.5/feed.schema.json"
+      "$ref": "https://opentechevents.org/schema/v0.6/feed.schema.json"
     },
     {
       "description": "url is where the publisher lives, and it is what a consumer shows to say where these events came from. description is what a directory lists the feed under. `organizers` is NOT recommended, on purpose: an aggregator MUST leave it out so each event states its own, and a warning that pushes an aggregator to claim events it does not organise would corrupt the very data the field exists to protect.",
@@ -5832,11 +5868,11 @@ SECTION: Examples
 
 ## event-all-day.json
 
-Source: spec/v0.5/examples/event-all-day.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/event-all-day.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "id": "https://devfest-levante.example/2026",
   "url": "https://devfest-levante.example/2026",
   "name": "DevFest Levante 2026",
@@ -5870,11 +5906,11 @@ Source: spec/v0.5/examples/event-all-day.json — Validated documents, one per r
 
 ## event-co-organized.json
 
-Source: spec/v0.5/examples/event-co-organized.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/event-co-organized.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "id": "https://gdgmadrid.example/eventos/2026-09-devfest-warmup",
   "url": "https://gdgmadrid.example/eventos/2026-09-devfest-warmup",
   "name": "DevFest Warm-up — GDG Madrid × Python Madrid",
@@ -5919,11 +5955,11 @@ Source: spec/v0.5/examples/event-co-organized.json — Validated documents, one 
 
 ## event-conference-cfp.json
 
-Source: spec/v0.5/examples/event-conference-cfp.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/event-conference-cfp.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "id": "https://devfest-levante.example/2026",
   "url": "https://devfest-levante.example/2026",
   "name": "DevFest Levante 2026",
@@ -6007,11 +6043,11 @@ Source: spec/v0.5/examples/event-conference-cfp.json — Validated documents, on
 
 ## event-contributing.json
 
-Source: spec/v0.5/examples/event-contributing.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/event-contributing.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "id": "https://eventos.example/ote/events/codemotion-2027",
   "url": "https://eventos.example/events/2027/codemotion-madrid",
   "name": "Codemotion Madrid 2027",
@@ -6043,11 +6079,11 @@ Source: spec/v0.5/examples/event-contributing.json — Validated documents, one 
 
 ## event-from-ics.json
 
-Source: spec/v0.5/examples/event-from-ics.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/event-from-ics.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "id": "https://calendar.example/ics/rust-madrid#a1b2c3d4-uid-from-the-ics",
   "name": "Rust Madrid — June meetup",
   "_comment_description": "El DESCRIPTION del .ics venía en HTML, como lo escribe Google Calendar: 'Talks on WASM and Rust tooling.<br><br>Apúntate en <a href=\"https://rustmadrid.example/junio\">la web</a>&nbsp;&mdash; aforo limitado.' Aquí está ya convertido: el <a> a enlace Markdown, el <br> a salto de línea, las entidades a su carácter. Copiarlo tal cual habría validado igual y habría roto lo que el campo promete.",
@@ -6081,11 +6117,11 @@ Source: spec/v0.5/examples/event-from-ics.json — Validated documents, one per 
 
 ## event-hackathon.json
 
-Source: spec/v0.5/examples/event-hackathon.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/event-hackathon.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "id": "https://hackalmeria.example/2026",
   "url": "https://hackalmeria.example/2026",
   "name": "HackAlmería 2026 — 36 horas de código",
@@ -6125,11 +6161,11 @@ Source: spec/v0.5/examples/event-hackathon.json — Validated documents, one per
 
 ## event-iri-url.json
 
-Source: spec/v0.5/examples/event-iri-url.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/event-iri-url.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "id": "https://eventos.wiki/events/2025/pycamp-españa",
   "url": "https://eventos.wiki/events/2025/pycamp-españa",
   "name": "PyCamp España 2025",
@@ -6164,11 +6200,11 @@ Source: spec/v0.5/examples/event-iri-url.json — Validated documents, one per r
 
 ## event-meetup.json
 
-Source: spec/v0.5/examples/event-meetup.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/event-meetup.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "id": "https://rustmadrid.example/meetups/2026-06",
   "url": "https://rustmadrid.example/meetups/2026-06",
   "name": "Rust Madrid — Meetup de junio",
@@ -6219,11 +6255,11 @@ Source: spec/v0.5/examples/event-meetup.json — Validated documents, one per re
 
 ## event-minimal.json
 
-Source: spec/v0.5/examples/event-minimal.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/event-minimal.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "id": "https://pyalmeria.example/eventos/2026-06-async",
   "name": "PyAlmería — Introducción a async/await",
   "startDate": "2026-06-11T18:30",
@@ -6234,11 +6270,11 @@ Source: spec/v0.5/examples/event-minimal.json — Validated documents, one per r
 
 ## event-online.json
 
-Source: spec/v0.5/examples/event-online.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/event-online.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "id": "https://rustgirona.example/sessions/2026-07-31",
   "url": "https://rustgirona.example/sessions/2026-07-31",
   "name": "Sessió setmanal de codificació — Rust Girona",
@@ -6308,11 +6344,11 @@ Source: spec/v0.5/examples/event-online.json — Validated documents, one per re
 
 ## event-recording.json
 
-Source: spec/v0.5/examples/event-recording.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/event-recording.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "id": "https://rustmadrid.example/meetups/2026-05",
   "url": "https://rustmadrid.example/meetups/2026-05",
   "name": "Rust Madrid — Meetup de mayo",
@@ -6346,11 +6382,11 @@ Source: spec/v0.5/examples/event-recording.json — Validated documents, one per
 
 ## event-recurring.json
 
-Source: spec/v0.5/examples/event-recurring.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/event-recurring.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "id": "https://rustmadrid.example/meetups/2026-06",
   "url": "https://rustmadrid.example/meetups/2026-06",
   "name": "Rust Madrid — Meetup de junio",
@@ -6396,11 +6432,11 @@ Source: spec/v0.5/examples/event-recurring.json — Validated documents, one per
 
 ## event-with-speakers.json
 
-Source: spec/v0.5/examples/event-with-speakers.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/event-with-speakers.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "id": "https://pyalmeria.example/talks/2026-09-async",
   "url": "https://pyalmeria.example/talks/2026-09-async",
   "name": "PyAlmería — Panel: el futuro de async en Python",
@@ -6441,11 +6477,11 @@ Source: spec/v0.5/examples/event-with-speakers.json — Validated documents, one
 
 ## event-workshop-addon.json
 
-Source: spec/v0.5/examples/event-workshop-addon.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/event-workshop-addon.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "id": "https://trgcon.example/2026/workshops/testing",
   "url": "https://trgcon.example/2026/workshops/testing",
   "name": "TRG Conf 2026 — Taller de testing en Python",
@@ -6508,11 +6544,11 @@ Source: spec/v0.5/examples/event-workshop-addon.json — Validated documents, on
 
 ## feed-alternates.json
 
-Source: spec/v0.5/examples/feed-alternates.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/feed-alternates.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "title": "Eventos de PyAlmería",
   "description": "Meetups y charlas mensuales de Python en Almería.",
   "url": "https://pyalmeria.example",
@@ -6555,11 +6591,11 @@ Source: spec/v0.5/examples/feed-alternates.json — Validated documents, one per
 
 ## feed-community.json
 
-Source: spec/v0.5/examples/feed-community.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/feed-community.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "title": "Eventos de PyAlmería",
   "description": "Meetups mensuales de Python en Almería.",
   "url": "https://pyalmeria.example",
@@ -6640,11 +6676,11 @@ Source: spec/v0.5/examples/feed-community.json — Validated documents, one per 
 
 ## feed-conference-tracks.json
 
-Source: spec/v0.5/examples/feed-conference-tracks.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/feed-conference-tracks.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "title": "Atlántico Tech Summit 2026",
   "description": "El programa completo de Atlántico Tech Summit 2026 — dos días, dos tracks en paralelo — como documentos independientes.",
   "url": "https://atlantico-tech-summit.example",
@@ -6960,11 +6996,11 @@ Source: spec/v0.5/examples/feed-conference-tracks.json — Validated documents, 
 
 ## feed-covers.json
 
-Source: spec/v0.5/examples/feed-covers.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/feed-covers.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "title": "Eventos de eventos.example",
   "description": "Agregador de eventos tech de habla hispana.",
   "url": "https://eventos.example",
@@ -7009,11 +7045,11 @@ Source: spec/v0.5/examples/feed-covers.json — Validated documents, one per rea
 
 ## feed-multipart-pricing.json
 
-Source: spec/v0.5/examples/feed-multipart-pricing.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/feed-multipart-pricing.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "title": "TRG Conf 2026",
   "description": "Las charlas y talleres de TRG Conf 2026, como documentos independientes.",
   "url": "https://trgcon.example",
@@ -7116,11 +7152,11 @@ Source: spec/v0.5/examples/feed-multipart-pricing.json — Validated documents, 
 
 ## feed-multipart.json
 
-Source: spec/v0.5/examples/feed-multipart.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/feed-multipart.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "title": "Eventos de PyAlmería",
   "description": "Meetups y formación de Python en Almería.",
   "url": "https://pyalmeria.example",
@@ -7226,11 +7262,11 @@ Source: spec/v0.5/examples/feed-multipart.json — Validated documents, one per 
 
 ## feed.json
 
-Source: spec/v0.5/examples/feed.json — Validated documents, one per real case. These pass `npm run validate`.
+Source: spec/v0.6/examples/feed.json — Validated documents, one per real case. These pass `npm run validate`.
 
 ```json
 {
-  "specVersion": "0.5.0",
+  "specVersion": "0.6.0",
   "title": "Open Tech Events Spain",
   "description": "Eventos de comunidades técnicas en España.",
   "url": "https://opentechevents.org",
@@ -7982,6 +8018,54 @@ Each published version lives frozen in its own folder (`spec/v0.1/`, `spec/v0.2/
 and under its own `$id` (`https://opentechevents.org/schema/vX.Y/…`). A document declares
 which one it adheres to with `specVersion`, so **nothing breaks when a new
 version is published**: `0.1.0` documents keep validating against `spec/v0.1/`.
+
+## [0.6.0] — 2026-11-03
+
+No schema change at all: every 0.5.0 document is a valid 0.6.0 document after
+changing `specVersion`. This version exists to carry four decisions that were
+the last long-standing *Open questions*, settled before any `1.0.0` because
+each one is breaking to settle afterwards.
+
+### Decided
+
+- **JSON is the published format; YAML is for authoring** (D039). Not a
+  preference: YAML 1.1 resolves unquoted `no`/`NO` to boolean `false`, and both
+  collide with fields this spec defines — `NO` is Norway in `country`'s enum,
+  `no` is Norwegian in `textLanguage`. A Norwegian community publishing a
+  Norwegian-language event breaks silently. Plus duplicate keys, which every
+  `translations` map assumes cannot exist, and anchors/aliases, which make a
+  public feed an amplification vector.
+- **An imported event's `id` is minted under a domain the community controls**
+  (D040) — their own site or platform profile first, `<ics-url>#<UID>` only
+  when there is no such domain. The fallback is sticky: an `id` is minted once
+  and re-minting duplicates the event for every consumer that stored the old
+  one, which is why the order is load-bearing and not a style note.
+- **`license` stays required on a standalone event** (D041). A document with
+  unknown redistribution terms is a legal risk to every directory that might
+  carry it, and a default would be worse in both directions.
+- **What a `1.0.0` will freeze** (D042): validity — the two base schemas and the
+  normative prose. The recommended profiles keep evolving, because they are
+  warnings that never reject, and freezing them would have made D034
+  unfixable until 2.0. The duty this creates is stated: the set of warnings is
+  not a stable interface, and a consumer that needs one pins the profile file.
+
+### Fixed (tooling, not the spec)
+
+- `update-timezones.mjs`, `update-currencies.mjs` and `update-countries.mjs` had
+  their target path **hardcoded to `spec/v0.4`**, so running them rewrote a
+  frozen version with whatever upstream had released since, and never touched
+  the version under development. Only `update-licenses.mjs` resolved correctly.
+  All four now share one resolver, and the list of published versions is read
+  from the filesystem instead of being hand-kept in four places.
+- Forking v0.6 therefore ran the enum integrity check of `AGENTS.md` for real
+  for the first time on three of the four enums: regenerated against IANA tzdata
+  2026f, ISO 4217 (2026-09-17) and ISO 3166-1, **no enum value changed** — only
+  the provenance `$comment`s, which now record the releases actually verified.
+
+### Migration from 0.5.0
+
+Change `specVersion` to `"0.6.0"`. Nothing else: no field was added, removed or
+redefined.
 
 ## [0.5.0] — 2026-11-03
 

@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://opentechevents.org/schema/v0.5/feed.recommended.schema.json",
+  "$id": "https://opentechevents.org/schema/v0.6/feed.recommended.schema.json",
   "title": "OTE Feed — recommended profile",
   "description": "A quality profile, NOT a validity profile. A feed that fails this schema is still a valid OTE feed. Tools SHOULD report failures here as warnings and MUST NOT reject a document for them. Deliberately short: a feed's job is to carry events, so nearly all of the quality lives in event.recommended.schema.json — which a checker applies to each entry of `events` separately.",
   "allOf": [
     {
-      "$ref": "https://opentechevents.org/schema/v0.5/feed.schema.json"
+      "$ref": "https://opentechevents.org/schema/v0.6/feed.schema.json"
     },
     {
       "description": "url is where the publisher lives, and it is what a consumer shows to say where these events came from. description is what a directory lists the feed under. `organizers` is NOT recommended, on purpose: an aggregator MUST leave it out so each event states its own, and a warning that pushes an aggregator to claim events it does not organise would corrupt the very data the field exists to protect.",
