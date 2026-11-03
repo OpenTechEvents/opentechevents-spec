@@ -1,0 +1,40 @@
+{
+  "specVersion": "0.6.0",
+  "title": "Eventos de PyAlmería",
+  "description": "Meetups y charlas mensuales de Python en Almería.",
+  "url": "https://pyalmeria.example",
+  "textLanguage": "es",
+  "organizers": [
+    { "name": "PyAlmería", "url": "https://pyalmeria.example" }
+  ],
+  "license": "CC-BY-4.0",
+  "updatedAt": "2026-09-01T10:00:00Z",
+
+  "_comment_alternates": "Este feed se sirve como JSON suelto, sin página HTML delante — así que alternates es el único sitio donde decir «la misma colección también está en RSS y en iCal aquí». Es INFORMATIVO: la spec no garantiza que esas versiones estén sincronizadas.",
+  "alternates": [
+    { "mediaType": "application/rss+xml", "url": "https://pyalmeria.example/events.rss" },
+    { "mediaType": "text/calendar", "url": "https://pyalmeria.example/events.ics" }
+  ],
+  "contributing": "mailto:hola@pyalmeria.example",
+  "events": [
+    {
+      "id": "https://pyalmeria.example/talks/2026-09-async",
+      "url": "https://pyalmeria.example/talks/2026-09-async",
+      "name": "PyAlmería — Panel: el futuro de async en Python",
+      "description": "Mesa redonda sobre asyncio, trio y anyio.",
+      "image": ["https://pyalmeria.example/img/2026-09-async.png"],
+      "speakers": [
+        { "name": "Ada Lovelace", "url": "https://ada.example" },
+        { "name": "Grace Hopper" }
+      ],
+      "startDate": "2026-09-24T19:00",
+      "endDate": "2026-09-24T20:30",
+      "timezone": "Europe/Madrid",
+      "attendanceMode": "in-person",
+      "location": { "venue": "El Cable, Almería" },
+      "tags": ["python", "async"],
+      "languages": ["es"],
+      "updatedAt": "2026-09-01T09:00:00Z"
+    }
+  ]
+}

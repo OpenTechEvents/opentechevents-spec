@@ -1,0 +1,19 @@
+{
+  "_comment": "INVÁLIDO a propósito: feed.organizers repite exactamente el mismo objeto. Misma regla que event.organizers. Ver docs/history/CHANGES.log #P030 / DECISIONS.md D027.",
+  "specVersion": "0.6.0",
+  "title": "Feed con organizadores duplicados",
+  "license": "CC0-1.0",
+  "updatedAt": "2026-08-04T10:00:00Z",
+  "organizers": [
+    {"name": "Example Org", "url": "https://example.org"},
+    {"name": "Example Org", "url": "https://example.org"}
+  ],
+  "events": [
+    {
+      "id": "https://example.org/events/1",
+      "name": "Event",
+      "startDate": "2026-09-01T10:00",
+      "timezone": "Europe/Madrid"
+    }
+  ]
+}

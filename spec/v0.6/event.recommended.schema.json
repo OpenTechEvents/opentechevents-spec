@@ -1,0 +1,303 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentechevents.org/schema/v0.6/event.recommended.schema.json",
+  "title": "OTE Event — recommended profile",
+  "description": "A quality profile, NOT a validity profile. An event that fails this schema is still a valid OTE event: event.schema.json decides what is valid, and it is deliberately permissive because most published .ics files carry neither URL nor description. This schema decides something else — whether the event can actually be discovered, filtered and subscribed to. Tools SHOULD report failures here as warnings and MUST NOT reject a document for them. It applies both to a standalone event and to one inside a feed: it references #/$defs/event, so it never asks for specVersion or license.",
+  "type": "object",
+  "languagesCoveredByText": true,
+  "allOf": [
+    {
+      "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/event"
+    },
+    {
+      "description": "Without these, the event is published but not findable: description is what every destination shows, organizers is who is trusted for it, attendanceMode and location answer 'can I go?', tags and languages are what someone filters by, and updatedAt is what lets a subscriber sync incrementally instead of refetching everything. url and image are asked for separately below, because where they live depends on whether the document is a part of a larger event.",
+      "type": "object",
+      "required": [
+        "description",
+        "organizers",
+        "attendanceMode",
+        "location",
+        "tags",
+        "languages",
+        "updatedAt"
+      ]
+    },
+    {
+      "description": "url is the only link RSS/Atom has, and image is what makes the event visible where it is listed (Google recommends it for the Event rich result, and every platform studied already emits one). A document with no partOf is the whole event: nothing else carries these, so it has to.",
+      "if": {
+        "type": "object",
+        "not": {
+          "required": [
+            "partOf"
+          ]
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "url",
+          "image"
+        ]
+      }
+    },
+    {
+      "description": "A part of a larger event usually has no page and no poster of its own — a talk inside a one-day conference is announced on the conference's page, under the conference's artwork, and README.md asks for exactly this modelling (a talk's speakers live on the talk's document). Warning it for the two fields the parent is supposed to carry would mark the recommended modelling as low quality. So image is not asked for at all here, and url is asked of partOf instead: RSS/Atom still gets a link for the item, which is the only reason url was recommended in the first place. A part that DOES have its own page should still publish it in url — this stops short of satisfying it, it does not forbid it.",
+      "if": {
+        "type": "object",
+        "allOf": [
+          {
+            "required": [
+              "partOf"
+            ]
+          },
+          {
+            "not": {
+              "required": [
+                "url"
+              ]
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "partOf": {
+            "type": "object",
+            "required": [
+              "url"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "description": "cfp.closesAt is recommended once there IS a call for proposals, and meaningless otherwise. The reason cfp exists is the question 'which conferences are accepting proposals right now', and without a deadline nobody can answer it: a consumer sees a link and cannot tell whether it closed last March. The warning is actionable by definition — whoever opened the call knows when it closes.",
+      "if": {
+        "type": "object",
+        "required": [
+          "cfp"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "cfp": {
+            "type": "object",
+            "required": [
+              "closesAt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "description": "endDate is recommended only for a timed event: without it a calendar client invents a duration. For an all-day event its absence already means 'ends the day it starts', which is almost always right — so asking for it there would be noise, and a warning nobody can act on is a warning that gets ignored.",
+      "if": {
+        "type": "object",
+        "required": [
+          "startDate"
+        ],
+        "properties": {
+          "startDate": {
+            "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/dateTime"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "endDate"
+        ]
+      }
+    },
+    {
+      "description": "license SHOULD carry no clause that can stop a directory or aggregator from redistributing or transforming the event: NonCommercial rules out any commercial directory outright, NoDerivatives blocks the reformatting/translation an aggregator routinely does, and ShareAlike (including ODbL) is viral for a COMBINED database — merging one event into a larger feed could force the whole feed to adopt that license. Software copyleft licenses (GPL and family) are excluded from the recommendation too: their mechanics are built around 'distributing the Program', legally murky applied to a JSON document, and that ambiguity alone is enough for a cautious directory to decline rather than risk it. None of this makes the license INVALID — event.schema.json already checks it is a real SPDX identifier or a URL — it only means a directory integration may need a conversation first. A URL is exempt: it names its own terms explicitly, which is the point of offering that alternative.",
+      "type": "object",
+      "properties": {
+        "license": {
+          "anyOf": [
+            {
+              "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/dataLicense"
+            },
+            {
+              "type": "string",
+              "format": "iri",
+              "pattern": "^https?://"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "description is only useful if it says something: event.schema.json deliberately leaves it unconstrained beyond being a string (an optional field has no minimum bar to clear, and forcing one would just move the required-field problem this profile already avoids elsewhere), but a document that carries an empty or whitespace-only description looks complete to this profile's own required check while giving a consumer nothing to show — worse than omitting it, which at least triggers this same warning honestly. docs/history/CHANGES.log #P017.",
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      }
+    },
+    {
+      "description": "attendanceMode and location are deliberately independent fields — README.md says location is observable fact, attendanceMode is organiser intent, and if they disagree attendanceMode wins — so this is not a validity rule and never overrides that precedence. It only flags that the detail a consumer needs to act on the declared mode is missing: online without location.onlineUrl cannot produce a schema.org VirtualLocation.url, in-person without location.venue cannot produce a Place.name, and hybrid needs both halves of a MixedEventAttendanceMode. Silent when location itself is absent, since the required-fields warning above already covers that case. docs/history/CHANGES.log #P028.",
+      "if": {
+        "type": "object",
+        "required": [
+          "attendanceMode",
+          "location"
+        ],
+        "properties": {
+          "attendanceMode": {
+            "const": "online"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "object",
+            "required": [
+              "onlineUrl"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "description": "See the 'online' rule above for why this is a warning, not a validity check. in-person without location.venue cannot produce a schema.org Place.name. docs/history/CHANGES.log #P028.",
+      "if": {
+        "type": "object",
+        "required": [
+          "attendanceMode",
+          "location"
+        ],
+        "properties": {
+          "attendanceMode": {
+            "const": "in-person"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "object",
+            "required": [
+              "venue"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "description": "See the 'online' rule above for why this is a warning, not a validity check. hybrid needs both halves of a schema.org MixedEventAttendanceMode: location.venue for the in-person half and location.onlineUrl for the online half. docs/history/CHANGES.log #P028.",
+      "if": {
+        "type": "object",
+        "required": [
+          "attendanceMode",
+          "location"
+        ],
+        "properties": {
+          "attendanceMode": {
+            "const": "hybrid"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "object",
+            "required": [
+              "venue",
+              "onlineUrl"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "description": "offers[].name is only recommended once a translation actually translates one: name itself stays fully optional (worth writing when there is more than one offer, noise when there is only one), but a producer who already wrote offers[].translations.*.name has demonstrated the name exists — leaving the primary blank then loses it for any consumer who reads offers[] directly (schema.org, RSS/iCal) instead of translations. docs/history/CHANGES.log #P033 / DECISIONS.md D030.",
+      "type": "object",
+      "properties": {
+        "offers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "if": {
+              "type": "object",
+              "required": [
+                "translations"
+              ]
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "name"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "description": "See the offers[].name rule above for the same reasoning, applied to partOf.name: a producer who wrote partOf.translations.*.name has demonstrated the series/multipart event has a name, so leaving partOf.name itself blank loses it for any consumer who does not read translations. docs/history/CHANGES.log #P033 / DECISIONS.md D030.",
+      "if": {
+        "type": "object",
+        "required": [
+          "partOf"
+        ],
+        "properties": {
+          "partOf": {
+            "type": "object",
+            "required": [
+              "translations"
+            ]
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "partOf": {
+            "type": "object",
+            "required": [
+              "name"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "description": "See the offers[].name rule above for the same reasoning, applied to eligibility.note: a producer who wrote eligibility.translations.*.note has demonstrated the condition is stated somewhere, so leaving eligibility.note itself blank loses it for any consumer who does not read translations. Already a base-schema error when type is restricted (event.schema.json); this only adds the warning for the other eligibility types, where note stays optional. docs/history/CHANGES.log #P033 / DECISIONS.md D030.",
+      "if": {
+        "type": "object",
+        "required": [
+          "eligibility"
+        ],
+        "properties": {
+          "eligibility": {
+            "type": "object",
+            "required": [
+              "translations"
+            ]
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "eligibility": {
+            "type": "object",
+            "required": [
+              "note"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

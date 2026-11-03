@@ -1,0 +1,60 @@
+{
+  "specVersion": "0.6.0",
+  "id": "https://trgcon.example/2026/workshops/testing",
+  "url": "https://trgcon.example/2026/workshops/testing",
+  "name": "TRG Conf 2026 — Taller de testing en Python",
+  "description": "Taller práctico de tres horas. Parte de TRG Conf 2026.",
+  "image": [
+    "https://trgcon.example/img/2026-workshop.png"
+  ],
+  "organizers": [
+    {
+      "name": "TRG Conf",
+      "url": "https://trgcon.example"
+    }
+  ],
+  "startDate": "2026-10-14T09:30",
+  "endDate": "2026-10-14T12:30",
+  "timezone": "Europe/Madrid",
+  "attendanceMode": "in-person",
+  "location": {
+    "venue": "La Nave, Madrid",
+    "address": {
+      "locality": "Madrid",
+      "country": "ES"
+    }
+  },
+  "tags": [
+    "python",
+    "testing"
+  ],
+  "languages": [
+    "es"
+  ],
+  "_comment_partof": "El taller es una PARTE de la conferencia (partOf.type multipart). partOf.offers lleva la entrada compartida — el ticket de la conferencia — escrita igual en cada parte. La oferta propia del taller es un add-on: coste total = entrada (240) + taller (60).",
+  "offers": [
+    {
+      "name": "Taller de testing",
+      "price": 60,
+      "currency": "EUR",
+      "scope": "add-on",
+      "url": "https://trgcon.example/tickets#workshops"
+    }
+  ],
+  "partOf": {
+    "id": "https://trgcon.example/2026",
+    "name": "TRG Conf 2026",
+    "url": "https://trgcon.example/2026",
+    "type": "multipart",
+    "offers": [
+      {
+        "name": "General",
+        "price": 240,
+        "currency": "EUR",
+        "url": "https://trgcon.example/tickets"
+      }
+    ]
+  },
+  "license": "CC-BY-4.0",
+  "updatedAt": "2026-09-01T09:00:00Z"
+}

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentechevents.org/schema/v0.6/feed.recommended.schema.json",
+  "title": "OTE Feed — recommended profile",
+  "description": "A quality profile, NOT a validity profile. A feed that fails this schema is still a valid OTE feed. Tools SHOULD report failures here as warnings and MUST NOT reject a document for them. Deliberately short: a feed's job is to carry events, so nearly all of the quality lives in event.recommended.schema.json — which a checker applies to each entry of `events` separately.",
+  "allOf": [
+    {
+      "$ref": "https://opentechevents.org/schema/v0.6/feed.schema.json"
+    },
+    {
+      "description": "url is where the publisher lives, and it is what a consumer shows to say where these events came from. description is what a directory lists the feed under. `organizers` is NOT recommended, on purpose: an aggregator MUST leave it out so each event states its own, and a warning that pushes an aggregator to claim events it does not organise would corrupt the very data the field exists to protect.",
+      "type": "object",
+      "required": [
+        "url",
+        "description"
+      ]
+    },
+    {
+      "description": "textLanguage SHOULD only be set without feed organizers when at least one event can inherit it by omitting its own textLanguage. Without organizers, the feed looks like an aggregator; if any event then omits textLanguage, the feed-level value risks attributing a language that event did not state. If every event declares its own textLanguage, the feed-level value only labels the feed's own title and description, so this warning stays silent. Not a validity error: it flags only the combination where inheritance can actually mis-attribute a language. See DECISIONS.md D016 and D031.",
+      "if": {
+        "type": "object",
+        "required": [
+          "events"
+        ],
+        "not": {
+          "required": [
+            "organizers"
+          ]
+        },
+        "properties": {
+          "events": {
+            "type": "array",
+            "contains": {
+              "type": "object",
+              "not": {
+                "required": [
+                  "textLanguage"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "textLanguage": {
+            "not": {}
+          }
+        }
+      }
+    },
+    {
+      "description": "description is only useful if it says something: feed.schema.json deliberately leaves it unconstrained beyond being a string, but a feed that carries an empty or whitespace-only description looks complete to this profile's own required check while giving a consumer nothing to show — worse than omitting it, which at least triggers this same warning honestly. docs/history/CHANGES.log #P017.",
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      }
+    }
+  ]
+}

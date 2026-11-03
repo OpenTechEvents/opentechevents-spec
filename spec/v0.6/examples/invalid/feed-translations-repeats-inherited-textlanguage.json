@@ -1,0 +1,19 @@
+{
+  "_comment": "INVÁLIDO a propósito: el evento no declara su propio textLanguage, así que hereda \"es\" del feed — y su translations.ES repite ese idioma efectivo, no distinto por mayúsculas (RFC 5646 §2.1.1). Mismo fallo que P009/D010, pero contra el idioma heredado en vez del propio del evento. Ver docs/history/CHANGES.log #P015 / DECISIONS.md D016.",
+  "specVersion": "0.6.0",
+  "title": "Agenda",
+  "license": "CC0-1.0",
+  "updatedAt": "2026-08-03T12:00:00Z",
+  "textLanguage": "es",
+  "events": [
+    {
+      "id": "https://example.org/events/1",
+      "name": "Evento",
+      "startDate": "2026-09-01T10:00",
+      "timezone": "Europe/Madrid",
+      "translations": {
+        "ES": { "name": "Evento" }
+      }
+    }
+  ]
+}

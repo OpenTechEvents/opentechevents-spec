@@ -1,0 +1,78 @@
+{
+  "specVersion": "0.6.0",
+  "title": "Eventos de PyAlmería",
+  "description": "Meetups mensuales de Python en Almería.",
+  "url": "https://pyalmeria.example",
+
+  "_comment_textLanguage": "Un feed monolingüe declara el idioma de su texto UNA vez y ningún evento lo repite: se hereda, como `license` y `organizers`. Es el caso del 99% — y es lo que hace que el campo cueste una línea en todo el fichero. `translations` no se hereda nunca: traduce el título DEL FEED, no el nombre de sus eventos. El primer evento traduce el suyo al inglés sin declarar su propio `textLanguage`: el idioma efectivo frente al que se valida esa traducción es el heredado del feed (\"es\"). Ver docs/history/CHANGES.log #P015 / DECISIONS.md D016.",
+
+  "textLanguage": "es",
+
+  "_comment_organizers": "Feed de una comunidad: `organizers` va arriba y lo hereda todo evento que no declare el suyo, `email` incluido — una línea en el fichero y ningún evento la repite. El segundo evento SÍ declara `organizers`, y su lista REEMPLAZA la heredada; no se suma. Por eso PyAlmería aparece repetida ahí, con su email otra vez: si se omitiera la entrada, el evento pasaría a ser solo de PyData Almería, y si se omitiera el email, ese evento se quedaría sin ORGANIZER al exportar a .ics. El reemplazo es lo que garantiza que la invitada NUNCA hereda el email de la anfitriona.",
+
+  "organizers": [
+    { "name": "PyAlmería", "url": "https://pyalmeria.example", "email": "hola@pyalmeria.example" }
+  ],
+  "license": "CC-BY-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "updatedAt": "2026-07-06T10:00:00Z",
+  "events": [
+    {
+      "id": "https://pyalmeria.example/eventos/2026-06-async",
+      "url": "https://pyalmeria.example/eventos/2026-06-async",
+      "name": "PyAlmería — Introducción a async/await",
+      "description": "Charla introductoria a la programación asíncrona en Python, con ejemplos en vivo.",
+      "image": ["https://pyalmeria.example/img/2026-06-async.png"],
+      "startDate": "2026-06-11T18:30",
+      "endDate": "2026-06-11T20:30",
+      "timezone": "Europe/Madrid",
+      "attendanceMode": "in-person",
+      "location": {
+        "venue": "El Cable, Almería",
+        "address": {
+          "street": "Calle Poeta Villaespesa 1",
+          "locality": "Almería",
+          "postalCode": "04001",
+          "country": "ES"
+        }
+      },
+      "tags": ["python", "async"],
+      "languages": ["es"],
+      "updatedAt": "2026-05-28T11:00:00Z",
+      "translations": {
+        "en": {
+          "name": "PyAlmería — Introduction to async/await",
+          "description": "Introductory talk on asynchronous programming in Python, with live examples."
+        }
+      }
+    },
+    {
+      "id": "https://pyalmeria.example/eventos/2026-07-datos",
+      "url": "https://pyalmeria.example/eventos/2026-07-datos",
+      "name": "Noche de datos — PyAlmería × PyData Almería",
+      "description": "Sesión conjunta con PyData Almería.",
+      "image": ["https://pyalmeria.example/img/2026-07-datos.png"],
+      "organizers": [
+        { "name": "PyAlmería", "url": "https://pyalmeria.example", "email": "hola@pyalmeria.example" },
+        { "name": "PyData Almería", "url": "https://pydata-almeria.example" }
+      ],
+      "startDate": "2026-07-09T18:30",
+      "endDate": "2026-07-09T21:00",
+      "timezone": "Europe/Madrid",
+      "attendanceMode": "hybrid",
+      "location": {
+        "venue": "El Cable, Almería",
+        "address": {
+          "street": "Calle Poeta Villaespesa 1",
+          "locality": "Almería",
+          "postalCode": "04001",
+          "country": "ES"
+        },
+        "onlineUrl": "https://meet.example/pyalmeria"
+      },
+      "tags": ["python", "data"],
+      "languages": ["es"],
+      "updatedAt": "2026-06-30T16:45:00Z"
+    }
+  ]
+}

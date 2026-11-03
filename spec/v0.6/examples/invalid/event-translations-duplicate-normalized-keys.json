@@ -1,0 +1,14 @@
+{
+  "_comment": "INVÁLIDO a propósito: translations tiene dos claves que son la misma etiqueta BCP 47 en distinta capitalización (en-US y EN-us) — dos traducciones contradictorias bajo el mismo idioma, sin criterio para elegir cuál es la correcta. Ver docs/history/CHANGES.log #P026 / DECISIONS.md D023.",
+  "specVersion": "0.6.0",
+  "id": "https://example.org/events/duplicate-normalized-translation-keys",
+  "name": "Nombre base",
+  "startDate": "2026-09-01T10:00",
+  "timezone": "Europe/Madrid",
+  "textLanguage": "es",
+  "translations": {
+    "en-US": { "name": "US English name" },
+    "EN-us": { "name": "Second US English name" }
+  },
+  "license": "CC0-1.0"
+}

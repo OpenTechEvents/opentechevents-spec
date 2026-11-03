@@ -1,0 +1,31 @@
+{
+  "specVersion": "0.6.0",
+  "id": "https://devfest-levante.example/2026",
+  "url": "https://devfest-levante.example/2026",
+  "name": "DevFest Levante 2026",
+  "description": "Conferencia de desarrollo del sureste, edición 2026.",
+  "image": [
+    "https://devfest-levante.example/img/2026-16x9.png"
+  ],
+  "organizers": [
+    { "name": "GDG Levante", "url": "https://gdglevante.example" }
+  ],
+  "startDate": "2026-10-16",
+  "endDate": "2026-10-17",
+  "timezone": "Europe/Madrid",
+  "attendanceMode": "in-person",
+  "location": {
+    "venue": "Las Naves, Valencia",
+    "address": {
+      "street": "Carrer de Joan Verdeguer 16",
+      "locality": "València",
+      "postalCode": "46024",
+      "country": "ES"
+    }
+  },
+  "tags": ["cloud", "ai", "web"],
+  "languages": ["es", "en"],
+  "status": "scheduled",
+  "license": "CC-BY-4.0",
+  "updatedAt": "2026-05-04T09:00:00Z"
+}

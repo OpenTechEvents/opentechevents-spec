@@ -1,0 +1,31 @@
+{
+  "specVersion": "0.6.0",
+  "id": "https://calendar.example/ics/rust-madrid#a1b2c3d4-uid-from-the-ics",
+  "name": "Rust Madrid — June meetup",
+  "_comment_description": "El DESCRIPTION del .ics venía en HTML, como lo escribe Google Calendar: 'Talks on WASM and Rust tooling.<br><br>Apúntate en <a href=\"https://rustmadrid.example/junio\">la web</a>&nbsp;&mdash; aforo limitado.' Aquí está ya convertido: el <a> a enlace Markdown, el <br> a salto de línea, las entidades a su carácter. Copiarlo tal cual habría validado igual y habría roto lo que el campo promete.",
+
+  "description": "Talks on WASM and Rust tooling.\n\nApúntate en [la web](https://rustmadrid.example/junio) — aforo limitado.",
+
+  "_comment_organizers": "El .ics traía ORGANIZER;CN=\"Rust Madrid\":mailto:hola@rustmadrid.example, y de ahí salen las dos cosas: nombre y email. Se copia porque este .ics está publicado en una URL pública y su licencia permite republicarlo (ver source); desde un calendario privado o un .ics compartido por enlace NO se copiaría, porque eso es cambiarle el nivel de exposición a una dirección que nadie publicó. Con el email, este evento puede volver a .ics con un ORGANIZER válido.",
+
+  "organizers": [
+    { "name": "Rust Madrid", "email": "hola@rustmadrid.example" }
+  ],
+  "startDate": "2026-06-26T19:00",
+  "endDate": "2026-06-26T21:00",
+  "timezone": "Europe/Madrid",
+  "location": {
+    "venue": "Campus Madrid, Calle de Moreno Nieto 2, Madrid",
+    "geo": { "lat": 40.4081, "lon": -3.7188 }
+  },
+  "tags": ["rust", "wasm"],
+  "languages": ["es"],
+  "license": "CC-BY-4.0",
+  "source": {
+    "name": "Rust Madrid",
+    "url": "https://calendar.example/ics/rust-madrid",
+    "license": "CC-BY-4.0",
+    "retrievedAt": "2026-06-01T05:00:00Z"
+  },
+  "updatedAt": "2026-06-10T18:00:00Z"
+}

@@ -1,0 +1,103 @@
+{
+  "specVersion": "0.6.0",
+  "title": "Eventos de PyAlmería",
+  "description": "Meetups y formación de Python en Almería.",
+  "url": "https://pyalmeria.example",
+
+  "_comment_multipart": "Un study jam de tres sesiones que se celebran en TRES SÁBADOS NO CONSECUTIVOS, con una sola inscripción. Se publica como tres eventos con el mismo `partOf` y `type: multipart` — NO como un evento con startDate del primer sábado y endDate del último: eso afirmaría un evento continuo de quince días y ocuparía dos semanas enteras en el calendario de quien se suscriba. Cada parte lleva sus fechas reales; quien ignore `partOf` ve tres sesiones correctas en vez de una mentira de quince días.",
+
+  "organizers": [
+    { "name": "PyAlmería", "url": "https://pyalmeria.example" }
+  ],
+  "license": "CC-BY-4.0",
+  "updatedAt": "2026-02-25T11:00:00Z",
+  "events": [
+    {
+      "id": "https://pyalmeria.example/study-jams/2026-testing/1",
+      "url": "https://pyalmeria.example/study-jams/2026-testing",
+      "name": "Study Jam de testing en Python — Sesión 1: pytest desde cero",
+      "description": "Primera sesión: pytest desde cero — fixtures, parametrización y estructura de un proyecto.",
+      "image": ["https://pyalmeria.example/img/2026-testing-study-jam.png"],
+      "startDate": "2026-03-07T10:00",
+      "endDate": "2026-03-07T14:00",
+      "timezone": "Europe/Madrid",
+      "attendanceMode": "in-person",
+      "location": {
+        "venue": "El Cable, Almería",
+        "address": {
+          "street": "Calle Poeta Villaespesa 1",
+          "locality": "Almería",
+          "postalCode": "04001",
+          "country": "ES"
+        }
+      },
+      "tags": ["python", "testing"],
+      "languages": ["es"],
+      "partOf": {
+        "type": "multipart",
+        "id": "https://pyalmeria.example/study-jams/2026-testing",
+        "name": "Study Jam de testing en Python (3 sesiones)",
+        "url": "https://pyalmeria.example/study-jams/2026-testing"
+      },
+      "updatedAt": "2026-02-18T09:00:00Z"
+    },
+    {
+      "id": "https://pyalmeria.example/study-jams/2026-testing/2",
+      "url": "https://pyalmeria.example/study-jams/2026-testing",
+      "name": "Study Jam de testing en Python — Sesión 2: dobles de prueba",
+      "description": "Segunda sesión: dobles de prueba — mocks, stubs y cuándo NO usarlos.",
+      "image": ["https://pyalmeria.example/img/2026-testing-study-jam.png"],
+      "startDate": "2026-03-14T10:00",
+      "endDate": "2026-03-14T14:00",
+      "timezone": "Europe/Madrid",
+      "attendanceMode": "in-person",
+      "location": {
+        "venue": "El Cable, Almería",
+        "address": {
+          "street": "Calle Poeta Villaespesa 1",
+          "locality": "Almería",
+          "postalCode": "04001",
+          "country": "ES"
+        }
+      },
+      "tags": ["python", "testing"],
+      "languages": ["es"],
+      "partOf": {
+        "type": "multipart",
+        "id": "https://pyalmeria.example/study-jams/2026-testing",
+        "name": "Study Jam de testing en Python (3 sesiones)",
+        "url": "https://pyalmeria.example/study-jams/2026-testing"
+      },
+      "updatedAt": "2026-02-18T09:00:00Z"
+    },
+    {
+      "id": "https://pyalmeria.example/study-jams/2026-testing/3",
+      "url": "https://pyalmeria.example/study-jams/2026-testing",
+      "name": "Study Jam de testing en Python — Sesión 3: CI y cobertura",
+      "description": "Tercera sesión: CI y cobertura — automatizar la suite y leer lo que mide.",
+      "image": ["https://pyalmeria.example/img/2026-testing-study-jam.png"],
+      "startDate": "2026-03-28T10:00",
+      "endDate": "2026-03-28T14:00",
+      "timezone": "Europe/Madrid",
+      "attendanceMode": "in-person",
+      "location": {
+        "venue": "El Cable, Almería",
+        "address": {
+          "street": "Calle Poeta Villaespesa 1",
+          "locality": "Almería",
+          "postalCode": "04001",
+          "country": "ES"
+        }
+      },
+      "tags": ["python", "testing"],
+      "languages": ["es"],
+      "partOf": {
+        "type": "multipart",
+        "id": "https://pyalmeria.example/study-jams/2026-testing",
+        "name": "Study Jam de testing en Python (3 sesiones)",
+        "url": "https://pyalmeria.example/study-jams/2026-testing"
+      },
+      "updatedAt": "2026-02-25T10:30:00Z"
+    }
+  ]
+}

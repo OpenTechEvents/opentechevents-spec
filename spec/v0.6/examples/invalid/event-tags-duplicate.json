@@ -1,0 +1,10 @@
+{
+  "_comment": "INVÁLIDO a propósito: tags repite exactamente el mismo valor — no añade información, es la misma categoría afirmada dos veces. Ver docs/history/CHANGES.log #P027.",
+  "specVersion": "0.6.0",
+  "id": "https://example.org/events/duplicate-tags",
+  "name": "Duplicate tags",
+  "startDate": "2026-09-01T10:00",
+  "timezone": "Europe/Madrid",
+  "tags": ["rust", "rust"],
+  "license": "CC0-1.0"
+}

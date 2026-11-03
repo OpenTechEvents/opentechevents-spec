@@ -1,0 +1,13 @@
+{
+  "_comment": "INVÁLIDO a propósito: UK no es un código ISO 3166-1 — está \"indeterminadamente reservado\" precisamente por su uso extendido fuera del estándar, pero el código real de Reino Unido es GB. Es el error más probable ahora que este campo deja de aceptar dos letras cualquiera — ver docs/history/CHANGES.log #P005 / DECISIONS.md D006.",
+  "specVersion": "0.6.0",
+  "id": "https://x.example/1",
+  "name": "X",
+  "startDate": "2026-06-26T18:00",
+  "timezone": "Europe/London",
+  "license": "CC-BY-4.0",
+  "location": {
+    "venue": "X",
+    "address": { "country": "UK" }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "_comment": "INVÁLIDO a propósito: languages repite exactamente el mismo idioma. Ver docs/history/CHANGES.log #P027.",
+  "specVersion": "0.6.0",
+  "id": "https://example.org/events/duplicate-languages",
+  "name": "Duplicate languages",
+  "startDate": "2026-09-01T10:00",
+  "timezone": "Europe/Madrid",
+  "languages": ["es", "es"],
+  "license": "CC0-1.0"
+}

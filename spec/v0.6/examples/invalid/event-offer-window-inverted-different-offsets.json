@@ -1,0 +1,12 @@
+{
+  "_comment": "INVÁLIDO a propósito: aunque la comparación de las cadenas sugiere lo contrario, con offsets distintos closesAt (2026-07-01T16:00 UTC) es anterior a opensAt (2026-07-02T04:00 UTC) — el motivo por el que esta regla compara instantes reales, no texto. Ver docs/history/CHANGES.log #P008 / DECISIONS.md D009.",
+  "specVersion": "0.6.0",
+  "id": "https://x.example/1",
+  "name": "X",
+  "startDate": "2026-06-26T18:00",
+  "timezone": "Europe/Madrid",
+  "license": "CC-BY-4.0",
+  "offers": [
+    { "price": 0, "opensAt": "2026-07-01T23:00:00-05:00", "closesAt": "2026-07-02T01:00:00+09:00" }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "_comment": "INVÁLIDO a propósito: feed.translations.es repite feed.textLanguage (\"es\") — mismo fallo que en un evento, aplicado al feed. Ver docs/history/CHANGES.log #P009 / DECISIONS.md D010.",
+  "specVersion": "0.6.0",
+  "title": "X",
+  "license": "CC-BY-4.0",
+  "updatedAt": "2026-06-01T00:00:00Z",
+  "textLanguage": "es",
+  "translations": {
+    "es": { "title": "Título contradictorio" }
+  },
+  "events": []
+}

@@ -1,0 +1,14 @@
+{
+  "_comment": "INVÁLIDO a propósito: translations.en no tiene ni title ni description, solo un campo desconocido. Ver docs/history/CHANGES.log #P024 / DECISIONS.md D022.",
+  "specVersion": "0.6.0",
+  "title": "Unknown-only feed translation",
+  "textLanguage": "es",
+  "translations": {
+    "en": {
+      "unkownField": "x"
+    }
+  },
+  "license": "CC0-1.0",
+  "updatedAt": "2026-08-04T10:00:00Z",
+  "events": []
+}

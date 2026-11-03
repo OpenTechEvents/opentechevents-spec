@@ -1,0 +1,9 @@
+{
+  "_comment": "INVÁLIDO a propósito: February never has a 30th, leap year or not. Only the day-of-month range was ever checked lexically here, not real calendar validity — see docs/history/CHANGES.log #P001 / DECISIONS.md D001.",
+  "specVersion": "0.6.0",
+  "id": "https://x.example/1",
+  "name": "X",
+  "startDate": "2026-02-30",
+  "timezone": "Europe/Madrid",
+  "license": "CC-BY-4.0"
+}

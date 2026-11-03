@@ -1,0 +1,81 @@
+{
+  "specVersion": "0.6.0",
+  "id": "https://devfest-levante.example/2026",
+  "url": "https://devfest-levante.example/2026",
+  "name": "DevFest Levante 2026",
+  "description": "Conferencia de desarrollo del sureste, edición 2026. Dos días, tres tracks.",
+  "image": [
+    "https://devfest-levante.example/img/2026-16x9.png"
+  ],
+  "organizers": [
+    { "name": "GDG Levante", "url": "https://gdglevante.example" }
+  ],
+  "startDate": "2026-10-16",
+  "endDate": "2026-10-17",
+  "timezone": "Europe/Madrid",
+  "attendanceMode": "in-person",
+  "location": {
+    "venue": "Las Naves, Carrer de Joan Verdeguer 16, València",
+    "address": {
+      "street": "Carrer de Joan Verdeguer 16",
+      "locality": "València",
+      "region": "Comunitat Valenciana",
+      "postalCode": "46024",
+      "country": "ES"
+    }
+  },
+  "tags": ["cloud", "ai", "web"],
+  "languages": ["es", "en"],
+  "textLanguage": "es",
+  "offers": [
+    {
+      "name": "Early bird",
+      "price": 35,
+      "currency": "EUR",
+      "url": "https://devfest-levante.example/2026/entradas",
+      "availability": "sold-out",
+      "closesAt": "2026-06-30T23:59:59+02:00"
+    },
+    {
+      "name": "General",
+      "price": 45,
+      "currency": "EUR",
+      "url": "https://devfest-levante.example/2026/entradas",
+      "availability": "in-stock",
+      "opensAt": "2026-07-01T00:00:00+02:00"
+    },
+    {
+      "name": "Estudiantes",
+      "price": 0,
+      "url": "https://devfest-levante.example/2026/entradas#estudiantes",
+      "availability": "sold-out",
+      "waitlistUrl": "https://devfest-levante.example/2026/lista-espera",
+      "translations": {
+        "en": { "name": "Students" }
+      }
+    }
+  ],
+
+  "_comment_waitlist": "Las plazas gratuitas de estudiantes se agotaron, y hay cola. `sold-out` + `waitlistUrl` en vez de un `availability: \"waitlist\"`: así un consumidor que no conozca el campo sigue leyendo «agotado», que es cierto — no puedes comprar —, mientras el que lo conozca ofrece la cola. `price: 0` con `sold-out` no es contradictorio: `price` describe el trato, `availability` si puedes actuar sobre él ahora. Y `waitlistUrl` con `in-stock` lo rechaza el schema: una cola para algo que está a la venta no es una cola.",
+
+  "_comment_translations": "`offers[].name` es texto LIBRE a propósito: quien organiza nombra sus entradas como quiera, y un enum se lo impediría. El precio de esa libertad es que hay que traducirlo, y se traduce DENTRO de la oferta — no con un espejo posicional (`translations.es.offers[0].name`), que colgaría la traducción de la tarifa equivocada en cuanto alguien reordene la lista. Los demás campos de la oferta no llevan idioma: `price` es un número, `currency` un código y `availability` un enum. Cualquier mapa de traducciones del documento, a la profundidad que esté, exige `textLanguage`.",
+  "cfp": {
+    "url": "https://devfest-levante.example/2026/cfp",
+    "opensAt": "2026-05-01T00:00:00+02:00",
+    "closesAt": "2026-07-15T23:59:59+02:00",
+    "coversTravel": true,
+    "coversAccommodation": true
+  },
+  "status": "scheduled",
+  "license": "CC-BY-4.0",
+  "updatedAt": "2026-05-04T09:00:00Z",
+
+  "_comment_languages_translations": "languages declara \"es\" y \"en\" porque la conferencia se vive en los dos —tracks y networking en inglés—, pero antes de P019 el documento no traducía ni name ni description: el perfil recomendado no tenía forma de detectarlo, y quien solo lee inglés no encontraba ni una palabra que entendiera. Ver docs/history/CHANGES.log #P019 / DECISIONS.md D019.",
+
+  "translations": {
+    "en": {
+      "name": "DevFest Levante 2026",
+      "description": "South-east dev conference, 2026 edition. Two days, three tracks."
+    }
+  }
+}

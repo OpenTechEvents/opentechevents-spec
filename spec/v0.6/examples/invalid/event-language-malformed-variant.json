@@ -1,0 +1,10 @@
+{
+  "_comment": "INVÁLIDO a propósito: \"12345678\" tiene la forma de un variant (5-8 alfanuméricos), pero no está registrado como ninguno en el IANA Language Subtag Registry — no basta con la forma, hace falta que el subtag exista de verdad. Ver docs/history/CHANGES.log #P006 / DECISIONS.md D007.",
+  "specVersion": "0.6.0",
+  "id": "https://x.example/1",
+  "name": "X",
+  "startDate": "2026-06-26T18:00",
+  "timezone": "Europe/Madrid",
+  "license": "CC-BY-4.0",
+  "textLanguage": "en-12345678"
+}

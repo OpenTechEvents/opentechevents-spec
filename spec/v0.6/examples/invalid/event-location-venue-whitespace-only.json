@@ -1,0 +1,12 @@
+{
+  "_comment": "INVÁLIDO a propósito: location.venue es solo espacios — mapea a schema.org Place.name, y un espacio no es un lugar. Ver docs/history/CHANGES.log #P018 / DECISIONS.md D018.",
+  "specVersion": "0.6.0",
+  "id": "https://x.example/1",
+  "name": "X",
+  "startDate": "2026-06-26T18:00",
+  "timezone": "Europe/Madrid",
+  "license": "CC-BY-4.0",
+  "location": {
+    "venue": "   "
+  }
+}

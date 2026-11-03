@@ -1,0 +1,9 @@
+{
+  "_comment": "INVÁLIDO a propósito: not a real IANA timezone identifier. timezone exists to turn a wall-clock startDate into an unambiguous instant; an invented zone breaks exactly that promise — see docs/history/CHANGES.log #P002 / DECISIONS.md D002. A historical alias like Europe/Kiev (pre-2022 name for Europe/Kyiv) is still valid and NOT what this file tests.",
+  "specVersion": "0.6.0",
+  "id": "https://x.example/1",
+  "name": "X",
+  "startDate": "2026-06-26T18:00",
+  "timezone": "Europe/Atlantida",
+  "license": "CC-BY-4.0"
+}

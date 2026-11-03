@@ -3,13 +3,13 @@ import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 
 /** The spec version these schemas describe. Matches the `specVersion` field of a document. */
-export const specVersion = "0.5.0";
+export const specVersion = "0.6.0";
 
 /** JSON Schema (draft 2020-12) of a single OTE event. */
-export const eventSchema = require("./spec/v0.5/event.schema.json");
+export const eventSchema = require("./spec/v0.6/event.schema.json");
 
 /** JSON Schema (draft 2020-12) of an OTE feed. */
-export const feedSchema = require("./spec/v0.5/feed.schema.json");
+export const feedSchema = require("./spec/v0.6/feed.schema.json");
 
 /**
  * Both schemas, in the order a validator needs them: the feed references the event by $id,
@@ -23,8 +23,8 @@ export const schemas = [eventSchema, feedSchema];
  * Report their failures as warnings; never reject a document for them. Both reference the base
  * schemas by $id, so register `schemas` first.
  */
-export const eventRecommendedSchema = require("./spec/v0.5/event.recommended.schema.json");
-export const feedRecommendedSchema = require("./spec/v0.5/feed.recommended.schema.json");
+export const eventRecommendedSchema = require("./spec/v0.6/event.recommended.schema.json");
+export const feedRecommendedSchema = require("./spec/v0.6/feed.recommended.schema.json");
 export const recommendedSchemas = [eventRecommendedSchema, feedRecommendedSchema];
 
 /**

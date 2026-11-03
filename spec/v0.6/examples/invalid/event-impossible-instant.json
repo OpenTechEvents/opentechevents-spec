@@ -1,0 +1,10 @@
+{
+  "_comment": "INVÁLIDO a propósito: April never has a 31st. updatedAt is an INSTANT (offset mandatory), but the offset being well-formed does not make the date it is attached to real — see docs/history/CHANGES.log #P001 / DECISIONS.md D001.",
+  "specVersion": "0.6.0",
+  "id": "https://x.example/1",
+  "name": "X",
+  "startDate": "2026-06-26",
+  "timezone": "Europe/Madrid",
+  "license": "CC-BY-4.0",
+  "updatedAt": "2026-04-31T10:00:00+02:00"
+}

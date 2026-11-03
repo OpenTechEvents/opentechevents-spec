@@ -1,0 +1,43 @@
+{
+  "specVersion": "0.6.0",
+  "id": "https://rustmadrid.example/meetups/2026-06",
+  "url": "https://rustmadrid.example/meetups/2026-06",
+  "name": "Rust Madrid — Meetup de junio",
+  "description": "Segundo lunes de cada mes. Esta edición: WASM y tooling.",
+  "image": [
+    "https://rustmadrid.example/img/2026-06.png"
+  ],
+  "organizers": [
+    { "name": "Rust Madrid", "url": "https://rustmadrid.example" }
+  ],
+  "startDate": "2026-06-08T19:00",
+  "endDate": "2026-06-08T21:00",
+  "timezone": "Europe/Madrid",
+  "attendanceMode": "in-person",
+  "location": {
+    "venue": "Campus Madrid, Calle de Moreno Nieto 2, Madrid",
+    "address": {
+      "street": "Calle de Moreno Nieto 2",
+      "locality": "Madrid",
+      "postalCode": "28005",
+      "country": "ES"
+    }
+  },
+  "tags": ["rust", "wasm"],
+  "languages": ["es"],
+  "status": "scheduled",
+
+  "_comment_partOf": "UNA ocurrencia de un meetup mensual, no la serie entera. El feed lleva un documento como este por cada edición: junio, julio, septiembre… `partOf` solo dice a qué conjunto pertenece — no genera fechas. Así, cancelar la de agosto es `status: cancelled` en SU documento, y quien ignore `partOf` sigue viendo un evento completo y correcto.",
+
+  "partOf": {
+    "id": "https://rustmadrid.example/meetups",
+    "name": "Rust Madrid — meetup mensual",
+    "url": "https://rustmadrid.example/meetups"
+  },
+  "license": "CC-BY-4.0",
+  "updatedAt": "2026-05-30T12:00:00Z",
+
+  "_comment_extensions": "`ics:rrule` NO es un campo de OTE: es vocabulario externo (lleva prefijo). Lo guarda el importador para poder volver al .ics de origen sin pérdida. Es informativo: ningún consumidor de OTE está obligado a expandirlo, porque las ocurrencias ya vienen expandidas.",
+
+  "ics:rrule": "FREQ=MONTHLY;BYDAY=2MO"
+}

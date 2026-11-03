@@ -1,0 +1,31 @@
+{
+  "specVersion": "0.6.0",
+  "id": "https://rustmadrid.example/meetups/2026-05",
+  "url": "https://rustmadrid.example/meetups/2026-05",
+  "name": "Rust Madrid — Meetup de mayo",
+  "description": "Charla sobre lifetimes y una sesión de preguntas.",
+  "image": ["https://rustmadrid.example/img/2026-05.png"],
+  "organizers": [
+    { "name": "Rust Madrid", "url": "https://rustmadrid.example" }
+  ],
+  "startDate": "2026-05-28T19:00",
+  "endDate": "2026-05-28T21:00",
+  "timezone": "Europe/Madrid",
+  "attendanceMode": "in-person",
+  "location": { "venue": "Impact Hub, Madrid", "address": { "locality": "Madrid", "country": "ES" } },
+  "tags": ["rust"],
+  "languages": ["es"],
+  "textLanguage": "es",
+  "license": "CC-BY-4.0",
+  "updatedAt": "2026-06-02T10:00:00Z",
+
+  "_comment_recordings": "El evento ya ocurrió. La grabación se enlaza AHORA, con el mismo `id` y un `updatedAt` nuevo. Dos entradas: la charla en YouTube (URL pelada) y las preguntas en la instancia PeerTube de la comunidad, con `title` porque hay más de una.",
+  "recordings": [
+    "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    {
+      "url": "https://tube.rustmadrid.example/w/abc123",
+      "title": "Preguntas y respuestas",
+      "translations": { "en": { "title": "Q&A" } }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "_comment": "INVÁLIDO a propósito: el evento hereda textLanguage del feed y sus translations tienen dos claves equivalentes tras normalizar (en-US y EN-us) — el mismo fallo que en un documento suelto, pero contra el idioma efectivo heredado. Ver docs/history/CHANGES.log #P026 / DECISIONS.md D023.",
+  "specVersion": "0.6.0",
+  "title": "Feed base",
+  "textLanguage": "es",
+  "license": "CC0-1.0",
+  "updatedAt": "2026-08-04T10:00:00Z",
+  "events": [
+    {
+      "id": "https://example.org/events/feed-event-duplicate-normalized-translation-keys",
+      "name": "Nombre base",
+      "startDate": "2026-09-01T10:00",
+      "timezone": "Europe/Madrid",
+      "translations": {
+        "en-US": { "name": "US English name" },
+        "EN-us": { "name": "Second US English name" }
+      }
+    }
+  ]
+}

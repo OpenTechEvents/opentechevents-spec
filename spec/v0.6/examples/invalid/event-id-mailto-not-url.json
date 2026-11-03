@@ -1,0 +1,9 @@
+{
+  "_comment": "INVÁLIDO a propósito: id es un mailto:, que ni siquiera identifica un evento — identifica un buzón. Ver docs/history/CHANGES.log #P020 / DECISIONS.md D020.",
+  "specVersion": "0.6.0",
+  "id": "mailto:hola@rustmadrid.example",
+  "name": "Evento con id mailto",
+  "startDate": "2026-09-01T10:00",
+  "timezone": "Europe/Madrid",
+  "license": "CC0-1.0"
+}

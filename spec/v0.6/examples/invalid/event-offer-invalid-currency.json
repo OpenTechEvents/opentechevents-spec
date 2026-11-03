@@ -1,0 +1,12 @@
+{
+  "_comment": "INVÁLIDO a propósito: ZZZ no es un código ISO 4217 real. currency existe para que el precio se pueda interpretar y comparar; un código inventado rompe justo esa promesa — ver docs/history/CHANGES.log #P004 / DECISIONS.md D005.",
+  "specVersion": "0.6.0",
+  "id": "https://x.example/1",
+  "name": "X",
+  "startDate": "2026-06-26T18:00",
+  "timezone": "Europe/Madrid",
+  "license": "CC-BY-4.0",
+  "offers": [
+    { "price": 10, "currency": "ZZZ" }
+  ]
+}

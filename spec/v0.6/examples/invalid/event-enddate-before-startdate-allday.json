@@ -1,0 +1,10 @@
+{
+  "_comment": "INVÁLIDO a propósito: mismo caso que event-enddate-before-startdate.json, pero con fechas de día completo. Ver docs/history/CHANGES.log #P003 / DECISIONS.md D004.",
+  "specVersion": "0.6.0",
+  "id": "https://x.example/1",
+  "name": "X",
+  "startDate": "2026-06-26",
+  "endDate": "2026-06-25",
+  "timezone": "Europe/Madrid",
+  "license": "CC-BY-4.0"
+}

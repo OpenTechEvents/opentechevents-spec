@@ -1,0 +1,19 @@
+{
+  "_comment": "INVÁLIDO a propósito: offers[0].translations tiene dos claves equivalentes tras normalizar BCP 47 (en-US y EN-us) — mismo fallo que en el mapa principal (P026), en un mapa local. Ver docs/history/CHANGES.log #P026 / DECISIONS.md D023.",
+  "specVersion": "0.6.0",
+  "id": "https://example.org/events/offer-duplicate-normalized-translation-keys",
+  "name": "Nombre base",
+  "startDate": "2026-09-01T10:00",
+  "timezone": "Europe/Madrid",
+  "textLanguage": "es",
+  "offers": [
+    {
+      "price": 0,
+      "translations": {
+        "en-US": { "name": "Free ticket" },
+        "EN-us": { "name": "No-cost ticket" }
+      }
+    }
+  ],
+  "license": "CC0-1.0"
+}

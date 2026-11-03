@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentechevents.org/schema/v0.6/feed.schema.json",
+  "title": "OTE Feed",
+  "description": "A collection of OTE events published at a stable URL. An exchange format, not an API.",
+  "type": "object",
+  "required": [
+    "specVersion",
+    "title",
+    "updatedAt",
+    "events"
+  ],
+  "properties": {
+    "specVersion": {
+      "description": "Version of OTE Spec this feed adheres to. Applies to every event in it.",
+      "const": "0.6.0",
+      "examples": [
+        "0.6.0"
+      ]
+    },
+    "title": {
+      "description": "Human-readable name of the feed.",
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S",
+      "examples": [
+        "Eventos de PyAlmería"
+      ]
+    },
+    "description": {
+      "description": "Short description of the feed.",
+      "type": "string",
+      "examples": [
+        "Meetups mensuales de Python en Almería."
+      ]
+    },
+    "url": {
+      "description": "Canonical URL of the community, directory or organisation publishing the feed.",
+      "type": "string",
+      "format": "iri",
+      "pattern": "^https?://",
+      "not": {
+        "pattern": "^https?://[^/?#]*@"
+      },
+      "examples": [
+        "https://pyalmeria.example"
+      ]
+    },
+    "textLanguage": {
+      "description": "Language this feed's own free text is written in — title and description — and the default every event inherits when it omits its own. What makes it cheap: a monolingual publisher declares it once for the whole file and no event repeats it. Not the same as organizers: an aggregator whose events don't share one language must leave this out, exactly as it must leave out organizers, so each event states its own instead of inheriting the wrong one. Absent means unknown, never English and never the language of the HTTP response.",
+      "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/languageTag",
+      "examples": [
+        "es",
+        "ca"
+      ]
+    },
+    "organizers": {
+      "description": "Who runs the events in this feed. Not the same as title/url, which name whoever publishes the feed: an aggregator publishes events it does not organise, and must leave this out so each event states its own.",
+      "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/organizers",
+      "examples": [
+        [
+          {
+            "name": "PyAlmería",
+            "url": "https://pyalmeria.example"
+          }
+        ]
+      ]
+    },
+    "license": {
+      "description": "License for the feed's contents, and the default every event inherits when it omits its own. Optional only for an aggregator whose events carry different licenses: if this is absent, every event in the feed must declare its own license — no valid OTE document, standalone or inside any feed, may resolve to an unknown license. SPDX identifier (full list at https://spdx.org/licenses/) or URL.",
+      "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/license",
+      "examples": [
+        "CC-BY-4.0",
+        "CC0-1.0"
+      ]
+    },
+    "licenseUrl": {
+      "description": "URL of the full license text.",
+      "type": "string",
+      "format": "iri",
+      "pattern": "^https?://",
+      "not": {
+        "pattern": "^https?://[^/?#]*@"
+      },
+      "examples": [
+        "https://creativecommons.org/licenses/by/4.0/"
+      ]
+    },
+    "updatedAt": {
+      "description": "When this feed was generated. Never earlier than any event's own updatedAt — a feed cannot contain a revision that, by its own timestamps, didn't exist yet when it was generated.",
+      "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/instant",
+      "examples": [
+        "2026-07-06T10:00:00Z"
+      ]
+    },
+    "translations": {
+      "description": "This feed's own title and description in other languages. Its EVENTS are not translated here: each one carries its own translations, and unlike license or textLanguage this field is never inherited — a feed's title is not an event's name. Requires textLanguage, like an event's translations do — see the document's constraints.",
+      "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/feedTranslations",
+      "examples": [
+        {
+          "en": {
+            "title": "Rust Girona events",
+            "description": "Weekly online Rust coding sessions, in Catalan and Spanish."
+          }
+        }
+      ]
+    },
+    "covers": {
+      "description": "New in v0.5. What this feed claims to be COMPLETE about, as a date window over the events' own startDate. Inside the window, the feed is the whole truth: an event that is absent is not happening (withdrawn or cancelled-and-removed), and a consumer MAY drop what it no longer finds. Outside the window the feed asserts NOTHING, and a consumer MUST NOT infer that a missing event was removed. Both bounds are optional: `from` alone means 'everything from this date on', `to` alone means 'everything up to this date', and an empty object is not allowed. Omitting `covers` keeps the pre-v0.5 meaning unchanged — the feed makes no completeness claim at all — so this is purely additive. It exists so that a publisher who prunes old events can say so, instead of silently asserting that events they dropped never happened. See README.",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "from": {
+          "description": "First day the feed claims completeness for. Absent means unbounded into the past.",
+          "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/date",
+          "examples": [
+            "2026-01-01"
+          ]
+        },
+        "to": {
+          "description": "Last day the feed claims completeness for, INCLUSIVE — the same convention as an all-day endDate. Absent means unbounded into the future, which is the usual case: a feed normally claims everything from some date onwards.",
+          "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/date",
+          "examples": [
+            "2027-12-31"
+          ]
+        }
+      },
+      "orderedCoverage": true,
+      "examples": [
+        {
+          "from": "2026-01-01"
+        },
+        {
+          "from": "2026-01-01",
+          "to": "2027-12-31"
+        }
+      ]
+    },
+    "alternates": {
+      "description": "New in v0.5. Where this same collection is published in other formats — RSS, iCalendar, schema.org JSON-LD. The JSON form of an HTML <link rel=\"alternate\"> / the Link: rel=\"alternate\" HTTP header, for feeds with no HTML page in front of them. INFORMATIONAL: OTE does not guarantee the linked resources are generated from this feed or kept in sync with it — a consumer MUST NOT assume exact sync, completeness or derivation; a producer SHOULD generate them from the same source, or otherwise intend them to describe the same collection.",
+      "$ref": "#/$defs/alternates",
+      "examples": [
+        [
+          {
+            "mediaType": "application/rss+xml",
+            "url": "https://pyalmeria.example/events.rss"
+          },
+          {
+            "mediaType": "text/calendar",
+            "url": "https://pyalmeria.example/events.ics"
+          }
+        ]
+      ]
+    },
+    "contributing": {
+      "description": "New in v0.5. URL for reporting or proposing a data change in this feed's records — the default every event inherits when it omits its own (default-value inheritance, like license: a declared scalar replaces the inherited one). It exists because an aggregator must leave organizers out, and source points upstream, not at the aggregator's copy. Accepts an HTTP(S) IRI or a mailto: role address; see event.contributing and DECISIONS.md.",
+      "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/contributing",
+      "examples": [
+        "https://github.com/pyalmeria/eventos/issues/new"
+      ]
+    },
+    "events": {
+      "description": "Events in this feed. Each one inherits the feed's specVersion and license unless it declares its own. No two may share an id — see the document's constraints.",
+      "type": "array",
+      "items": {
+        "$ref": "https://opentechevents.org/schema/v0.6/event.schema.json#/$defs/event"
+      }
+    }
+  },
+  "$defs": {
+    "alternates": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/alternate"
+      }
+    },
+    "alternate": {
+      "type": "object",
+      "required": [
+        "mediaType",
+        "url"
+      ],
+      "$comment": "mediaType is a bare, lowercase media-type token — no parameters (application/rss+xml, not 'application/rss+xml; charset=utf-8'). Two entries MAY share a mediaType (RSS mirrors); they SHOULD then be mirrors or equivalent choices, not semantically different feeds that would need a human label. No title: a client renders 'RSS'/'iCalendar' in the reader's language from the media type, the same 'an enum is multilingual for free' reasoning as status.",
+      "properties": {
+        "mediaType": {
+          "description": "IANA media type of the alternate representation. A loose shape check, not a closed list — new feed formats appear.",
+          "type": "string",
+          "pattern": "^[a-z]+/[a-z0-9][a-z0-9!#$&^_.+-]*$",
+          "examples": [
+            "application/rss+xml",
+            "application/atom+xml",
+            "application/feed+json",
+            "text/calendar",
+            "application/ld+json"
+          ]
+        },
+        "url": {
+          "description": "Absolute HTTP(S) IRI of the alternate representation. No embedded credentials.",
+          "type": "string",
+          "format": "iri",
+          "pattern": "^https?://",
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
+          "examples": [
+            "https://pyalmeria.example/events.rss"
+          ]
+        }
+      }
+    }
+  },
+  "distinctTranslationLanguages": true,
+  "uniqueEventIds": true,
+  "eventsNotNewerThanFeed": true,
+  "eventsRespectInheritedTextLanguage": true,
+  "sharedOffersConsistent": true,
+  "allOf": [
+    {
+      "description": "Same rule as an event: a map of translations is unusable without knowing which language the primary text is in. A feed that translates its title must say what language that title is in.",
+      "if": {
+        "type": "object",
+        "required": [
+          "translations"
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "textLanguage"
+        ]
+      }
+    },
+    {
+      "description": "license is the one default this spec never lets go missing by omission: an aggregator MAY leave feed.license out precisely because its events carry different licenses, but only if every event then declares its own — the same disciplined-omission pattern organizers/textLanguage already use for an aggregator, applied to a guarantee that is deliberately stricter than attribution or language, because redistributing data under an unknown license is a real legal risk, not just an editorial gap. docs/history/CHANGES.log #P032 / DECISIONS.md D029.",
+      "if": {
+        "type": "object",
+        "not": {
+          "required": [
+            "license"
+          ]
+        }
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "license"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
+}

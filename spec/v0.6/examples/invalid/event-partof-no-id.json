@@ -1,0 +1,12 @@
+{
+  "_comment": "INVÁLIDO a propósito: `partOf` sin `id`. Un nombre de serie no agrupa nada — dos comunidades pueden llamar «Meetup mensual» a cosas distintas, y un consumidor no tiene con qué unir las ocurrencias. El `id` es lo único obligatorio de `partOf` precisamente por eso.",
+  "specVersion": "0.6.0",
+  "id": "https://rustmadrid.example/meetups/2026-06",
+  "name": "Rust Madrid — Meetup de junio",
+  "startDate": "2026-06-08T19:00",
+  "timezone": "Europe/Madrid",
+  "license": "CC-BY-4.0",
+  "partOf": {
+    "name": "Rust Madrid — meetup mensual"
+  }
+}

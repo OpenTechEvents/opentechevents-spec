@@ -1,0 +1,21 @@
+{
+  "_comment": "INVÁLIDO a propósito: el feed omite license (permitido, patrón de agregador) pero uno de sus eventos tampoco declara la suya — ningún documento OTE válido puede resolver a una licencia desconocida. El otro evento SÍ declara la suya, para confirmar que el fallo es del evento incompleto, no de omitir feed.license en sí. Ver docs/history/CHANGES.log #P032 / DECISIONS.md D029.",
+  "specVersion": "0.6.0",
+  "title": "Mixed-license aggregator, one event missing its license",
+  "updatedAt": "2026-08-04T10:00:00Z",
+  "events": [
+    {
+      "id": "https://example.org/events/1",
+      "name": "Event with its own license",
+      "startDate": "2026-09-01T10:00",
+      "timezone": "Europe/Madrid",
+      "license": "CC-BY-4.0"
+    },
+    {
+      "id": "https://example.org/events/2",
+      "name": "Event with no license anywhere to inherit from",
+      "startDate": "2026-09-01T10:00",
+      "timezone": "Europe/Madrid"
+    }
+  ]
+}

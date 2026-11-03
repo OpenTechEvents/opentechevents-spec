@@ -1,0 +1,313 @@
+{
+  "specVersion": "0.6.0",
+  "title": "Atlántico Tech Summit 2026",
+  "description": "El programa completo de Atlántico Tech Summit 2026 — dos días, dos tracks en paralelo — como documentos independientes.",
+  "url": "https://atlantico-tech-summit.example",
+  "textLanguage": "es",
+  "organizers": [
+    {
+      "name": "Atlántico Tech",
+      "url": "https://atlantico-tech-summit.example/organiza"
+    }
+  ],
+  "license": "CC-BY-4.0",
+  "updatedAt": "2026-10-15T09:00:00Z",
+  "_comment_tracks": "Cada charla es su propio documento con su propio id. Dos charlas en paralelo son dos documentos con horas que se solapan y `location.venue` distinto (Sala A / Sala B) — no hace falta ningún campo nuevo, es el uso ya documentado de `partOf` + `multipart`.",
+  "_comment_pricing": "Todas las partes comparten el MISMO bloque `partOf.offers` (la entrada de la conferencia), escrito igual — `sharedOffersConsistent` lo exige. La mayoría de sesiones no tiene `offers` propio: están CUBIERTAS por la entrada. El taller SÍ tiene `offers` con `scope: add-on`: coste = entrada + 45.",
+  "events": [
+    {
+      "id": "https://atlantico-tech-summit.example/2026/sessions/keynote-apertura",
+      "url": "https://atlantico-tech-summit.example/2026/sessions/keynote-apertura",
+      "name": "Atlántico Tech Summit 2026 — Keynote de apertura",
+      "description": "Charla inaugural: hacia dónde va la plataforma web. Sesión plenaria, sin track paralelo.",
+      "image": [
+        "https://atlantico-tech-summit.example/img/keynote-apertura.png"
+      ],
+      "speakers": [
+        {
+          "name": "Ada Lovelace",
+          "url": "https://ada.example",
+          "sameAs": [
+            "https://fosstodon.org/@ada"
+          ]
+        }
+      ],
+      "startDate": "2026-11-14T09:15",
+      "endDate": "2026-11-14T10:00",
+      "timezone": "Atlantic/Canary",
+      "attendanceMode": "in-person",
+      "location": {
+        "venue": "Auditorio, Palacio de Congresos, Las Palmas de Gran Canaria",
+        "address": {
+          "locality": "Las Palmas de Gran Canaria",
+          "region": "Las Palmas",
+          "country": "ES"
+        }
+      },
+      "tags": [
+        "ats2026",
+        "keynote"
+      ],
+      "languages": [
+        "es"
+      ],
+      "partOf": {
+        "id": "https://atlantico-tech-summit.example/2026",
+        "name": "Atlántico Tech Summit 2026",
+        "url": "https://atlantico-tech-summit.example/2026",
+        "type": "multipart",
+        "offers": [
+          {
+            "name": "General",
+            "price": 320,
+            "currency": "EUR",
+            "url": "https://atlantico-tech-summit.example/tickets"
+          },
+          {
+            "name": "Estudiante",
+            "price": 120,
+            "currency": "EUR",
+            "url": "https://atlantico-tech-summit.example/tickets"
+          }
+        ]
+      },
+      "updatedAt": "2026-10-15T08:00:00Z"
+    },
+    {
+      "id": "https://atlantico-tech-summit.example/2026/sessions/wasm-en-produccion",
+      "url": "https://atlantico-tech-summit.example/2026/sessions/wasm-en-produccion",
+      "name": "WebAssembly en producción: lo que aprendimos",
+      "description": "Track A. En paralelo con «Diseño de APIs que no odiarás» en la Sala B.",
+      "image": [
+        "https://atlantico-tech-summit.example/img/wasm-en-produccion.png"
+      ],
+      "speakers": [
+        {
+          "name": "Grace Hopper"
+        }
+      ],
+      "startDate": "2026-11-14T10:30",
+      "endDate": "2026-11-14T11:15",
+      "timezone": "Atlantic/Canary",
+      "attendanceMode": "in-person",
+      "location": {
+        "venue": "Sala A, Palacio de Congresos, Las Palmas de Gran Canaria",
+        "address": {
+          "locality": "Las Palmas de Gran Canaria",
+          "region": "Las Palmas",
+          "country": "ES"
+        }
+      },
+      "tags": [
+        "ats2026",
+        "wasm"
+      ],
+      "languages": [
+        "es"
+      ],
+      "partOf": {
+        "id": "https://atlantico-tech-summit.example/2026",
+        "name": "Atlántico Tech Summit 2026",
+        "url": "https://atlantico-tech-summit.example/2026",
+        "type": "multipart",
+        "offers": [
+          {
+            "name": "General",
+            "price": 320,
+            "currency": "EUR",
+            "url": "https://atlantico-tech-summit.example/tickets"
+          },
+          {
+            "name": "Estudiante",
+            "price": 120,
+            "currency": "EUR",
+            "url": "https://atlantico-tech-summit.example/tickets"
+          }
+        ]
+      },
+      "updatedAt": "2026-10-15T08:00:00Z"
+    },
+    {
+      "id": "https://atlantico-tech-summit.example/2026/sessions/diseno-de-apis",
+      "url": "https://atlantico-tech-summit.example/2026/sessions/diseno-de-apis",
+      "name": "Diseño de APIs que no odiarás",
+      "description": "Track B. En paralelo con «WebAssembly en producción» en la Sala A.",
+      "image": [
+        "https://atlantico-tech-summit.example/img/diseno-de-apis.png"
+      ],
+      "speakers": [
+        {
+          "name": "Radia Perlman",
+          "url": "https://radia.example"
+        }
+      ],
+      "startDate": "2026-11-14T10:30",
+      "endDate": "2026-11-14T11:15",
+      "timezone": "Atlantic/Canary",
+      "attendanceMode": "in-person",
+      "location": {
+        "venue": "Sala B, Palacio de Congresos, Las Palmas de Gran Canaria",
+        "address": {
+          "locality": "Las Palmas de Gran Canaria",
+          "region": "Las Palmas",
+          "country": "ES"
+        }
+      },
+      "tags": [
+        "ats2026",
+        "apis"
+      ],
+      "languages": [
+        "es"
+      ],
+      "partOf": {
+        "id": "https://atlantico-tech-summit.example/2026",
+        "name": "Atlántico Tech Summit 2026",
+        "url": "https://atlantico-tech-summit.example/2026",
+        "type": "multipart",
+        "offers": [
+          {
+            "name": "General",
+            "price": 320,
+            "currency": "EUR",
+            "url": "https://atlantico-tech-summit.example/tickets"
+          },
+          {
+            "name": "Estudiante",
+            "price": 120,
+            "currency": "EUR",
+            "url": "https://atlantico-tech-summit.example/tickets"
+          }
+        ]
+      },
+      "updatedAt": "2026-10-15T08:00:00Z"
+    },
+    {
+      "id": "https://atlantico-tech-summit.example/2026/sessions/panel-comunidades",
+      "url": "https://atlantico-tech-summit.example/2026/sessions/panel-comunidades",
+      "name": "Panel: sostener una comunidad técnica sin quemarse",
+      "description": "Track A, segundo día. En paralelo con el taller de testing en la Sala B.",
+      "image": [
+        "https://atlantico-tech-summit.example/img/panel-comunidades.png"
+      ],
+      "speakers": [
+        {
+          "name": "Ada Lovelace",
+          "url": "https://ada.example"
+        },
+        {
+          "name": "Grace Hopper"
+        },
+        {
+          "type": "organization",
+          "name": "Canarias en Código"
+        }
+      ],
+      "startDate": "2026-11-15T11:30",
+      "endDate": "2026-11-15T12:30",
+      "timezone": "Atlantic/Canary",
+      "attendanceMode": "in-person",
+      "location": {
+        "venue": "Sala A, Palacio de Congresos, Las Palmas de Gran Canaria",
+        "address": {
+          "locality": "Las Palmas de Gran Canaria",
+          "region": "Las Palmas",
+          "country": "ES"
+        }
+      },
+      "tags": [
+        "ats2026",
+        "comunidad"
+      ],
+      "languages": [
+        "es"
+      ],
+      "partOf": {
+        "id": "https://atlantico-tech-summit.example/2026",
+        "name": "Atlántico Tech Summit 2026",
+        "url": "https://atlantico-tech-summit.example/2026",
+        "type": "multipart",
+        "offers": [
+          {
+            "name": "General",
+            "price": 320,
+            "currency": "EUR",
+            "url": "https://atlantico-tech-summit.example/tickets"
+          },
+          {
+            "name": "Estudiante",
+            "price": 120,
+            "currency": "EUR",
+            "url": "https://atlantico-tech-summit.example/tickets"
+          }
+        ]
+      },
+      "updatedAt": "2026-10-15T08:00:00Z"
+    },
+    {
+      "id": "https://atlantico-tech-summit.example/2026/sessions/taller-testing",
+      "url": "https://atlantico-tech-summit.example/2026/sessions/taller-testing",
+      "name": "Taller: testing de contratos con Pact",
+      "description": "Track B, segundo día, en paralelo con el panel. Plazas limitadas — es un ADD-ON: se paga aparte de la entrada.",
+      "image": [
+        "https://atlantico-tech-summit.example/img/taller-testing.png"
+      ],
+      "speakers": [
+        {
+          "name": "Barbara Liskov",
+          "url": "https://liskov.example"
+        }
+      ],
+      "startDate": "2026-11-15T11:30",
+      "endDate": "2026-11-15T14:30",
+      "timezone": "Atlantic/Canary",
+      "attendanceMode": "in-person",
+      "location": {
+        "venue": "Sala B, Palacio de Congresos, Las Palmas de Gran Canaria",
+        "address": {
+          "locality": "Las Palmas de Gran Canaria",
+          "region": "Las Palmas",
+          "country": "ES"
+        }
+      },
+      "tags": [
+        "ats2026",
+        "testing",
+        "taller"
+      ],
+      "languages": [
+        "es"
+      ],
+      "offers": [
+        {
+          "name": "Taller de testing",
+          "price": 45,
+          "currency": "EUR",
+          "scope": "add-on",
+          "url": "https://atlantico-tech-summit.example/tickets#talleres"
+        }
+      ],
+      "partOf": {
+        "id": "https://atlantico-tech-summit.example/2026",
+        "name": "Atlántico Tech Summit 2026",
+        "url": "https://atlantico-tech-summit.example/2026",
+        "type": "multipart",
+        "offers": [
+          {
+            "name": "General",
+            "price": 320,
+            "currency": "EUR",
+            "url": "https://atlantico-tech-summit.example/tickets"
+          },
+          {
+            "name": "Estudiante",
+            "price": 120,
+            "currency": "EUR",
+            "url": "https://atlantico-tech-summit.example/tickets"
+          }
+        ]
+      },
+      "updatedAt": "2026-10-15T08:00:00Z"
+    }
+  ]
+}

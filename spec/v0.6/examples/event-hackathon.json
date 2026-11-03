@@ -1,0 +1,37 @@
+{
+  "specVersion": "0.6.0",
+  "id": "https://hackalmeria.example/2026",
+  "url": "https://hackalmeria.example/2026",
+  "name": "HackAlmería 2026 — 36 horas de código",
+  "description": "Hackathon de fin de semana: se empieza el sábado a las 9:00 y se termina el domingo a las 21:00, sin parar. Comida, café y sitio para dormir incluidos.",
+  "image": [
+    "https://hackalmeria.example/img/2026-cartel.png"
+  ],
+  "organizers": [
+    { "name": "HackAlmería", "url": "https://hackalmeria.example" },
+    { "name": "Universidad de Almería", "url": "https://ual.example" }
+  ],
+
+  "_comment_dates": "Un hackathon SÍ es un evento continuo: empieza el sábado y no para hasta el domingo. Por eso lleva fecha-hora de inicio y fin cruzando la medianoche, y NO `partOf`: no son dos sesiones, es una. Compárese con feed-multipart.json, donde las fechas no son continuas y por eso son documentos distintos.",
+
+  "startDate": "2026-04-18T09:00",
+  "endDate": "2026-04-19T21:00",
+  "timezone": "Europe/Madrid",
+  "attendanceMode": "in-person",
+  "location": {
+    "venue": "Escuela de Ingeniería, Universidad de Almería",
+    "address": {
+      "street": "Carretera Sacramento s/n, La Cañada de San Urbano",
+      "locality": "Almería",
+      "region": "Andalucía",
+      "postalCode": "04120",
+      "country": "ES"
+    },
+    "geo": { "lat": 36.8283, "lon": -2.4055 }
+  },
+  "tags": ["hackathon", "open-source", "ai"],
+  "languages": ["es", "en"],
+  "status": "scheduled",
+  "license": "CC-BY-4.0",
+  "updatedAt": "2026-02-10T12:00:00Z"
+}

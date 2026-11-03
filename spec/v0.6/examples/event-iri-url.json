@@ -1,0 +1,32 @@
+{
+  "specVersion": "0.6.0",
+  "id": "https://eventos.wiki/events/2025/pycamp-españa",
+  "url": "https://eventos.wiki/events/2025/pycamp-españa",
+  "name": "PyCamp España 2025",
+  "description": "Encuentro de la comunidad Python publicado con una URL que conserva la ñ del slug.",
+  "image": [
+    "http://eventos.wiki/images/2025/pycamp-españa.png"
+  ],
+  "organizers": [
+    {
+      "name": "Python España",
+      "url": "https://www.es.python.org/"
+    }
+  ],
+  "startDate": "2025-04-25",
+  "endDate": "2025-04-27",
+  "timezone": "Europe/Madrid",
+  "attendanceMode": "in-person",
+  "location": {
+    "venue": "España"
+  },
+  "tags": [
+    "python"
+  ],
+  "languages": [
+    "es"
+  ],
+  "textLanguage": "es",
+  "license": "CC-BY-4.0",
+  "updatedAt": "2025-01-15T10:00:00Z"
+}

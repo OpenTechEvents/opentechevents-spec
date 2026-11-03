@@ -1,0 +1,10 @@
+{
+  "_comment": "INVÁLIDO a propósito: url lleva credenciales embebidas (user:pass@) en la autoridad. Un campo url es un enlace público de descubrimiento, no un canal autenticado — publicar credenciales ahí las filtra a cualquiera que lea el feed. Ver docs/history/CHANGES.log #P029 / DECISIONS.md D026.",
+  "specVersion": "0.6.0",
+  "id": "https://example.org/events/url-userinfo",
+  "url": "https://user:pass@example.org/events/url-userinfo",
+  "name": "Evento con credenciales en url",
+  "startDate": "2026-09-01T10:00",
+  "timezone": "Europe/Madrid",
+  "license": "CC0-1.0"
+}

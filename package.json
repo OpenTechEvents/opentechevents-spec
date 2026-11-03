@@ -1,6 +1,6 @@
 {
   "name": "@opentechevents/schema",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "JSON Schemas for OTE Spec — an open specification for tech community events",
   "type": "module",
   "license": "MIT",
@@ -41,7 +41,11 @@
     "./v0.5/event.schema.json": "./spec/v0.5/event.schema.json",
     "./v0.5/feed.schema.json": "./spec/v0.5/feed.schema.json",
     "./v0.5/event.recommended.schema.json": "./spec/v0.5/event.recommended.schema.json",
-    "./v0.5/feed.recommended.schema.json": "./spec/v0.5/feed.recommended.schema.json"
+    "./v0.5/feed.recommended.schema.json": "./spec/v0.5/feed.recommended.schema.json",
+    "./v0.6/event.schema.json": "./spec/v0.6/event.schema.json",
+    "./v0.6/feed.schema.json": "./spec/v0.6/feed.schema.json",
+    "./v0.6/event.recommended.schema.json": "./spec/v0.6/event.recommended.schema.json",
+    "./v0.6/feed.recommended.schema.json": "./spec/v0.6/feed.recommended.schema.json"
   },
   "files": [
     "index.js",
@@ -56,7 +60,9 @@
     "spec/v0.4/*.json",
     "spec/v0.4/README.md",
     "spec/v0.5/*.json",
-    "spec/v0.5/README.md"
+    "spec/v0.5/README.md",
+    "spec/v0.6/*.json",
+    "spec/v0.6/README.md"
   ],
   "scripts": {
     "dev": "node scripts/serve.mjs",
@@ -65,7 +71,7 @@
     "build-reference": "node scripts/build-reference.mjs",
     "build-examples": "node scripts/build-examples.mjs",
     "build-llms": "node scripts/build-llms.mjs",
-    "publish-schemas": "mkdir -p docs/schema/v0.1 docs/schema/v0.2 docs/schema/v0.3 docs/schema/v0.4 docs/schema/v0.5 && cp spec/v0.1/*.schema.json docs/schema/v0.1/ && cp spec/v0.2/*.schema.json docs/schema/v0.2/ && cp spec/v0.3/*.schema.json docs/schema/v0.3/ && cp spec/v0.4/*.schema.json docs/schema/v0.4/ && cp spec/v0.5/*.schema.json docs/schema/v0.5/",
+    "publish-schemas": "mkdir -p docs/schema/v0.1 docs/schema/v0.2 docs/schema/v0.3 docs/schema/v0.4 docs/schema/v0.5 docs/schema/v0.6 && cp spec/v0.1/*.schema.json docs/schema/v0.1/ && cp spec/v0.2/*.schema.json docs/schema/v0.2/ && cp spec/v0.3/*.schema.json docs/schema/v0.3/ && cp spec/v0.4/*.schema.json docs/schema/v0.4/ && cp spec/v0.5/*.schema.json docs/schema/v0.5/ && cp spec/v0.6/*.schema.json docs/schema/v0.6/",
     "prepublishOnly": "npm run validate"
   },
   "devDependencies": {

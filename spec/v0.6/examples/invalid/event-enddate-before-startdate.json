@@ -1,0 +1,10 @@
+{
+  "_comment": "INVÁLIDO a propósito: endDate es anterior a startDate — el evento terminaría antes de empezar. Ver docs/history/CHANGES.log #P003 / DECISIONS.md D004.",
+  "specVersion": "0.6.0",
+  "id": "https://x.example/1",
+  "name": "X",
+  "startDate": "2026-06-26T20:00",
+  "endDate": "2026-06-26T18:00",
+  "timezone": "Europe/Madrid",
+  "license": "CC-BY-4.0"
+}

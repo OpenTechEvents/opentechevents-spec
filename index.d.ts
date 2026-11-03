@@ -1,5 +1,5 @@
 /** The spec version these schemas describe. Matches the `specVersion` field of a document. */
-export declare const specVersion: "0.5.0";
+export declare const specVersion: "0.6.0";
 
 /** JSON Schema (draft 2020-12) of a single OTE event. */
 export declare const eventSchema: Record<string, unknown>;

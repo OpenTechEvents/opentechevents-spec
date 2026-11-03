@@ -1,0 +1,100 @@
+{
+  "specVersion": "0.6.0",
+  "title": "TRG Conf 2026",
+  "description": "Las charlas y talleres de TRG Conf 2026, como documentos independientes.",
+  "url": "https://trgcon.example",
+  "textLanguage": "es",
+  "organizers": [
+    {
+      "name": "TRG Conf",
+      "url": "https://trgcon.example"
+    }
+  ],
+  "license": "CC-BY-4.0",
+  "updatedAt": "2026-09-01T10:00:00Z",
+  "events": [
+    {
+      "id": "https://trgcon.example/2026/talks/keynote",
+      "url": "https://trgcon.example/2026/talks/keynote",
+      "name": "Keynote de apertura",
+      "description": "Charla inaugural.",
+      "image": [
+        "https://trgcon.example/img/keynote.png"
+      ],
+      "_comment": "Sin offers propio: esta charla está CUBIERTA por partOf.offers. Coste = 240.",
+      "startDate": "2026-10-14T09:00",
+      "endDate": "2026-10-14T09:45",
+      "timezone": "Europe/Madrid",
+      "attendanceMode": "in-person",
+      "location": {
+        "venue": "La Nave, Madrid"
+      },
+      "tags": [
+        "tech"
+      ],
+      "languages": [
+        "es"
+      ],
+      "partOf": {
+        "id": "https://trgcon.example/2026",
+        "name": "TRG Conf 2026",
+        "type": "multipart",
+        "offers": [
+          {
+            "name": "General",
+            "price": 240,
+            "currency": "EUR",
+            "url": "https://trgcon.example/tickets"
+          }
+        ]
+      },
+      "updatedAt": "2026-09-01T09:00:00Z"
+    },
+    {
+      "id": "https://trgcon.example/2026/workshops/testing",
+      "url": "https://trgcon.example/2026/workshops/testing",
+      "name": "Taller de testing en Python",
+      "description": "Taller práctico de tres horas.",
+      "image": [
+        "https://trgcon.example/img/workshop.png"
+      ],
+      "_comment": "Mismo partOf.offers, escrito IGUAL (sharedOffersConsistent lo exige). Su offers propio es un add-on: 240 + 60.",
+      "startDate": "2026-10-14T09:30",
+      "endDate": "2026-10-14T12:30",
+      "timezone": "Europe/Madrid",
+      "attendanceMode": "in-person",
+      "location": {
+        "venue": "La Nave, Madrid"
+      },
+      "tags": [
+        "python"
+      ],
+      "languages": [
+        "es"
+      ],
+      "offers": [
+        {
+          "name": "Taller de testing",
+          "price": 60,
+          "currency": "EUR",
+          "scope": "add-on",
+          "url": "https://trgcon.example/tickets#workshops"
+        }
+      ],
+      "partOf": {
+        "id": "https://trgcon.example/2026",
+        "name": "TRG Conf 2026",
+        "type": "multipart",
+        "offers": [
+          {
+            "name": "General",
+            "price": 240,
+            "currency": "EUR",
+            "url": "https://trgcon.example/tickets"
+          }
+        ]
+      },
+      "updatedAt": "2026-09-01T09:00:00Z"
+    }
+  ]
+}

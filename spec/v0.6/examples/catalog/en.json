@@ -1,0 +1,476 @@
+{
+  "_comment": "Catalogue for the practical-examples gallery at opentechevents.org/examples/. This file holds the STRUCTURE (which documents, in what order, under which filters, which fields to link) plus the English prose. Translations live next to it as <lang>.json and carry prose only. The code shown on the site is read from the documents themselves — never written here. CI fails if a document is missing from this file, if this file names a document that does not exist, or if a translation is missing: `npm run build-examples -- --check`.",
+  "specVersion": "0.6.0",
+  "cases": [
+    {
+      "id": "meetup",
+      "label": "Meetups"
+    },
+    {
+      "id": "conference",
+      "label": "Conferences"
+    },
+    {
+      "id": "hackathon",
+      "label": "Hackathons"
+    },
+    {
+      "id": "online",
+      "label": "Online"
+    },
+    {
+      "id": "hybrid",
+      "label": "Hybrid"
+    },
+    {
+      "id": "recurring",
+      "label": "Recurring"
+    },
+    {
+      "id": "multipart",
+      "label": "Multi-part"
+    },
+    {
+      "id": "co-organized",
+      "label": "Co-organised"
+    },
+    {
+      "id": "imported",
+      "label": "Imported"
+    },
+    {
+      "id": "feed",
+      "label": "Feeds"
+    }
+  ],
+  "examples": [
+    {
+      "file": "event-minimal.json",
+      "cases": [
+        "meetup"
+      ],
+      "fields": [
+        "event.id",
+        "event.name",
+        "event.startDate",
+        "event.timezone",
+        "event.license"
+      ],
+      "title": "The smallest valid event",
+      "summary": "Six lines. This is the whole barrier to entry for a small meetup — everything else is optional.",
+      "points": [
+        "Only `id`, `name`, `startDate` and `timezone` are required — plus `specVersion` and `license`, which a standalone document cannot inherit from a feed.",
+        "`url` and `description` are strongly recommended and still not required: most published .ics files carry neither, and a spec that demanded them would force importers to drop the event or invent the data.",
+        "`startDate` carries the time on the poster, with no UTC offset. `timezone` is what turns it into an unambiguous instant."
+      ]
+    },
+    {
+      "file": "event-meetup.json",
+      "cases": [
+        "meetup",
+        "hybrid"
+      ],
+      "fields": [
+        "event.attendanceMode",
+        "event.location",
+        "event.location.address",
+        "event.location.geo",
+        "event.image",
+        "event.offers",
+        "event.tags",
+        "event.updatedAt"
+      ],
+      "title": "Hybrid meetup, with everything you'd normally want",
+      "summary": "A venue and a joining URL at once, topics, coordinates, a poster, a free ticket — and one field that is not part of the spec yet.",
+      "points": [
+        "`location` and `attendanceMode` answer different questions: `location` is observable fact (is there a venue? is there a URL?), `attendanceMode` is the organiser's intent. If they disagree, `attendanceMode` wins.",
+        "`venue` and `address` are the same place said twice on purpose: `venue` is the one string iCal and RSS can print, `address` is the five parts a schema.org `PostalAddress` needs — and Google validates them one by one.",
+        "`updatedAt` is what lets a consumer sync incrementally — it is iCal's `LAST-MODIFIED`, not `DTSTAMP`.",
+        "`image` lists the SAME poster in three crops, most useful first: several sizes of one image, not a gallery. Only the first survives iCal.",
+        "`offers` with a single `price: 0` is how a free event says so. Leaving `offers` out does NOT mean free — it means the price is unknown, which is a different claim.",
+        "`capacity` is NOT in v0.4. The document is valid anyway: the schemas do not forbid extra fields, on purpose. That is how the spec grows — through fields someone already uses, which is exactly how `image` and `offers` got in."
+      ]
+    },
+    {
+      "file": "event-recurring.json",
+      "cases": [
+        "meetup",
+        "recurring"
+      ],
+      "fields": [
+        "event.partOf",
+        "event.partOf.id",
+        "event.status"
+      ],
+      "title": "A monthly meetup: one document per occurrence",
+      "summary": "This is June's edition, not the series. OTE never puts a recurrence rule in the feed — whoever publishes expands it.",
+      "points": [
+        "One document = one occurrence. Twelve editions are twelve documents, each with its own `id`, dates and `status`. `partOf` only says which set they belong to.",
+        "That is what makes cancelling August possible: `status: \"cancelled\"` on that occurrence's own document, which stays published so subscribers find out.",
+        "A consumer that ignores `partOf` still sees a complete, correct event. A recurrence rule it ignored would leave it with no dates at all.",
+        "`ics:rrule` is someone else's vocabulary — the prefix says so. The importer keeps it for lossless round-trips; nobody is required to expand it."
+      ]
+    },
+    {
+      "file": "event-online.json",
+      "cases": [
+        "online",
+        "recurring"
+      ],
+      "fields": [
+        "event.attendanceMode",
+        "event.location.onlineUrl",
+        "event.eligibility",
+        "event.eligibility.type",
+        "event.languages",
+        "event.textLanguage",
+        "event.translations"
+      ],
+      "title": "Online-only session, in two languages, behind a community door",
+      "summary": "No venue, just a joining URL — a weekly series behind it, a membership in front of it, and a text that exists in Catalan and Spanish.",
+      "points": [
+        "`location` carries `onlineUrl` and nothing else. An empty `location: {}` is invalid: saying nothing is already done by omitting the field.",
+        "`eligibility` is the third part of \"can I go?\": `attendanceMode` and `location` say the event is within reach of anyone with a connection, this says there is still a door — the voice channel lives inside the community's Discord. Its `url` is where the condition is met, not where a seat is bought: that is `offers[].url`.",
+        "`languages` and `textLanguage` are not the same data, and here they disagree: Catalan and Spanish are SPOKEN at the session, and the document is WRITTEN in Catalan only. Neither derives from the other, and both use BCP 47 tags.",
+        "`translations` carries the Spanish version of `name` and `description` — while those two fields stay plain strings, so a v0.2 consumer reads this document without noticing the field exists. There is no `ca` entry: that would be the same text twice.",
+        "Text that lives INSIDE an object is translated where it lives: `eligibility.translations` and `partOf.translations`, never a positional mirror like `translations.es.partOf.name`. `location.venue` and `organizers[].name` are never translated at all — they are proper nouns.",
+        "Weekly sessions are published the same way monthly ones are: one document per session, grouped by `partOf`."
+      ]
+    },
+    {
+      "file": "event-hackathon.json",
+      "cases": [
+        "hackathon",
+        "co-organized"
+      ],
+      "fields": [
+        "event.startDate",
+        "event.endDate",
+        "event.location.geo"
+      ],
+      "title": "A hackathon that runs through the night",
+      "summary": "Starts Saturday morning, ends Sunday evening, never stops. One event — and deliberately no `partOf`.",
+      "points": [
+        "A continuous event crossing midnight is exactly what `startDate`/`endDate` are for: both date-times, both in the same form.",
+        "Compare with the multi-part study jam below. There the dates are NOT continuous, which is why it becomes several documents instead of one.",
+        "Two organisers — the community and its host venue. Order matters: the first is the principal one, and the only one that survives translation to iCal."
+      ]
+    },
+    {
+      "file": "feed-multipart.json",
+      "cases": [
+        "multipart",
+        "feed"
+      ],
+      "fields": [
+        "event.partOf.type",
+        "event.partOf.id",
+        "feed.events"
+      ],
+      "title": "One study jam, three non-consecutive Saturdays",
+      "summary": "The case that tempts everyone into stretching the dates. Three documents, one `partOf` with `type: \"multipart\"`.",
+      "points": [
+        "Do NOT write `startDate` on the first Saturday and `endDate` on the last: that claims a continuous fifteen-day event and blocks two full weeks in every subscriber's calendar.",
+        "`type: \"multipart\"` is not decoration — it changes the translation. A series becomes schema.org `EventSeries`; a multi-part event becomes an `Event` whose parts are its `subEvent`.",
+        "What `multipart` does not model is \"one single registration\". That is not a date — it is ticketing, which v0.4 leaves out. Don't fix it by deforming the time fields."
+      ]
+    },
+    {
+      "file": "event-all-day.json",
+      "cases": [
+        "conference"
+      ],
+      "fields": [
+        "event.startDate",
+        "event.endDate",
+        "event.timezone"
+      ],
+      "title": "A two-day conference, all-day form",
+      "summary": "Dates without times, when the schedule isn't the point yet.",
+      "points": [
+        "Both dates use the same form. Mixing (a date for `startDate`, a date-time for `endDate`) is rejected by the schema.",
+        "For all-day events `timezone` contextualises the date — it says which region that day belongs to. It does not shift it, and a consumer must not convert it to another zone.",
+        "`endDate: \"2026-10-17\"` is inclusive — the event runs through the 17th, which is why this is two days, not one. Exported to iCalendar that's `DTEND;VALUE=DATE:20261018` (one day later): RFC 5545 defines DTEND as the non-inclusive end, the opposite convention."
+      ]
+    },
+    {
+      "file": "event-iri-url.json",
+      "cases": [
+        "conference"
+      ],
+      "fields": [
+        "event.id",
+        "event.url",
+        "event.image"
+      ],
+      "title": "A URL with a Spanish slug",
+      "summary": "The address people publish and share contains `ñ`, and the document keeps that spelling.",
+      "points": [
+        "`id` and `url` accept HTTP(S) IRIs, not only ASCII URIs. A browser-valid slug like `pycamp-españa` is valid OTE.",
+        "The identifier is compared byte-for-byte by consumers, so a publisher must mint it once and keep the same spelling instead of switching later to a percent-encoded form.",
+        "The same rule applies to image URLs: the schema still requires an absolute HTTP(S) IRI, but it no longer rejects a real image path because the scheme is `http` or the filename is not ASCII."
+      ]
+    },
+    {
+      "file": "event-conference-cfp.json",
+      "cases": [
+        "conference"
+      ],
+      "fields": [
+        "event.offers",
+        "event.offers[].price",
+        "event.offers[].availability",
+        "event.offers[].waitlistUrl",
+        "event.offers[].translations",
+        "event.cfp",
+        "event.cfp.closesAt",
+        "event.cfp.coversTravel"
+      ],
+      "title": "Conference with tickets and an open call for papers",
+      "summary": "Three ticket tiers and a call for proposals — the two things people search a conference for, and neither of them was in v0.2.",
+      "points": [
+        "Tiered pricing is several `offers`, not one with a range: a price you cannot write as a single number is more than one offer. `availability` says which tier is already gone.",
+        "The student tier is `price: 0` and no `currency` — free is free in every currency, and asking for one there is how a free meetup ends up publishing a US dollar amount.",
+        "The deadlines carry an offset, unlike the event's own dates. A CFP closing at \"23:59\" is the classic bug: which midnight is the entire question, and \"anywhere on Earth\" is a real answer (`-12:00`).",
+        "The free student places ran out and a queue opened: `sold-out` + `waitlistUrl`, not a third `availability` value. Every consumer that already exists keeps reading \"sold out\" — which is true, you cannot buy — while one that knows the field offers the queue. `price: 0` next to `sold-out` is not a contradiction: `price` describes the deal, `availability` whether you can act on it now.",
+        "`offers[].name` is free text on purpose — an enum would take away an organiser's right to name their own tickets — so translating it is the price, and it is done INSIDE the offer. The rest of the offer has no language at all: `price` is a number, `currency` a code, `availability` an enum.",
+        "`cfp` has no equivalent in schema.org, iCal or RSS — it degrades to text on export. It is in the core anyway because \"which conferences are accepting proposals right now\" is a question only the publisher can answer, and today it is answered by scraping."
+      ]
+    },
+    {
+      "file": "event-co-organized.json",
+      "cases": [
+        "co-organized",
+        "meetup"
+      ],
+      "fields": [
+        "event.organizers",
+        "event.organizers[].type",
+        "event.organizers[].name"
+      ],
+      "title": "Three organisers, and another project's vocabulary",
+      "summary": "Two communities and a person — plus a prefixed field that belongs to a community directory, not to OTE.",
+      "points": [
+        "`organizers` is a list because co-organisation is the norm, not the exception. Order is significant: the first one is the principal.",
+        "`type` defaults to `organization`: a translator has to pick a schema.org `@type` either way, and `Organization` is the tolerant choice.",
+        "`combuilders:communityId` is not an OTE field. OTE promises never to mint a field name containing a colon, so prefixed fields cannot collide with the core — today or at 1.0."
+      ]
+    },
+    {
+      "file": "event-from-ics.json",
+      "cases": [
+        "imported",
+        "meetup"
+      ],
+      "fields": [
+        "event.source",
+        "event.source.license",
+        "event.attendanceMode",
+        "event.location.venue"
+      ],
+      "title": "Imported from an .ics file",
+      "summary": "What an importer can honestly produce from a calendar file — including what it must leave out.",
+      "points": [
+        "No `attendanceMode`, because iCalendar cannot express it. Staying silent and saying `in-person` are different claims, and only one is honest.",
+        "`location.address` is missing, and the checker says so — an `.ics` carries `LOCATION` as one free-text line, with no parts to split it into. The warning names what the event lacks, not who is to blame for it.",
+        "`source` is required when the event was imported or aggregated. It is orthogonal to `organizers`: who runs the event vs. where the data came from.",
+        "`source.license` (what the origin allows) and `license` (what this document allows) are different fields. Declaring a licence does not grant rights the origin never gave.",
+        "The source's `DESCRIPTION` was HTML — which is what Google Calendar writes, and what an importer actually meets. It arrives here converted: `<a>` to a Markdown link, `<br>` to a line break, entities to their character. `description` says plain text or Markdown, and copying the markup through would validate while breaking that promise."
+      ]
+    },
+    {
+      "file": "feed-community.json",
+      "cases": [
+        "feed",
+        "co-organized"
+      ],
+      "fields": [
+        "feed.organizers",
+        "feed.license",
+        "feed.textLanguage",
+        "feed.events"
+      ],
+      "title": "A community feed, and how inheritance works",
+      "summary": "`license` and `organizers` sit on the feed and flow down. One event overrides them — and that override replaces, it does not merge.",
+      "points": [
+        "Repeating `\"license\": \"CC-BY-4.0\"` in 200 events is noise, not rigour: an event that omits it inherits the feed's.",
+        "An event that declares `organizers` REPLACES the inherited list. With merging there would be no way to remove an inherited organiser.",
+        "That is why the second event repeats the feed's own community next to the guest one: leaving it out would attribute the event to the guest alone.",
+        "`textLanguage` inherits the same way: declared once on the feed, no event repeats it. That is what makes the field cost one line for a monolingual publisher. `translations` never inherits — it translates the FEED's title, not its events' names."
+      ]
+    },
+    {
+      "file": "feed.json",
+      "cases": [
+        "feed",
+        "imported"
+      ],
+      "fields": [
+        "feed.title",
+        "feed.updatedAt",
+        "event.status"
+      ],
+      "title": "An aggregator feed",
+      "summary": "Someone publishing events they do not organise — the case where getting `organizers` wrong misattributes everything.",
+      "points": [
+        "An aggregator feed must OMIT `organizers`: it does not run what it publishes, so every event states its own.",
+        "`feed.title`/`url` name whoever publishes the feed. Never fall back to them for attribution — that is exactly how an aggregator ends up credited for every event it aggregates.",
+        "The cancelled event stays in the feed. Deleting it silently leaves a dead event in subscribers' calendars with no way to find out."
+      ]
+    },
+    {
+      "file": "event-with-speakers.json",
+      "cases": [
+        "conference"
+      ],
+      "fields": [
+        "event.speakers",
+        "event.speakers[].name",
+        "event.speakers[].url",
+        "event.speakers[].sameAs",
+        "event.speakers[].type"
+      ],
+      "title": "Who is on stage",
+      "summary": "A panel: three speakers on one talk, each with a canonical page and their other profiles.",
+      "points": [
+        "`speakers` is not `organizers`: whoever gives the talk did not organise it. Putting a speaker in `organizers` corrupts the data for everyone who consumes it.",
+        "It is a list because a panel is the norm. `type` defaults to `person` — the opposite of `organizers` — because a speaker is overwhelmingly a person.",
+        "`url` is one canonical page; `sameAs` is the list of other profiles, mapping to schema.org `Person.sameAs`. `speakers` is deliberately NOT in the recommended profile: an `.ics` importer never has it."
+      ]
+    },
+    {
+      "file": "event-contributing.json",
+      "cases": [
+        "imported"
+      ],
+      "fields": [
+        "event.source",
+        "event.source.url",
+        "event.contributing"
+      ],
+      "title": "Where the data came from, and where to fix it",
+      "summary": "An aggregated event carries `source` (provenance) and `contributing` (a correction channel) — different fields, both present.",
+      "points": [
+        "`source.url` points UPSTREAM, at the record the data came from. Correcting it there does not fix a mapping bug the aggregator introduced.",
+        "`contributing` points at where THIS record is fixed. It exists because an aggregator must leave `organizers` out, so the field that could carry a contact is gone.",
+        "`contributing` is inherited from `feed.contributing` like `license`; a declared value replaces the inherited one."
+      ]
+    },
+    {
+      "file": "feed-alternates.json",
+      "cases": [
+        "feed"
+      ],
+      "fields": [
+        "feed.alternates",
+        "feed.alternates[].mediaType",
+        "feed.alternates[].url",
+        "feed.contributing"
+      ],
+      "title": "A JSON-only feed that points at its other formats",
+      "summary": "No HTML page in front of it, so `alternates` is the only place to say the same collection is also RSS and iCal.",
+      "points": [
+        "`alternates` is the JSON form of an HTML `<link rel=\"alternate\">`, for feeds served as a bare endpoint.",
+        "It is INFORMATIONAL: a consumer must not assume the linked RSS/iCal is in sync with this feed; a producer should generate them from the same source.",
+        "`feed.contributing` here is a `mailto:` role address — the form dev.events uses for corrections."
+      ]
+    },
+    {
+      "file": "feed-covers.json",
+      "cases": [
+        "feed"
+      ],
+      "fields": [
+        "feed.covers",
+        "feed.covers.from",
+        "event.source"
+      ],
+      "title": "An aggregator that prunes its history, and says so",
+      "summary": "A long-running feed that no longer publishes its whole archive — `covers` is what makes dropping the old events honest instead of silent.",
+      "points": [
+        "`covers` says what the feed claims to be COMPLETE about. From 2026-01-01 onwards an absent event means it is not happening; before that date the feed asserts nothing and a consumer must not infer removal.",
+        "Without it, the spec's own rule — a cancelled event stays published, never deleted — makes absence mean deletion, so pruning 2025 would assert that those events never happened.",
+        "No `to`, which is the normal shape: a feed stays complete into the future and only trims its past.",
+        "An aggregator feed carries no `organizers` and no `textLanguage`: it does not organise what it publishes, and its events do not share a language, so each declares its own."
+      ]
+    },
+    {
+      "file": "event-recording.json",
+      "cases": [
+        "meetup"
+      ],
+      "fields": [
+        "event.recordings",
+        "event.recordings[].url",
+        "event.recordings[].title",
+        "event.recordings[].translations"
+      ],
+      "title": "Linking the recording after the fact",
+      "summary": "The event is over; the recording is added to the same record, same id, new updatedAt.",
+      "points": [
+        "`recordings` is not `image` (the poster) and not `location.onlineUrl` (the live link, which stops meaning the same thing once the event ends).",
+        "A list: the talk is on YouTube and the Q&A on the community's own PeerTube. The second entry has a `title` because there is more than one.",
+        "`recordings` is NOT recommended: most events have no recording, a live one has none yet, and the spec has no 'is in the past' predicate."
+      ]
+    },
+    {
+      "file": "event-workshop-addon.json",
+      "cases": [
+        "conference",
+        "multipart"
+      ],
+      "fields": [
+        "event.partOf.offers",
+        "event.offers[].scope"
+      ],
+      "title": "A conference ticket, and a workshop on top",
+      "summary": "A paid workshop that is a PART of a conference: partOf.offers carries the shared admission, the workshop's own offer is an add-on.",
+      "points": [
+        "`partOf.offers` is the shared admission — the conference ticket — written identically on every part, so a consumer holding one part can price it without resolving the parent.",
+        "`scope: \"add-on\"` means this offer is ON TOP of the admission: total = 240 (admission) + 60 (add-on). An `add-on` offer requires `partOf.offers` in the same document.",
+        "Tier-specific coverage (a workshop only for Full tickets), per-day passes, bundles and coupons are out of scope for v0.5 — see DECISIONS.md."
+      ]
+    },
+    {
+      "file": "feed-multipart-pricing.json",
+      "cases": [
+        "feed",
+        "multipart"
+      ],
+      "fields": [
+        "event.partOf.offers",
+        "event.offers[].scope"
+      ],
+      "title": "Both parts of a paid multi-part event",
+      "summary": "Two documents sharing one partOf.id, both carrying the same partOf.offers block — which the validator enforces.",
+      "points": [
+        "The keynote has no `offers` of its own: it is COVERED by `partOf.offers`. That is the one place an absent `offers` list means something other than unknown.",
+        "The workshop repeats the SAME `partOf.offers` block, byte for byte in meaning — `sharedOffersConsistent` rejects a feed where two parts of one set disagree.",
+        "This relaxes the 'a consumer that ignores partOf still sees correct events' guarantee for PRICING only: ignoring `partOf.offers` yields incomplete pricing, never wrong pricing."
+      ]
+    },
+    {
+      "file": "feed-conference-tracks.json",
+      "cases": [
+        "conference",
+        "multipart",
+        "feed"
+      ],
+      "fields": [
+        "event.partOf",
+        "event.partOf.type",
+        "event.partOf.offers",
+        "event.speakers",
+        "event.offers[].scope"
+      ],
+      "title": "A two-day conference with parallel tracks",
+      "summary": "Five sessions over two days, two rooms running at once — each its own document, all sharing one partOf.",
+      "points": [
+        "Parallel tracks need no new field: two sessions at the same time are two documents with overlapping dates and a different location.venue (Sala A / Sala B). One document = one occurrence.",
+        "Every session carries the SAME partOf.offers block — the conference admission — written identically. sharedOffersConsistent rejects a feed where two parts of one set disagree.",
+        "Most sessions have no offers of their own: they are covered by partOf.offers. The Pact workshop has scope: \"add-on\" — total to attend it is the admission plus 45.",
+        "The opening keynote is plenary (no parallel track); the rest pair up. Each session lists its speakers."
+      ]
+    }
+  ]
+}

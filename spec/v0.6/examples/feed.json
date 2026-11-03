@@ -1,0 +1,70 @@
+{
+  "specVersion": "0.6.0",
+  "title": "Open Tech Events Spain",
+  "description": "Eventos de comunidades técnicas en España.",
+  "url": "https://opentechevents.org",
+
+  "_comment_organizers": "Feed de agregador: NO lleva `organizers`. Quien publica (title/url) no organiza estos eventos, así que cada evento declara los suyos. Un feed de una sola comunidad sí los pone arriba y los hereda todo el feed — ver feed-community.json.",
+
+  "license": "CC-BY-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "updatedAt": "2026-07-06T10:00:00Z",
+  "events": [
+    {
+      "id": "https://rustmadrid.example/meetup/2026-06",
+      "url": "https://rustmadrid.example/meetup/2026-06",
+      "name": "Rust Madrid — June meetup",
+      "description": "Talks on WASM and Rust tooling.",
+      "image": ["https://rustmadrid.example/img/2026-06.png"],
+      "organizers": [
+        { "name": "Rust Madrid", "url": "https://rustmadrid.example" }
+      ],
+      "startDate": "2026-06-26T19:00",
+      "endDate": "2026-06-26T21:00",
+      "timezone": "Europe/Madrid",
+      "attendanceMode": "hybrid",
+      "location": {
+        "venue": "Campus Madrid, Calle de Moreno Nieto 2, Madrid",
+        "address": {
+          "street": "Calle de Moreno Nieto 2",
+          "locality": "Madrid",
+          "postalCode": "28005",
+          "country": "ES"
+        },
+        "onlineUrl": "https://meet.example/rust-madrid"
+      },
+      "tags": ["rust", "wasm"],
+      "languages": ["es"],
+      "updatedAt": "2026-06-01T07:30:00Z"
+    },
+    {
+      "id": "https://coolconf.example/2026/",
+      "url": "https://coolconf.example/2026/",
+      "name": "CoolConf 2026",
+      "description": "Conferencia de dos días sobre web, cloud y sistemas.",
+      "image": ["https://coolconf.example/img/2026-16x9.png"],
+      "organizers": [
+        { "name": "CoolConf", "url": "https://coolconf.example" }
+      ],
+      "startDate": "2026-10-15",
+      "endDate": "2026-10-16",
+      "timezone": "Europe/Madrid",
+      "attendanceMode": "in-person",
+      "location": {
+        "venue": "Valencia, Spain",
+
+        "_comment_address": "La sede aún no está cerrada, así que `address` solo trae lo que se sabe: ciudad y país. Rellenar `street` o `postalCode` con \"\" o `null` sería inválido — y peor que callarse, porque publica un desconocido como si fuera dato.",
+
+        "address": {
+          "locality": "València",
+          "country": "ES"
+        }
+      },
+      "tags": ["web", "cloud"],
+      "languages": ["es", "en"],
+      "status": "cancelled",
+      "license": "CC0-1.0",
+      "updatedAt": "2026-07-02T14:00:00Z"
+    }
+  ]
+}

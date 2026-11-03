@@ -1,0 +1,10 @@
+{
+  "_comment": "INVÁLIDO a propósito: languages repite el mismo idioma (RFC 5646 §2.1.1: comparación case-insensitive) escrito con distinta capitalización. pt vs pt-BR seguirían siendo válidos — esto detecta solo la misma etiqueta, no equivalencias regionales. Ver docs/history/CHANGES.log #P031 / DECISIONS.md D028.",
+  "specVersion": "0.6.0",
+  "id": "https://example.org/events/languages-case-duplicate",
+  "name": "Same language, different case",
+  "startDate": "2026-09-01T10:00",
+  "timezone": "Europe/Madrid",
+  "languages": ["es", "ES"],
+  "license": "CC0-1.0"
+}

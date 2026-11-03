@@ -1,0 +1,21 @@
+{
+  "_comment": "INVÁLIDO a propósito: dos eventos distintos comparten el mismo id — un consumidor no puede saber cuál de los dos estados es el correcto para esa identidad. Ver docs/history/CHANGES.log #P010 / DECISIONS.md D011.",
+  "specVersion": "0.6.0",
+  "title": "X",
+  "license": "CC-BY-4.0",
+  "updatedAt": "2026-08-03T12:00:00Z",
+  "events": [
+    {
+      "id": "https://x.example/events/same",
+      "name": "First",
+      "startDate": "2026-08-04T18:00",
+      "timezone": "Europe/Madrid"
+    },
+    {
+      "id": "https://x.example/events/same",
+      "name": "Second",
+      "startDate": "2026-08-05T18:00",
+      "timezone": "Europe/Madrid"
+    }
+  ]
+}

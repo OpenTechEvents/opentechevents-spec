@@ -1,0 +1,67 @@
+{
+  "specVersion": "0.6.0",
+  "id": "https://rustgirona.example/sessions/2026-07-31",
+  "url": "https://rustgirona.example/sessions/2026-07-31",
+  "name": "Sessió setmanal de codificació — Rust Girona",
+  "description": "Cada setmana ens trobem en línia per picar Rust una estona. Canal de veu de Discord; l'enllaç és a la pàgina de l'esdeveniment.",
+  "_comment_image": "El `alt` va en el `textLanguage` del documento (`ca`) y se traduce en el propio objeto de la imagen, no en un espejo posicional tipo `translations.es.image[0]`: una lista no tiene claves estables y reordenarla pegaría el texto a la imagen equivocada. Se traduce, no se escribe en inglés «internacional»: el `alt` lo lee un lector de pantalla con la pronunciación del idioma que lo rodea.",
+
+  "image": [
+    {
+      "url": "https://rustgirona.example/img/sessio-setmanal.png",
+      "alt": "Captura d'una sessió: quadrícula de webcams i un editor amb codi Rust compartit",
+      "translations": {
+        "es": { "alt": "Captura de una sesión: cuadrícula de webcams y un editor con código Rust compartido" }
+      }
+    }
+  ],
+  "organizers": [
+    { "name": "Rust Girona", "url": "https://rustgirona.example" },
+    { "type": "person", "name": "Ivan Fraixedes", "url": "https://ifraixedes.example" }
+  ],
+  "startDate": "2026-07-31T18:00",
+  "endDate": "2026-07-31T19:00",
+  "timezone": "Europe/Madrid",
+
+  "_comment_online": "Evento solo online. `location` trae `onlineUrl` y NADA de sede física — no hay `venue` que poner, y `location: {}` sería inválido. `attendanceMode: online` no es redundante con eso: `location` son hechos observables (hay URL de conexión), `attendanceMode` es la intención de quien organiza. Si se contradicen, manda `attendanceMode`.",
+
+  "attendanceMode": "online",
+  "location": { "onlineUrl": "https://discord.example/rust-girona" },
+
+  "_comment_eligibility": "`attendanceMode` y `location` dicen que el evento está al alcance de cualquiera con internet; `eligibility` dice que aun así hay una puerta — el canal de voz está dentro del Discord de la comunidad, y hay que estar dentro. `url` apunta a dónde se cumple la condición, no a dónde se paga: eso es `offers[].url`. Sin este campo, el requisito solo vivía en la prosa de `description`, donde ningún consumidor lo puede filtrar.",
+
+  "eligibility": {
+    "type": "members-only",
+    "note": "Membres del Discord de Rust Girona",
+    "url": "https://rustgirona.example/join",
+    "translations": {
+      "es": { "note": "Miembros del Discord de Rust Girona" }
+    }
+  },
+  "tags": ["rust", "pair-programming"],
+
+  "_comment_languages": "`languages` y `textLanguage` no son el mismo dato y aquí se ve: en la sesión se habla catalán y castellano, y el documento está escrito SOLO en catalán. Ninguno de los dos se deriva del otro.",
+
+  "languages": ["ca", "es"],
+  "textLanguage": "ca",
+  "status": "scheduled",
+  "partOf": {
+    "id": "https://rustgirona.example/sessions",
+    "name": "Sessió setmanal de codificació",
+    "url": "https://rustgirona.example/sessions",
+    "translations": {
+      "es": { "name": "Sesión semanal de programación" }
+    }
+  },
+  "license": "CC-BY-4.0",
+  "updatedAt": "2026-07-24T08:00:00Z",
+
+  "_comment_translations": "El texto principal sigue en los campos de siempre —cadenas, no mapas de idioma—, así que un consumidor de v0.2 lee este documento sin enterarse de que existe `translations`. Solo se traducen `name` y `description`: `eligibility.note` y `partOf.name` NO están cubiertos a propósito, y se quedan en el idioma que declara `textLanguage`. Y no hay entrada `ca`: sería el mismo texto dos veces, y dos formas de afirmar lo mismo son dos formas de contradecirse.",
+
+  "translations": {
+    "es": {
+      "name": "Sesión semanal de programación — Rust Girona",
+      "description": "Cada semana nos juntamos en línea para picar Rust un rato. Canal de voz de Discord; el enlace está en la página del evento."
+    }
+  }
+}

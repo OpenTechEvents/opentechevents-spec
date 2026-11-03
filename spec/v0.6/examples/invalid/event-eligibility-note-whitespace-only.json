@@ -1,0 +1,13 @@
+{
+  "_comment": "INVÁLIDO a propósito: eligibility.type es \"restricted\", así que note es obligatoria — pero \"   \" no dice nada, es solo espacios. Ver docs/history/CHANGES.log #P018 / DECISIONS.md D018.",
+  "specVersion": "0.6.0",
+  "id": "https://x.example/1",
+  "name": "X",
+  "startDate": "2026-06-26",
+  "timezone": "Europe/Madrid",
+  "license": "CC-BY-4.0",
+  "eligibility": {
+    "type": "restricted",
+    "note": "   "
+  }
+}

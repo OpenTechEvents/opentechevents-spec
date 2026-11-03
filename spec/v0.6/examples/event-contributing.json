@@ -1,0 +1,29 @@
+{
+  "specVersion": "0.6.0",
+  "id": "https://eventos.example/ote/events/codemotion-2027",
+  "url": "https://eventos.example/events/2027/codemotion-madrid",
+  "name": "Codemotion Madrid 2027",
+  "description": "Agregado a partir de la web de Codemotion.",
+  "image": ["https://eventos.example/img/codemotion-2027.png"],
+  "organizers": [
+    { "name": "Codemotion", "type": "organization" }
+  ],
+  "startDate": "2027-05-12T09:00",
+  "endDate": "2027-05-13T18:30",
+  "timezone": "Europe/Madrid",
+  "attendanceMode": "in-person",
+  "location": { "venue": "La Nave, Madrid", "address": { "locality": "Madrid", "country": "ES" } },
+  "tags": ["tech"],
+  "languages": ["es"],
+  "textLanguage": "es",
+  "license": "CC-BY-4.0",
+
+  "_comment_source_vs_contributing": "source apunta a DE DÓNDE vino el dato (la web de Codemotion). contributing apunta a DÓNDE SE CORRIGE este registro — incluido un fallo de mapeo del agregador, que arreglar en el origen no soluciona. Campos distintos; a menudo aparecen los dos.",
+  "source": {
+    "name": "Codemotion",
+    "url": "https://codemotion.com/madrid-2027",
+    "retrievedAt": "2026-09-01T04:00:00Z"
+  },
+  "updatedAt": "2026-09-01T04:00:00Z",
+  "contributing": "https://github.com/eventos-example/feed/issues/new"
+}

@@ -1,0 +1,9 @@
+{
+  "_comment": "INVÁLIDO a propósito: name es solo espacios — minLength:1 lo acepta, pero no es un nombre. Ver docs/history/CHANGES.log #P018 / DECISIONS.md D018.",
+  "specVersion": "0.6.0",
+  "id": "https://example.org/events/blank-name",
+  "name": "   ",
+  "startDate": "2026-09-01T10:00",
+  "timezone": "Europe/Madrid",
+  "license": "CC0-1.0"
+}

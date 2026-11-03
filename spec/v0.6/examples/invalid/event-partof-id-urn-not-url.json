@@ -1,0 +1,13 @@
+{
+  "_comment": "INVÁLIDO a propósito: partOf.id es un urn:uuid, no una URL — mismas reglas que event.id (P020/D020). No tiene que resolver a un documento OTE, pero sí tiene que ser una URL http(s).",
+  "specVersion": "0.6.0",
+  "id": "https://example.org/events/child",
+  "name": "Child event",
+  "startDate": "2026-09-01T10:00",
+  "timezone": "Europe/Madrid",
+  "partOf": {
+    "id": "urn:uuid:123e4567-e89b-12d3-a456-426614174000",
+    "name": "Parent series"
+  },
+  "license": "CC0-1.0"
+}

@@ -1,0 +1,15 @@
+{
+  "_comment": "INVÁLIDO a propósito: translations.en no tiene ni name ni description, solo un campo desconocido — minProperties:1 lo acepta, pero no traduce nada de OTE. Ver docs/history/CHANGES.log #P024 / DECISIONS.md D022.",
+  "specVersion": "0.6.0",
+  "id": "https://example.org/events/unknown-only-translation",
+  "name": "Unknown-only translation",
+  "startDate": "2026-09-01T10:00",
+  "timezone": "Europe/Madrid",
+  "textLanguage": "es",
+  "translations": {
+    "en": {
+      "unkownField": "x"
+    }
+  },
+  "license": "CC0-1.0"
+}

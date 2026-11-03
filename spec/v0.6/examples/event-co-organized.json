@@ -1,0 +1,42 @@
+{
+  "specVersion": "0.6.0",
+  "id": "https://gdgmadrid.example/eventos/2026-09-devfest-warmup",
+  "url": "https://gdgmadrid.example/eventos/2026-09-devfest-warmup",
+  "name": "DevFest Warm-up — GDG Madrid × Python Madrid",
+  "description": "Sesión conjunta de calentamiento para el DevFest, con charla invitada.",
+  "image": [
+    "https://gdgmadrid.example/img/2026-09-devfest-warmup.png"
+  ],
+
+  "_comment_organizers": "Tres organizadores: dos comunidades y una persona. El primero es el principal, y el orden es significativo porque iCal solo puede expresar UNO: aquí ese primero lleva `email`, así que sí se emite un ORGANIZER válido (`ORGANIZER;CN=\"GDG Madrid\":mailto:hola@gdgmadrid.example`) y los otros dos se degradan a X-OTE-ORGANIZER. El email es de ROL, no de nadie: fíjate en que la persona de la lista no lleva. schema.org y Atom aceptan la lista entera.",
+
+  "_comment_extensions": "`combuilders:communityId` NO es un campo de OTE: es vocabulario de otro proyecto (un directorio de comunidades), y por eso lleva prefijo. OTE se compromete a no acuñar nunca nombres de campo con `:`, así que no puede colisionar con un campo del núcleo. Un consumidor de OTE lo ignora; el directorio lo lee. Ver la sección «Extensiones» del README.",
+
+  "organizers": [
+    {
+      "name": "GDG Madrid",
+      "url": "https://gdgmadrid.example",
+      "email": "hola@gdgmadrid.example",
+      "combuilders:communityId": "gdg-madrid"
+    },
+    { "name": "Python Madrid", "url": "https://www.meetup.com/python-madrid/" },
+    { "type": "person", "name": "Ada Lovelace", "url": "https://ada.example" }
+  ],
+  "startDate": "2026-09-24T19:00",
+  "endDate": "2026-09-24T21:00",
+  "timezone": "Europe/Madrid",
+  "attendanceMode": "in-person",
+  "location": {
+    "venue": "Campus Madrid, Calle de Moreno Nieto 2, Madrid",
+    "address": {
+      "street": "Calle de Moreno Nieto 2",
+      "locality": "Madrid",
+      "postalCode": "28005",
+      "country": "ES"
+    }
+  },
+  "tags": ["python", "cloud"],
+  "languages": ["es"],
+  "license": "CC-BY-4.0",
+  "updatedAt": "2026-09-02T17:20:00Z"
+}

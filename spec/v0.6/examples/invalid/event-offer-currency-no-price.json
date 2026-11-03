@@ -1,0 +1,15 @@
+{
+  "_comment": "INVÁLIDO a propósito: offers[0].currency sin offers[0].price — una moneda sin importe que calificar, huérfana en el mapeo a schema.org Offer.priceCurrency. Ver docs/history/CHANGES.log #P022 / DECISIONS.md D021.",
+  "specVersion": "0.6.0",
+  "id": "https://x.example/1",
+  "name": "X",
+  "startDate": "2026-06-26",
+  "timezone": "Europe/Madrid",
+  "license": "CC-BY-4.0",
+  "offers": [
+    {
+      "url": "https://x.example/1#registro",
+      "currency": "EUR"
+    }
+  ]
+}

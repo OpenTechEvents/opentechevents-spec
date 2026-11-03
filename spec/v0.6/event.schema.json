@@ -1,0 +1,3594 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentechevents.org/schema/v0.6/event.schema.json",
+  "title": "OTE Event",
+  "description": "A single tech community event. See https://opentechevents.org for the normative prose.",
+  "allOf": [
+    {
+      "$ref": "#/$defs/event"
+    },
+    {
+      "type": "object",
+      "description": "A standalone event document must carry its own specVersion and license. Inside a feed, both are inherited from the feed.",
+      "required": [
+        "specVersion",
+        "license"
+      ]
+    },
+    {
+      "description": "A map of translations is unusable without knowing which language the primary text is in: a consumer cannot tell which entry duplicates it, nor what it is falling back to. So ANY translations map in the document — the event's own, or one inside image, offers, eligibility or partOf — requires textLanguage. It is the one place where a field of this spec depends on another being present, and it holds at every depth because the primary language is a property of the whole document, not of each object. A standalone document has no feed to inherit textLanguage from, so it must always carry its own; inside a feed, the same requirement is enforced against the effective (possibly inherited) language — see feed.schema.json.",
+      "if": {
+        "type": "object",
+        "anyOf": [
+          {
+            "required": [
+              "translations"
+            ]
+          },
+          {
+            "required": [
+              "eligibility"
+            ],
+            "properties": {
+              "eligibility": {
+                "required": [
+                  "translations"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          {
+            "required": [
+              "partOf"
+            ],
+            "properties": {
+              "partOf": {
+                "required": [
+                  "translations"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          {
+            "required": [
+              "offers"
+            ],
+            "properties": {
+              "offers": {
+                "contains": {
+                  "required": [
+                    "translations"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            }
+          },
+          {
+            "required": [
+              "image"
+            ],
+            "properties": {
+              "image": {
+                "contains": {
+                  "required": [
+                    "translations"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            }
+          },
+          {
+            "required": [
+              "recordings"
+            ],
+            "properties": {
+              "recordings": {
+                "contains": {
+                  "required": [
+                    "translations"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            }
+          },
+          {
+            "required": [
+              "partOf"
+            ],
+            "properties": {
+              "partOf": {
+                "type": "object",
+                "required": [
+                  "offers"
+                ],
+                "properties": {
+                  "offers": {
+                    "type": "array",
+                    "contains": {
+                      "type": "object",
+                      "required": [
+                        "translations"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "textLanguage"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "event": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "startDate",
+        "timezone"
+      ],
+      "properties": {
+        "specVersion": {
+          "description": "Version of OTE Spec this document adheres to.",
+          "x-inheritsFrom": "feed.specVersion",
+          "const": "0.6.0",
+          "examples": [
+            "0.6.0"
+          ]
+        },
+        "id": {
+          "description": "Stable, globally unique identifier: an HTTP(S) IRI under a domain the publisher controls — not necessarily one they own; a canonical page on a platform they use (Meetup, GitHub Pages, LinkedIn) works exactly as well, since what matters is that the address is stable and nobody else can end up with that same one. Non-ASCII characters are allowed exactly as published (`pycamp-españa` is not rewritten to `pycamp-espa%C3%B1a`). Minted once, never rewritten — this is what lets consumers update an event instead of duplicating it.",
+          "type": "string",
+          "format": "iri",
+          "pattern": "^https?://",
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
+          "examples": [
+            "https://pyalmeria.example/eventos/2026-06-async",
+            "https://eventos.wiki/events/2025/pycamp-españa",
+            "https://calendar.example/ics/rust-madrid#a1b2c3d4-uid",
+            "https://www.meetup.com/pyalmeria/events/123456789/"
+          ]
+        },
+        "url": {
+          "description": "Canonical URL where the event is described today. May change over time; id may not.",
+          "type": "string",
+          "format": "iri",
+          "pattern": "^https?://",
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
+          "examples": [
+            "https://pyalmeria.example/eventos/2026-06-async"
+          ]
+        },
+        "name": {
+          "description": "Display name of the event.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "PyAlmería — Introducción a async/await"
+          ]
+        },
+        "description": {
+          "description": "Short description. Plain text or Markdown — never HTML: an importer whose source carries markup (Google Calendar writes DESCRIPTION with <a> and <br>) converts links to Markdown, tags to line breaks, entities to characters, and drops the rest. See README.",
+          "type": "string",
+          "examples": [
+            "Charla introductoria a la programación asíncrona en Python, con ejemplos en vivo."
+          ]
+        },
+        "image": {
+          "description": "Promotional images of the event: poster, cover, card. A list in preference order — the FIRST is the primary one, and often the only one a destination can use. The rest may be other crops or resolutions of that same image (Google asks for 1:1, 4:3 and 16:9) or different images altogether; a consumer that can show only one shows the first, and none may assume the list renders as a photo gallery. An entry is either a bare HTTP(S) IRI to the image file itself — never to a page showing it — or an object that adds alt text.",
+          "$ref": "#/$defs/images",
+          "examples": [
+            [
+              "https://rustmadrid.example/img/2026-06-16x9.png"
+            ],
+            [
+              {
+                "url": "https://rustmadrid.example/img/2026-06-16x9.png",
+                "alt": "Cartel: Ferris sobre fondo morado, «Rust Madrid · 16 junio · Impact Hub»"
+              },
+              "https://rustmadrid.example/img/2026-06-1x1.png",
+              "https://rustmadrid.example/img/2026-06-4x3.png"
+            ]
+          ]
+        },
+        "organizers": {
+          "description": "Who runs the event — not where the data came from (that is source). A list: co-organised events are the norm, not the exception. Declaring it REPLACES the inherited list, it does not add to it.",
+          "x-inheritsFrom": "feed.organizers",
+          "$ref": "#/$defs/organizers",
+          "examples": [
+            [
+              {
+                "name": "PyAlmería",
+                "url": "https://pyalmeria.example"
+              }
+            ],
+            [
+              {
+                "name": "GDG Madrid",
+                "url": "https://gdgmadrid.example"
+              },
+              {
+                "type": "person",
+                "name": "Ada Lovelace",
+                "url": "https://ada.example"
+              }
+            ]
+          ]
+        },
+        "speakers": {
+          "description": "Who gives the talk(s) — NOT who runs the event (that is organizers) and NOT where the data came from (source). New in v0.5. A list in display / preference order: the first is the one that survives to a single-value destination, the same rule organizers and image state. Co-talks and panels are the norm. Kept as small as organizers: a name, and where to find them. One document is one occurrence, so in a multi-part conference the speakers of a given talk live on that talk's document, not on the parent. Only exact repeats are rejected; distinct entries are never deduplicated by inferred identity. Not translated: a speaker's name is a proper noun.",
+          "$ref": "#/$defs/speakers",
+          "examples": [
+            [
+              {
+                "name": "Ada Lovelace",
+                "url": "https://ada.example",
+                "sameAs": [
+                  "https://fosstodon.org/@ada",
+                  "https://www.linkedin.com/in/ada-lovelace"
+                ]
+              }
+            ],
+            [
+              {
+                "name": "Grace Hopper"
+              },
+              {
+                "type": "organization",
+                "name": "The Rust Survey Team"
+              }
+            ]
+          ]
+        },
+        "startDate": {
+          "description": "Wall-clock start: a date (2026-10-15) for all-day events, or a local date-time (2026-10-15T09:00), never with seconds. Never carries a UTC offset — timezone does that. Which of the two forms you pick is not this field's decision alone: it has to match endDate's, and endDate (if present) must not be earlier — see the document's constraints.",
+          "$ref": "#/$defs/wallClock",
+          "examples": [
+            "2026-06-11T18:30",
+            "2026-10-15"
+          ]
+        },
+        "endDate": {
+          "description": "Wall-clock end, in the SAME form as startDate (both dates, or both date-times) and never earlier than it. If absent, the event is assumed to end on the day it starts. For an all-day event (date form, no time), endDate is INCLUSIVE — it names the last day the event runs, not the day after. Converting to iCalendar needs +1 day for DTEND;VALUE=DATE (RFC 5545 defines it as the non-inclusive end); importing needs -1 day back. Both rules belong to the document, not to this field — see the document's constraints.",
+          "$ref": "#/$defs/wallClock",
+          "examples": [
+            "2026-06-11T20:00",
+            "2026-10-16"
+          ]
+        },
+        "timezone": {
+          "description": "A real IANA timezone identifier (e.g. Europe/Madrid) — canonical name or historical alias, never an invented or malformed one. Turns a wall-clock startDate into an unambiguous instant. For all-day events it contextualises the date — it does not shift it. On the two nights a year local time is ambiguous (a repeated hour) or impossible (a skipped hour) because of a DST transition, resolve exactly as RFC 5545 §3.3.5 does: a repeated local time means its FIRST occurrence; a skipped local time is read using the UTC offset that was in effect BEFORE the transition.",
+          "type": "string",
+          "enum": [
+            "Africa/Abidjan",
+            "Africa/Accra",
+            "Africa/Addis_Ababa",
+            "Africa/Algiers",
+            "Africa/Asmara",
+            "Africa/Asmera",
+            "Africa/Bamako",
+            "Africa/Bangui",
+            "Africa/Banjul",
+            "Africa/Bissau",
+            "Africa/Blantyre",
+            "Africa/Brazzaville",
+            "Africa/Bujumbura",
+            "Africa/Cairo",
+            "Africa/Casablanca",
+            "Africa/Ceuta",
+            "Africa/Conakry",
+            "Africa/Dakar",
+            "Africa/Dar_es_Salaam",
+            "Africa/Djibouti",
+            "Africa/Douala",
+            "Africa/El_Aaiun",
+            "Africa/Freetown",
+            "Africa/Gaborone",
+            "Africa/Harare",
+            "Africa/Johannesburg",
+            "Africa/Juba",
+            "Africa/Kampala",
+            "Africa/Khartoum",
+            "Africa/Kigali",
+            "Africa/Kinshasa",
+            "Africa/Lagos",
+            "Africa/Libreville",
+            "Africa/Lome",
+            "Africa/Luanda",
+            "Africa/Lubumbashi",
+            "Africa/Lusaka",
+            "Africa/Malabo",
+            "Africa/Maputo",
+            "Africa/Maseru",
+            "Africa/Mbabane",
+            "Africa/Mogadishu",
+            "Africa/Monrovia",
+            "Africa/Nairobi",
+            "Africa/Ndjamena",
+            "Africa/Niamey",
+            "Africa/Nouakchott",
+            "Africa/Ouagadougou",
+            "Africa/Porto-Novo",
+            "Africa/Sao_Tome",
+            "Africa/Timbuktu",
+            "Africa/Tripoli",
+            "Africa/Tunis",
+            "Africa/Windhoek",
+            "America/Adak",
+            "America/Anchorage",
+            "America/Anguilla",
+            "America/Antigua",
+            "America/Araguaina",
+            "America/Argentina/Buenos_Aires",
+            "America/Argentina/Catamarca",
+            "America/Argentina/ComodRivadavia",
+            "America/Argentina/Cordoba",
+            "America/Argentina/Jujuy",
+            "America/Argentina/La_Rioja",
+            "America/Argentina/Mendoza",
+            "America/Argentina/Rio_Gallegos",
+            "America/Argentina/Salta",
+            "America/Argentina/San_Juan",
+            "America/Argentina/San_Luis",
+            "America/Argentina/Tucuman",
+            "America/Argentina/Ushuaia",
+            "America/Aruba",
+            "America/Asuncion",
+            "America/Atikokan",
+            "America/Atka",
+            "America/Bahia",
+            "America/Bahia_Banderas",
+            "America/Barbados",
+            "America/Belem",
+            "America/Belize",
+            "America/Blanc-Sablon",
+            "America/Boa_Vista",
+            "America/Bogota",
+            "America/Boise",
+            "America/Buenos_Aires",
+            "America/Cambridge_Bay",
+            "America/Campo_Grande",
+            "America/Cancun",
+            "America/Caracas",
+            "America/Catamarca",
+            "America/Cayenne",
+            "America/Cayman",
+            "America/Chicago",
+            "America/Chihuahua",
+            "America/Ciudad_Juarez",
+            "America/Coral_Harbour",
+            "America/Cordoba",
+            "America/Costa_Rica",
+            "America/Coyhaique",
+            "America/Creston",
+            "America/Cuiaba",
+            "America/Curacao",
+            "America/Danmarkshavn",
+            "America/Dawson",
+            "America/Dawson_Creek",
+            "America/Denver",
+            "America/Detroit",
+            "America/Dominica",
+            "America/Edmonton",
+            "America/Eirunepe",
+            "America/El_Salvador",
+            "America/Ensenada",
+            "America/Fort_Nelson",
+            "America/Fort_Wayne",
+            "America/Fortaleza",
+            "America/Glace_Bay",
+            "America/Godthab",
+            "America/Goose_Bay",
+            "America/Grand_Turk",
+            "America/Grenada",
+            "America/Guadeloupe",
+            "America/Guatemala",
+            "America/Guayaquil",
+            "America/Guyana",
+            "America/Halifax",
+            "America/Havana",
+            "America/Hermosillo",
+            "America/Indiana/Indianapolis",
+            "America/Indiana/Knox",
+            "America/Indiana/Marengo",
+            "America/Indiana/Petersburg",
+            "America/Indiana/Tell_City",
+            "America/Indiana/Vevay",
+            "America/Indiana/Vincennes",
+            "America/Indiana/Winamac",
+            "America/Indianapolis",
+            "America/Inuvik",
+            "America/Iqaluit",
+            "America/Jamaica",
+            "America/Jujuy",
+            "America/Juneau",
+            "America/Kentucky/Louisville",
+            "America/Kentucky/Monticello",
+            "America/Knox_IN",
+            "America/Kralendijk",
+            "America/La_Paz",
+            "America/Lima",
+            "America/Los_Angeles",
+            "America/Louisville",
+            "America/Lower_Princes",
+            "America/Maceio",
+            "America/Managua",
+            "America/Manaus",
+            "America/Marigot",
+            "America/Martinique",
+            "America/Matamoros",
+            "America/Mazatlan",
+            "America/Mendoza",
+            "America/Menominee",
+            "America/Merida",
+            "America/Metlakatla",
+            "America/Mexico_City",
+            "America/Miquelon",
+            "America/Moncton",
+            "America/Monterrey",
+            "America/Montevideo",
+            "America/Montreal",
+            "America/Montserrat",
+            "America/Nassau",
+            "America/New_York",
+            "America/Nipigon",
+            "America/Nome",
+            "America/Noronha",
+            "America/North_Dakota/Beulah",
+            "America/North_Dakota/Center",
+            "America/North_Dakota/New_Salem",
+            "America/Nuuk",
+            "America/Ojinaga",
+            "America/Panama",
+            "America/Pangnirtung",
+            "America/Paramaribo",
+            "America/Phoenix",
+            "America/Port_of_Spain",
+            "America/Port-au-Prince",
+            "America/Porto_Acre",
+            "America/Porto_Velho",
+            "America/Puerto_Rico",
+            "America/Punta_Arenas",
+            "America/Rainy_River",
+            "America/Rankin_Inlet",
+            "America/Recife",
+            "America/Regina",
+            "America/Resolute",
+            "America/Rio_Branco",
+            "America/Rosario",
+            "America/Santa_Isabel",
+            "America/Santarem",
+            "America/Santiago",
+            "America/Santo_Domingo",
+            "America/Sao_Paulo",
+            "America/Scoresbysund",
+            "America/Shiprock",
+            "America/Sitka",
+            "America/St_Barthelemy",
+            "America/St_Johns",
+            "America/St_Kitts",
+            "America/St_Lucia",
+            "America/St_Thomas",
+            "America/St_Vincent",
+            "America/Swift_Current",
+            "America/Tegucigalpa",
+            "America/Thule",
+            "America/Thunder_Bay",
+            "America/Tijuana",
+            "America/Toronto",
+            "America/Tortola",
+            "America/Vancouver",
+            "America/Virgin",
+            "America/Whitehorse",
+            "America/Winnipeg",
+            "America/Yakutat",
+            "America/Yellowknife",
+            "Antarctica/Casey",
+            "Antarctica/Davis",
+            "Antarctica/DumontDUrville",
+            "Antarctica/Macquarie",
+            "Antarctica/Mawson",
+            "Antarctica/McMurdo",
+            "Antarctica/Palmer",
+            "Antarctica/Rothera",
+            "Antarctica/South_Pole",
+            "Antarctica/Syowa",
+            "Antarctica/Troll",
+            "Antarctica/Vostok",
+            "Arctic/Longyearbyen",
+            "Asia/Aden",
+            "Asia/Almaty",
+            "Asia/Amman",
+            "Asia/Anadyr",
+            "Asia/Aqtau",
+            "Asia/Aqtobe",
+            "Asia/Ashgabat",
+            "Asia/Ashkhabad",
+            "Asia/Atyrau",
+            "Asia/Baghdad",
+            "Asia/Bahrain",
+            "Asia/Baku",
+            "Asia/Bangkok",
+            "Asia/Barnaul",
+            "Asia/Beirut",
+            "Asia/Bishkek",
+            "Asia/Brunei",
+            "Asia/Calcutta",
+            "Asia/Chita",
+            "Asia/Choibalsan",
+            "Asia/Chongqing",
+            "Asia/Chungking",
+            "Asia/Colombo",
+            "Asia/Dacca",
+            "Asia/Damascus",
+            "Asia/Dhaka",
+            "Asia/Dili",
+            "Asia/Dubai",
+            "Asia/Dushanbe",
+            "Asia/Famagusta",
+            "Asia/Gaza",
+            "Asia/Harbin",
+            "Asia/Hebron",
+            "Asia/Ho_Chi_Minh",
+            "Asia/Hong_Kong",
+            "Asia/Hovd",
+            "Asia/Irkutsk",
+            "Asia/Istanbul",
+            "Asia/Jakarta",
+            "Asia/Jayapura",
+            "Asia/Jerusalem",
+            "Asia/Kabul",
+            "Asia/Kamchatka",
+            "Asia/Karachi",
+            "Asia/Kashgar",
+            "Asia/Kathmandu",
+            "Asia/Katmandu",
+            "Asia/Khandyga",
+            "Asia/Kolkata",
+            "Asia/Krasnoyarsk",
+            "Asia/Kuala_Lumpur",
+            "Asia/Kuching",
+            "Asia/Kuwait",
+            "Asia/Macao",
+            "Asia/Macau",
+            "Asia/Magadan",
+            "Asia/Makassar",
+            "Asia/Manila",
+            "Asia/Muscat",
+            "Asia/Nicosia",
+            "Asia/Novokuznetsk",
+            "Asia/Novosibirsk",
+            "Asia/Omsk",
+            "Asia/Oral",
+            "Asia/Phnom_Penh",
+            "Asia/Pontianak",
+            "Asia/Pyongyang",
+            "Asia/Qatar",
+            "Asia/Qostanay",
+            "Asia/Qyzylorda",
+            "Asia/Rangoon",
+            "Asia/Riyadh",
+            "Asia/Saigon",
+            "Asia/Sakhalin",
+            "Asia/Samarkand",
+            "Asia/Seoul",
+            "Asia/Shanghai",
+            "Asia/Singapore",
+            "Asia/Srednekolymsk",
+            "Asia/Taipei",
+            "Asia/Tashkent",
+            "Asia/Tbilisi",
+            "Asia/Tehran",
+            "Asia/Tel_Aviv",
+            "Asia/Thimbu",
+            "Asia/Thimphu",
+            "Asia/Tokyo",
+            "Asia/Tomsk",
+            "Asia/Ujung_Pandang",
+            "Asia/Ulaanbaatar",
+            "Asia/Ulan_Bator",
+            "Asia/Urumqi",
+            "Asia/Ust-Nera",
+            "Asia/Vientiane",
+            "Asia/Vladivostok",
+            "Asia/Yakutsk",
+            "Asia/Yangon",
+            "Asia/Yekaterinburg",
+            "Asia/Yerevan",
+            "Atlantic/Azores",
+            "Atlantic/Bermuda",
+            "Atlantic/Canary",
+            "Atlantic/Cape_Verde",
+            "Atlantic/Faeroe",
+            "Atlantic/Faroe",
+            "Atlantic/Jan_Mayen",
+            "Atlantic/Madeira",
+            "Atlantic/Reykjavik",
+            "Atlantic/South_Georgia",
+            "Atlantic/St_Helena",
+            "Atlantic/Stanley",
+            "Australia/ACT",
+            "Australia/Adelaide",
+            "Australia/Brisbane",
+            "Australia/Broken_Hill",
+            "Australia/Canberra",
+            "Australia/Currie",
+            "Australia/Darwin",
+            "Australia/Eucla",
+            "Australia/Hobart",
+            "Australia/LHI",
+            "Australia/Lindeman",
+            "Australia/Lord_Howe",
+            "Australia/Melbourne",
+            "Australia/North",
+            "Australia/NSW",
+            "Australia/Perth",
+            "Australia/Queensland",
+            "Australia/South",
+            "Australia/Sydney",
+            "Australia/Tasmania",
+            "Australia/Victoria",
+            "Australia/West",
+            "Australia/Yancowinna",
+            "Brazil/Acre",
+            "Brazil/DeNoronha",
+            "Brazil/East",
+            "Brazil/West",
+            "Canada/Atlantic",
+            "Canada/Central",
+            "Canada/Eastern",
+            "Canada/Mountain",
+            "Canada/Newfoundland",
+            "Canada/Pacific",
+            "Canada/Saskatchewan",
+            "Canada/Yukon",
+            "CET",
+            "Chile/Continental",
+            "Chile/EasterIsland",
+            "CST6CDT",
+            "Cuba",
+            "EET",
+            "Egypt",
+            "Eire",
+            "EST",
+            "EST5EDT",
+            "Etc/GMT",
+            "Etc/GMT-0",
+            "Etc/GMT-1",
+            "Etc/GMT-10",
+            "Etc/GMT-11",
+            "Etc/GMT-12",
+            "Etc/GMT-13",
+            "Etc/GMT-14",
+            "Etc/GMT-2",
+            "Etc/GMT-3",
+            "Etc/GMT-4",
+            "Etc/GMT-5",
+            "Etc/GMT-6",
+            "Etc/GMT-7",
+            "Etc/GMT-8",
+            "Etc/GMT-9",
+            "Etc/GMT+0",
+            "Etc/GMT+1",
+            "Etc/GMT+10",
+            "Etc/GMT+11",
+            "Etc/GMT+12",
+            "Etc/GMT+2",
+            "Etc/GMT+3",
+            "Etc/GMT+4",
+            "Etc/GMT+5",
+            "Etc/GMT+6",
+            "Etc/GMT+7",
+            "Etc/GMT+8",
+            "Etc/GMT+9",
+            "Etc/GMT0",
+            "Etc/Greenwich",
+            "Etc/UCT",
+            "Etc/Universal",
+            "Etc/UTC",
+            "Etc/Zulu",
+            "Europe/Amsterdam",
+            "Europe/Andorra",
+            "Europe/Astrakhan",
+            "Europe/Athens",
+            "Europe/Belfast",
+            "Europe/Belgrade",
+            "Europe/Berlin",
+            "Europe/Bratislava",
+            "Europe/Brussels",
+            "Europe/Bucharest",
+            "Europe/Budapest",
+            "Europe/Busingen",
+            "Europe/Chisinau",
+            "Europe/Copenhagen",
+            "Europe/Dublin",
+            "Europe/Gibraltar",
+            "Europe/Guernsey",
+            "Europe/Helsinki",
+            "Europe/Isle_of_Man",
+            "Europe/Istanbul",
+            "Europe/Jersey",
+            "Europe/Kaliningrad",
+            "Europe/Kiev",
+            "Europe/Kirov",
+            "Europe/Kyiv",
+            "Europe/Lisbon",
+            "Europe/Ljubljana",
+            "Europe/London",
+            "Europe/Luxembourg",
+            "Europe/Madrid",
+            "Europe/Malta",
+            "Europe/Mariehamn",
+            "Europe/Minsk",
+            "Europe/Monaco",
+            "Europe/Moscow",
+            "Europe/Nicosia",
+            "Europe/Oslo",
+            "Europe/Paris",
+            "Europe/Podgorica",
+            "Europe/Prague",
+            "Europe/Riga",
+            "Europe/Rome",
+            "Europe/Samara",
+            "Europe/San_Marino",
+            "Europe/Sarajevo",
+            "Europe/Saratov",
+            "Europe/Simferopol",
+            "Europe/Skopje",
+            "Europe/Sofia",
+            "Europe/Stockholm",
+            "Europe/Tallinn",
+            "Europe/Tirane",
+            "Europe/Tiraspol",
+            "Europe/Ulyanovsk",
+            "Europe/Uzhgorod",
+            "Europe/Vaduz",
+            "Europe/Vatican",
+            "Europe/Vienna",
+            "Europe/Vilnius",
+            "Europe/Volgograd",
+            "Europe/Warsaw",
+            "Europe/Zagreb",
+            "Europe/Zaporozhye",
+            "Europe/Zurich",
+            "GB",
+            "GB-Eire",
+            "GMT",
+            "GMT-0",
+            "GMT+0",
+            "GMT0",
+            "Greenwich",
+            "Hongkong",
+            "HST",
+            "Iceland",
+            "Indian/Antananarivo",
+            "Indian/Chagos",
+            "Indian/Christmas",
+            "Indian/Cocos",
+            "Indian/Comoro",
+            "Indian/Kerguelen",
+            "Indian/Mahe",
+            "Indian/Maldives",
+            "Indian/Mauritius",
+            "Indian/Mayotte",
+            "Indian/Reunion",
+            "Iran",
+            "Israel",
+            "Jamaica",
+            "Japan",
+            "Kwajalein",
+            "Libya",
+            "MET",
+            "Mexico/BajaNorte",
+            "Mexico/BajaSur",
+            "Mexico/General",
+            "MST",
+            "MST7MDT",
+            "Navajo",
+            "NZ",
+            "NZ-CHAT",
+            "Pacific/Apia",
+            "Pacific/Auckland",
+            "Pacific/Bougainville",
+            "Pacific/Chatham",
+            "Pacific/Chuuk",
+            "Pacific/Easter",
+            "Pacific/Efate",
+            "Pacific/Enderbury",
+            "Pacific/Fakaofo",
+            "Pacific/Fiji",
+            "Pacific/Funafuti",
+            "Pacific/Galapagos",
+            "Pacific/Gambier",
+            "Pacific/Guadalcanal",
+            "Pacific/Guam",
+            "Pacific/Honolulu",
+            "Pacific/Johnston",
+            "Pacific/Kanton",
+            "Pacific/Kiritimati",
+            "Pacific/Kosrae",
+            "Pacific/Kwajalein",
+            "Pacific/Majuro",
+            "Pacific/Marquesas",
+            "Pacific/Midway",
+            "Pacific/Nauru",
+            "Pacific/Niue",
+            "Pacific/Norfolk",
+            "Pacific/Noumea",
+            "Pacific/Pago_Pago",
+            "Pacific/Palau",
+            "Pacific/Pitcairn",
+            "Pacific/Pohnpei",
+            "Pacific/Ponape",
+            "Pacific/Port_Moresby",
+            "Pacific/Rarotonga",
+            "Pacific/Saipan",
+            "Pacific/Samoa",
+            "Pacific/Tahiti",
+            "Pacific/Tarawa",
+            "Pacific/Tongatapu",
+            "Pacific/Truk",
+            "Pacific/Wake",
+            "Pacific/Wallis",
+            "Pacific/Yap",
+            "Poland",
+            "Portugal",
+            "PRC",
+            "PST8PDT",
+            "ROC",
+            "ROK",
+            "Singapore",
+            "Turkey",
+            "UCT",
+            "Universal",
+            "US/Alaska",
+            "US/Aleutian",
+            "US/Arizona",
+            "US/Central",
+            "US/East-Indiana",
+            "US/Eastern",
+            "US/Hawaii",
+            "US/Indiana-Starke",
+            "US/Michigan",
+            "US/Mountain",
+            "US/Pacific",
+            "US/Samoa",
+            "UTC",
+            "W-SU",
+            "WET",
+            "Zulu"
+          ],
+          "examples": [
+            "Europe/Madrid",
+            "America/Bogota",
+            "UTC"
+          ],
+          "$comment": "Generated by scripts/update-timezones.mjs from IANA tzdata 2026f (https://www.iana.org/time-zones). Every Zone and Link (alias), so a historical rename (e.g. Europe/Kiev → Europe/Kyiv, 2022) never invalidates a document that used the old name."
+        },
+        "attendanceMode": {
+          "description": "What the organiser says this event is. Absent never means in-person.",
+          "enum": [
+            "in-person",
+            "online",
+            "hybrid"
+          ],
+          "examples": [
+            "in-person",
+            "online",
+            "hybrid"
+          ]
+        },
+        "location": {
+          "$ref": "#/$defs/location",
+          "examples": [
+            {
+              "venue": "El Cable, Almería"
+            },
+            {
+              "onlineUrl": "https://meet.example/pyalmeria"
+            },
+            {
+              "venue": "Campus Madrid, Calle de Moreno Nieto 2, Madrid",
+              "address": {
+                "street": "Calle de Moreno Nieto 2",
+                "locality": "Madrid",
+                "postalCode": "28005",
+                "country": "ES"
+              },
+              "onlineUrl": "https://meet.example/rust-madrid"
+            }
+          ]
+        },
+        "eligibility": {
+          "description": "Who may attend, when the answer is not \"anyone\". The third part of \"can I go?\", after attendanceMode and location: those two answer whether the event is reachable, this one whether you are allowed in. Absent never means open — an importer reading a .ics cannot know, and staying quiet is not the same claim as saying the door is open.",
+          "$ref": "#/$defs/eligibility",
+          "examples": [
+            {
+              "type": "open"
+            },
+            {
+              "type": "members-only",
+              "note": "Miembros del Discord de Rust Girona",
+              "url": "https://rustgirona.example/join"
+            },
+            {
+              "type": "restricted",
+              "note": "Solo alumnado de la Universidad de Almería"
+            }
+          ]
+        },
+        "tags": {
+          "description": "Free-form topic tags — what the event is ABOUT. Maps to iCal CATEGORIES and schema.org keywords. Not who may attend: that question has its own field, eligibility, because a tag like \"members-only\" is invisible to a consumer that does not already know to look for it. A controlled vocabulary may layer on top later; the field itself stays free.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 1,
+          "uniqueItems": true,
+          "examples": [
+            [
+              "rust",
+              "wasm"
+            ],
+            [
+              "python",
+              "async"
+            ]
+          ]
+        },
+        "languages": {
+          "description": "Languages SPOKEN at the event, as BCP 47 tags, e.g. [\"es\",\"en\"]. Not the language this document is written in — that is textLanguage, and the two disagree all the time: a bilingual session described in Catalan only.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/languageTag"
+          },
+          "minItems": 1,
+          "uniqueItems": true,
+          "distinctLanguageTags": true,
+          "examples": [
+            [
+              "es"
+            ],
+            [
+              "es",
+              "en"
+            ]
+          ]
+        },
+        "textLanguage": {
+          "description": "Language THIS DOCUMENT's free text is written in — name, description, and any other prose in it. One BCP 47 tag, not a list: a text is written in one language. A different question from languages, which says what is spoken at the event. Absent defaults to the enclosing feed's textLanguage; in a standalone document, with no feed to inherit from, absent means unknown, never English.",
+          "x-inheritsFrom": "feed.textLanguage",
+          "$ref": "#/$defs/languageTag",
+          "examples": [
+            "es",
+            "ca",
+            "en"
+          ]
+        },
+        "offers": {
+          "description": "What it costs to attend, and where to register. A list: tiered pricing (early bird, student, patron) is one entry each, and a free event is a single entry with price 0. Absent means UNKNOWN, never free — saying free is what price 0 is for.",
+          "$ref": "#/$defs/offers",
+          "examples": [
+            [
+              {
+                "price": 0,
+                "url": "https://rustmadrid.example/meetups/2026-06#registro"
+              }
+            ],
+            [
+              {
+                "name": "Early bird",
+                "price": 35,
+                "currency": "EUR",
+                "url": "https://devfest-levante.example/2026/entradas",
+                "availability": "sold-out",
+                "closesAt": "2026-07-31T23:59:59+02:00"
+              },
+              {
+                "name": "General",
+                "price": 45,
+                "currency": "EUR",
+                "url": "https://devfest-levante.example/2026/entradas",
+                "availability": "in-stock"
+              }
+            ]
+          ]
+        },
+        "cfp": {
+          "description": "The event's open call for proposals — talks, workshops, papers. The one field of the spec with no equivalent in ANY of the three destination formats: it exists because 'which conferences are accepting proposals right now' is a question only the publisher can answer, and today it is answered by scraping.",
+          "$ref": "#/$defs/cfp",
+          "examples": [
+            {
+              "url": "https://devfest-levante.example/2026/cfp",
+              "closesAt": "2026-07-15T23:59:59+02:00"
+            },
+            {
+              "url": "https://devfest-levante.example/2026/cfp",
+              "opensAt": "2026-05-01T00:00:00+02:00",
+              "closesAt": "2026-07-15T23:59:59+02:00",
+              "coversTravel": true,
+              "coversAccommodation": true
+            }
+          ]
+        },
+        "status": {
+          "description": "What happened to the event, not to the data. An event that is cancelled, postponed or moved online MUST stay published: removing it leaves a dead event in subscribers' calendars. tentative means announced but not confirmed (iCal STATUS:TENTATIVE) — it exists so an importer never has to upgrade an unconfirmed event to scheduled.",
+          "enum": [
+            "scheduled",
+            "tentative",
+            "cancelled",
+            "postponed",
+            "rescheduled",
+            "moved-online"
+          ],
+          "default": "scheduled",
+          "examples": [
+            "scheduled",
+            "cancelled",
+            "moved-online"
+          ]
+        },
+        "partOf": {
+          "description": "The series or multi-part event this document is one occurrence of. A REFERENCE, never a recurrence rule: OTE does not generate dates: whoever publishes expands the recurrence into one document per occurrence, each with its own id, dates and status. A consumer that ignores this field still sees complete, correct events — EXCEPT for pricing (new in v0.5): a consumer that needs the price of a multi-part event MUST also read partOf.offers. Ignoring it yields INCOMPLETE pricing (a missing price), never WRONG pricing.",
+          "$ref": "#/$defs/partOf",
+          "examples": [
+            {
+              "id": "https://rustmadrid.example/meetups",
+              "name": "Rust Madrid — meetup mensual",
+              "url": "https://rustmadrid.example/meetups"
+            },
+            {
+              "type": "multipart",
+              "id": "https://pyalmeria.example/study-jams/2026-testing",
+              "name": "Study Jam de testing en Python (3 sesiones)"
+            }
+          ]
+        },
+        "license": {
+          "description": "License of THIS DATA, not of the event. SPDX identifier (CC0-1.0, CC-BY-4.0…, full list at https://spdx.org/licenses/) or a URL.",
+          "x-inheritsFrom": "feed.license",
+          "$ref": "#/$defs/license",
+          "examples": [
+            "CC-BY-4.0",
+            "CC0-1.0"
+          ]
+        },
+        "source": {
+          "description": "Provenance. Required when the event was imported or aggregated from elsewhere; omitted when the organiser describes their own event — they are the source.",
+          "$ref": "#/$defs/source",
+          "examples": [
+            {
+              "name": "Rust Madrid",
+              "url": "https://calendar.example/ics/rust-madrid",
+              "license": "CC-BY-4.0",
+              "retrievedAt": "2026-06-01T05:00:00Z"
+            }
+          ]
+        },
+        "updatedAt": {
+          "description": "Instant the event's DATA last changed — equivalent to iCal LAST-MODIFIED, not DTSTAMP (which marks generation and changes on every export). Lets a consumer sync incrementally: fetch only what changed since its last read. Absent means unknown, not 'never changed'.",
+          "$ref": "#/$defs/instant",
+          "examples": [
+            "2026-06-10T18:00:00Z"
+          ]
+        },
+        "recordings": {
+          "description": "New in v0.5. Published recordings of the event, linked after it happened. NOT image (the poster) and NOT location.onlineUrl (the live link, which stops meaning the same thing once the event is over). A list — a talk may be on more than one platform, or split into parts. An entry is a bare HTTP(S) IRI or an object that adds a title. Adding it does not change the id — it updates the same record, with a new updatedAt.",
+          "$ref": "#/$defs/recordings",
+          "examples": [
+            [
+              "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            ],
+            [
+              "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+              {
+                "url": "https://tube.rustmadrid.example/w/abc123",
+                "title": "Q&A"
+              }
+            ]
+          ]
+        },
+        "contributing": {
+          "description": "New in v0.5. Where to report or propose a fix to a wrong datum in THIS record — a broken link, a stale date, a mis-mapped field. Inherited from feed.contributing unless declared here; a declared value replaces the inherited one, like license. It exists because the publisher who most needs it — an aggregator — must leave organizers out, and source points at where the data came from, not at the aggregator's own copy. Like cfp it travels to no destination format; its value is inside the OTE ecosystem (a reading tool's 'suggest a correction' link). NOT recommended: an .ics importer never has it, and a warning would push a small community to open an issue tracker it does not want.",
+          "$ref": "#/$defs/contributing",
+          "x-inheritsFrom": "feed.contributing",
+          "examples": [
+            "https://github.com/pyalmeria/eventos/issues/new",
+            "mailto:corrections@rustmadrid.example"
+          ]
+        },
+        "translations": {
+          "description": "The same event's free text in other languages, keyed by BCP 47 tag. The document keeps ONE primary text in its own fields — declared by textLanguage — and this carries the versions of it. Additive on purpose: name and description stay strings, so every existing consumer keeps working and a monolingual publisher writes nothing at all. Never a translation of the language the document is already in. Requires textLanguage — and so does any other translations map in the document, at any depth; see the document's constraints.",
+          "$ref": "#/$defs/translations",
+          "examples": [
+            {
+              "es": {
+                "name": "Sesión semanal de programación — Rust Girona",
+                "description": "Cada semana nos juntamos en línea para picar Rust un rato."
+              }
+            }
+          ]
+        }
+      },
+      "orderedDates": true,
+      "distinctTranslationLanguages": true,
+      "distinctPartOfId": true,
+      "allOf": [
+        {
+          "description": "startDate and endDate must be of the same form: two all-day dates, or two local date-times.",
+          "oneOf": [
+            {
+              "properties": {
+                "startDate": {
+                  "$ref": "#/$defs/date"
+                },
+                "endDate": {
+                  "$ref": "#/$defs/date"
+                }
+              },
+              "type": "object"
+            },
+            {
+              "properties": {
+                "startDate": {
+                  "$ref": "#/$defs/dateTime"
+                },
+                "endDate": {
+                  "$ref": "#/$defs/dateTime"
+                }
+              },
+              "type": "object"
+            }
+          ]
+        },
+        {
+          "description": "An offer with scope 'add-on' is an additional charge on top of the set's shared admission — meaningless, and uncomputable, without that admission present. So if any offer has scope 'add-on', the document must carry partOf, and partOf must carry offers (the shared admission). partOf.id is never resolved for pricing — the admission has to be in the same document. New in v0.5; see DECISIONS.md.",
+          "if": {
+            "type": "object",
+            "required": [
+              "offers"
+            ],
+            "properties": {
+              "offers": {
+                "type": "array",
+                "contains": {
+                  "type": "object",
+                  "required": [
+                    "scope"
+                  ],
+                  "properties": {
+                    "scope": {
+                      "const": "add-on"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "type": "object",
+            "required": [
+              "partOf"
+            ],
+            "properties": {
+              "partOf": {
+                "type": "object",
+                "required": [
+                  "offers"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "format": "date"
+    },
+    "dateTime": {
+      "description": "A calendar-valid wall-clock date-time, deliberately WITHOUT an offset — that is what timezone is for — and WITHOUT seconds: this is the hour on a poster, never a technical instant. No standard RFC 3339 format covers this shape, so validating it fully requires registering the `ote-local-date-time` format shipped as `customFormats` in the npm package.",
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$",
+      "format": "ote-local-date-time"
+    },
+    "wallClock": {
+      "type": "string",
+      "anyOf": [
+        {
+          "$ref": "#/$defs/date"
+        },
+        {
+          "$ref": "#/$defs/dateTime"
+        }
+      ]
+    },
+    "instant": {
+      "description": "An absolute point in time, WITH offset or Z. Used for metadata (when data was fetched) and for deadlines (when a sale or a call closes) — never for when an event happens, which is wall clock plus timezone.",
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+      "format": "date-time"
+    },
+    "currency": {
+      "type": "string",
+      "enum": [
+        "AED",
+        "AFN",
+        "ALL",
+        "AMD",
+        "AOA",
+        "ARS",
+        "AUD",
+        "AWG",
+        "AZN",
+        "BAM",
+        "BBD",
+        "BDT",
+        "BHD",
+        "BIF",
+        "BMD",
+        "BND",
+        "BOB",
+        "BOV",
+        "BRL",
+        "BSD",
+        "BTN",
+        "BWP",
+        "BYN",
+        "BZD",
+        "CAD",
+        "CDF",
+        "CHE",
+        "CHF",
+        "CHW",
+        "CLF",
+        "CLP",
+        "CNY",
+        "COP",
+        "COU",
+        "CRC",
+        "CUP",
+        "CVE",
+        "CZK",
+        "DJF",
+        "DKK",
+        "DOP",
+        "DZD",
+        "EGP",
+        "ERN",
+        "ETB",
+        "EUR",
+        "FJD",
+        "FKP",
+        "GBP",
+        "GEL",
+        "GHS",
+        "GIP",
+        "GMD",
+        "GNF",
+        "GTQ",
+        "GYD",
+        "HKD",
+        "HNL",
+        "HTG",
+        "HUF",
+        "IDR",
+        "ILS",
+        "INR",
+        "IQD",
+        "IRR",
+        "ISK",
+        "JMD",
+        "JOD",
+        "JPY",
+        "KES",
+        "KGS",
+        "KHR",
+        "KMF",
+        "KPW",
+        "KRW",
+        "KWD",
+        "KYD",
+        "KZT",
+        "LAK",
+        "LBP",
+        "LKR",
+        "LRD",
+        "LSL",
+        "LYD",
+        "MAD",
+        "MDL",
+        "MGA",
+        "MKD",
+        "MMK",
+        "MNT",
+        "MOP",
+        "MRU",
+        "MUR",
+        "MVR",
+        "MWK",
+        "MXN",
+        "MXV",
+        "MYR",
+        "MZN",
+        "NAD",
+        "NGN",
+        "NIO",
+        "NOK",
+        "NPR",
+        "NZD",
+        "OMR",
+        "PAB",
+        "PEN",
+        "PGK",
+        "PHP",
+        "PKR",
+        "PLN",
+        "PYG",
+        "QAR",
+        "RON",
+        "RSD",
+        "RUB",
+        "RWF",
+        "SAR",
+        "SBD",
+        "SCR",
+        "SDG",
+        "SEK",
+        "SGD",
+        "SHP",
+        "SLE",
+        "SOS",
+        "SRD",
+        "SSP",
+        "STN",
+        "SVC",
+        "SYP",
+        "SZL",
+        "THB",
+        "TJS",
+        "TMT",
+        "TND",
+        "TOP",
+        "TRY",
+        "TTD",
+        "TWD",
+        "TZS",
+        "UAH",
+        "UGX",
+        "USD",
+        "USN",
+        "UYI",
+        "UYU",
+        "UYW",
+        "UZS",
+        "VED",
+        "VES",
+        "VND",
+        "VUV",
+        "WST",
+        "XAD",
+        "XAF",
+        "XAG",
+        "XAU",
+        "XBA",
+        "XBB",
+        "XBC",
+        "XBD",
+        "XCD",
+        "XCG",
+        "XDR",
+        "XOF",
+        "XPD",
+        "XPF",
+        "XPT",
+        "XSU",
+        "XTS",
+        "XUA",
+        "XXX",
+        "YER",
+        "ZAR",
+        "ZMW",
+        "ZWG"
+      ],
+      "$comment": "Generated by scripts/update-currencies.mjs from the official ISO 4217 active-currency list published by SIX Group (list-one.xml, published 2026-09-17) — not from Intl.supportedValuesOf('currency'), which lags the real registry. See docs/history/CHANGES.log #P004."
+    },
+    "country": {
+      "type": "string",
+      "enum": [
+        "AD",
+        "AE",
+        "AF",
+        "AG",
+        "AI",
+        "AL",
+        "AM",
+        "AO",
+        "AQ",
+        "AR",
+        "AS",
+        "AT",
+        "AU",
+        "AW",
+        "AX",
+        "AZ",
+        "BA",
+        "BB",
+        "BD",
+        "BE",
+        "BF",
+        "BG",
+        "BH",
+        "BI",
+        "BJ",
+        "BL",
+        "BM",
+        "BN",
+        "BO",
+        "BQ",
+        "BR",
+        "BS",
+        "BT",
+        "BV",
+        "BW",
+        "BY",
+        "BZ",
+        "CA",
+        "CC",
+        "CD",
+        "CF",
+        "CG",
+        "CH",
+        "CI",
+        "CK",
+        "CL",
+        "CM",
+        "CN",
+        "CO",
+        "CR",
+        "CU",
+        "CV",
+        "CW",
+        "CX",
+        "CY",
+        "CZ",
+        "DE",
+        "DJ",
+        "DK",
+        "DM",
+        "DO",
+        "DZ",
+        "EC",
+        "EE",
+        "EG",
+        "EH",
+        "ER",
+        "ES",
+        "ET",
+        "FI",
+        "FJ",
+        "FK",
+        "FM",
+        "FO",
+        "FR",
+        "GA",
+        "GB",
+        "GD",
+        "GE",
+        "GF",
+        "GG",
+        "GH",
+        "GI",
+        "GL",
+        "GM",
+        "GN",
+        "GP",
+        "GQ",
+        "GR",
+        "GS",
+        "GT",
+        "GU",
+        "GW",
+        "GY",
+        "HK",
+        "HM",
+        "HN",
+        "HR",
+        "HT",
+        "HU",
+        "ID",
+        "IE",
+        "IL",
+        "IM",
+        "IN",
+        "IO",
+        "IQ",
+        "IR",
+        "IS",
+        "IT",
+        "JE",
+        "JM",
+        "JO",
+        "JP",
+        "KE",
+        "KG",
+        "KH",
+        "KI",
+        "KM",
+        "KN",
+        "KP",
+        "KR",
+        "KW",
+        "KY",
+        "KZ",
+        "LA",
+        "LB",
+        "LC",
+        "LI",
+        "LK",
+        "LR",
+        "LS",
+        "LT",
+        "LU",
+        "LV",
+        "LY",
+        "MA",
+        "MC",
+        "MD",
+        "ME",
+        "MF",
+        "MG",
+        "MH",
+        "MK",
+        "ML",
+        "MM",
+        "MN",
+        "MO",
+        "MP",
+        "MQ",
+        "MR",
+        "MS",
+        "MT",
+        "MU",
+        "MV",
+        "MW",
+        "MX",
+        "MY",
+        "MZ",
+        "NA",
+        "NC",
+        "NE",
+        "NF",
+        "NG",
+        "NI",
+        "NL",
+        "NO",
+        "NP",
+        "NR",
+        "NU",
+        "NZ",
+        "OM",
+        "PA",
+        "PE",
+        "PF",
+        "PG",
+        "PH",
+        "PK",
+        "PL",
+        "PM",
+        "PN",
+        "PR",
+        "PS",
+        "PT",
+        "PW",
+        "PY",
+        "QA",
+        "RE",
+        "RO",
+        "RS",
+        "RU",
+        "RW",
+        "SA",
+        "SB",
+        "SC",
+        "SD",
+        "SE",
+        "SG",
+        "SH",
+        "SI",
+        "SJ",
+        "SK",
+        "SL",
+        "SM",
+        "SN",
+        "SO",
+        "SR",
+        "SS",
+        "ST",
+        "SV",
+        "SX",
+        "SY",
+        "SZ",
+        "TC",
+        "TD",
+        "TF",
+        "TG",
+        "TH",
+        "TJ",
+        "TK",
+        "TL",
+        "TM",
+        "TN",
+        "TO",
+        "TR",
+        "TT",
+        "TV",
+        "TW",
+        "TZ",
+        "UA",
+        "UG",
+        "UM",
+        "US",
+        "UY",
+        "UZ",
+        "VA",
+        "VC",
+        "VE",
+        "VG",
+        "VI",
+        "VN",
+        "VU",
+        "WF",
+        "WS",
+        "YE",
+        "YT",
+        "ZA",
+        "ZM",
+        "ZW"
+      ],
+      "$comment": "Generated by scripts/update-countries.mjs from the officially assigned ISO 3166-1 alpha-2 codes. Fetched from the Debian iso-codes project (https://salsa.debian.org/iso-codes-team/iso-codes/-/raw/main/data/iso_3166-1.json) and verified to match a human-retrieved snapshot of the ISO Online Browsing Platform (retrieved 2026-08-03 by hhkaos) before being trusted — iso.org itself returns 403 to automated requests. See docs/history/CHANGES.log #P005 / DECISIONS.md D006."
+    },
+    "license": {
+      "description": "A real SPDX License List identifier, or a URL to the license text. Never an invented identifier: the whole point of asking for SPDX here instead of prose is that a consumer can compare it against an allowlist.",
+      "type": "string",
+      "anyOf": [
+        {
+          "enum": [
+            "0BSD",
+            "3D-Slicer-1.0",
+            "AAL",
+            "Abstyles",
+            "AdaCore-doc",
+            "Adobe-2006",
+            "Adobe-Display-PostScript",
+            "Adobe-Glyph",
+            "Adobe-Utopia",
+            "ADSL",
+            "Advanced-Cryptics-Dictionary",
+            "AFL-1.1",
+            "AFL-1.2",
+            "AFL-2.0",
+            "AFL-2.1",
+            "AFL-3.0",
+            "Afmparse",
+            "AGPL-1.0",
+            "AGPL-1.0-only",
+            "AGPL-1.0-or-later",
+            "AGPL-3.0",
+            "AGPL-3.0-only",
+            "AGPL-3.0-or-later",
+            "Aladdin",
+            "ALGLIB-Documentation",
+            "AMD-newlib",
+            "AMDPLPA",
+            "AML",
+            "AML-glslang",
+            "AMPAS",
+            "ANTLR-PD",
+            "ANTLR-PD-fallback",
+            "any-OSI",
+            "any-OSI-perl-modules",
+            "Apache-1.0",
+            "Apache-1.1",
+            "Apache-2.0",
+            "APAFML",
+            "APL-1.0",
+            "App-s2p",
+            "APSL-1.0",
+            "APSL-1.1",
+            "APSL-1.2",
+            "APSL-2.0",
+            "Arphic-1999",
+            "Artistic-1.0",
+            "Artistic-1.0-cl8",
+            "Artistic-1.0-Perl",
+            "Artistic-2.0",
+            "Artistic-dist",
+            "Aspell-RU",
+            "ASWF-Digital-Assets-1.0",
+            "ASWF-Digital-Assets-1.1",
+            "Baekmuk",
+            "Bahyph",
+            "Barr",
+            "bcrypt-Solar-Designer",
+            "Beerware",
+            "Bitstream-Charter",
+            "Bitstream-Vera",
+            "BitTorrent-1.0",
+            "BitTorrent-1.1",
+            "blessing",
+            "BlueOak-1.0.0",
+            "Boehm-GC",
+            "Boehm-GC-without-fee",
+            "BOLA-1.1",
+            "Borceux",
+            "Brian-Gladman-2-Clause",
+            "Brian-Gladman-3-Clause",
+            "BSD-1-Clause",
+            "BSD-2-Clause",
+            "BSD-2-Clause-Darwin",
+            "BSD-2-Clause-first-lines",
+            "BSD-2-Clause-FreeBSD",
+            "BSD-2-Clause-NetBSD",
+            "BSD-2-Clause-Patent",
+            "BSD-2-Clause-pkgconf-disclaimer",
+            "BSD-2-Clause-Views",
+            "BSD-3-Clause",
+            "BSD-3-Clause-acpica",
+            "BSD-3-Clause-Attribution",
+            "BSD-3-Clause-Clear",
+            "BSD-3-Clause-flex",
+            "BSD-3-Clause-HP",
+            "BSD-3-Clause-LBNL",
+            "BSD-3-Clause-Modification",
+            "BSD-3-Clause-No-Military-License",
+            "BSD-3-Clause-No-Nuclear-License",
+            "BSD-3-Clause-No-Nuclear-License-2014",
+            "BSD-3-Clause-No-Nuclear-Warranty",
+            "BSD-3-Clause-Open-MPI",
+            "BSD-3-Clause-Sun",
+            "BSD-3-Clause-Tso",
+            "BSD-4-Clause",
+            "BSD-4-Clause-Shortened",
+            "BSD-4-Clause-UC",
+            "BSD-4.3RENO",
+            "BSD-4.3TAHOE",
+            "BSD-Advertising-Acknowledgement",
+            "BSD-Attribution-HPND-disclaimer",
+            "BSD-Inferno-Nettverk",
+            "BSD-Mark-Modifications",
+            "BSD-Protection",
+            "BSD-Source-beginning-file",
+            "BSD-Source-Code",
+            "BSD-Systemics",
+            "BSD-Systemics-W3Works",
+            "BSL-1.0",
+            "Buddy",
+            "BUSL-1.1",
+            "bzip2-1.0.5",
+            "bzip2-1.0.6",
+            "C-UDA-1.0",
+            "CAL-1.0",
+            "CAL-1.0-Combined-Work-Exception",
+            "Caldera",
+            "Caldera-no-preamble",
+            "CAPEC-tou",
+            "Catharon",
+            "CATOSL-1.1",
+            "CC-BY-1.0",
+            "CC-BY-2.0",
+            "CC-BY-2.5",
+            "CC-BY-2.5-AU",
+            "CC-BY-3.0",
+            "CC-BY-3.0-AT",
+            "CC-BY-3.0-AU",
+            "CC-BY-3.0-DE",
+            "CC-BY-3.0-IGO",
+            "CC-BY-3.0-NL",
+            "CC-BY-3.0-US",
+            "CC-BY-4.0",
+            "CC-BY-NC-1.0",
+            "CC-BY-NC-2.0",
+            "CC-BY-NC-2.5",
+            "CC-BY-NC-3.0",
+            "CC-BY-NC-3.0-DE",
+            "CC-BY-NC-4.0",
+            "CC-BY-NC-ND-1.0",
+            "CC-BY-NC-ND-2.0",
+            "CC-BY-NC-ND-2.5",
+            "CC-BY-NC-ND-3.0",
+            "CC-BY-NC-ND-3.0-DE",
+            "CC-BY-NC-ND-3.0-IGO",
+            "CC-BY-NC-ND-4.0",
+            "CC-BY-NC-SA-1.0",
+            "CC-BY-NC-SA-2.0",
+            "CC-BY-NC-SA-2.0-DE",
+            "CC-BY-NC-SA-2.0-FR",
+            "CC-BY-NC-SA-2.0-UK",
+            "CC-BY-NC-SA-2.5",
+            "CC-BY-NC-SA-3.0",
+            "CC-BY-NC-SA-3.0-DE",
+            "CC-BY-NC-SA-3.0-IGO",
+            "CC-BY-NC-SA-4.0",
+            "CC-BY-ND-1.0",
+            "CC-BY-ND-2.0",
+            "CC-BY-ND-2.5",
+            "CC-BY-ND-3.0",
+            "CC-BY-ND-3.0-DE",
+            "CC-BY-ND-4.0",
+            "CC-BY-SA-1.0",
+            "CC-BY-SA-2.0",
+            "CC-BY-SA-2.0-UK",
+            "CC-BY-SA-2.1-JP",
+            "CC-BY-SA-2.5",
+            "CC-BY-SA-3.0",
+            "CC-BY-SA-3.0-AT",
+            "CC-BY-SA-3.0-DE",
+            "CC-BY-SA-3.0-IGO",
+            "CC-BY-SA-4.0",
+            "CC-PDDC",
+            "CC-PDM-1.0",
+            "CC-SA-1.0",
+            "CC0-1.0",
+            "CDDL-1.0",
+            "CDDL-1.1",
+            "CDL-1.0",
+            "CDLA-Permissive-1.0",
+            "CDLA-Permissive-2.0",
+            "CDLA-Sharing-1.0",
+            "CECILL-1.0",
+            "CECILL-1.1",
+            "CECILL-2.0",
+            "CECILL-2.1",
+            "CECILL-B",
+            "CECILL-C",
+            "CERN-OHL-1.1",
+            "CERN-OHL-1.2",
+            "CERN-OHL-P-2.0",
+            "CERN-OHL-S-2.0",
+            "CERN-OHL-W-2.0",
+            "CFITSIO",
+            "check-cvs",
+            "checkmk",
+            "ClArtistic",
+            "Clips",
+            "CMU-Mach",
+            "CMU-Mach-nodoc",
+            "CNRI-Jython",
+            "CNRI-Python",
+            "CNRI-Python-GPL-Compatible",
+            "COIL-1.0",
+            "Community-Spec-1.0",
+            "Condor-1.1",
+            "copyleft-next-0.3.0",
+            "copyleft-next-0.3.1",
+            "Cornell-Lossless-JPEG",
+            "CPAL-1.0",
+            "CPL-1.0",
+            "CPOL-1.02",
+            "Cronyx",
+            "Crossword",
+            "CryptoSwift",
+            "CrystalStacker",
+            "CUA-OPL-1.0",
+            "Cube",
+            "curl",
+            "cve-tou",
+            "D-FSL-1.0",
+            "DEC-3-Clause",
+            "diffmark",
+            "DL-DE-BY-2.0",
+            "DL-DE-ZERO-2.0",
+            "DOC",
+            "DocBook-DTD",
+            "DocBook-Schema",
+            "DocBook-Stylesheet",
+            "DocBook-XML",
+            "Dotseqn",
+            "DRL-1.0",
+            "DRL-1.1",
+            "DSDP",
+            "dtoa",
+            "dvipdfm",
+            "ECL-1.0",
+            "ECL-2.0",
+            "eCos-2.0",
+            "EFL-1.0",
+            "EFL-2.0",
+            "eGenix",
+            "Elastic-2.0",
+            "Entessa",
+            "EPICS",
+            "EPL-1.0",
+            "EPL-2.0",
+            "ErlPL-1.1",
+            "ESA-PL-permissive-2.4",
+            "ESA-PL-strong-copyleft-2.4",
+            "ESA-PL-weak-copyleft-2.4",
+            "etalab-2.0",
+            "EUDatagrid",
+            "EUPL-1.0",
+            "EUPL-1.1",
+            "EUPL-1.2",
+            "Eurosym",
+            "Fair",
+            "FBM",
+            "FDK-AAC",
+            "Ferguson-Twofish",
+            "Frameworx-1.0",
+            "FreeBSD-DOC",
+            "FreeImage",
+            "FSFAP",
+            "FSFAP-no-warranty-disclaimer",
+            "FSFUL",
+            "FSFULLR",
+            "FSFULLRSD",
+            "FSFULLRWD",
+            "FSL-1.1-ALv2",
+            "FSL-1.1-MIT",
+            "FTL",
+            "Furuseth",
+            "fwlw",
+            "Game-Programming-Gems",
+            "GCR-docs",
+            "GD",
+            "generic-xts",
+            "GFDL-1.1",
+            "GFDL-1.1-invariants-only",
+            "GFDL-1.1-invariants-or-later",
+            "GFDL-1.1-no-invariants-only",
+            "GFDL-1.1-no-invariants-or-later",
+            "GFDL-1.1-only",
+            "GFDL-1.1-or-later",
+            "GFDL-1.2",
+            "GFDL-1.2-invariants-only",
+            "GFDL-1.2-invariants-or-later",
+            "GFDL-1.2-no-invariants-only",
+            "GFDL-1.2-no-invariants-or-later",
+            "GFDL-1.2-only",
+            "GFDL-1.2-or-later",
+            "GFDL-1.3",
+            "GFDL-1.3-invariants-only",
+            "GFDL-1.3-invariants-or-later",
+            "GFDL-1.3-no-invariants-only",
+            "GFDL-1.3-no-invariants-or-later",
+            "GFDL-1.3-only",
+            "GFDL-1.3-or-later",
+            "Giftware",
+            "GL2PS",
+            "Glide",
+            "Glulxe",
+            "GLWTPL",
+            "gnuplot",
+            "GPL-1.0",
+            "GPL-1.0-only",
+            "GPL-1.0-or-later",
+            "GPL-1.0+",
+            "GPL-2.0",
+            "GPL-2.0-only",
+            "GPL-2.0-or-later",
+            "GPL-2.0-with-autoconf-exception",
+            "GPL-2.0-with-bison-exception",
+            "GPL-2.0-with-classpath-exception",
+            "GPL-2.0-with-font-exception",
+            "GPL-2.0-with-GCC-exception",
+            "GPL-2.0+",
+            "GPL-3.0",
+            "GPL-3.0-only",
+            "GPL-3.0-or-later",
+            "GPL-3.0-with-autoconf-exception",
+            "GPL-3.0-with-GCC-exception",
+            "GPL-3.0+",
+            "Graphics-Gems",
+            "gSOAP-1.3b",
+            "gtkbook",
+            "Gutmann",
+            "HaskellReport",
+            "HDF5",
+            "hdparm",
+            "HIDAPI",
+            "Hippocratic-2.1",
+            "HP-1986",
+            "HP-1989",
+            "HPND",
+            "HPND-DEC",
+            "HPND-doc",
+            "HPND-doc-sell",
+            "HPND-export-US",
+            "HPND-export-US-acknowledgement",
+            "HPND-export-US-modify",
+            "HPND-export2-US",
+            "HPND-Fenneberg-Livingston",
+            "HPND-INRIA-IMAG",
+            "HPND-Intel",
+            "HPND-Kevlin-Henney",
+            "HPND-Markus-Kuhn",
+            "HPND-merchantability-variant",
+            "HPND-MIT-disclaimer",
+            "HPND-Netrek",
+            "HPND-Pbmplus",
+            "HPND-sell-MIT-disclaimer-xserver",
+            "HPND-sell-regexpr",
+            "HPND-sell-variant",
+            "HPND-sell-variant-critical-systems",
+            "HPND-sell-variant-MIT-disclaimer",
+            "HPND-sell-variant-MIT-disclaimer-rev",
+            "HPND-SMC",
+            "HPND-UC",
+            "HPND-UC-export-US",
+            "HTMLTIDY",
+            "hyphen-bulgarian",
+            "IBM-pibs",
+            "ICU",
+            "IEC-Code-Components-EULA",
+            "IJG",
+            "IJG-short",
+            "ImageMagick",
+            "iMatix",
+            "Imlib2",
+            "Info-ZIP",
+            "Inner-Net-2.0",
+            "InnoSetup",
+            "Intel",
+            "Intel-ACPI",
+            "Interbase-1.0",
+            "IPA",
+            "IPL-1.0",
+            "ISC",
+            "ISC-Veillard",
+            "ISO-permission",
+            "Jam",
+            "JasPer-2.0",
+            "jove",
+            "JPL-image",
+            "JPNIC",
+            "JSON",
+            "Kastrup",
+            "Kazlib",
+            "Knuth-CTAN",
+            "LAL-1.2",
+            "LAL-1.3",
+            "Latex2e",
+            "Latex2e-translated-notice",
+            "Leptonica",
+            "LGPL-2.0",
+            "LGPL-2.0-only",
+            "LGPL-2.0-or-later",
+            "LGPL-2.0+",
+            "LGPL-2.1",
+            "LGPL-2.1-only",
+            "LGPL-2.1-or-later",
+            "LGPL-2.1+",
+            "LGPL-3.0",
+            "LGPL-3.0-only",
+            "LGPL-3.0-or-later",
+            "LGPL-3.0+",
+            "LGPLLR",
+            "Libpng",
+            "libpng-1.6.35",
+            "libpng-2.0",
+            "libselinux-1.0",
+            "libtiff",
+            "libutil-David-Nugent",
+            "LiLiQ-P-1.1",
+            "LiLiQ-R-1.1",
+            "LiLiQ-Rplus-1.1",
+            "Linux-man-pages-1-para",
+            "Linux-man-pages-copyleft",
+            "Linux-man-pages-copyleft-2-para",
+            "Linux-man-pages-copyleft-var",
+            "Linux-OpenIB",
+            "LOOP",
+            "LPD-document",
+            "LPL-1.0",
+            "LPL-1.02",
+            "LPPL-1.0",
+            "LPPL-1.1",
+            "LPPL-1.2",
+            "LPPL-1.3a",
+            "LPPL-1.3c",
+            "lsof",
+            "Lucida-Bitmap-Fonts",
+            "LZMA-SDK-9.11-to-9.20",
+            "LZMA-SDK-9.22",
+            "Mackerras-3-Clause",
+            "Mackerras-3-Clause-acknowledgment",
+            "magaz",
+            "mailprio",
+            "MakeIndex",
+            "man2html",
+            "Martin-Birgmeier",
+            "McPhee-slideshow",
+            "metamail",
+            "Minpack",
+            "MIPS",
+            "MirOS",
+            "MIT",
+            "MIT-0",
+            "MIT-advertising",
+            "MIT-Click",
+            "MIT-CMU",
+            "MIT-enna",
+            "MIT-feh",
+            "MIT-Festival",
+            "MIT-Khronos-old",
+            "MIT-Modern-Variant",
+            "MIT-open-group",
+            "MIT-STK",
+            "MIT-testregex",
+            "MIT-Wu",
+            "MITNFA",
+            "MMIXware",
+            "MMPL-1.0.1",
+            "Motosoto",
+            "MPEG-SSG",
+            "mpi-permissive",
+            "mpich2",
+            "MPL-1.0",
+            "MPL-1.1",
+            "MPL-2.0",
+            "MPL-2.0-no-copyleft-exception",
+            "mplus",
+            "MS-LPL",
+            "MS-PL",
+            "MS-RL",
+            "MTLL",
+            "MulanPSL-1.0",
+            "MulanPSL-2.0",
+            "Multics",
+            "Mup",
+            "NAIST-2003",
+            "NASA-1.3",
+            "Naumen",
+            "NBPL-1.0",
+            "NCBI-PD",
+            "NCGL-UK-2.0",
+            "NCL",
+            "NCSA",
+            "Net-SNMP",
+            "NetCDF",
+            "Newsletr",
+            "NGPL",
+            "ngrep",
+            "NICTA-1.0",
+            "NIST-PD",
+            "NIST-PD-fallback",
+            "NIST-PD-TNT",
+            "NIST-Software",
+            "NLOD-1.0",
+            "NLOD-2.0",
+            "NLPL",
+            "Nokia",
+            "NOSL",
+            "Noweb",
+            "NPL-1.0",
+            "NPL-1.1",
+            "NPOSL-3.0",
+            "NRL",
+            "NTIA-PD",
+            "NTP",
+            "NTP-0",
+            "Nunit",
+            "O-UDA-1.0",
+            "OAR",
+            "OCCT-PL",
+            "OCLC-2.0",
+            "ODbL-1.0",
+            "ODC-By-1.0",
+            "OFFIS",
+            "OFL-1.0",
+            "OFL-1.0-no-RFN",
+            "OFL-1.0-RFN",
+            "OFL-1.1",
+            "OFL-1.1-no-RFN",
+            "OFL-1.1-RFN",
+            "OGC-1.0",
+            "OGDL-Taiwan-1.0",
+            "OGL-Canada-2.0",
+            "OGL-UK-1.0",
+            "OGL-UK-2.0",
+            "OGL-UK-3.0",
+            "OGTSL",
+            "OLDAP-1.1",
+            "OLDAP-1.2",
+            "OLDAP-1.3",
+            "OLDAP-1.4",
+            "OLDAP-2.0",
+            "OLDAP-2.0.1",
+            "OLDAP-2.1",
+            "OLDAP-2.2",
+            "OLDAP-2.2.1",
+            "OLDAP-2.2.2",
+            "OLDAP-2.3",
+            "OLDAP-2.4",
+            "OLDAP-2.5",
+            "OLDAP-2.6",
+            "OLDAP-2.7",
+            "OLDAP-2.8",
+            "OLFL-1.3",
+            "OML",
+            "OpenMDW-1.0",
+            "OpenPBS-2.3",
+            "OpenSSL",
+            "OpenSSL-standalone",
+            "OpenVision",
+            "OPL-1.0",
+            "OPL-UK-3.0",
+            "OPUBL-1.0",
+            "OSC-1.0",
+            "OSET-PL-2.1",
+            "OSL-1.0",
+            "OSL-1.1",
+            "OSL-2.0",
+            "OSL-2.1",
+            "OSL-3.0",
+            "OSSP",
+            "PADL",
+            "ParaType-Free-Font-1.3",
+            "Parity-6.0.0",
+            "Parity-7.0.0",
+            "PDDL-1.0",
+            "PHP-3.0",
+            "PHP-3.01",
+            "Pixar",
+            "pkgconf",
+            "Plexus",
+            "pnmstitch",
+            "PolyForm-Noncommercial-1.0.0",
+            "PolyForm-Small-Business-1.0.0",
+            "PostgreSQL",
+            "PPL",
+            "PSF-2.0",
+            "psfrag",
+            "psutils",
+            "Python-2.0",
+            "Python-2.0.1",
+            "python-ldap",
+            "Qhull",
+            "QPL-1.0",
+            "QPL-1.0-INRIA-2004",
+            "radvd",
+            "Rdisc",
+            "RHeCos-1.1",
+            "RPL-1.1",
+            "RPL-1.5",
+            "RPSL-1.0",
+            "RSA-MD",
+            "RSCPL",
+            "Ruby",
+            "Ruby-pty",
+            "SAX-PD",
+            "SAX-PD-2.0",
+            "Saxpath",
+            "SCEA",
+            "SchemeReport",
+            "Sendmail",
+            "Sendmail-8.23",
+            "Sendmail-Open-Source-1.1",
+            "SGI-B-1.0",
+            "SGI-B-1.1",
+            "SGI-B-2.0",
+            "SGI-OpenGL",
+            "SGMLUG-PM",
+            "SGP4",
+            "SHL-0.5",
+            "SHL-0.51",
+            "SimPL-2.0",
+            "SISSL",
+            "SISSL-1.2",
+            "SL",
+            "Sleepycat",
+            "SMAIL-GPL",
+            "SMLNJ",
+            "SMPPL",
+            "SNIA",
+            "snprintf",
+            "SOFA",
+            "softSurfer",
+            "Soundex",
+            "Spencer-86",
+            "Spencer-94",
+            "Spencer-99",
+            "SPL-1.0",
+            "ssh-keyscan",
+            "SSH-OpenSSH",
+            "SSH-short",
+            "SSLeay-standalone",
+            "SSPL-1.0",
+            "StandardML-NJ",
+            "SugarCRM-1.1.3",
+            "SUL-1.0",
+            "Sun-PPP",
+            "Sun-PPP-2000",
+            "SunPro",
+            "SWL",
+            "swrule",
+            "Symlinks",
+            "TAPR-OHL-1.0",
+            "TCL",
+            "TCP-wrappers",
+            "TekHVC",
+            "TermReadKey",
+            "TGPPL-1.0",
+            "ThirdEye",
+            "threeparttable",
+            "TMate",
+            "TORQUE-1.1",
+            "TOSL",
+            "TPDL",
+            "TPL-1.0",
+            "TrustedQSL",
+            "TTWL",
+            "TTYP0",
+            "TU-Berlin-1.0",
+            "TU-Berlin-2.0",
+            "Ubuntu-font-1.0",
+            "UCAR",
+            "UCL-1.0",
+            "ulem",
+            "UMich-Merit",
+            "Unicode-3.0",
+            "Unicode-DFS-2015",
+            "Unicode-DFS-2016",
+            "Unicode-TOU",
+            "UnixCrypt",
+            "Unlicense",
+            "Unlicense-libtelnet",
+            "Unlicense-libwhirlpool",
+            "UnRAR",
+            "UPL-1.0",
+            "URT-RLE",
+            "Vim",
+            "Vixie-Cron",
+            "VOSTROM",
+            "VSL-1.0",
+            "W3C",
+            "W3C-19980720",
+            "W3C-20150513",
+            "w3m",
+            "Watcom-1.0",
+            "Widget-Workshop",
+            "WordNet",
+            "Wsuipa",
+            "WTFNMFPL",
+            "WTFPL",
+            "wwl",
+            "wxWindows",
+            "X11",
+            "X11-distribute-modifications-variant",
+            "X11-no-permit-persons",
+            "X11-swapped",
+            "Xdebug-1.03",
+            "Xerox",
+            "Xfig",
+            "XFree86-1.1",
+            "xinetd",
+            "xkeyboard-config-Zinoviev",
+            "xlock",
+            "Xnet",
+            "xpp",
+            "XSkat",
+            "xzoom",
+            "YPL-1.0",
+            "YPL-1.1",
+            "Zed",
+            "Zeeff",
+            "Zend-2.0",
+            "Zimbra-1.3",
+            "Zimbra-1.4",
+            "Zlib",
+            "zlib-acknowledgement",
+            "ZPL-1.1",
+            "ZPL-2.0",
+            "ZPL-2.1"
+          ],
+          "$comment": "Generated by scripts/update-licenses.mjs from the official SPDX License List (v3.28.0, 3.28.0, released 2026-02-20T00:00:00Z) — github.com/spdx/license-list-data, the SPDX project's own repository. Includes deprecated IDs: SPDX states these remain valid, merely discouraged for new use. See docs/history/CHANGES.log #P007."
+        },
+        {
+          "format": "iri",
+          "pattern": "^https?://",
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          }
+        }
+      ]
+    },
+    "dataLicense": {
+      "type": "string",
+      "enum": [
+        "CC-BY-1.0",
+        "CC-BY-2.0",
+        "CC-BY-2.5",
+        "CC-BY-2.5-AU",
+        "CC-BY-3.0",
+        "CC-BY-3.0-AT",
+        "CC-BY-3.0-AU",
+        "CC-BY-3.0-DE",
+        "CC-BY-3.0-IGO",
+        "CC-BY-3.0-NL",
+        "CC-BY-3.0-US",
+        "CC-BY-4.0",
+        "CC-PDDC",
+        "CC-PDM-1.0",
+        "CC0-1.0",
+        "ODC-By-1.0",
+        "PDDL-1.0"
+      ],
+      "$comment": "Generated by scripts/update-licenses.mjs, same source and release as $defs.license. The subset with no clause (NonCommercial, NoDerivatives, ShareAlike) that can block a directory from redistributing or transforming an event, and no software-copyleft ambiguity. Used only by the recommended (quality) profile, never validity. See docs/history/CHANGES.log #P007 / DECISIONS.md D008."
+    },
+    "languageTag": {
+      "description": "The CORE of a BCP 47 (RFC 5646) language tag: language, with optional script, region and variant subtags (\"es\", \"ca\", \"en\", \"es-MX\", \"zh-Hant\", \"ca-valencia\"), each checked against the real IANA Language Subtag Registry. Deliberately does NOT accept extended language subtags, extension singletons (\"-u-...\"), private use (\"x-...\") or grandfathered tags (\"i-klingon\") — none has a real use case for the language of an event's text, and grandfathered tags are relics RFC 5646 itself deprecates in favour of the modern subtag form. Shared by languages (spoken at the event), textLanguage (the document's own text) and the keys of translations, so the three can never drift into three notions of what a language is.",
+      "type": "string",
+      "pattern": "^[A-Za-z]{2,8}(-[A-Za-z0-9]{2,8})*$",
+      "format": "ote-language-tag"
+    },
+    "languageMap": {
+      "description": "The shape every translations map shares, wherever it appears: keys are BCP 47 tags, and an empty map is invalid — saying nothing is already done by omitting the field, the same rule location follows. Defined once so the five maps of this spec can never drift into five notions of what a language key is.",
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "$ref": "#/$defs/languageTag"
+      }
+    },
+    "translations": {
+      "description": "Free text in other languages, keyed by BCP 47 tag. A map and not a list because the language IS the key: one entry per language, and no way to publish two Spanish versions that contradict each other.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/languageMap"
+        }
+      ],
+      "additionalProperties": {
+        "$ref": "#/$defs/translation"
+      }
+    },
+    "translation": {
+      "description": "One language's version of an event's OWN free text: name and description, the two fields every destination format prints. Not a mirror of the whole event — text that lives inside offers, eligibility or partOf is translated where it lives, by that object's own translations map. A positional mirror (translations.es.offers[0].name) is the one shape this spec refuses: a list has no stable keys, so reordering the offers would silently attach a translation to the wrong tier.",
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "name": {
+          "description": "The event's name in this language.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "Sesión semanal de programación — Rust Girona"
+          ]
+        },
+        "description": {
+          "description": "The event's description in this language. Plain text or Markdown, like the field it translates.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "Cada semana nos juntamos en línea para picar Rust un rato."
+          ]
+        }
+      },
+      "anyOf": [
+        {
+          "description": "A translation entry is only a translation if it translates something OTE recognizes. Extension fields may still ride alongside name/description — this only forbids an entry whose entire content is unrecognized, which minProperties alone cannot catch.",
+          "required": [
+            "name"
+          ]
+        },
+        {
+          "required": [
+            "description"
+          ]
+        }
+      ]
+    },
+    "feedTranslations": {
+      "description": "A feed's OWN title and description in other languages, keyed by BCP 47 tag. Never its events': each event carries its own translations, because each event has its own text and its own languages.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/languageMap"
+        }
+      ],
+      "additionalProperties": {
+        "$ref": "#/$defs/feedTranslation"
+      }
+    },
+    "offerTranslations": {
+      "description": "This offer's name in other languages. Local to the offer, so no consumer has to line up two lists by position. It exists because offers[].name stays FREE TEXT on purpose: a kind enum (general, early-bird, student) would have been multilingual for free, and it would also have taken away the organiser's right to name their own tickets. Free text is the choice; translating it is the price.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/languageMap"
+        }
+      ],
+      "additionalProperties": {
+        "$ref": "#/$defs/offerTranslation"
+      }
+    },
+    "offerTranslation": {
+      "description": "One language's version of an offer's free text. Only name: price is a number, currency is a code, availability is an enum — none of them has a language.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "This ticket's name in this language.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "Students",
+            "Estudiantes"
+          ]
+        }
+      }
+    },
+    "eligibilityTranslations": {
+      "description": "This condition's note in other languages. Only note is translated: type is an enum, and an enum is multilingual for free — a consumer renders members-only in the reader's language without anyone translating the data.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/languageMap"
+        }
+      ],
+      "additionalProperties": {
+        "$ref": "#/$defs/eligibilityTranslation"
+      }
+    },
+    "eligibilityTranslation": {
+      "description": "One language's version of the condition in words.",
+      "type": "object",
+      "required": [
+        "note"
+      ],
+      "properties": {
+        "note": {
+          "description": "The condition, in this language.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "Miembros del Discord de Rust Girona"
+          ]
+        }
+      }
+    },
+    "partOfTranslations": {
+      "description": "The series' or multi-part event's name in other languages. The id is never translated: it is an identifier, and translating it would split one series into two.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/languageMap"
+        }
+      ],
+      "additionalProperties": {
+        "$ref": "#/$defs/partOfTranslation"
+      }
+    },
+    "partOfTranslation": {
+      "description": "One language's version of the series' display name.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "The series' or multi-part event's name in this language.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "Sesión semanal de programación"
+          ]
+        }
+      }
+    },
+    "feedTranslation": {
+      "description": "One language's version of a feed's own free text.",
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "title": {
+          "description": "The feed's title in this language.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "Rust Girona events"
+          ]
+        },
+        "description": {
+          "description": "The feed's description in this language.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "Weekly online Rust coding sessions, in Catalan and Spanish."
+          ]
+        }
+      },
+      "anyOf": [
+        {
+          "description": "Same rule as an event's own translation: extension fields may still ride alongside title/description, but an entry whose entire content is unrecognized is not a translation.",
+          "required": [
+            "title"
+          ]
+        },
+        {
+          "required": [
+            "description"
+          ]
+        }
+      ]
+    },
+    "organizers": {
+      "description": "Who runs the event or the feed. Kept deliberately small: a name, and where to find them.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/organizer"
+      }
+    },
+    "organizer": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "$comment": "email is deliberately NOT in the recommended profile: an .ics importer does not always have it, and warning about a missing address would push someone into publishing contact data they chose not to publish.",
+      "properties": {
+        "name": {
+          "description": "Display name of the organiser.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "PyAlmería",
+            "Ada Lovelace"
+          ]
+        },
+        "url": {
+          "description": "Where this organiser lives on the web — their own site, or their profile on the platform they publish from.",
+          "type": "string",
+          "format": "iri",
+          "pattern": "^https?://",
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
+          "examples": [
+            "https://pyalmeria.example",
+            "https://www.meetup.com/pyalmeria/"
+          ]
+        },
+        "email": {
+          "description": "Address for enquiries about the event. A ROLE address (info@, hola@) rather than someone's personal mailbox: a feed is open and crawlable, and what goes in it cannot be unpublished. Optional and deliberately NOT recommended. It exists because without it there is no valid iCal ORGANIZER to emit (a CAL-ADDRESS is in practice a mailto:) and no RSS 2.0 <author>, which requires an email. Written bare, without the mailto: prefix — the exporter adds it. Never populate it from a source that is not itself publicly published.",
+          "type": "string",
+          "format": "email",
+          "examples": [
+            "hola@pyalmeria.example",
+            "info@gdgmadrid.example"
+          ]
+        },
+        "type": {
+          "description": "Organisation or person. A translator has to pick a schema.org @type either way, and Organization is the tolerant choice.",
+          "enum": [
+            "organization",
+            "person"
+          ],
+          "default": "organization",
+          "examples": [
+            "organization",
+            "person"
+          ]
+        }
+      }
+    },
+    "speakers": {
+      "description": "Who gives the talk(s). Kept deliberately small, like organizers: a name, where they are from, and where to find them.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/speaker"
+      }
+    },
+    "speaker": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "$comment": "sameAs is HTTP(S) only, not a DID / AT-URI / acct: handle: schema.org sameAs is a Web-page URL, and a decentralised identifier is an identifier, not a page — emit the public profile URL instead. affiliation is a bare string on purpose: the alternative shape people reach for is an object with a url, which is a second organisation to describe and that is organizers/sponsors territory. speakers is deliberately NOT in the recommended profile: an .ics importer never has speaker data, and most events in a community feed are meetups whose speaker is often the organiser anyway.",
+      "properties": {
+        "name": {
+          "description": "Display name of the speaker. A proper noun: never translated.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "Ada Lovelace",
+            "Grace Hopper"
+          ]
+        },
+        "affiliation": {
+          "description": "The organisation this speaker is there as — ONE display name, the way an agenda writes it (\"Martí Cristobal, Bettatech\"). It exists so that the company does NOT end up inside name: name is the person, and a name carrying an employer stops matching the same person anywhere else. A proper noun, never translated, same discipline as organizers[].name. Deliberately a string and not an object: this is a label on the speaker, not a second organisation to describe — if it needs a URL of its own it is probably an organizer or a sponsor. Meaningless and ignored on type: organization, where name already IS the organisation. Maps to schema.org Person.affiliation.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "Bettatech",
+            "Igalia"
+          ]
+        },
+        "url": {
+          "description": "The speaker's canonical page — their own site, or their main profile. One URL. Same rules as organizers[].url. Other profiles go in sameAs.",
+          "type": "string",
+          "format": "iri",
+          "pattern": "^https?://",
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
+          "examples": [
+            "https://ada.example"
+          ]
+        },
+        "sameAs": {
+          "description": "Other profile pages for this SAME person — Mastodon, LinkedIn, GitHub, a personal site distinct from url. A list; order not significant; only exact repeats rejected. Maps to schema.org Person.sameAs. HTTP(S) only: not a DID or handle. Google's Event rich-result docs do not document a nested performer.sameAs — the value is generic schema.org consumers and OTE directories.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "format": "iri",
+            "pattern": "^https?://",
+            "not": {
+              "pattern": "^https?://[^/?#]*@"
+            }
+          },
+          "examples": [
+            [
+              "https://fosstodon.org/@ada",
+              "https://www.linkedin.com/in/ada-lovelace"
+            ]
+          ]
+        },
+        "type": {
+          "description": "Person or organisation. A translator picks a schema.org @type either way, and Person is the tolerant choice for a speaker.",
+          "enum": [
+            "person",
+            "organization"
+          ],
+          "default": "person",
+          "examples": [
+            "person",
+            "organization"
+          ]
+        }
+      }
+    },
+    "contributing": {
+      "description": "URL for reporting or proposing a data change — an issue tracker, a form, an OTE editor deep link (?repo=…), or a mailto: role address. Accepts an HTTP(S) IRI OR a mailto: URI with exactly one bare address and no mail headers. A mailto: carries the same discipline as organizers[].email: a role address (hello@, corrections@), never a personal mailbox, and never populated from a source that is not itself publicly published. The first field of this spec to accept a non-HTTP scheme — see DECISIONS.md.",
+      "type": "string",
+      "anyOf": [
+        {
+          "format": "iri",
+          "pattern": "^https?://",
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          }
+        },
+        {
+          "pattern": "^mailto:[^\\s?@,#/\\[\\]]+@[^\\s?@,#/\\[\\]]+$"
+        }
+      ],
+      "examples": [
+        "https://github.com/pyalmeria/eventos/issues/new",
+        "https://tools.opentechevents.org/editor/?repo=rustmadrid/events",
+        "mailto:hello@dev.events"
+      ]
+    },
+    "partOf": {
+      "description": "A reference to the whole this occurrence belongs to. Identity only — no dates: the occurrence already carries them.",
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "description": "Stable identifier of the series or multi-part event. Same rules as the event's id: an HTTP(S) IRI under a domain the publisher controls — not necessarily one they own, a platform page (Meetup, GitHub Pages, LinkedIn) works too — minted once and not percent-encoded later into a second spelling. It does NOT have to resolve to an OTE document — it is what lets a consumer group occurrences.",
+          "type": "string",
+          "format": "iri",
+          "pattern": "^https?://",
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
+          "examples": [
+            "https://rustmadrid.example/meetups",
+            "https://pyalmeria.example/study-jams/2026-testing"
+          ]
+        },
+        "name": {
+          "description": "Display name of the series or multi-part event, so a consumer can group occurrences without resolving the id.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "Rust Madrid — meetup mensual",
+            "Study Jam de testing en Python (3 sesiones)"
+          ]
+        },
+        "url": {
+          "description": "Page describing the series or the multi-part event as a whole.",
+          "type": "string",
+          "format": "iri",
+          "pattern": "^https?://",
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
+          "examples": [
+            "https://rustmadrid.example/meetups"
+          ]
+        },
+        "type": {
+          "description": "series: independent occurrences that share an identity (a monthly meetup). multipart: parts of ONE event, published as one document per part because each part has its own date, time or room — the three sessions of a study jam on non-consecutive Saturdays, and equally the seventeen talks of a single conference day. What makes it multipart is that the parts are not attended or cancelled independently and there is one registration for the whole; the distance between the dates decides nothing. series is the tolerant choice, and the choice changes the translation: a series becomes schema.org EventSeries, a multi-part event becomes an Event whose parts are its subEvent.",
+          "enum": [
+            "series",
+            "multipart"
+          ],
+          "default": "series",
+          "examples": [
+            "series",
+            "multipart"
+          ]
+        },
+        "translations": {
+          "description": "The series' display name in other languages. Its id stays untranslated — an identifier with two spellings is two series.",
+          "$ref": "#/$defs/partOfTranslations",
+          "examples": [
+            {
+              "es": {
+                "name": "Sesión semanal de programación"
+              }
+            }
+          ]
+        },
+        "offers": {
+          "description": "New in v0.5. The SHARED admission of a multi-part event — the price of attending the whole set — written identically on every part that carries it, so a consumer holding a single part document can price it without resolving the parent. Same shape as event.offers ($defs/offers). A part that omits its own offers, in a document that carries partOf.offers, is COVERED by this admission — the one place an absent offers list means something other than unknown. Across the parts of one set (same partOf.id) these blocks must be equal by value — see feed.schema.json's sharedOffersConsistent. Tier-specific coverage, per-day passes, bundles and coupons are out of scope for v0.5 (see DECISIONS.md).",
+          "$ref": "#/$defs/offers",
+          "examples": [
+            [
+              {
+                "name": "Early bird",
+                "price": 180,
+                "currency": "EUR",
+                "url": "https://trgcon.example/tickets",
+                "closesAt": "2026-09-01T23:59:59+02:00"
+              },
+              {
+                "name": "General",
+                "price": 240,
+                "currency": "EUR",
+                "url": "https://trgcon.example/tickets"
+              }
+            ]
+          ]
+        }
+      }
+    },
+    "location": {
+      "description": "What is KNOWN about where the event happens. Not the same question as attendanceMode, which states the organiser's intent.",
+      "type": "object",
+      "properties": {
+        "venue": {
+          "description": "Human-readable physical location, in one line of free text: the name of the place plus as much address as it takes to get there — how much is your call. Its presence means the event has a physical venue. It is not made redundant by address, because joining address's parts back up never gives you the name: a PostalAddress has no field for \"El Cable\" or \"Campus Madrid\", and the name is what people navigate by. In schema.org it is Place.name, a sibling of Place.address.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "El Cable, Almería",
+            "Campus Madrid, Calle de Moreno Nieto 2, Madrid"
+          ]
+        },
+        "address": {
+          "description": "Postal address of the physical venue, in parts. COMPLEMENTS venue, never replaces it: venue is the one string every format can print, address is what a translator needs to emit a schema.org PostalAddress — whose subfields Google validates one by one for the Event rich result. Every part is optional; leave out what you do not know. An absent key means unknown; \"\" or null publish 'unknown' as if it were data, which is the one thing worse than saying nothing.",
+          "$ref": "#/$defs/address",
+          "examples": [
+            {
+              "street": "Calle de Moreno Nieto 2",
+              "locality": "Madrid",
+              "postalCode": "28005",
+              "country": "ES"
+            },
+            {
+              "locality": "Almería",
+              "country": "ES"
+            }
+          ]
+        },
+        "onlineUrl": {
+          "description": "URL to attend online. Its presence means the event has online access.",
+          "type": "string",
+          "format": "iri",
+          "pattern": "^https?://",
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
+          "examples": [
+            "https://meet.example/pyalmeria"
+          ]
+        },
+        "geo": {
+          "description": "Coordinates of the physical venue (WGS-84 decimal degrees). Independent of venue, which is free text — a point, not a name. Maps to iCal GEO and schema.org Place.geo (GeoCoordinates).",
+          "type": "object",
+          "required": [
+            "lat",
+            "lon"
+          ],
+          "properties": {
+            "lat": {
+              "description": "Latitude in decimal degrees.",
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90,
+              "examples": [
+                40.4168
+              ]
+            },
+            "lon": {
+              "description": "Longitude in decimal degrees.",
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180,
+              "examples": [
+                -3.7038
+              ]
+            }
+          }
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "venue"
+          ]
+        },
+        {
+          "required": [
+            "onlineUrl"
+          ]
+        }
+      ]
+    },
+    "address": {
+      "description": "A postal address in parts, mapped 1:1 onto schema.org PostalAddress. Five fields, all optional, none of them free-form enough to be a second venue: this is the machine-readable half of a location, not a prettier one.",
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "street": {
+          "description": "Street and number, as written locally. May carry a floor or a unit; it is one line of text, not a sub-object.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "Calle de Moreno Nieto 2",
+            "100 West Snickerpark Dr"
+          ]
+        },
+        "locality": {
+          "description": "City, town or village.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "Madrid",
+            "Almería"
+          ]
+        },
+        "region": {
+          "description": "Province, state or autonomous community — whatever level sits between locality and country in that country. Free text or an ISO 3166-2 code; both travel to schema.org addressRegion unchanged.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "Comunidad de Madrid",
+            "PA"
+          ]
+        },
+        "postalCode": {
+          "description": "Postal code, as the local post office writes it. A string, never a number: leading zeros are part of it.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "28005",
+            "19019"
+          ]
+        },
+        "country": {
+          "description": "A real, currently-assigned ISO 3166-1 alpha-2 code (ES, US, MX), never an invented, reserved or former one. A code and not a country name, because the name has one spelling per language: \"España\", \"Spain\" and \"Espagne\" are the same country, and a consumer grouping events by country would see three. Turning a name into a code is a table lookup, not an invention — which is why the spec asks for it here and nowhere else. Common mistake: the UK is GB, not UK — \"UK\" is not an ISO 3166-1 code.",
+          "$ref": "#/$defs/country",
+          "examples": [
+            "ES",
+            "US"
+          ]
+        }
+      }
+    },
+    "eligibility": {
+      "description": "The door: whether there is a condition to get in, and what it is. An enum so a consumer can filter on it, plus a note so a human can read the part no enum can carry. It models the CONDITION, not the ticketing: no capacity, no seats left, no per-attendee approval state.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "description": "The kind of door. open: anyone may attend — including an event that sells tickets or runs out of seats, because a price and a capacity are not conditions on WHO you are. members-only: you have to belong to something first. approval-required: you sign up and the organiser DECIDES — Luma's request-to-approve, a Meetup group with an admission question, a workshop that picks a cohort. It is about a judgement on the person, never about capacity: first-come-first-served with limited seats is open, and the seats running out is offers[].availability. restricted: there IS a condition and none of the other values names it — say which in `note`, which is why the schema demands it there. Four values, kept small on purpose: a consumer that has to handle twenty doors handles none. invite-only is deliberately NOT one of them, see the spec prose.",
+          "enum": [
+            "open",
+            "members-only",
+            "approval-required",
+            "restricted"
+          ],
+          "examples": [
+            "open",
+            "members-only",
+            "approval-required"
+          ]
+        },
+        "note": {
+          "description": "The condition in words, for a person to read: which community, which university, which company. REQUIRED when type is restricted, because \"restricted\" on its own tells nobody anything; worth writing whenever the enum value alone leaves a question. This is the part that survives export to every format, inside the text.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "Miembros del Discord de Rust Girona",
+            "Solo alumnado de la Universidad de Almería"
+          ]
+        },
+        "url": {
+          "description": "Where the condition is explained or met: the page to join the community, request an invitation, apply. Distinct from offers[].url, which is where a seat or money changes hands — here nothing is bought, a door is opened.",
+          "type": "string",
+          "format": "iri",
+          "pattern": "^https?://",
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
+          "examples": [
+            "https://rustgirona.example/join"
+          ]
+        },
+        "translations": {
+          "description": "The note in other languages. type needs none: an enum carries no language, and a consumer renders it in the reader's.",
+          "$ref": "#/$defs/eligibilityTranslations",
+          "examples": [
+            {
+              "es": {
+                "note": "Miembros del Discord de Rust Girona"
+              }
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "description": "restricted means \"there is a door the enum cannot name\". Without a note it names nothing, and a consumer can only show the word itself — which is how a field meant to answer \"can I go?\" ends up asking it.",
+          "if": {
+            "type": "object",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "const": "restricted"
+              }
+            }
+          },
+          "then": {
+            "type": "object",
+            "required": [
+              "note"
+            ]
+          }
+        }
+      ]
+    },
+    "images": {
+      "description": "The event's images, in preference order. Two item forms on purpose: a bare URL string, which is what every 0.2 document already contains and keeps validating unchanged, and an object that adds alt text. Mixing them in one list is legal and expected — the primary image earns its alt, the extra crops of it do not need one.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          {
+            "type": "string",
+            "format": "iri",
+            "pattern": "^https?://",
+            "not": {
+              "pattern": "^https?://[^/?#]*@"
+            }
+          },
+          {
+            "$ref": "#/$defs/imageEntry"
+          }
+        ]
+      }
+    },
+    "imageEntry": {
+      "description": "One image with its description. The alt travels attached to its own URL and not in a sibling field of the event, because the entries of the list are not guaranteed to be the same picture: one alt for the whole list would describe the first image and be applied to the third. Same reason there is no positional mirror in translations — a list has no stable keys.",
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "properties": {
+        "url": {
+          "description": "Absolute HTTP(S) IRI of the image file itself, never of a page showing it. The same value the bare-string form carries.",
+          "type": "string",
+          "format": "iri",
+          "pattern": "^https?://",
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
+          "examples": [
+            "https://rustmadrid.example/img/2026-06-16x9.png"
+          ]
+        },
+        "alt": {
+          "description": "What the image SHOWS, for whoever cannot see it: screen readers, text-only clients, and any render where the image fails to load. Describe the picture, not the event — the name and description are already being read out next to it, so repeating them makes a screen reader say the same thing twice. Skip \"image of\" or \"poster showing\": the client already announces it is an image. Written in the document's textLanguage, like every other free text here, and translated by this entry's own translations map: alt is read aloud with the pronunciation of the surrounding language, so an English alt inside a Spanish document is worse for accessibility than the problem it was meant to solve. Purely decorative images have no place in a feed and no empty string here — an image with nothing to say is an image left out.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "maxLength": 250,
+          "examples": [
+            "Cartel: Ferris sobre fondo morado, «Rust Madrid · 16 junio · Impact Hub»",
+            "Sala diáfana con unas 60 sillas y una pantalla al fondo"
+          ]
+        },
+        "translations": {
+          "description": "This image's alt text in other languages. Local to the image it describes — never a positional mirror of the image list. Requires the document's textLanguage, like every other translations map.",
+          "$ref": "#/$defs/imageTranslations",
+          "examples": [
+            {
+              "en": {
+                "alt": "Poster: Ferris on a purple background, “Rust Madrid · June 16 · Impact Hub”"
+              }
+            }
+          ]
+        }
+      },
+      "dependentRequired": {
+        "translations": [
+          "alt"
+        ]
+      }
+    },
+    "imageTranslations": {
+      "description": "This image's alt text in other languages. Only alt is translated: the url is a file, and a file has no language.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/languageMap"
+        }
+      ],
+      "additionalProperties": {
+        "$ref": "#/$defs/imageTranslation"
+      }
+    },
+    "imageTranslation": {
+      "description": "One language's version of what the image shows.",
+      "type": "object",
+      "required": [
+        "alt"
+      ],
+      "properties": {
+        "alt": {
+          "description": "What the image shows, in this language.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "maxLength": 250,
+          "examples": [
+            "Poster: Ferris on a purple background, “Rust Madrid · June 16 · Impact Hub”"
+          ]
+        }
+      }
+    },
+    "recordings": {
+      "description": "Published recordings of the event, added AFTER it happened (same id, new updatedAt). NOT location.onlineUrl (that is the live link) and NOT image (that is the poster). A list — a talk may be on more than one platform, or split into parts. Two item forms, like image: a bare HTTP(S) IRI, or an object that adds a title. NOT recommended: most events have no recording, a live event has none yet, and the spec has no 'is in the past' predicate.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "oneOf": [
+          {
+            "type": "string",
+            "format": "iri",
+            "pattern": "^https?://",
+            "not": {
+              "pattern": "^https?://[^/?#]*@"
+            }
+          },
+          {
+            "$ref": "#/$defs/recordingEntry"
+          }
+        ]
+      }
+    },
+    "recordingEntry": {
+      "description": "One recording with its title. Same shape reasoning as imageEntry.",
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "properties": {
+        "url": {
+          "description": "Absolute HTTP(S) IRI where the recording can be watched. A watch page (YouTube, PeerTube) is fine here — unlike image, this need not be the media file itself.",
+          "type": "string",
+          "format": "iri",
+          "pattern": "^https?://",
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
+          "examples": [
+            "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+          ]
+        },
+        "title": {
+          "description": "What this recording is, when the list has more than one ('Q&A', 'Full session', 'Lightning talks'). Noise when there is only one. Free text, in the document's textLanguage, translated by this entry's own translations map — like image[].alt.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "Q&A",
+            "Full session"
+          ]
+        },
+        "translations": {
+          "description": "This recording's title in other languages. Local to the entry, never a positional mirror. Requires the document's textLanguage, like every other translations map.",
+          "$ref": "#/$defs/recordingTranslations",
+          "examples": [
+            {
+              "es": {
+                "title": "Preguntas y respuestas"
+              }
+            }
+          ]
+        }
+      },
+      "dependentRequired": {
+        "translations": [
+          "title"
+        ]
+      }
+    },
+    "recordingTranslations": {
+      "description": "This recording's title in other languages. Only title is translated: the url is a link, and a link has no language.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/languageMap"
+        }
+      ],
+      "additionalProperties": {
+        "$ref": "#/$defs/recordingTranslation"
+      }
+    },
+    "recordingTranslation": {
+      "description": "One language's version of a recording's title.",
+      "type": "object",
+      "required": [
+        "title"
+      ],
+      "properties": {
+        "title": {
+          "description": "This recording's title in this language.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "Preguntas y respuestas"
+          ]
+        }
+      }
+    },
+    "offers": {
+      "description": "Ways of attending, with their price. A list because an event may sell several kinds of ticket, and because the answer to \"is it free?\" has to survive an event that is free for students and paid for everyone else.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/offer"
+      }
+    },
+    "offer": {
+      "description": "One way of attending: a price, a place to get it, or both. Maps 1:1 onto a schema.org Offer, which is what Google reads to show a price. It models the ticket, not the ticketing: no capacity, no seats left, no per-ticket registration state.",
+      "type": "object",
+      "properties": {
+        "scope": {
+          "description": "New in v0.5. What this offer means relative to the set's shared admission (partOf.offers). Only meaningful when the document has partOf. 'admission' (what an absent scope is read as): a complete way to attend this part — sold standalone, or a restatement of the set admission. 'add-on': an ADDITIONAL charge on top of the set admission — total is a priced partOf.offers entry plus this entry's price when both carry a number, otherwise 'an additional charge, total unknown' (URL-only offers stay valid). An 'add-on' offer requires partOf AND partOf.offers to be present in the same document — see the document's constraints. 'admission' covers ALL admission tiers; 'this add-on only applies to the Pro tier' is out of scope for v0.5.",
+          "enum": [
+            "admission",
+            "add-on"
+          ],
+          "examples": [
+            "admission",
+            "add-on"
+          ]
+        },
+        "name": {
+          "description": "What this ticket is called (\"General admission\", \"Estudiantes\"). Worth writing when there is more than one offer, noise when there is only one.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "General admission",
+            "Estudiantes"
+          ]
+        },
+        "price": {
+          "description": "Amount per attendee, in `currency`. 0 means free — and it is the ONLY way to say free: an absent offers list means the price is unknown. A number, never text: no currency symbol, no thousands separator, no range and no \"desde\", because the whole reason to publish a price as data is that someone can filter and compare on it. A price that cannot be written as one number is several offers.",
+          "type": "number",
+          "minimum": 0,
+          "examples": [
+            0,
+            45,
+            12.5
+          ]
+        },
+        "currency": {
+          "description": "A real ISO 4217 alpha-3 code (EUR, USD, MXN), never an invented one. Only meaningful alongside `price` — it names what price is denominated in, and nothing else — so it requires `price` to be present at all, whatever its value. Required whenever `price` is above 0, and pointless at 0: free is free in every currency, and emitting one there is how Luma ends up publishing a currency for a meetup that costs nothing.",
+          "$ref": "#/$defs/currency",
+          "examples": [
+            "EUR",
+            "USD"
+          ]
+        },
+        "url": {
+          "description": "Where to buy the ticket or register for this particular offer. Distinct from the event's own url: that page describes the event, this one is where money or a seat changes hands. Omit it when registration happens on the event page itself.",
+          "type": "string",
+          "format": "iri",
+          "pattern": "^https?://",
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
+          "examples": [
+            "https://devfest-levante.example/2026/entradas"
+          ]
+        },
+        "availability": {
+          "description": "Whether this offer can still be taken. Absent never means available — a stale feed that keeps claiming in-stock is worse than one that says nothing. Only the two states an attendee can act on are modelled.",
+          "enum": [
+            "in-stock",
+            "sold-out"
+          ],
+          "examples": [
+            "in-stock",
+            "sold-out"
+          ]
+        },
+        "waitlistUrl": {
+          "description": "Where to join the queue for this offer once it is gone. It exists so \"gone, nothing to do\" and \"gone, but you can queue\" stop being the same document — the third thing an attendee can act on, and the reason it is a URL and not a third availability value: every consumer that already exists keeps reading sold-out, which is TRUE, instead of meeting an enum value it cannot interpret. Distinct from url, where the ticket is bought: nothing is bought in a queue.",
+          "type": "string",
+          "format": "iri",
+          "pattern": "^https?://",
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
+          "examples": [
+            "https://devfest-levante.example/2026/lista-espera"
+          ]
+        },
+        "opensAt": {
+          "description": "When this offer goes on sale. An INSTANT, with offset or Z — unlike the event's own dates, which are wall clock: a sale opening is a moment a button starts working, not an hour on a poster.",
+          "$ref": "#/$defs/instant",
+          "examples": [
+            "2026-05-01T10:00:00+02:00"
+          ]
+        },
+        "closesAt": {
+          "description": "When this offer stops being available. An INSTANT, with offset or Z, for the same reason as opensAt — and because \"23:59\" without an offset is the classic deadline bug.",
+          "$ref": "#/$defs/instant",
+          "examples": [
+            "2026-07-31T23:59:59+02:00"
+          ]
+        },
+        "translations": {
+          "description": "This offer's name in other languages. Local to the offer it belongs to — never a positional mirror of the offers list. Requires the document's textLanguage, like every other translations map.",
+          "$ref": "#/$defs/offerTranslations",
+          "examples": [
+            {
+              "en": {
+                "name": "Students"
+              }
+            }
+          ]
+        }
+      },
+      "anyOf": [
+        {
+          "description": "An offer must carry a price or a link — ideally both. One with neither says nothing that omitting the whole list does not already say, the same rule location follows with venue and onlineUrl.",
+          "required": [
+            "price"
+          ]
+        },
+        {
+          "required": [
+            "url"
+          ]
+        }
+      ],
+      "dependentRequired": {
+        "currency": [
+          "price"
+        ]
+      },
+      "orderedInstants": true,
+      "allOf": [
+        {
+          "description": "A waitlist for something you can still buy is not a waitlist: the queue only makes sense once the offer is gone. Availability may still be ABSENT — a publisher who knows there is a queue and does not track the ticket state should not be forced to assert sold-out to mention it. Only the incoherent combination is rejected, never the incomplete one.",
+          "if": {
+            "type": "object",
+            "required": [
+              "waitlistUrl"
+            ]
+          },
+          "then": {
+            "type": "object",
+            "properties": {
+              "availability": {
+                "not": {
+                  "const": "in-stock"
+                }
+              }
+            }
+          }
+        },
+        {
+          "description": "A non-zero amount without a currency is not a price: 45 is a different thing in EUR, USD and MXN, and a consumer that has to guess will guess its own.",
+          "if": {
+            "type": "object",
+            "required": [
+              "price"
+            ],
+            "properties": {
+              "price": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              }
+            }
+          },
+          "then": {
+            "type": "object",
+            "required": [
+              "currency"
+            ]
+          }
+        }
+      ]
+    },
+    "cfp": {
+      "description": "An open call for proposals. One per event: unlike organizers, no real producer publishes more than one — the CFP directories that exist (confs.tech, developers.events, Sessionize) all model exactly one link and one deadline. Deliberately small: it says where to submit and until when, not what a submission looks like.",
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "orderedInstants": true,
+      "properties": {
+        "url": {
+          "description": "Where proposals are submitted — the form, or the page describing the call. Required: a CFP nobody can find is not a call, and this is the one piece of it that survives export to every format, inside the text.",
+          "type": "string",
+          "format": "iri",
+          "pattern": "^https?://",
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
+          "examples": [
+            "https://devfest-levante.example/2026/cfp"
+          ]
+        },
+        "opensAt": {
+          "description": "When the call starts accepting proposals. An INSTANT, with offset or Z. Absent means it is already open — a call that has not opened yet is announced, not published.",
+          "$ref": "#/$defs/instant",
+          "examples": [
+            "2026-05-01T00:00:00+02:00"
+          ]
+        },
+        "closesAt": {
+          "description": "Deadline for proposals. An INSTANT, with offset or Z, never a bare \"23:59\": which midnight it is is the whole question, and \"anywhere on Earth\" is a real answer (-12:00) that a wall-clock field could not express. Absent means unknown, not open forever — and it is what a consumer needs to answer \"which CFPs are open right now\".",
+          "$ref": "#/$defs/instant",
+          "examples": [
+            "2026-07-15T23:59:59+02:00",
+            "2026-07-15T23:59:59-12:00"
+          ]
+        },
+        "coversTravel": {
+          "description": "Whether the event covers a selected speaker's travel. Absent never means false. It is here and \"call for sponsors\" is not because this is what a speaker filters on before deciding whether they can afford to submit.",
+          "type": "boolean",
+          "examples": [
+            true
+          ]
+        },
+        "coversAccommodation": {
+          "description": "Whether the event covers a selected speaker's accommodation. Same rule as coversTravel: absent means unknown.",
+          "type": "boolean",
+          "examples": [
+            true
+          ]
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "anyOf": [
+        {
+          "description": "Provenance has to point somewhere: a name a person can read, a URL a machine can follow, ideally both. Either alone is enough, and demanding the name would be worse than accepting the URL — an importer of an `.ics` always knows the address it fetched and often has no publisher name to read (iCalendar's X-WR-CALNAME is optional), so the requirement would be met by inventing one. A fabricated origin is worse than an origin given only as a link. Same rule as offers with price and url, and location with venue and onlineUrl.",
+          "required": [
+            "name"
+          ]
+        },
+        {
+          "required": [
+            "url"
+          ]
+        }
+      ],
+      "properties": {
+        "name": {
+          "description": "Name of the origin (e.g. \"Rust Madrid\", \"Meetup\"), as a person would read it. Write it whenever the origin has a name of its own: a consumer showing where the data came from can derive a label from `url` (its host), but a derived label is a guess.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "examples": [
+            "Rust Madrid",
+            "Meetup"
+          ]
+        },
+        "url": {
+          "description": "Link to the original record, so the data can be verified and corrected upstream.",
+          "type": "string",
+          "format": "iri",
+          "pattern": "^https?://",
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
+          "examples": [
+            "https://calendar.example/ics/rust-madrid"
+          ]
+        },
+        "license": {
+          "description": "License under which the ORIGIN publishes the data. Constrains what may be republished: declaring a license does not grant rights the origin never gave.",
+          "$ref": "#/$defs/license",
+          "examples": [
+            "CC-BY-4.0"
+          ]
+        },
+        "retrievedAt": {
+          "description": "When the data was fetched.",
+          "$ref": "#/$defs/instant",
+          "examples": [
+            "2026-06-01T05:00:00Z"
+          ]
+        }
+      }
+    }
+  }
+}

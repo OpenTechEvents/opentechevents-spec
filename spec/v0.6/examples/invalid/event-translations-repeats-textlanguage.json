@@ -1,0 +1,13 @@
+{
+  "_comment": "INVÁLIDO a propósito: translations.es repite textLanguage: \"es\" — dos versiones bajo la misma etiqueta que podrían contradecirse. Ver docs/history/CHANGES.log #P009 / DECISIONS.md D010.",
+  "specVersion": "0.6.0",
+  "id": "https://x.example/1",
+  "name": "Texto principal",
+  "startDate": "2026-06-26T18:00",
+  "timezone": "Europe/Madrid",
+  "license": "CC-BY-4.0",
+  "textLanguage": "es",
+  "translations": {
+    "es": { "name": "Texto contradictorio" }
+  }
+}

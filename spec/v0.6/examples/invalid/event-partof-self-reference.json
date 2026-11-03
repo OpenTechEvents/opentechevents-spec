@@ -1,0 +1,12 @@
+{
+  "_comment": "INVÁLIDO a propósito: partOf.id es igual al id del propio evento — una ocurrencia no puede ser el conjunto al que pertenece. Ver docs/history/CHANGES.log #P011 / DECISIONS.md D012.",
+  "specVersion": "0.6.0",
+  "id": "https://x.example/events/self",
+  "name": "X",
+  "startDate": "2026-06-26T18:00",
+  "timezone": "Europe/Madrid",
+  "license": "CC-BY-4.0",
+  "partOf": {
+    "id": "https://x.example/events/self"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "_comment": "INVÁLIDO a propósito: \"und\" (Undetermined) está registrado en IANA, pero no nombra un idioma concreto — el mismo motivo por el que ISO 3166-1 \"ZZ\" (uso privado) no vale como country (D006). Declarar \"no sé qué idioma es\" no sirve para lo que textLanguage existe: elegir el lang de HTML, la voz de un lector de pantalla, el orden alfabético. Ver docs/history/CHANGES.log #P006 / DECISIONS.md D007.",
+  "specVersion": "0.6.0",
+  "id": "https://x.example/1",
+  "name": "X",
+  "startDate": "2026-06-26T18:00",
+  "timezone": "Europe/Madrid",
+  "license": "CC-BY-4.0",
+  "textLanguage": "und"
+}

@@ -1,0 +1,18 @@
+{
+  "_comment": "INVÁLIDO a propósito: ni el evento ni el feed declaran textLanguage, así que no hay ningún idioma efectivo frente al que interpretar translations.en — la herencia documentada (feed.textLanguage como valor por defecto) no sustituye tener UN idioma efectivo, solo dice de dónde puede venir. Ver docs/history/CHANGES.log #P015 / DECISIONS.md D016.",
+  "specVersion": "0.6.0",
+  "title": "Agenda",
+  "license": "CC0-1.0",
+  "updatedAt": "2026-08-03T12:00:00Z",
+  "events": [
+    {
+      "id": "https://example.org/events/1",
+      "name": "Event",
+      "startDate": "2026-09-01T10:00",
+      "timezone": "Europe/Madrid",
+      "translations": {
+        "es": { "name": "Evento" }
+      }
+    }
+  ]
+}
