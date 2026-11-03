@@ -5,12 +5,17 @@
 # written to only when something actually changes, so a healthy registry produces
 # no daily commit.
 #
+# The same run also refreshes the suggested-extensions adoption counts
+# (scripts/scan-extensions.mjs): it reads the same registry and fetches the same feeds,
+# so giving it its own schedule would double the requests every adopter serves us.
+#
 # It also runs on a push that edits the registry: the site reads the version and
 # licence badges out of docs/data/feed-health.json, joined by feed URL, so a newly
 # registered adopter renders without badges until this check has seen it once.
 # Waiting for the next cron would leave that gap open for up to a day. The push
-# trigger cannot loop — this workflow only ever writes the two feed-health files,
-# never docs/data/adopters.json.
+# trigger cannot loop — this workflow only ever writes the two feed-health files and
+# the adoption counts inside docs/data/suggested-extensions.json, never
+# docs/data/adopters.json.
 name: Check adopter feeds
 
 on:
@@ -55,9 +60,15 @@ jobs:
           FEED_WINDOW: "7"
         run: node scripts/check-feeds.mjs
 
+      # Adoption counts for /extensions/. Separate step so a failure here is legible as
+      # its own thing, and `|| true` is deliberately absent: if the scan breaks, the run
+      # should say so rather than quietly leaving the counts at whatever they were.
+      - name: Scan suggested extensions
+        run: node scripts/scan-extensions.mjs
+
       - name: Persist health state
         run: |
-          PATHS=".github/feed-health.json docs/data/feed-health.json"
+          PATHS=".github/feed-health.json docs/data/feed-health.json docs/data/suggested-extensions.json"
           if [ -z "$(git status --porcelain -- $PATHS)" ]; then
             echo "Health state unchanged."
             exit 0
@@ -65,6 +76,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add $PATHS
-          git commit -m "chore(health): update feed failure counters [skip ci]"
+          git commit -m "chore(health): update feed counters and extension adoption [skip ci]"
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin HEAD:"${GITHUB_REF_NAME}"

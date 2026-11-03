@@ -1,6 +1,6 @@
 {
   "_comment": "Candidate fields that are not (yet) in the OTE core. Each entry has a RECOMMENDED SHAPE so early adopters converge, and an observedAdoption count written by scripts/scan-extensions.mjs (never by hand) from the registered adopter feeds. A field graduates to the core through a normal proposal once its graduationQuestion is answered — see CONTRIBUTING.md. The public page renders from this file: https://opentechevents.org/extensions/",
-  "generatedNote": "observedAdoption is machine-written. Everything else is maintained by hand.",
+  "generatedNote": "observedAdoption is machine-written. Everything else is maintained by hand, including translations.es — an entry with no translation falls back to English.",
   "extensions": [
     {
       "name": "sponsors",
@@ -10,7 +10,17 @@
       "status": "gathering-evidence",
       "statusVersion": null,
       "graduationQuestion": "Do ≥3 producers emit it, and with what shape (flat list vs. tiered)?",
-      "observedAdoption": { "feeds": 0, "asOf": null }
+      "translations": {
+        "es": {
+          "purpose": "Quién patrocina el evento, como lista — distinto de organizers (quién lo organiza) y de speakers (quién está en el escenario).",
+          "shape": "array de { name, url?, tier? } — la misma disciplina de 'un nombre y dónde encontrarlo' que organizers",
+          "graduationQuestion": "¿Lo emiten ≥3 productores, y con qué forma (lista plana o por niveles)?"
+        }
+      },
+      "observedAdoption": {
+        "feeds": 0,
+        "asOf": null
+      }
     },
     {
       "name": "capacity",
@@ -20,7 +30,17 @@
       "status": "gathering-evidence",
       "statusVersion": null,
       "graduationQuestion": "Do ≥3 producers emit a stable capacity (not a live seats-left counter)?",
-      "observedAdoption": { "feeds": 0, "asOf": null }
+      "translations": {
+        "es": {
+          "purpose": "Número máximo de asistentes. No es 'plazas libres': eso es estado de venta, y un fichero que se regenera cada noche no puede sostenerlo.",
+          "shape": "entero, ≥ 0",
+          "graduationQuestion": "¿Emiten ≥3 productores un aforo estable (no un contador de plazas libres en vivo)?"
+        }
+      },
+      "observedAdoption": {
+        "feeds": 0,
+        "asOf": null
+      }
     },
     {
       "name": "level",
@@ -30,17 +50,17 @@
       "status": "gathering-evidence",
       "statusVersion": null,
       "graduationQuestion": "Do real conferences emit a filterable level, or only free-text audience prose?",
-      "observedAdoption": { "feeds": 0, "asOf": null }
-    },
-    {
-      "name": "speakers[].affiliation",
-      "scope": "event",
-      "purpose": "The speaker's organisation, as ONE display name.",
-      "shape": "string — a proper noun, written once, not translated (like organizers[].name / a locality's spelling)",
-      "status": "gathering-evidence",
-      "statusVersion": null,
-      "graduationQuestion": "Do ≥3 producers emit it? Lowest cost of the speakers enrichment set — no translation — so likely first to graduate.",
-      "observedAdoption": { "feeds": 0, "asOf": null }
+      "translations": {
+        "es": {
+          "purpose": "A quién va dirigido el evento — '¿es para mí?', el eje que eligibility NO cubre (ese es '¿me dejarán entrar?').",
+          "shape": "enum: beginner | intermediate | advanced",
+          "graduationQuestion": "¿Las conferencias reales emiten un nivel filtrable, o solo prosa libre sobre el público?"
+        }
+      },
+      "observedAdoption": {
+        "feeds": 0,
+        "asOf": null
+      }
     },
     {
       "name": "speakers[].jobTitle",
@@ -50,7 +70,17 @@
       "status": "gathering-evidence",
       "statusVersion": null,
       "graduationQuestion": "Do ≥3 producers emit it, AND is it worth the translations-map cost?",
-      "observedAdoption": { "feeds": 0, "asOf": null }
+      "translations": {
+        "es": {
+          "purpose": "El puesto de la ponente, p. ej. 'Principal Engineer'.",
+          "shape": "string — texto libre, en el textLanguage del documento; graduarlo exige un mapa de traducciones local (D010/D023/D030)",
+          "graduationQuestion": "¿Lo emiten ≥3 productores Y compensa el coste del mapa de traducciones?"
+        }
+      },
+      "observedAdoption": {
+        "feeds": 0,
+        "asOf": null
+      }
     },
     {
       "name": "speakers[].bio",
@@ -60,7 +90,17 @@
       "status": "gathering-evidence",
       "statusVersion": null,
       "graduationQuestion": "Do ≥3 producers emit it structured, rather than only on the speaker's own page?",
-      "observedAdoption": { "feeds": 0, "asOf": null }
+      "translations": {
+        "es": {
+          "purpose": "Un párrafo corto sobre la ponente.",
+          "shape": "string — prosa libre, en el textLanguage del documento; mismo coste de traducción que jobTitle, pero mayor",
+          "graduationQuestion": "¿Lo emiten ≥3 productores de forma estructurada, en vez de solo en la página de la propia ponente?"
+        }
+      },
+      "observedAdoption": {
+        "feeds": 0,
+        "asOf": null
+      }
     },
     {
       "name": "speakers[].image",
@@ -70,7 +110,17 @@
       "status": "gathering-evidence",
       "statusVersion": null,
       "graduationQuestion": "Do ≥3 producers emit it, AND is it worth reopening the image[].alt accessibility apparatus nested inside speakers[]?",
-      "observedAdoption": { "feeds": 0, "asOf": null }
+      "translations": {
+        "es": {
+          "purpose": "Una foto de la ponente.",
+          "shape": "LA MISMA forma que image[] del evento — un string o { url, alt, translations }. Su mapa de traducciones NO lo valida el core mientras sea extensión.",
+          "graduationQuestion": "¿Lo emiten ≥3 productores Y compensa reabrir el aparato de accesibilidad de image[].alt anidado dentro de speakers[]?"
+        }
+      },
+      "observedAdoption": {
+        "feeds": 0,
+        "asOf": null
+      }
     },
     {
       "name": "sameAs",
@@ -80,7 +130,17 @@
       "status": "gathering-evidence",
       "statusVersion": null,
       "graduationQuestion": "Do ≥2 aggregators emit it pointing at a shared canonical URL? And does the 'deduplication across sources' non-goal need revisiting, or does 'publisher hint ≠ heuristic' hold?",
-      "observedAdoption": { "feeds": 0, "asOf": null }
+      "translations": {
+        "es": {
+          "purpose": "URLs que el publicador afirma que describen EL MISMO evento —la página canónica de quien organiza, otro id de OTE— para deduplicar entre agregadores. Es una AFIRMACIÓN del publicador, no una heurística del consumidor.",
+          "shape": "array de IRIs HTTP(S), uniqueItems, sin userinfo — mapea a schema.org Event.sameAs. Distinto de id (identificador estable por publicador) y de source.url (procedencia).",
+          "graduationQuestion": "¿Lo emiten ≥2 agregadores apuntando a una URL canónica compartida? ¿Y hay que revisar el no-objetivo de 'deduplicación entre fuentes', o se sostiene el 'pista del publicador ≠ heurística'?"
+        }
+      },
+      "observedAdoption": {
+        "feeds": 0,
+        "asOf": null
+      }
     }
   ]
 }

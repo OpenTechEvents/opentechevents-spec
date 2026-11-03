@@ -134,6 +134,36 @@ function corsNote(res) {
     : "no `Access-Control-Allow-Origin`";
 }
 
+/**
+ * How the feed is SERVED, as opposed to what it says. Recorded because the one question the
+ * spec could not answer about large feeds — "is this a real problem, and for how many?" — had
+ * exactly one data point and no series behind it. Measuring it here costs nothing: the daily
+ * run already downloads every feed.
+ *
+ * The numbers also keep the diagnosis honest. eventos.wiki is the feed that prompted the
+ * question, and measured on 2026-11-03 it was 568 KB served in 23,7 s, of which 23,6 s was time
+ * to first byte, uncompressed, with no ETag. Its problem is a slow origin and a missing
+ * `Content-Encoding`, not a document that needs splitting — and only the numbers show that.
+ */
+function transportOf(res, body, startedAt, firstByteAt) {
+  return {
+    bytes: body.length,
+    // What the server actually negotiated. `null` means it sent none: fetch advertises gzip and
+    // br on every request, so an absent header is a server that compresses nothing.
+    encoding: res.headers.get("content-encoding"),
+    // A conditional request needs one of these; with neither, every poll is a full download.
+    revalidation:
+      [res.headers.get("etag") ? "etag" : null, res.headers.get("last-modified") ? "last-modified" : null]
+        .filter(Boolean)
+        .join("+") || null,
+    cacheControl: res.headers.get("cache-control"),
+    // Split on purpose: ttfb is the origin thinking, total − ttfb is the bytes moving. A feed
+    // can be big and fast, or small and slow, and the fix is different for each.
+    ttfbMs: Math.round(firstByteAt - startedAt),
+    totalMs: Math.round(Date.now() - startedAt),
+  };
+}
+
 const ok = (extra) => ({ error: null, kind: null, ...extra });
 const hard = (error, extra) => ({ error, kind: "hard", ...extra });
 const transient = (error, extra) => ({ error, kind: "transient", ...extra });
@@ -142,37 +172,50 @@ const transient = (error, extra) => ({ error, kind: "transient", ...extra });
 // answers deliberately is not, and retrying it only wastes the publisher's bandwidth.
 async function attempt(url) {
   let res;
+  const startedAt = Date.now();
   try {
     res = await fetch(url, { headers: { Origin: ORIGIN }, signal: AbortSignal.timeout(TIMEOUT_MS) });
   } catch (err) {
     return transient(`fetch failed: ${err.message}`);
   }
+  // fetch resolves on headers, so this is the origin's own thinking time, before any body.
+  const firstByteAt = Date.now();
   const cors = corsNote(res);
   if (res.status === 429 || res.status >= 500) return transient(`HTTP ${res.status}`, { cors });
   if (!res.ok) return hard(`HTTP ${res.status}`, { cors });
 
+  // Read as text, not .json(): the byte count is half the measurement, and parsing afterwards
+  // costs nothing a 500 KB download has not already paid.
+  let body;
+  try {
+    body = await res.text();
+  } catch (err) {
+    return transient(`fetch failed while reading the body: ${err.message}`);
+  }
+  const transport = transportOf(res, body, startedAt, firstByteAt);
+
   let doc;
   try {
-    doc = await res.json();
+    doc = JSON.parse(body);
   } catch {
-    return hard("response is not JSON", { cors });
+    return hard("response is not JSON", { cors, transport });
   }
 
   const version = typeof doc.specVersion === "string" ? doc.specVersion : null;
   if (!version || !byVersion.has(version)) {
     // Not a version this repo has ever published: there is no schema to judge it by.
-    return hard(`unknown specVersion: ${JSON.stringify(doc.specVersion ?? null)}`, { cors });
+    return hard(`unknown specVersion: ${JSON.stringify(doc.specVersion ?? null)}`, { cors, transport });
   }
 
   // Older than the support window: reachable, and that is all we claim. Judging it
   // against rules we no longer support would report a failure nobody agreed to fix.
-  if (!supported.has(version)) return ok({ cors, version, licenses: licensesIn(doc) });
+  if (!supported.has(version)) return ok({ cors, transport, version, licenses: licensesIn(doc) });
 
   const { ajv, validate } = validatorFor(version);
   if (!validate(doc)) {
-    return hard("schema errors:\n" + ajv.errorsText(validate.errors, { separator: "\n" }), { cors, version });
+    return hard("schema errors:\n" + ajv.errorsText(validate.errors, { separator: "\n" }), { cors, transport, version });
   }
-  return ok({ cors, version, licenses: licensesIn(doc) });
+  return ok({ cors, transport, version, licenses: licensesIn(doc) });
 }
 
 /* Every licence a consumer would actually end up with, inheritance resolved. An event
@@ -214,7 +257,7 @@ const state = existsSync(STATE) ? JSON.parse(readFileSync(STATE, "utf8")) : {};
 const previous = existsSync(PUBLIC_STATE) ? JSON.parse(readFileSync(PUBLIC_STATE, "utf8")) : {};
 // A feed that times out tells us nothing about its version: keep the last one we saw
 // rather than blanking it, so the public status stays useful through an outage.
-const lastKnown = new Map((previous.feeds || []).map((f) => [f.feed, { specVersion: f.specVersion, licenses: f.licenses }]));
+const lastKnown = new Map((previous.feeds || []).map((f) => [f.feed, { specVersion: f.specVersion, licenses: f.licenses, transport: f.transport }]));
 const today = new Date().toISOString().slice(0, 10);
 const next = {};
 const status = [];
@@ -222,7 +265,7 @@ let failing = 0;
 const noCors = [];
 
 for (const adopter of adopters) {
-  const { error, kind, cors, version, licenses } = await checkFeed(adopter.feed);
+  const { error, kind, cors, transport, version, licenses } = await checkFeed(adopter.feed);
   const prev = state[adopter.feed];
   const last = lastKnown.get(adopter.feed) || {};
   const stale = version && !supported.has(version);
@@ -241,6 +284,11 @@ for (const adopter of adopters) {
     // of them: whoever aggregates has to look at each event, not only at feed.license.
     licenses: licenses && licenses.length ? licenses : last.licenses || null,
     cors: error ? null : cors === null,
+    // How it is served, not what it says: size, whether the server compressed it, whether a
+    // consumer can revalidate instead of re-downloading, and where the time went. Kept through
+    // an outage like specVersion and licenses — a feed that times out today was still this
+    // size yesterday, and losing the series would defeat the point of recording it.
+    transport: transport || last.transport || null,
     failureKind: kind,
     failingSince: error ? (prev ? prev.since : today) : null,
     error: error ? error.split("\n")[0] : null,
