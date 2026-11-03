@@ -21,8 +21,9 @@
  */
 import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
+import { latestVersion } from "./schema-model.mjs";
 
-const VERSION = "v0.5";
+const VERSION = latestVersion();
 const BASE_LANG = "en";
 const REPO = "https://github.com/OpenTechEvents/opentechevents-spec/blob/main";
 const check = process.argv.includes("--check");

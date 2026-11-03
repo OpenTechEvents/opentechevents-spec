@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Regenerates $defs.timezone's enum in spec/v0.4/event.schema.json from the official IANA tzdata
+ * Regenerates $defs.timezone's enum in the current spec version's event.schema.json from the official IANA tzdata
  * release — NOT from `Intl.supportedValuesOf('timeZone')`. That API's notion of "canonical" name
  * tracks whatever tzdata snapshot the running Node/ICU bundles, and two Node versions can disagree
  * on which of an old/new pair (e.g. Europe/Kiev vs Europe/Kyiv, renamed 2022) counts as canonical —
@@ -12,11 +12,36 @@
  * adds a zone (rare — see https://www.iana.org/time-zones for release notes).
  */
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-const SCHEMA_PATH = new URL("../spec/v0.4/event.schema.json", import.meta.url);
+/**
+ * Which spec version to write to: the highest `spec/vN.N/` by default, `--spec vN.N` to target an
+ * older one deliberately. This used to be hardcoded, and the hardcoded value was `v0.4` — so long
+ * after v0.5 shipped, running this script silently rewrote a FROZEN version, with whatever
+ * upstream data had been released since, and left the version under development untouched.
+ * `AGENTS.md`'s fork procedure depends on this resolving correctly: regenerating the enums into
+ * the NEW version is the integrity check that proves the copy was faithful. Same resolution as
+ * scripts/update-licenses.mjs, which always had it right.
+ */
+function specArg(name) {
+  const i = process.argv.indexOf(`--${name}`);
+  return i === -1 ? undefined : process.argv[i + 1];
+}
+
+const specDir = new URL("../spec/", import.meta.url);
+const specVersion =
+  specArg("spec") ??
+  readdirSync(specDir)
+    .filter((n) => /^v\d+\.\d+$/.test(n))
+    .sort((a, b) => {
+      const [aM, aN] = a.slice(1).split(".").map(Number);
+      const [bM, bN] = b.slice(1).split(".").map(Number);
+      return aM - bM || aN - bN;
+    })
+    .at(-1);
+const SCHEMA_PATH = new URL(`${specVersion}/event.schema.json`, specDir);
 const RELEASE_URL = "https://data.iana.org/time-zones/tzdata-latest.tar.gz";
 // Zone/Link definitions live in these files; "factory" only defines the "Factory" placeholder
 // zone, a deliberate "no real timezone was given" sentinel, not a real geographic identifier.

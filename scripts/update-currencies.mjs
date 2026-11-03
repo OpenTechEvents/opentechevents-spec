@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Regenerates $defs.currency's enum in spec/v0.4/event.schema.json from the official ISO 4217
+ * Regenerates $defs.currency's enum in the current spec version's event.schema.json from the official ISO 4217
  * active-currency list, published by SIX Group (the ISO-designated maintenance agency) —
  * NOT from `Intl.supportedValuesOf('currency')`. That API bundles whatever CLDR/ICU snapshot
  * shipped with the running Node, which lags the real registry: it still accepts BGN (Bulgarian
@@ -11,9 +11,34 @@
  * Maintenance script, not part of `npm run validate` or CI: run by hand when SIX Group
  * publishes an amendment (see https://www.six-group.com/en/products-services/financial-information/market-reference-data/data-standards/iso-currency.html).
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 
-const SCHEMA_PATH = new URL("../spec/v0.4/event.schema.json", import.meta.url);
+/**
+ * Which spec version to write to: the highest `spec/vN.N/` by default, `--spec vN.N` to target an
+ * older one deliberately. This used to be hardcoded, and the hardcoded value was `v0.4` — so long
+ * after v0.5 shipped, running this script silently rewrote a FROZEN version, with whatever
+ * upstream data had been released since, and left the version under development untouched.
+ * `AGENTS.md`'s fork procedure depends on this resolving correctly: regenerating the enums into
+ * the NEW version is the integrity check that proves the copy was faithful. Same resolution as
+ * scripts/update-licenses.mjs, which always had it right.
+ */
+function specArg(name) {
+  const i = process.argv.indexOf(`--${name}`);
+  return i === -1 ? undefined : process.argv[i + 1];
+}
+
+const specDir = new URL("../spec/", import.meta.url);
+const specVersion =
+  specArg("spec") ??
+  readdirSync(specDir)
+    .filter((n) => /^v\d+\.\d+$/.test(n))
+    .sort((a, b) => {
+      const [aM, aN] = a.slice(1).split(".").map(Number);
+      const [bM, bN] = b.slice(1).split(".").map(Number);
+      return aM - bM || aN - bN;
+    })
+    .at(-1);
+const SCHEMA_PATH = new URL(`${specVersion}/event.schema.json`, specDir);
 const LIST_URL =
   "https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xml";
 

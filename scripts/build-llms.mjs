@@ -18,9 +18,10 @@
  */
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync, rmSync } from "node:fs";
 import { join, basename } from "node:path";
+import { latestVersion } from "./schema-model.mjs";
 
 const SITE = "https://opentechevents.org";
-const VERSION = "v0.5";
+const VERSION = latestVersion();
 const OUT_DIR = join("docs", "llms");
 const check = process.argv.includes("--check");
 

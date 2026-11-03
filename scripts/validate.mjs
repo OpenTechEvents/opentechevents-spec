@@ -21,9 +21,9 @@ import { join, basename } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 import { ajvOptions, annotationKeywords, customFormats, customKeywords, specVersion } from "../index.js";
-import { fieldsOf, loadSchemas } from "./schema-model.mjs";
+import { fieldsOf, loadSchemas, publishedVersions } from "./schema-model.mjs";
 
-const VERSIONS = ["v0.1", "v0.2", "v0.3", "v0.4", "v0.5"];
+const VERSIONS = publishedVersions();
 const SPEC_DIR = "spec";
 const LATEST = VERSIONS[VERSIONS.length - 1];
 
@@ -223,6 +223,24 @@ for (const version of VERSIONS) {
 //
 // Deliberately NOT in this list: the per-version pages under docs/spec/v0.*/ (generated, and
 // naming an old version is their whole job), /prior-art/, and anything under docs/schema|llms|data.
+// The two READMEs are the first thing a human reads, and they drifted two versions behind: the
+// root one still pointed at v0.4 and its npm snippet at v0.4's schema URLs, while v0.6 shipped.
+// They name older versions legitimately (a table of frozen ones, links to their folders), so a
+// blanket "mentions no other version" rule would be wrong — what must hold is that the version
+// each one declares CURRENT is the latest.
+{
+  const claims = [
+    ["README.md", /\[OTE Spec (v\d+\.\d+)\]/],
+    ["README.md", /schema\/(v\d+\.\d+)\/event\.schema\.json/],
+    ["spec/README.md", /current specification is \[`(v\d+\.\d+)\//],
+    ["spec/README.md", /\| \[`(v\d+\.\d+)\/`\][^|]*\| \*\*Current/],
+  ];
+  for (const [file, pattern] of claims) {
+    const claimed = pattern.exec(readFileSync(file, "utf8"))?.[1];
+    log(claimed === LATEST, `${file} presents ${LATEST} as current${claimed === LATEST ? "" : ` — says ${claimed ?? "nothing matching"}`}`);
+  }
+}
+
 const CURRENT_SPEC_PAGES = [
   join("docs", "index.html"),
   join("docs", "spec", "index.html"),

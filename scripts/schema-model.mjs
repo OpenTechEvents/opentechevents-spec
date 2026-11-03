@@ -6,9 +6,32 @@
  * cannot check (why `id` must never change, why a cancelled event stays published) is NOT
  * here — it is hand-written, and marked as such in the docs.
  */
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { customKeywords } from "../index.js";
+
+/**
+ * Every published spec version, newest last, read from the filesystem rather than hand-kept.
+ * There were four separate copies of this list before — two VERSIONS arrays and two hardcoded
+ * paths — and the hardcoded ones were still pointing at v0.4 long after v0.5 shipped, so
+ * regenerating an enum rewrote a frozen version instead of the one under development. A list
+ * that cannot be forgotten is the fix.
+ */
+export function publishedVersions(specDir = new URL("../spec/", import.meta.url)) {
+  return readdirSync(specDir)
+    .filter((name) => /^v\d+\.\d+$/.test(name))
+    .sort((a, b) => {
+      const [aMajor, aMinor] = a.slice(1).split(".").map(Number);
+      const [bMajor, bMinor] = b.slice(1).split(".").map(Number);
+      return aMajor - bMajor || aMinor - bMinor;
+    });
+}
+
+/** The version under development: the highest published one. */
+export function latestVersion() {
+  return publishedVersions().at(-1);
+}
+
 
 /**
  * Object-level rules that live outside JSON Schema entirely — a boolean flag

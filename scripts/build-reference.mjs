@@ -16,7 +16,7 @@
 import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
-import { constraintsOf, fieldsOf, loadSchemas, recommendedOf } from "./schema-model.mjs";
+import { constraintsOf, fieldsOf, loadSchemas, publishedVersions, recommendedOf } from "./schema-model.mjs";
 
 /**
  * Every published version gets its own data file, so the website can show the reference for the
@@ -29,7 +29,7 @@ import { constraintsOf, fieldsOf, loadSchemas, recommendedOf } from "./schema-mo
  * through by hand. The orchestrator branch at the bottom is the only part that knows about more
  * than one version.
  */
-const VERSIONS = ["v0.1", "v0.2", "v0.3", "v0.4", "v0.5"];
+const VERSIONS = publishedVersions();
 const LATEST = VERSIONS[VERSIONS.length - 1];
 const VERSION = process.env.OTE_SPEC_VERSION || LATEST;
 const BASE_LANG = "en"; // the schema's own `description` fields
