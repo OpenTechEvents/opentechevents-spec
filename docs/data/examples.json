@@ -1474,16 +1474,18 @@
           "No `attendanceMode`, because iCalendar cannot express it. Staying silent and saying `in-person` are different claims, and only one is honest.",
           "`location.address` is missing, and the checker says so — an `.ics` carries `LOCATION` as one free-text line, with no parts to split it into. The warning names what the event lacks, not who is to blame for it.",
           "`source` is required when the event was imported or aggregated. It is orthogonal to `organizers`: who runs the event vs. where the data came from.",
-          "`source.license` (what the origin allows) and `license` (what this document allows) are different fields. Declaring a licence does not grant rights the origin never gave."
+          "`source.license` (what the origin allows) and `license` (what this document allows) are different fields. Declaring a licence does not grant rights the origin never gave.",
+          "The source's `DESCRIPTION` was HTML — which is what Google Calendar writes, and what an importer actually meets. It arrives here converted: `<a>` to a Markdown link, `<br>` to a line break, entities to their character. `description` says plain text or Markdown, and copying the markup through would validate while breaking that promise."
         ],
         "es": [
           "Sin `attendanceMode`, porque iCalendar no sabe expresarlo. Callarse y decir `in-person` son afirmaciones distintas, y solo una es honesta.",
           "Falta `location.address`, y el checker avisa: un `.ics` trae `LOCATION` como una línea de texto libre, sin partes en las que separarla. El aviso dice qué le falta al evento, no de quién es la culpa.",
           "`source` es obligatoria cuando el evento se importó o agregó. Es ortogonal a `organizers`: quién hace el evento frente a de dónde salieron los datos.",
-          "`source.license` (lo que permite la fuente) y `license` (lo que permite este documento) son campos distintos. Declarar una licencia no concede derechos que la fuente nunca dio."
+          "`source.license` (lo que permite la fuente) y `license` (lo que permite este documento) son campos distintos. Declarar una licencia no concede derechos que la fuente nunca dio.",
+          "El `DESCRIPTION` de la fuente venía en HTML —que es lo que escribe Google Calendar y lo que un importador se encuentra de verdad—. Aquí llega ya convertido: el `<a>` a enlace Markdown, el `<br>` a salto de línea, las entidades a su carácter. `description` dice texto plano o Markdown, y copiar el marcado tal cual habría validado rompiendo esa promesa."
         ]
       },
-      "source": "{\n  \"specVersion\": \"0.5.0\",\n  \"id\": \"https://calendar.example/ics/rust-madrid#a1b2c3d4-uid-from-the-ics\",\n  \"name\": \"Rust Madrid — June meetup\",\n  \"description\": \"Talks on WASM and Rust tooling.\",\n  \"organizers\": [\n    {\n      \"name\": \"Rust Madrid\",\n      \"email\": \"hola@rustmadrid.example\"\n    }\n  ],\n  \"startDate\": \"2026-06-26T19:00\",\n  \"endDate\": \"2026-06-26T21:00\",\n  \"timezone\": \"Europe/Madrid\",\n  \"location\": {\n    \"venue\": \"Campus Madrid, Calle de Moreno Nieto 2, Madrid\",\n    \"geo\": {\n      \"lat\": 40.4081,\n      \"lon\": -3.7188\n    }\n  },\n  \"tags\": [\n    \"rust\",\n    \"wasm\"\n  ],\n  \"languages\": [\n    \"es\"\n  ],\n  \"license\": \"CC-BY-4.0\",\n  \"source\": {\n    \"name\": \"Rust Madrid\",\n    \"url\": \"https://calendar.example/ics/rust-madrid\",\n    \"license\": \"CC-BY-4.0\",\n    \"retrievedAt\": \"2026-06-01T05:00:00Z\"\n  },\n  \"updatedAt\": \"2026-06-10T18:00:00Z\"\n}",
+      "source": "{\n  \"specVersion\": \"0.5.0\",\n  \"id\": \"https://calendar.example/ics/rust-madrid#a1b2c3d4-uid-from-the-ics\",\n  \"name\": \"Rust Madrid — June meetup\",\n  \"description\": \"Talks on WASM and Rust tooling.\\n\\nApúntate en [la web](https://rustmadrid.example/junio) — aforo limitado.\",\n  \"organizers\": [\n    {\n      \"name\": \"Rust Madrid\",\n      \"email\": \"hola@rustmadrid.example\"\n    }\n  ],\n  \"startDate\": \"2026-06-26T19:00\",\n  \"endDate\": \"2026-06-26T21:00\",\n  \"timezone\": \"Europe/Madrid\",\n  \"location\": {\n    \"venue\": \"Campus Madrid, Calle de Moreno Nieto 2, Madrid\",\n    \"geo\": {\n      \"lat\": 40.4081,\n      \"lon\": -3.7188\n    }\n  },\n  \"tags\": [\n    \"rust\",\n    \"wasm\"\n  ],\n  \"languages\": [\n    \"es\"\n  ],\n  \"license\": \"CC-BY-4.0\",\n  \"source\": {\n    \"name\": \"Rust Madrid\",\n    \"url\": \"https://calendar.example/ics/rust-madrid\",\n    \"license\": \"CC-BY-4.0\",\n    \"retrievedAt\": \"2026-06-01T05:00:00Z\"\n  },\n  \"updatedAt\": \"2026-06-10T18:00:00Z\"\n}",
       "lines": {
         "event.specVersion": [
           2
@@ -1927,7 +1929,7 @@
           "`url` es una sola página canónica; `sameAs` es la lista de otros perfiles, que mapea a `Person.sameAs` de schema.org. `speakers` NO está en el perfil recomendado: quien importa un `.ics` nunca lo tiene."
         ]
       },
-      "source": "{\n  \"specVersion\": \"0.5.0\",\n  \"id\": \"https://pyalmeria.example/talks/2026-09-async\",\n  \"url\": \"https://pyalmeria.example/talks/2026-09-async\",\n  \"name\": \"PyAlmería — Panel: el futuro de async en Python\",\n  \"description\": \"Mesa redonda sobre el estado de asyncio, trio y anyio, con preguntas del público.\",\n  \"image\": [\n    {\n      \"url\": \"https://pyalmeria.example/img/2026-09-async.png\",\n      \"alt\": \"Cartel: tres ponentes sobre fondo azul y el título del panel\"\n    }\n  ],\n  \"organizers\": [\n    {\n      \"name\": \"PyAlmería\",\n      \"url\": \"https://pyalmeria.example\"\n    }\n  ],\n  \"speakers\": [\n    {\n      \"name\": \"Ada Lovelace\",\n      \"url\": \"https://ada.example\",\n      \"sameAs\": [\n        \"https://fosstodon.org/@ada\",\n        \"https://www.linkedin.com/in/ada-lovelace\"\n      ]\n    },\n    {\n      \"name\": \"Grace Hopper\"\n    },\n    {\n      \"type\": \"organization\",\n      \"name\": \"El equipo de anyio\"\n    }\n  ],\n  \"startDate\": \"2026-09-24T19:00\",\n  \"endDate\": \"2026-09-24T20:30\",\n  \"timezone\": \"Europe/Madrid\",\n  \"attendanceMode\": \"in-person\",\n  \"location\": {\n    \"venue\": \"El Cable, Almería\",\n    \"address\": {\n      \"locality\": \"Almería\",\n      \"country\": \"ES\"\n    }\n  },\n  \"tags\": [\n    \"python\",\n    \"async\"\n  ],\n  \"languages\": [\n    \"es\"\n  ],\n  \"textLanguage\": \"es\",\n  \"license\": \"CC-BY-4.0\",\n  \"updatedAt\": \"2026-09-01T09:00:00Z\"\n}",
+      "source": "{\n  \"specVersion\": \"0.5.0\",\n  \"id\": \"https://pyalmeria.example/talks/2026-09-async\",\n  \"url\": \"https://pyalmeria.example/talks/2026-09-async\",\n  \"name\": \"PyAlmería — Panel: el futuro de async en Python\",\n  \"description\": \"Mesa redonda sobre el estado de asyncio, trio y anyio, con preguntas del público.\",\n  \"image\": [\n    {\n      \"url\": \"https://pyalmeria.example/img/2026-09-async.png\",\n      \"alt\": \"Cartel: tres ponentes sobre fondo azul y el título del panel\"\n    }\n  ],\n  \"organizers\": [\n    {\n      \"name\": \"PyAlmería\",\n      \"url\": \"https://pyalmeria.example\"\n    }\n  ],\n  \"speakers\": [\n    {\n      \"name\": \"Ada Lovelace\",\n      \"affiliation\": \"Analytical Engines\",\n      \"url\": \"https://ada.example\",\n      \"sameAs\": [\n        \"https://fosstodon.org/@ada\",\n        \"https://www.linkedin.com/in/ada-lovelace\"\n      ]\n    },\n    {\n      \"name\": \"Grace Hopper\",\n      \"affiliation\": \"US Navy\"\n    },\n    {\n      \"type\": \"organization\",\n      \"name\": \"El equipo de anyio\"\n    }\n  ],\n  \"startDate\": \"2026-09-24T19:00\",\n  \"endDate\": \"2026-09-24T20:30\",\n  \"timezone\": \"Europe/Madrid\",\n  \"attendanceMode\": \"in-person\",\n  \"location\": {\n    \"venue\": \"El Cable, Almería\",\n    \"address\": {\n      \"locality\": \"Almería\",\n      \"country\": \"ES\"\n    }\n  },\n  \"tags\": [\n    \"python\",\n    \"async\"\n  ],\n  \"languages\": [\n    \"es\"\n  ],\n  \"textLanguage\": \"es\",\n  \"license\": \"CC-BY-4.0\",\n  \"updatedAt\": \"2026-09-01T09:00:00Z\"\n}",
       "lines": {
         "event.specVersion": [
           2
@@ -1964,62 +1966,66 @@
         ],
         "event.speakers[].name": [
           21,
-          29,
-          33
+          30,
+          35
+        ],
+        "event.speakers[].affiliation": [
+          22,
+          31
         ],
         "event.speakers[].url": [
-          22
-        ],
-        "event.speakers[].sameAs": [
           23
         ],
+        "event.speakers[].sameAs": [
+          24
+        ],
         "event.speakers[].type": [
-          32
+          34
         ],
         "event.speakers": [
           19
         ],
         "event.startDate": [
-          36
-        ],
-        "event.endDate": [
-          37
-        ],
-        "event.timezone": [
           38
         ],
-        "event.attendanceMode": [
+        "event.endDate": [
           39
         ],
-        "event.location.venue": [
-          41
-        ],
-        "event.location.address.locality": [
-          43
-        ],
-        "event.location.address.country": [
-          44
-        ],
-        "event.location.address": [
-          42
-        ],
-        "event.location": [
+        "event.timezone": [
           40
         ],
+        "event.attendanceMode": [
+          41
+        ],
+        "event.location.venue": [
+          43
+        ],
+        "event.location.address.locality": [
+          45
+        ],
+        "event.location.address.country": [
+          46
+        ],
+        "event.location.address": [
+          44
+        ],
+        "event.location": [
+          42
+        ],
         "event.tags": [
-          47
+          49
         ],
         "event.languages": [
-          51
+          53
         ],
         "event.textLanguage": [
-          54
+          56
         ],
         "event.license": [
-          55
+          57
         ],
         "event.updatedAt": [
-          56
+          58
         ]
       }
     },
@@ -2276,6 +2282,137 @@
         ],
         "feed.events": [
           26
+        ]
+      }
+    },
+    {
+      "file": "feed-covers.json",
+      "kind": "feed",
+      "repoUrl": "https://github.com/OpenTechEvents/opentechevents-spec/blob/main/spec/v0.5/examples/feed-covers.json",
+      "cases": [
+        "feed"
+      ],
+      "fields": [
+        "feed.covers",
+        "feed.covers.from",
+        "event.source"
+      ],
+      "title": {
+        "en": "An aggregator that prunes its history, and says so",
+        "es": "Un agregador que poda su historia, y lo dice"
+      },
+      "summary": {
+        "en": "A long-running feed that no longer publishes its whole archive — `covers` is what makes dropping the old events honest instead of silent.",
+        "es": "Un feed de años que ya no publica su archivo entero — `covers` es lo que hace que podar lo viejo sea honesto en vez de silencioso."
+      },
+      "points": {
+        "en": [
+          "`covers` says what the feed claims to be COMPLETE about. From 2026-01-01 onwards an absent event means it is not happening; before that date the feed asserts nothing and a consumer must not infer removal.",
+          "Without it, the spec's own rule — a cancelled event stays published, never deleted — makes absence mean deletion, so pruning 2025 would assert that those events never happened.",
+          "No `to`, which is the normal shape: a feed stays complete into the future and only trims its past.",
+          "An aggregator feed carries no `organizers` and no `textLanguage`: it does not organise what it publishes, and its events do not share a language, so each declares its own."
+        ],
+        "es": [
+          "`covers` dice sobre qué afirma el feed ser COMPLETO. De 2026-01-01 en adelante, que falte un evento significa que no se celebra; antes de esa fecha el feed no afirma nada y quien lo consume no puede deducir que se eliminó.",
+          "Sin él, la propia regla de la spec —un evento cancelado se queda publicado, nunca se borra— hace que la ausencia signifique eliminación, así que podar 2025 afirmaría que aquellos eventos nunca ocurrieron.",
+          "Sin `to`, que es la forma normal: un feed sigue siendo completo hacia el futuro y solo recorta su pasado.",
+          "Un feed de agregador no lleva `organizers` ni `textLanguage`: no organiza lo que publica, y sus eventos no comparten idioma, así que cada uno declara el suyo."
+        ]
+      },
+      "source": "{\n  \"specVersion\": \"0.5.0\",\n  \"title\": \"Eventos de eventos.example\",\n  \"description\": \"Agregador de eventos tech de habla hispana.\",\n  \"url\": \"https://eventos.example\",\n  \"license\": \"CC-BY-4.0\",\n  \"updatedAt\": \"2026-11-03T06:00:00Z\",\n  \"covers\": {\n    \"from\": \"2026-01-01\"\n  },\n  \"events\": [\n    {\n      \"id\": \"https://eventos.example/e/2026-11-07-biznagafest\",\n      \"url\": \"https://eventos.example/e/2026-11-07-biznagafest\",\n      \"name\": \"BiznagaFest 2026\",\n      \"description\": \"Encuentro de comunidades técnicas en Málaga.\",\n      \"image\": [\n        \"https://eventos.example/img/2026-11-07-biznagafest.png\"\n      ],\n      \"organizers\": [\n        {\n          \"name\": \"GDG Málaga\",\n          \"url\": \"https://gdg.community.dev/gdg-malaga/\"\n        }\n      ],\n      \"startDate\": \"2026-11-07T09:00\",\n      \"endDate\": \"2026-11-07T21:00\",\n      \"timezone\": \"Europe/Madrid\",\n      \"attendanceMode\": \"in-person\",\n      \"location\": {\n        \"venue\": \"FYCMA, Málaga\"\n      },\n      \"tags\": [\n        \"comunidad\",\n        \"ia\"\n      ],\n      \"languages\": [\n        \"es\"\n      ],\n      \"textLanguage\": \"es\",\n      \"source\": {\n        \"name\": \"BiznagaFest\",\n        \"url\": \"https://www.biznagafest.com/\",\n        \"retrievedAt\": \"2026-11-03T05:00:00Z\"\n      },\n      \"updatedAt\": \"2026-11-03T05:30:00Z\"\n    }\n  ]\n}",
+      "lines": {
+        "feed.specVersion": [
+          2
+        ],
+        "feed.title": [
+          3
+        ],
+        "feed.description": [
+          4
+        ],
+        "feed.url": [
+          5
+        ],
+        "feed.license": [
+          6
+        ],
+        "feed.updatedAt": [
+          7
+        ],
+        "feed.covers.from": [
+          9
+        ],
+        "feed.covers": [
+          8
+        ],
+        "event.id": [
+          13
+        ],
+        "event.url": [
+          14
+        ],
+        "event.name": [
+          15
+        ],
+        "event.description": [
+          16
+        ],
+        "event.image": [
+          17
+        ],
+        "event.organizers[].name": [
+          22
+        ],
+        "event.organizers[].url": [
+          23
+        ],
+        "event.organizers": [
+          20
+        ],
+        "event.startDate": [
+          26
+        ],
+        "event.endDate": [
+          27
+        ],
+        "event.timezone": [
+          28
+        ],
+        "event.attendanceMode": [
+          29
+        ],
+        "event.location.venue": [
+          31
+        ],
+        "event.location": [
+          30
+        ],
+        "event.tags": [
+          33
+        ],
+        "event.languages": [
+          37
+        ],
+        "event.textLanguage": [
+          40
+        ],
+        "event.source.name": [
+          42
+        ],
+        "event.source.url": [
+          43
+        ],
+        "event.source.retrievedAt": [
+          44
+        ],
+        "event.source": [
+          41
+        ],
+        "event.updatedAt": [
+          46
+        ],
+        "feed.events": [
+          11
         ]
       }
     },
@@ -3259,6 +3396,12 @@
         ]
       },
       {
+        "file": "feed-covers.json",
+        "lines": [
+          13
+        ]
+      },
+      {
         "file": "event-recording.json",
         "lines": [
           3
@@ -3390,6 +3533,12 @@
         ]
       },
       {
+        "file": "feed-covers.json",
+        "lines": [
+          15
+        ]
+      },
+      {
         "file": "event-recording.json",
         "lines": [
           5
@@ -3505,7 +3654,7 @@
       {
         "file": "event-with-speakers.json",
         "lines": [
-          36
+          38
         ]
       },
       {
@@ -3518,6 +3667,12 @@
         "file": "feed-alternates.json",
         "lines": [
           44
+        ]
+      },
+      {
+        "file": "feed-covers.json",
+        "lines": [
+          26
         ]
       },
       {
@@ -3636,7 +3791,7 @@
       {
         "file": "event-with-speakers.json",
         "lines": [
-          38
+          40
         ]
       },
       {
@@ -3649,6 +3804,12 @@
         "file": "feed-alternates.json",
         "lines": [
           46
+        ]
+      },
+      {
+        "file": "feed-covers.json",
+        "lines": [
+          28
         ]
       },
       {
@@ -3751,7 +3912,7 @@
       {
         "file": "event-with-speakers.json",
         "lines": [
-          55
+          57
         ]
       },
       {
@@ -3860,6 +4021,12 @@
         "file": "feed-alternates.json",
         "lines": [
           29
+        ]
+      },
+      {
+        "file": "feed-covers.json",
+        "lines": [
+          14
         ]
       },
       {
@@ -3985,6 +4152,12 @@
         "file": "feed-alternates.json",
         "lines": [
           31
+        ]
+      },
+      {
+        "file": "feed-covers.json",
+        "lines": [
+          16
         ]
       },
       {
@@ -4147,6 +4320,12 @@
         ]
       },
       {
+        "file": "feed-covers.json",
+        "lines": [
+          17
+        ]
+      },
+      {
         "file": "event-recording.json",
         "lines": [
           7
@@ -4275,6 +4454,12 @@
         ]
       },
       {
+        "file": "feed-covers.json",
+        "lines": [
+          22
+        ]
+      },
+      {
         "file": "event-recording.json",
         "lines": [
           12
@@ -4386,6 +4571,12 @@
         ]
       },
       {
+        "file": "feed-covers.json",
+        "lines": [
+          23
+        ]
+      },
+      {
         "file": "event-recording.json",
         "lines": [
           13
@@ -4491,6 +4682,12 @@
         ]
       },
       {
+        "file": "feed-covers.json",
+        "lines": [
+          20
+        ]
+      },
+      {
         "file": "event-recording.json",
         "lines": [
           10
@@ -4583,7 +4780,7 @@
       {
         "file": "event-with-speakers.json",
         "lines": [
-          37
+          39
         ]
       },
       {
@@ -4596,6 +4793,12 @@
         "file": "feed-alternates.json",
         "lines": [
           45
+        ]
+      },
+      {
+        "file": "feed-covers.json",
+        "lines": [
+          27
         ]
       },
       {
@@ -4702,7 +4905,7 @@
       {
         "file": "event-with-speakers.json",
         "lines": [
-          39
+          41
         ]
       },
       {
@@ -4715,6 +4918,12 @@
         "file": "feed-alternates.json",
         "lines": [
           47
+        ]
+      },
+      {
+        "file": "feed-covers.json",
+        "lines": [
+          29
         ]
       },
       {
@@ -4821,7 +5030,7 @@
       {
         "file": "event-with-speakers.json",
         "lines": [
-          41
+          43
         ]
       },
       {
@@ -4834,6 +5043,12 @@
         "file": "feed-alternates.json",
         "lines": [
           49
+        ]
+      },
+      {
+        "file": "feed-covers.json",
+        "lines": [
+          31
         ]
       },
       {
@@ -4987,7 +5202,7 @@
       {
         "file": "event-with-speakers.json",
         "lines": [
-          43
+          45
         ]
       },
       {
@@ -5170,7 +5385,7 @@
       {
         "file": "event-with-speakers.json",
         "lines": [
-          44
+          46
         ]
       },
       {
@@ -5264,7 +5479,7 @@
       {
         "file": "event-with-speakers.json",
         "lines": [
-          42
+          44
         ]
       },
       {
@@ -5462,7 +5677,7 @@
       {
         "file": "event-with-speakers.json",
         "lines": [
-          40
+          42
         ]
       },
       {
@@ -5475,6 +5690,12 @@
         "file": "feed-alternates.json",
         "lines": [
           48
+        ]
+      },
+      {
+        "file": "feed-covers.json",
+        "lines": [
+          30
         ]
       },
       {
@@ -5587,7 +5808,7 @@
       {
         "file": "event-with-speakers.json",
         "lines": [
-          47
+          49
         ]
       },
       {
@@ -5600,6 +5821,12 @@
         "file": "feed-alternates.json",
         "lines": [
           51
+        ]
+      },
+      {
+        "file": "feed-covers.json",
+        "lines": [
+          33
         ]
       },
       {
@@ -5712,7 +5939,7 @@
       {
         "file": "event-with-speakers.json",
         "lines": [
-          51
+          53
         ]
       },
       {
@@ -5725,6 +5952,12 @@
         "file": "feed-alternates.json",
         "lines": [
           55
+        ]
+      },
+      {
+        "file": "feed-covers.json",
+        "lines": [
+          37
         ]
       },
       {
@@ -5981,7 +6214,7 @@
       {
         "file": "event-with-speakers.json",
         "lines": [
-          56
+          58
         ]
       },
       {
@@ -5994,6 +6227,12 @@
         "file": "feed-alternates.json",
         "lines": [
           58
+        ]
+      },
+      {
+        "file": "feed-covers.json",
+        "lines": [
+          46
         ]
       },
       {
@@ -6337,13 +6576,19 @@
       {
         "file": "event-with-speakers.json",
         "lines": [
-          54
+          56
         ]
       },
       {
         "file": "event-contributing.json",
         "lines": [
           33
+        ]
+      },
+      {
+        "file": "feed-covers.json",
+        "lines": [
+          40
         ]
       },
       {
@@ -6447,6 +6692,12 @@
         ]
       },
       {
+        "file": "feed-covers.json",
+        "lines": [
+          2
+        ]
+      },
+      {
         "file": "feed-multipart-pricing.json",
         "lines": [
           2
@@ -6480,6 +6731,12 @@
       },
       {
         "file": "feed-alternates.json",
+        "lines": [
+          3
+        ]
+      },
+      {
+        "file": "feed-covers.json",
         "lines": [
           3
         ]
@@ -6523,6 +6780,12 @@
         ]
       },
       {
+        "file": "feed-covers.json",
+        "lines": [
+          4
+        ]
+      },
+      {
         "file": "feed-multipart-pricing.json",
         "lines": [
           4
@@ -6556,6 +6819,12 @@
       },
       {
         "file": "feed-alternates.json",
+        "lines": [
+          5
+        ]
+      },
+      {
+        "file": "feed-covers.json",
         "lines": [
           5
         ]
@@ -6631,6 +6900,12 @@
         ]
       },
       {
+        "file": "feed-covers.json",
+        "lines": [
+          6
+        ]
+      },
+      {
         "file": "feed-multipart-pricing.json",
         "lines": [
           13
@@ -6666,6 +6941,12 @@
         "file": "feed-alternates.json",
         "lines": [
           14
+        ]
+      },
+      {
+        "file": "feed-covers.json",
+        "lines": [
+          7
         ]
       },
       {
@@ -6737,6 +7018,12 @@
         "file": "feed-alternates.json",
         "lines": [
           26
+        ]
+      },
+      {
+        "file": "feed-covers.json",
+        "lines": [
+          11
         ]
       },
       {
@@ -6996,6 +7283,12 @@
         "lines": [
           36
         ]
+      },
+      {
+        "file": "feed-covers.json",
+        "lines": [
+          42
+        ]
       }
     ],
     "event.source.url": [
@@ -7009,6 +7302,12 @@
         "file": "event-contributing.json",
         "lines": [
           37
+        ]
+      },
+      {
+        "file": "feed-covers.json",
+        "lines": [
+          43
         ]
       }
     ],
@@ -7032,6 +7331,12 @@
         "lines": [
           38
         ]
+      },
+      {
+        "file": "feed-covers.json",
+        "lines": [
+          44
+        ]
       }
     ],
     "event.source": [
@@ -7045,6 +7350,12 @@
         "file": "event-contributing.json",
         "lines": [
           35
+        ]
+      },
+      {
+        "file": "feed-covers.json",
+        "lines": [
+          41
         ]
       }
     ],
@@ -7093,8 +7404,8 @@
         "file": "event-with-speakers.json",
         "lines": [
           21,
-          29,
-          33
+          30,
+          35
         ]
       },
       {
@@ -7117,11 +7428,20 @@
         ]
       }
     ],
+    "event.speakers[].affiliation": [
+      {
+        "file": "event-with-speakers.json",
+        "lines": [
+          22,
+          31
+        ]
+      }
+    ],
     "event.speakers[].url": [
       {
         "file": "event-with-speakers.json",
         "lines": [
-          22
+          23
         ]
       },
       {
@@ -7144,7 +7464,7 @@
       {
         "file": "event-with-speakers.json",
         "lines": [
-          23
+          24
         ]
       },
       {
@@ -7158,7 +7478,7 @@
       {
         "file": "event-with-speakers.json",
         "lines": [
-          32
+          34
         ]
       },
       {
@@ -7231,6 +7551,22 @@
         "file": "feed-alternates.json",
         "lines": [
           25
+        ]
+      }
+    ],
+    "feed.covers.from": [
+      {
+        "file": "feed-covers.json",
+        "lines": [
+          9
+        ]
+      }
+    ],
+    "feed.covers": [
+      {
+        "file": "feed-covers.json",
+        "lines": [
+          8
         ]
       }
     ],

@@ -10,12 +10,10 @@
       "$ref": "https://opentechevents.org/schema/v0.5/event.schema.json#/$defs/event"
     },
     {
-      "description": "Without these, the event is published but not findable: url is the only link RSS/Atom has, description is what every destination shows, image is what makes the event visible where it is listed (Google recommends it for the Event rich result, and every platform studied already emits one), organizers is who is trusted for it, attendanceMode and location answer 'can I go?', tags and languages are what someone filters by, and updatedAt is what lets a subscriber sync incrementally instead of refetching everything.",
+      "description": "Without these, the event is published but not findable: description is what every destination shows, organizers is who is trusted for it, attendanceMode and location answer 'can I go?', tags and languages are what someone filters by, and updatedAt is what lets a subscriber sync incrementally instead of refetching everything. url and image are asked for separately below, because where they live depends on whether the document is a part of a larger event.",
       "type": "object",
       "required": [
-        "url",
         "description",
-        "image",
         "organizers",
         "attendanceMode",
         "location",
@@ -23,6 +21,55 @@
         "languages",
         "updatedAt"
       ]
+    },
+    {
+      "description": "url is the only link RSS/Atom has, and image is what makes the event visible where it is listed (Google recommends it for the Event rich result, and every platform studied already emits one). A document with no partOf is the whole event: nothing else carries these, so it has to.",
+      "if": {
+        "type": "object",
+        "not": {
+          "required": [
+            "partOf"
+          ]
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "url",
+          "image"
+        ]
+      }
+    },
+    {
+      "description": "A part of a larger event usually has no page and no poster of its own — a talk inside a one-day conference is announced on the conference's page, under the conference's artwork, and README.md asks for exactly this modelling (a talk's speakers live on the talk's document). Warning it for the two fields the parent is supposed to carry would mark the recommended modelling as low quality. So image is not asked for at all here, and url is asked of partOf instead: RSS/Atom still gets a link for the item, which is the only reason url was recommended in the first place. A part that DOES have its own page should still publish it in url — this stops short of satisfying it, it does not forbid it.",
+      "if": {
+        "type": "object",
+        "allOf": [
+          {
+            "required": [
+              "partOf"
+            ]
+          },
+          {
+            "not": {
+              "required": [
+                "url"
+              ]
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "partOf": {
+            "type": "object",
+            "required": [
+              "url"
+            ]
+          }
+        }
+      }
     },
     {
       "description": "cfp.closesAt is recommended once there IS a call for proposals, and meaningless otherwise. The reason cfp exists is the question 'which conferences are accepting proposals right now', and without a deadline nobody can answer it: a consumer sees a link and cannot tell whether it closed last March. The warning is actionable by definition — whoever opened the call knows when it closes.",

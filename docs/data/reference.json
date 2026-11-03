@@ -479,8 +479,8 @@
             "Charla introductoria a la programación asíncrona en Python, con ejemplos en vivo."
           ],
           "description": {
-            "en": "Short description. Plain text or Markdown.",
-            "es": "Descripción breve. Texto plano o Markdown."
+            "en": "Short description. Plain text or Markdown — never HTML: an importer whose source carries markup (Google Calendar writes DESCRIPTION with <a> and <br>) converts links to Markdown, tags to line breaks, entities to characters, and drops the rest. See README.",
+            "es": "Descripción breve. Texto plano o Markdown, nunca HTML: un importador cuya fuente trae marcado (Google Calendar escribe DESCRIPTION con <a> y <br>) convierte los enlaces a Markdown, las etiquetas a saltos de línea, las entidades a su carácter, y descarta el resto. Ver README."
           },
           "requiredIn": null
         },
@@ -707,6 +707,21 @@
             "es": "Nombre del ponente. Un nombre propio: nunca se traduce."
           },
           "requiredIn": "speakers[]"
+        },
+        {
+          "path": "speakers[].affiliation",
+          "type": "string",
+          "required": false,
+          "recommended": false,
+          "examples": [
+            "Bettatech",
+            "Igalia"
+          ],
+          "description": {
+            "en": "The organisation this speaker is there as — ONE display name, the way an agenda writes it (\"Martí Cristobal, Bettatech\"). It exists so that the company does NOT end up inside name: name is the person, and a name carrying an employer stops matching the same person anywhere else. A proper noun, never translated, same discipline as organizers[].name. Deliberately a string and not an object: this is a label on the speaker, not a second organisation to describe — if it needs a URL of its own it is probably an organizer or a sponsor. Meaningless and ignored on type: organization, where name already IS the organisation. Maps to schema.org Person.affiliation.",
+            "es": "La organización por la que viene esta ponente — UN nombre para mostrar, tal y como lo escribe una agenda (\"Martí Cristobal, Bettatech\"). Existe para que la empresa NO acabe dentro de name: name es la persona, y un nombre que lleva pegado un empleador deja de casar con esa misma persona en cualquier otro sitio. Nombre propio, nunca se traduce, la misma disciplina que organizers[].name. Es un string y no un objeto a propósito: esto es una etiqueta sobre la ponente, no una segunda organización que describir — si necesita URL propia, probablemente sea organizadora o patrocinadora. En type: organization no significa nada y se ignora, porque ahí name YA es la organización. Mapea a schema.org Person.affiliation."
+          },
+          "requiredIn": null
         },
         {
           "path": "speakers[].url",
@@ -1543,7 +1558,7 @@
           "path": "partOf.url",
           "type": "string (iri)",
           "required": false,
-          "recommended": false,
+          "recommended": true,
           "examples": [
             "https://rustmadrid.example/meetups"
           ],
@@ -1564,8 +1579,8 @@
           ],
           "default": "series",
           "description": {
-            "en": "series: independent occurrences that share an identity (a monthly meetup). multipart: parts of ONE event held on non-consecutive dates (a three-session study jam on non-consecutive Saturdays, one registration). series is the tolerant choice, and the choice changes the translation: a series becomes schema.org EventSeries, a multi-part event becomes an Event whose parts are its subEvent.",
-            "es": "`series`: ocurrencias independientes que comparten identidad (un meetup mensual). `multipart`: partes de UN SOLO evento celebrado en fechas no consecutivas (un study jam de tres sesiones en sábados no consecutivos, con una sola inscripción). `series` es la opción tolerante, y la elección cambia la traducción: una serie se convierte en `EventSeries` de schema.org; un evento multi-parte, en un `Event` cuyas partes son su `subEvent`."
+            "en": "series: independent occurrences that share an identity (a monthly meetup). multipart: parts of ONE event, published as one document per part because each part has its own date, time or room — the three sessions of a study jam on non-consecutive Saturdays, and equally the seventeen talks of a single conference day. What makes it multipart is that the parts are not attended or cancelled independently and there is one registration for the whole; the distance between the dates decides nothing. series is the tolerant choice, and the choice changes the translation: a series becomes schema.org EventSeries, a multi-part event becomes an Event whose parts are its subEvent.",
+            "es": "`series`: ocurrencias independientes que comparten identidad (un meetup mensual). `multipart`: partes de UN SOLO evento, publicadas como un documento por parte porque cada una tiene su propia fecha, hora o sala — las tres sesiones de un study jam en sábados no consecutivos, e igualmente las diecisiete charlas de un único día de conferencia. Lo que lo hace `multipart` es que las partes no se atienden ni se cancelan por separado y hay una sola inscripción para el conjunto; la distancia entre las fechas no decide nada. `series` es la opción tolerante, y la elección cambia la traducción: una serie se convierte en `EventSeries` de schema.org; un evento multi-parte, en un `Event` cuyas partes son su `subEvent`."
           },
           "requiredIn": null
         },
@@ -2174,6 +2189,29 @@
             "en": "Must carry at least one property.",
             "es": "Debe llevar al menos una propiedad."
           }
+        },
+        {
+          "kind": "minProperties",
+          "min": 1,
+          "owner": "covers",
+          "key": "feed.covers#0",
+          "text": {
+            "en": "Must carry at least one property.",
+            "es": "Debe llevar al menos una propiedad."
+          }
+        },
+        {
+          "kind": "prose",
+          "note": {
+            "en": "covers.to must not be earlier than covers.from.",
+            "es": "covers.to no puede ser anterior a covers.from."
+          },
+          "owner": "covers",
+          "key": "feed.covers#1",
+          "text": {
+            "en": "",
+            "es": ""
+          }
         }
       ],
       "title": {
@@ -2370,6 +2408,54 @@
           "requiredIn": null
         },
         {
+          "path": "covers",
+          "type": "object",
+          "required": false,
+          "recommended": false,
+          "examples": [
+            {
+              "from": "2026-01-01"
+            },
+            {
+              "from": "2026-01-01",
+              "to": "2027-12-31"
+            }
+          ],
+          "description": {
+            "en": "New in v0.5. What this feed claims to be COMPLETE about, as a date window over the events' own startDate. Inside the window, the feed is the whole truth: an event that is absent is not happening (withdrawn or cancelled-and-removed), and a consumer MAY drop what it no longer finds. Outside the window the feed asserts NOTHING, and a consumer MUST NOT infer that a missing event was removed. Both bounds are optional: `from` alone means 'everything from this date on', `to` alone means 'everything up to this date', and an empty object is not allowed. Omitting `covers` keeps the pre-v0.5 meaning unchanged — the feed makes no completeness claim at all — so this is purely additive. It exists so that a publisher who prunes old events can say so, instead of silently asserting that events they dropped never happened. See README.",
+            "es": "Novedad de v0.5. Sobre qué afirma este feed ser COMPLETO, como una ventana de fechas sobre el startDate de los eventos. Dentro de la ventana el feed es toda la verdad: un evento ausente no se celebra (retirado, o cancelado y eliminado), y quien lo consume PUEDE borrar lo que ya no encuentra. Fuera de la ventana el feed NO afirma nada, y quien lo consume NO DEBE deducir que un evento que falta se eliminó. Ambos extremos son opcionales: solo `from` significa «todo a partir de esta fecha», solo `to` significa «todo hasta esta fecha», y un objeto vacío no vale. Omitir `covers` mantiene el significado anterior a v0.5 sin cambios —el feed no afirma completitud ninguna—, así que es puramente aditivo. Existe para que quien poda eventos antiguos pueda decirlo, en vez de afirmar en silencio que los eventos que quitó nunca ocurrieron. Ver README."
+          },
+          "requiredIn": null
+        },
+        {
+          "path": "covers.from",
+          "type": "string (date)",
+          "required": false,
+          "recommended": false,
+          "examples": [
+            "2026-01-01"
+          ],
+          "description": {
+            "en": "First day the feed claims completeness for. Absent means unbounded into the past.",
+            "es": "Primer día del que el feed afirma completitud. Ausente significa sin límite hacia el pasado."
+          },
+          "requiredIn": null
+        },
+        {
+          "path": "covers.to",
+          "type": "string (date)",
+          "required": false,
+          "recommended": false,
+          "examples": [
+            "2027-12-31"
+          ],
+          "description": {
+            "en": "Last day the feed claims completeness for, INCLUSIVE — the same convention as an all-day endDate. Absent means unbounded into the future, which is the usual case: a feed normally claims everything from some date onwards.",
+            "es": "Último día del que el feed afirma completitud, INCLUSIVE — la misma convención que un endDate de día completo. Ausente significa sin límite hacia el futuro, que es el caso habitual: normalmente un feed afirma todo a partir de una fecha."
+          },
+          "requiredIn": null
+        },
+        {
           "path": "alternates",
           "type": "object[]",
           "required": false,
@@ -2453,5 +2539,12 @@
         }
       ]
     }
+  ],
+  "versions": [
+    "v0.1",
+    "v0.2",
+    "v0.3",
+    "v0.4",
+    "v0.5"
   ]
 }

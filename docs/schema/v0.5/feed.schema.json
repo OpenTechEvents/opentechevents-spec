@@ -39,7 +39,9 @@
       "type": "string",
       "format": "iri",
       "pattern": "^https?://",
-      "not": {"pattern": "^https?://[^/?#]*@"},
+      "not": {
+        "pattern": "^https?://[^/?#]*@"
+      },
       "examples": [
         "https://pyalmeria.example"
       ]
@@ -77,7 +79,9 @@
       "type": "string",
       "format": "iri",
       "pattern": "^https?://",
-      "not": {"pattern": "^https?://[^/?#]*@"},
+      "not": {
+        "pattern": "^https?://[^/?#]*@"
+      },
       "examples": [
         "https://creativecommons.org/licenses/by/4.0/"
       ]
@@ -98,6 +102,38 @@
             "title": "Rust Girona events",
             "description": "Weekly online Rust coding sessions, in Catalan and Spanish."
           }
+        }
+      ]
+    },
+    "covers": {
+      "description": "New in v0.5. What this feed claims to be COMPLETE about, as a date window over the events' own startDate. Inside the window, the feed is the whole truth: an event that is absent is not happening (withdrawn or cancelled-and-removed), and a consumer MAY drop what it no longer finds. Outside the window the feed asserts NOTHING, and a consumer MUST NOT infer that a missing event was removed. Both bounds are optional: `from` alone means 'everything from this date on', `to` alone means 'everything up to this date', and an empty object is not allowed. Omitting `covers` keeps the pre-v0.5 meaning unchanged — the feed makes no completeness claim at all — so this is purely additive. It exists so that a publisher who prunes old events can say so, instead of silently asserting that events they dropped never happened. See README.",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "from": {
+          "description": "First day the feed claims completeness for. Absent means unbounded into the past.",
+          "$ref": "https://opentechevents.org/schema/v0.5/event.schema.json#/$defs/date",
+          "examples": [
+            "2026-01-01"
+          ]
+        },
+        "to": {
+          "description": "Last day the feed claims completeness for, INCLUSIVE — the same convention as an all-day endDate. Absent means unbounded into the future, which is the usual case: a feed normally claims everything from some date onwards.",
+          "$ref": "https://opentechevents.org/schema/v0.5/event.schema.json#/$defs/date",
+          "examples": [
+            "2027-12-31"
+          ]
+        }
+      },
+      "orderedCoverage": true,
+      "examples": [
+        {
+          "from": "2026-01-01"
+        },
+        {
+          "from": "2026-01-01",
+          "to": "2027-12-31"
         }
       ]
     },
@@ -166,7 +202,9 @@
           "type": "string",
           "format": "iri",
           "pattern": "^https?://",
-          "not": {"pattern": "^https?://[^/?#]*@"},
+          "not": {
+            "pattern": "^https?://[^/?#]*@"
+          },
           "examples": [
             "https://pyalmeria.example/events.rss"
           ]

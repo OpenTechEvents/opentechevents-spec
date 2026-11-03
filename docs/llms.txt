@@ -12,7 +12,7 @@ otherwise fetch the pieces you need from the list).
 ## Start here
 
 - [overview.md](https://opentechevents.org/llms/overview.md): What OTE is, who it is for, and how a community adopts it.
-- [spec-v0.4.md](https://opentechevents.org/llms/spec-v0.4.md): The specification itself for v0.5: every field, and the rules a validator cannot check — why an id must never change, why a cancelled event stays published.
+- [spec-v0.5.md](https://opentechevents.org/llms/spec-v0.5.md): The specification itself for v0.5: every field, and the rules a validator cannot check — why an id must never change, why a cancelled event stays published.
 - [reference-v0.5.md](https://opentechevents.org/llms/reference-v0.5.md): Field reference table generated from the schemas: type, required or recommended, allowed values, examples.
 
 ## Versions
@@ -45,6 +45,7 @@ otherwise fetch the pieces you need from the list).
 - [feed-alternates.json](https://opentechevents.org/llms/feed-alternates.json): Validated documents, one per real case. These pass `npm run validate`.
 - [feed-community.json](https://opentechevents.org/llms/feed-community.json): Validated documents, one per real case. These pass `npm run validate`.
 - [feed-conference-tracks.json](https://opentechevents.org/llms/feed-conference-tracks.json): Validated documents, one per real case. These pass `npm run validate`.
+- [feed-covers.json](https://opentechevents.org/llms/feed-covers.json): Validated documents, one per real case. These pass `npm run validate`.
 - [feed-multipart-pricing.json](https://opentechevents.org/llms/feed-multipart-pricing.json): Validated documents, one per real case. These pass `npm run validate`.
 - [feed-multipart.json](https://opentechevents.org/llms/feed-multipart.json): Validated documents, one per real case. These pass `npm run validate`.
 - [feed.json](https://opentechevents.org/llms/feed.json): Validated documents, one per real case. These pass `npm run validate`.

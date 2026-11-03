@@ -2,7 +2,9 @@
   "specVersion": "0.5.0",
   "id": "https://calendar.example/ics/rust-madrid#a1b2c3d4-uid-from-the-ics",
   "name": "Rust Madrid — June meetup",
-  "description": "Talks on WASM and Rust tooling.",
+  "_comment_description": "El DESCRIPTION del .ics venía en HTML, como lo escribe Google Calendar: 'Talks on WASM and Rust tooling.<br><br>Apúntate en <a href=\"https://rustmadrid.example/junio\">la web</a>&nbsp;&mdash; aforo limitado.' Aquí está ya convertido: el <a> a enlace Markdown, el <br> a salto de línea, las entidades a su carácter. Copiarlo tal cual habría validado igual y habría roto lo que el campo promete.",
+
+  "description": "Talks on WASM and Rust tooling.\n\nApúntate en [la web](https://rustmadrid.example/junio) — aforo limitado.",
 
   "_comment_organizers": "El .ics traía ORGANIZER;CN=\"Rust Madrid\":mailto:hola@rustmadrid.example, y de ahí salen las dos cosas: nombre y email. Se copia porque este .ics está publicado en una URL pública y su licencia permite republicarlo (ver source); desde un calendario privado o un .ics compartido por enlace NO se copiaría, porque eso es cambiarle el nivel de exposición a una dirección que nadie publicó. Con el email, este evento puede volver a .ics con un ORGANIZER válido.",
 
