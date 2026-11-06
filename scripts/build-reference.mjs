@@ -351,14 +351,24 @@ const outputs = [
  */
 function versionPages() {
   const template = readFileSync(join("docs", "spec", "index.html"), "utf8");
-  return VERSIONS.filter((version) => version !== LATEST).map((version) => {
+  // The latest gets a page too, even though /spec/ already shows it. Without it the same URL
+  // 404s today and resolves the day the next version forks — a citation that heals itself is
+  // indistinguishable from an invented one, so /spec/v0.6/ has to exist while v0.6 is current.
+  // The version replace below is the identity for it, so the hard rule is not in play here.
+  return VERSIONS.map((version) => {
     const html = template
       // One level deeper than /spec/, so every relative asset gains a ../ .
       .replace(/(href|src)="\.\.\//g, '$1="../../')
       .replace(/(href|src)="(reference\.(?:css|js))"/g, '$1="../$2"')
+      // Self-referential, except for the latest: /spec/ and /spec/<latest>/ serve the same page,
+      // and the friendly URL is the one to index. It self-heals at fork time — the day the next
+      // version ships this page stops being the latest, is regenerated, and its canonical turns
+      // self-referential, exactly when it stops being an alias and becomes the original.
       .replace(
         '<link rel="canonical" href="https://opentechevents.org/spec/">',
-        `<link rel="canonical" href="https://opentechevents.org/spec/${version}/">`
+        version === LATEST
+          ? '<link rel="canonical" href="https://opentechevents.org/spec/">'
+          : `<link rel="canonical" href="https://opentechevents.org/spec/${version}/">`
       )
       // The static label a crawler or a curl reads before any JavaScript runs; the live page
       // relabels itself from the data, but a fetcher never gets that far.
@@ -379,6 +389,18 @@ if (!process.env.OTE_SPEC_VERSION) {
   );
   const pages = versionPages();
   let pageFailures = 0;
+  // Every published version has a page, and exactly one of those pages claims /spec/ as its
+  // canonical. The staleness diff below does not cover either: it compares the pages that were
+  // generated against disk, so a refactor that re-special-cased the latest, or that pointed two
+  // pages at the friendly URL, would be consistent with itself and still wrong.
+  const missingPages = VERSIONS.filter((version) => !pages.some(([path]) => path.includes(join("spec", version))));
+  const aliases = pages.filter(([, html]) => html.includes('<link rel="canonical" href="https://opentechevents.org/spec/">'));
+  for (const version of missingPages) console.log(`  FAIL  ${version} has no page under docs/spec/`);
+  if (aliases.length !== 1) {
+    console.log(`  FAIL  ${aliases.length} per-version page(s) claim /spec/ as canonical — expected exactly 1 (${LATEST})`);
+  }
+  pageFailures += missingPages.length + (aliases.length === 1 ? 0 : 1);
+  if (!pageFailures) console.log(`  ok    every version has a page, and only ${LATEST}'s is canonically /spec/`);
   if (check) {
     for (const [path, html] of pages) {
       if (!existsSync(path) || readFileSync(path, "utf8") !== html) {

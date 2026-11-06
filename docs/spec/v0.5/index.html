@@ -62,6 +62,11 @@
     <p class="version-pick">
       <label for="spec-version" data-t="versionLabel">Spec version</label>
       <select id="spec-version"></select>
+      <!-- The version-pinned URL of the page you are on. /spec/ means "whichever version is
+           current", so a citation written against it comes to describe the next one; this is the
+           URL to paste in an issue, a post or a skill file. Visible rather than only canonical:
+           a crawler reads the <link>, a human and an agent have to be shown. -->
+      <a class="version-permalink" href="/spec/v0.5/" data-v-href="/spec/{version}/" data-t="versionPermalink">Permalink: /spec/v0.5/</a>
       <span class="version-note" data-t="versionNote">Older versions are frozen: what they say is what a document declaring them was validated against.</span>
     </p>
   </div>
