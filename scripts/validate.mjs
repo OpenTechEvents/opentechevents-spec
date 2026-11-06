@@ -234,10 +234,33 @@ for (const version of VERSIONS) {
     ["README.md", /schema\/(v\d+\.\d+)\/event\.schema\.json/],
     ["spec/README.md", /current specification is \[`(v\d+\.\d+)\//],
     ["spec/README.md", /\| \[`(v\d+\.\d+)\/`\][^|]*\| \*\*Current/],
+    // The instruction files rot the same way and were two versions behind when this was added:
+    // AGENTS.md announced v0.5 and CONTRIBUTING.md v0.4 while v0.6 was published. They are the
+    // first thing a contributor or an agent reads, which makes them the worst place to be stale.
+    ["AGENTS.md", /La versión vigente es \[`spec\/(v\d+\.\d+)\//],
+    ["CLAUDE.md", /La versión vigente es \[`spec\/(v\d+\.\d+)\//],
+    ["CONTRIBUTING.md", /current specification is \*\*\[OTE Spec (v\d+\.\d+)\]/],
+    ["CONTRIBUTING.md", /Only `spec\/(v\d+\.\d+)\/` is current/],
   ];
   for (const [file, pattern] of claims) {
     const claimed = pattern.exec(readFileSync(file, "utf8"))?.[1];
     log(claimed === LATEST, `${file} presents ${LATEST} as current${claimed === LATEST ? "" : ` — says ${claimed ?? "nothing matching"}`}`);
+  }
+}
+
+// Every `spec/vN.N/...` path cited by the files a human or an agent is told to read must exist.
+// A claim check cannot catch this: CONTRIBUTING.md linked v0.4's README anchors long after v0.4
+// stopped being current, and the link resolved to a real file, just the wrong one. What rots
+// silently is the pin itself, so the cheapest defence is "the pin points at something, and the
+// something is still there". Historical mentions (the CHANGELOG, the audit logs, a research
+// finding about v0.3) are not here on purpose: naming an old version is their job.
+{
+  const cited = ["README.md", "CLAUDE.md", "AGENTS.md", "CONTRIBUTING.md", join("spec", "README.md")];
+  for (const file of cited) {
+    const paths = [...new Set(readFileSync(file, "utf8").match(/spec\/v\d+\.\d+\/[\w./-]*/g) ?? [])]
+      .map((p) => p.replace(/[.)]+$/, ""));
+    const dead = paths.filter((p) => !existsSync(p));
+    log(dead.length === 0, `${file} cites only spec paths that exist${dead.length ? ` — missing ${dead.join(", ")}` : ""}`);
   }
 }
 
