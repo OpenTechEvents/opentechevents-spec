@@ -274,6 +274,33 @@ for (const version of VERSIONS) {
   }
 }
 
+// Dead relative links in the markdown that can still be edited. CLAUDE.md and AGENTS.md pointed
+// four times at a RESUME-SCHEMA-AUDIT.md that does not exist, which is worse than a broken link in
+// prose: those files are instructions, and an instruction to go read something unfindable sends
+// the reader to invent what it said. Published versions are excluded because they are frozen —
+// their dead links cannot be fixed, and listing them every run would train everyone to ignore it.
+{
+  const mds = spawnSync("git", ["ls-files", "*.md"], { encoding: "utf8" })
+    .stdout.split("\n")
+    .filter((f) => f && !f.startsWith("docs/llms/") && !f.startsWith("spec/v0."));
+  const dead = [];
+  for (const file of mds) {
+    const dir = join(file, "..");
+    // Code spans and fenced blocks first: `[Conference name](URL)` inside backticks is another
+    // project's format being quoted, not a link this repo can follow.
+    const prose = readFileSync(file, "utf8").replace(/```[\s\S]*?```/g, "").replace(/`[^`\n]*`/g, "");
+    for (const [, target] of prose.matchAll(/\]\(([^)#\s]+)(?:#[^)]*)?\)/g)) {
+      if (/^(https?:|mailto:)/.test(target)) continue;
+      // Resolved against the file and against the repo root: both spellings are used, and both
+      // are correct on GitHub.
+      if (!existsSync(join(dir, target)) && !existsSync(target.replace(/^\//, ""))) {
+        dead.push(`${file} → ${target}`);
+      }
+    }
+  }
+  log(dead.length === 0, `markdown links resolve (${mds.length} files)${dead.length ? ` — dead: ${dead.join(", ")}` : ""}`);
+}
+
 // Every `spec/vN.N/...` path cited by the files a human or an agent is told to read must exist.
 // A claim check cannot catch this: CONTRIBUTING.md linked v0.4's README anchors long after v0.4
 // stopped being current, and the link resolved to a real file, just the wrong one. What rots
