@@ -255,8 +255,13 @@ const CURRENT_SPEC_PAGES = [
 // ("this page used to announce v0.4"), not something a reader ever sees. Only what reaches the
 // page counts. Crude but sufficient — these are our own files, with no regex literals or
 // strings carrying "//" next to a version number.
+// The generated field slot goes with them, and for the same reason the generated enums are
+// exempt elsewhere: a version named inside it is a datum from that version's own schema — nine
+// v0.6 field descriptions say "New in v0.5", which is a true statement about the field, not this
+// page claiming to describe v0.5. Stripped BEFORE the comments, since its markers are comments.
 const withoutComments = (source) =>
   source
+    .replace(/<!-- generated:fields -->[\s\S]*?<!-- \/generated:fields -->/g, "")
     .replace(/<!--[\s\S]*?-->/g, "")
     .replace(/\/\*[\s\S]*?\*\//g, "")
     .replace(/^\s*\/\/.*$/gm, "");
