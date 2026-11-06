@@ -1619,6 +1619,11 @@ non-normative, not for correcting a demonstrable error. Two reasons:
 A "clarifications only" carve-out would not survive contact with reality: every edit looks like a
 clarification to whoever is making it.
 
+`npm run validate` enforces this from **v0.4** onward: each of those directories must be
+byte-identical to its `schema-vX.Y.0` tag, and a published version with no tag fails too. The
+earlier ones predate the rule and are not reconciled: nothing in production declares them that the
+rule would protect, and the time is better spent making sure it cannot happen again.
+
 So a correction goes into the **next** version, and anything that cannot wait goes into
 [`../ERRATA.md`](../ERRATA.md) — a new file that states what the published text says and what it
 should say, and modifies nothing. That is what it means for a demonstrably wrong paragraph to stay

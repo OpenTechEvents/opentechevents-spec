@@ -248,6 +248,32 @@ for (const version of VERSIONS) {
   }
 }
 
+// A published version is frozen: its directory must be byte-identical to the tag that marks its
+// publication (see spec/README.md). Checked against the tag and not against npm because the tag is
+// what CI already has — `fetch-depth: 0` in validate-spec.yml exists for this, and without it the
+// loop below would pass vacuously.
+//
+// The check starts at FREEZE_FROM. Earlier versions predate the rule and two of them drifted after
+// publication: v0.2 in a schema `description`, v0.3 in its prose. No exception list, no errata for
+// them, no time spent — v0.2 is declared by nobody, and v0.3's drift touched no schema byte. What
+// matters is that it cannot happen again, and that starts where the record is clean.
+{
+  const FREEZE_FROM = 4; // the minor; compared as a number, since "v0.10" < "v0.4" as a string
+  const minorOf = (version) => Number(version.split(".")[1]);
+  const git = (args) => spawnSync("git", args, { encoding: "utf8" });
+  for (const version of VERSIONS.filter((v) => minorOf(v) >= FREEZE_FROM)) {
+    const tag = `schema-${version}.0`;
+    if (git(["rev-parse", "-q", "--verify", `refs/tags/${tag}`]).status !== 0) {
+      // Not "cannot check, moving on": a published version with no tag has nothing anchoring its
+      // bytes, which is the state the rule exists to prevent.
+      log(false, `${version} has no ${tag} tag to be frozen against`);
+      continue;
+    }
+    const drift = git(["diff", "--name-only", tag, "--", join(SPEC_DIR, version)]).stdout.trim();
+    log(!drift, `spec/${version} is byte-identical to ${tag}${drift ? ` — drifted: ${drift.split("\n").join(", ")}` : ""}`);
+  }
+}
+
 // Every `spec/vN.N/...` path cited by the files a human or an agent is told to read must exist.
 // A claim check cannot catch this: CONTRIBUTING.md linked v0.4's README anchors long after v0.4
 // stopped being current, and the link resolved to a real file, just the wrong one. What rots
