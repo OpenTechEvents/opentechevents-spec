@@ -346,6 +346,9 @@ const INDEX_PAGE = join("docs", "spec", "index.html");
  * The generated region inside `<div id="reference">`. Everything outside the two markers is
  * hand-written; what is between them is this script's, on every page including /spec/ itself.
  */
+/** The <link> that offers the markdown reference, dropped from the version-pinned copies. */
+const MARKDOWN_ALTERNATE = /<link rel="alternate" type="text\/markdown"[^>]*>\n/;
+
 const FIELD_SLOT = /(<!-- generated:fields -->)[\s\S]*?(<!-- \/generated:fields -->)/;
 
 const escapeHtml = (text) =>
@@ -425,6 +428,10 @@ function versionPages() {
       // One level deeper than /spec/, so every relative asset gains a ../ .
       .replace(/(href|src)="\.\.\//g, '$1="../../')
       .replace(/(href|src)="(reference\.(?:css|js))"/g, '$1="../$2"')
+      // Dropped from every copy but the latest's: /llms/ carries only the current version's
+      // markdown, so on an older page this would resolve to a file that does not exist. The
+      // comment above it stays, and says why it is absent.
+      .replace(MARKDOWN_ALTERNATE, version === LATEST ? "$&" : "")
       // Self-referential, except for the latest: /spec/ and /spec/<latest>/ serve the same page,
       // and the friendly URL is the one to index. It self-heals at fork time — the day the next
       // version ships this page stops being the latest, is regenerated, and its canonical turns

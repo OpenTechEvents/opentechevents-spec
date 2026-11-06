@@ -18,7 +18,7 @@
  */
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync, rmSync } from "node:fs";
 import { join, basename } from "node:path";
-import { latestVersion } from "./schema-model.mjs";
+import { latestVersion, publishedVersions } from "./schema-model.mjs";
 
 const SITE = "https://opentechevents.org";
 const VERSION = latestVersion();
@@ -52,6 +52,22 @@ const SECTIONS = [
     entries: [
       { file: join("spec", "README.md"), as: "spec-versions.md", lead: "Which spec versions exist and what stability each one carries." },
     ],
+    // Linked, not copied. Everything above this section describes the CURRENT version only, so an
+    // agent reading the index had no way to learn that the older ones are published at all — and
+    // a document carries its own specVersion, which is the version it must be read against. The
+    // schema is listed first on purpose: validity is decided by the validator against that URL,
+    // never by a model reading a table. The page is for the question the schema cannot answer,
+    // what a field MEANS, and it is server-rendered, so fetching it returns the fields.
+    // Copies of the older reference tables are deliberately NOT published here: they would add
+    // ~181KB of near-duplicate prose to llms-full.txt for something these two URLs already give.
+    links: publishedVersions().map((version) => ({
+      label: version,
+      url: `${SITE}/spec/${version}/`,
+      lead:
+        (version === latestVersion() ? "Current." : "Frozen — published, immutable, and still correct for documents that declare it.") +
+        ` Field reference for ${version}. Normative schemas: ${SITE}/schema/${version}/event.schema.json` +
+        ` and ${SITE}/schema/${version}/feed.schema.json — validate a document declaring this version against those, not against the current ones.`,
+    })),
   },
   {
     title: "Schemas",
@@ -134,6 +150,11 @@ for (const section of sections) {
   index.push(`## ${section.title}`, "");
   for (const e of section.entries) {
     index.push(`- [${e.as}](${SITE}/llms/${e.as}): ${e.lead}`);
+  }
+  // Links point at the site rather than at a copy under /llms/, so they appear in the index and
+  // nowhere else: there is no file to copy, and nothing to add to llms-full.txt.
+  for (const link of section.links ?? []) {
+    index.push(`- [${link.label}](${link.url}): ${link.lead}`);
   }
   index.push("");
 }

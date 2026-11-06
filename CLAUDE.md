@@ -2,7 +2,7 @@
 
 ## Contexto del proyecto
 
-OTE Spec es una especificación abierta para describir y publicar eventos de comunidades técnicas, pensada para ser compatible con RSS, iCalendar y schema.org `Event`. La versión vigente es [`spec/v0.5/`](spec/v0.5/README.md).
+OTE Spec es una especificación abierta para describir y publicar eventos de comunidades técnicas, pensada para ser compatible con RSS, iCalendar y schema.org `Event`. La versión vigente es [`spec/v0.6/`](spec/v0.6/README.md), publicada e inmutable en npm (`@opentechevents/schema@0.6.0`).
 
 Una auditoría previa (33 rondas, `P001`–`P033`) ya revisó el schema buscando fallos de validación e inconsistencias internas — ver `RESUME-SCHEMA-AUDIT.md` si necesitas ese histórico, pero no es tu misión ahora. **Codex** actúa en esta misión como un integrador externo real (ver [`AGENTS.md`](AGENTS.md)) en dos papeles: quien importa un `.ics`/Meetup/RSS real hacia OTE, y quien exporta OTE hacia schema.org/iCalendar/RSS-Atom — leyendo solo la spec publicada, sin `docs/history/CHANGES.log` ni `DECISIONS.md`, sin el porqué detrás de cada decisión — y documenta cada punto donde tuvo que adivinar en **`INTEGRATION-AUDIT.log`**, formato `HALLAZGO`.
 
@@ -22,6 +22,23 @@ Actúas como quien recibe el informe de un integrador externo y tiene que decidi
 4. **Si es un hueco real de la spec (categoría 1), no lo implementes tú.** Esta misión no toca `spec/v0.3/` — ese cambio pertenece al otro track (ver `RESUME-SCHEMA-AUDIT.md`). Márcalo como **candidato a P034+** con la evidencia ya reunida, para que quien retome esa auditoría no tenga que repetir el trabajo.
 5. **Escribe una `REVISION`** en `INTEGRATION-AUDIT.log` con tu veredicto y la categoría.
 6. Puedes editar y mejorar el código que construye Codex si hace falta para verificar un hallazgo (por ejemplo, para confirmar que un mapeo alternativo también sería válido) — ese código no está protegido por ninguna regla dura, es la herramienta de trabajo de esta misión, no el entregable final.
+
+## Principio de proyecto: la vía determinista (aplica a cualquier misión)
+
+OTE es una especificación determinista, y el repo está construido sobre esa propiedad. **Siempre que exista una vía determinista, se elige esa**, aunque cueste más código que la alternativa.
+
+- **Derivar, no redactar.** La tabla de campos, las páginas `/spec/vN.N/`, los `reference.<lang>.md`, `llms.txt`, los ids de ancla (`<schema>-<path>`) y los enums salen de los schemas vía `scripts/`. Una prosa escrita a mano que repita lo que ya dice un schema es una segunda fuente de verdad, y la segunda siempre es la que se queda obsoleta. Si algo se puede generar, se genera y se declara generado (ver el slot `<!-- generated:fields -->` de `docs/spec/index.html`).
+- **La validez la decide el validador, no un modelo leyendo prosa.** Un documento declara su `specVersion`; se valida con ajv contra el schema de *esa* versión (`/schema/vN.N/event.schema.json`, `$id` con granularidad de minor). Publicar una tabla en markdown para que un agente "compruebe" validez es sustituir una comprobación exacta por una aproximación.
+- **Puerta automática, no revisión humana.** Todo artefacto generado tiene su `--check` en `npm run validate`, y el caso negativo se prueba: hay que ver el `FAIL` cuando el artefacto está stale. Un gate que nunca se ha visto fallar no es un gate (ej.: `actions/checkout` sin `fetch-depth: 0` hace vacuo cualquier check contra tags).
+- **Nada inventado en un artefacto publicado.** Si la fuente no lo dice, el importador no lo rellena: declara la pérdida. Fabricar datos plausibles es el fallo más caro de esta clase de herramientas.
+
+## El papel de la IA en este proyecto
+
+La IA aquí **nunca es autoridad sobre la spec**. Juega tres papeles distintos, y conviene no confundirlos:
+
+1. **Consumidor de primera clase.** Agentes y crawlers leen el sitio y los feeds, y son el lector que no puede ejecutar JavaScript ni adivinar. De ahí el trabajo de `docs/spec/`: la página servía 0 campos antes de que corriera JS, así que un agente concluía que `speakers` no existía mientras un humano veía el campo en el navegador — ambos con evidencia, ambos equivocados sobre el otro. **Lo que un agente no puede leer en los bytes servidos, para él no existe.**
+2. **Integrador ciego.** Otro modelo (ver [`AGENTS.md`](AGENTS.md)) implementa importadores/exportadores leyendo sólo la spec publicada, sin `DECISIONS.md` ni el histórico, y anota en `INTEGRATION-AUDIT.log` cada punto donde tuvo que adivinar. Su valor está precisamente en no tener contexto.
+3. **Revisor con disciplina de evidencia** (tu papel por defecto). Un informe de fricción no es un diagnóstico: verifica cada premisa tú mismo ejecutando los comandos y leyendo la prosa citada antes de darle la razón. En la revisión de 2026-11-06, dos de tres informes traían premisas falsas y el mecanismo propuesto por uno violaba la regla dura de abajo.
 
 ## Regla dura de proyecto (aplica a cualquier misión)
 
