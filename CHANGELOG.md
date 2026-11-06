@@ -11,6 +11,13 @@ and under its own `$id` (`https://opentechevents.org/schema/vX.Y/…`). A docume
 which one it adheres to with `specVersion`, so **nothing breaks when a new
 version is published**: `0.1.0` documents keep validating against `spec/v0.1/`.
 
+## [Unreleased]
+
+Nothing in the schemas. Two statements in published versions are known to be wrong and, because a
+published version is frozen, they are recorded rather than fixed — see [`ERRATA.md`](ERRATA.md):
+the `speakers` description in v0.6 reads as forbidding a valid import (its replacement is candidate
+**D043** for the next version), and v0.6's own freeze paragraph describes v0.5.
+
 ## [0.6.0] — 2026-11-03
 
 No schema change at all: every 0.5.0 document is a valid 0.6.0 document after

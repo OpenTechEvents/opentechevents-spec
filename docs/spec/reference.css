@@ -424,6 +424,10 @@
   font-size: 0.85rem;
   color: var(--ink-faint);
 }
+.version-pick .version-errata {
+  font-size: 0.85rem;
+  color: var(--accent-ink);
+}
 .version-pick .version-note {
   flex: 1 1 22rem;
   color: var(--muted, #5b6672);

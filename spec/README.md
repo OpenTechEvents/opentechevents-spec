@@ -6,12 +6,42 @@ Each published version lives frozen in its own folder and under its own `$id`. A
 
 | Version | Status |
 | --- | --- |
-| [`v0.6/`](v0.6/README.md) | **Current.** Schemas, normative prose, recommended-field profiles and examples. |
+| [`v0.6/`](v0.6/README.md) | **Current** — and frozen: `schema-v0.6.0`, on npm. Schemas, normative prose, recommended-field profiles and examples. |
 | [`v0.5/`](v0.5/README.md) | Frozen — `schema-v0.5.0`, on npm. |
 | [`v0.4/`](v0.4/README.md) | Frozen. |
 | [`v0.3/`](v0.3/README.md) | Frozen. |
 | [`v0.2/`](v0.2/README.md) | Frozen. |
 | [`v0.1/`](v0.1/README.md) | Frozen. |
+
+## A published version is frozen
+
+**Freeze attaches when the version is published to npm, and it covers the whole directory, byte for
+byte.** The `schema-vX.Y.0` tag is the repo-side marker of that moment and must agree with it; the
+npm version is the part that cannot be undone, because an npm version is immutable and carries an
+integrity hash. "Current" and "frozen" are not opposites, and the current version is both: it is
+what new documents should declare, and it is already published.
+
+There is **no exception** — not for a `description`, not for prose a reader might call
+non-normative, not for correcting a demonstrable error. Two reasons:
+
+- **The `$id` has minor granularity.** `https://opentechevents.org/schema/v0.6/event.schema.json`
+  is one URL per minor, and `docs/schema/v0.6/` is its byte-identical copy. Change bytes inside a
+  published minor and two different files answer to one `$id`, which is the exact integrity the
+  per-version `$id` exists to provide. A patch release is not an escape hatch either: `0.6.1` would
+  be a second immutable tarball serving different bytes under the *same* `$id`, so instead of one
+  correction there are two published versions disagreeing about what v0.6 says, and one URL that
+  matches only one of them.
+- **`description` is not non-normative in practice.** `scripts/build-reference.mjs` generates
+  `reference.en.md`, `reference.es.md` and the website's field table from those strings. The
+  `description` *is* the published field reference, whatever a reader calls it.
+
+A "clarifications only" carve-out would not survive contact with reality: every edit looks like a
+clarification to whoever is making it.
+
+So a correction goes into the **next** version, and anything that cannot wait goes into
+[`../ERRATA.md`](../ERRATA.md) — a new file that states what the published text says and what it
+should say, and modifies nothing. That is what it means for a demonstrably wrong paragraph to stay
+where it is.
 
 ## The earlier sketch, removed
 

@@ -255,7 +255,7 @@ for (const version of VERSIONS) {
 // something is still there". Historical mentions (the CHANGELOG, the audit logs, a research
 // finding about v0.3) are not here on purpose: naming an old version is their job.
 {
-  const cited = ["README.md", "CLAUDE.md", "AGENTS.md", "CONTRIBUTING.md", join("spec", "README.md")];
+  const cited = ["README.md", "CLAUDE.md", "AGENTS.md", "CONTRIBUTING.md", "ERRATA.md", join("spec", "README.md")];
   for (const file of cited) {
     const paths = [...new Set(readFileSync(file, "utf8").match(/spec\/v\d+\.\d+\/[\w./-]*/g) ?? [])]
       .map((p) => p.replace(/[.)]+$/, ""));
