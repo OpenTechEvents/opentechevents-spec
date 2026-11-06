@@ -1,3 +1,26 @@
+> **Implemented, 2026-11-06.** All three tasks are in, in the order below, each with its gate and
+> its negative case verified: `0446931` (task 2), `d4be41f` (task 1), `3027c59` + `f32d58b`
+> (task 3), plus `8451272` (the per-version links in `llms.txt`) and `e79f60a` (the current-version
+> claims, which this work found two versions stale in `AGENTS.md` and `CONTRIBUTING.md`).
+>
+> What the implementation changed about the plan, so nobody re-derives it:
+>
+> - Task 1's expected `grep -c 'id="event-title"' … # 1` is wrong: `title` is not a field of
+>   `event` in any version (it is `feed.title`; the event one is `name`).
+> - Task 1's trap (a) is real but **latent**. The global replace only rewrites the LATEST string,
+>   and the ten descriptions say "New in v0.5", so with LATEST = v0.6 the naive order yields a v0.1
+>   page carrying v0.6's rows, not the literal "New in v0.1". It becomes literal at the next fork.
+> - Task 3's enforcement loop names the tags wrongly (`schema-0.3.0`; they are `schema-v0.3.0`) and
+>   assumes every version has one — v0.1 has none. With the names fixed, **v0.2 and v0.3 had
+>   drifted after publication**: v0.2 in a schema `description` (verified against the published npm
+>   tarball, which differs from the repo), v0.3 in its prose. Decided not to reconcile them: no
+>   exception list and no errata, the gate starts at v0.4 where the record is clean.
+> - The `<link rel="alternate" type="text/markdown">` was not free: `docs/llms/` publishes only the
+>   latest's markdown, so it ships on the current version's pages and is dropped from the rest.
+>   Publishing the older tables there was considered and rejected — it decides nothing about
+>   validity (the schema does) and adds ~181KB of near-duplicate prose to `llms-full.txt`.
+> - The two open questions are resolved: `ERRATA.md` at the root, grouped by version. No sitemap.
+
 # Handoff — read this first
 
 Three friction reports from the same external reporter, reviewed on 2026-11-06 against the repo and
