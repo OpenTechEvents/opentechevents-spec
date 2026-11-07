@@ -1,6 +1,6 @@
 {
   "_comment": "Health of the registered adopter feeds, refreshed daily by scripts/check-feeds.mjs. Feeds are validated against the spec version they declare; `supported` false means older than the supported window, which is information, not a failure. `specVersion` and `licenses` are the last values seen, kept through an outage; `licenses` lists every licence a consumer ends up with, feed-level inheritance already resolved. `updated` is when this status last changed.",
-  "updated": "2026-11-06",
+  "updated": "2026-11-07",
   "latestSpecVersion": "0.6.0",
   "feeds": [
     {
@@ -19,8 +19,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 246,
-        "totalMs": 255
+        "ttfbMs": 352,
+        "totalMs": 356
       },
       "failureKind": null,
       "failingSince": null,
@@ -42,8 +42,8 @@
         "encoding": null,
         "revalidation": null,
         "cacheControl": "public, max-age=1800",
-        "ttfbMs": 23131,
-        "totalMs": 23712
+        "ttfbMs": 23690,
+        "totalMs": 24382
       },
       "failureKind": null,
       "failingSince": null,
@@ -65,8 +65,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 152,
-        "totalMs": 153
+        "ttfbMs": 379,
+        "totalMs": 380
       },
       "failureKind": null,
       "failingSince": null,
@@ -84,12 +84,12 @@
       ],
       "cors": true,
       "transport": {
-        "bytes": 306761,
+        "bytes": 306799,
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 193,
-        "totalMs": 200
+        "ttfbMs": 283,
+        "totalMs": 308
       },
       "failureKind": null,
       "failingSince": null,
