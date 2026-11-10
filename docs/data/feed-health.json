@@ -1,31 +1,8 @@
 {
   "_comment": "Health of the registered adopter feeds, refreshed daily by scripts/check-feeds.mjs. Feeds are validated against the spec version they declare; `supported` false means older than the supported window, which is information, not a failure. `specVersion` and `licenses` are the last values seen, kept through an outage; `licenses` lists every licence a consumer ends up with, feed-level inheritance already resolved. `updated` is when this status last changed.",
-  "updated": "2026-11-03",
-  "latestSpecVersion": "0.5.0",
+  "updated": "2026-11-10",
+  "latestSpecVersion": "0.6.0",
   "feeds": [
-    {
-      "name": "Community Builders Community Events",
-      "url": "https://communitybuilders.dev/#events",
-      "feed": "https://communitybuilders.dev/events/feed.json",
-      "status": "ok",
-      "specVersion": "0.3.0",
-      "supported": true,
-      "licenses": [
-        "CC0-1.0"
-      ],
-      "cors": true,
-      "transport": {
-        "bytes": 76918,
-        "encoding": "gzip",
-        "revalidation": "etag+last-modified",
-        "cacheControl": "max-age=600",
-        "ttfbMs": 476,
-        "totalMs": 484
-      },
-      "failureKind": null,
-      "failingSince": null,
-      "error": null
-    },
     {
       "name": "eventos.wiki",
       "url": "https://eventos.wiki",
@@ -38,35 +15,12 @@
       ],
       "cors": true,
       "transport": {
-        "bytes": 566037,
+        "bytes": 568868,
         "encoding": null,
         "revalidation": null,
         "cacheControl": "public, max-age=1800",
-        "ttfbMs": 23863,
-        "totalMs": 24214
-      },
-      "failureKind": null,
-      "failingSince": null,
-      "error": null
-    },
-    {
-      "name": "CoruñaJUG",
-      "url": "https://corunajug.org/",
-      "feed": "https://corunajug.org/feed.json",
-      "status": "ok",
-      "specVersion": "0.3.0",
-      "supported": true,
-      "licenses": [
-        "CC-BY-4.0"
-      ],
-      "cors": true,
-      "transport": {
-        "bytes": 10299,
-        "encoding": "gzip",
-        "revalidation": "etag+last-modified",
-        "cacheControl": "max-age=600",
-        "ttfbMs": 386,
-        "totalMs": 387
+        "ttfbMs": 22992,
+        "totalMs": 23440
       },
       "failureKind": null,
       "failingSince": null,
@@ -84,12 +38,81 @@
       ],
       "cors": true,
       "transport": {
-        "bytes": 329209,
+        "bytes": 352929,
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 253,
-        "totalMs": 276
+        "ttfbMs": 188,
+        "totalMs": 213
+      },
+      "failureKind": null,
+      "failingSince": null,
+      "error": null
+    },
+    {
+      "name": "Community Builders Community Events",
+      "url": "https://communitybuilders.dev/#events",
+      "feed": "https://communitybuilders.dev/events/feed.json",
+      "status": "ok",
+      "specVersion": "0.3.0",
+      "supported": false,
+      "licenses": [
+        "CC0-1.0"
+      ],
+      "cors": true,
+      "transport": {
+        "bytes": 76918,
+        "encoding": "gzip",
+        "revalidation": "etag+last-modified",
+        "cacheControl": "max-age=600",
+        "ttfbMs": 103,
+        "totalMs": 105
+      },
+      "failureKind": null,
+      "failingSince": null,
+      "error": null
+    },
+    {
+      "name": "CoruñaJUG",
+      "url": "https://corunajug.org/",
+      "feed": "https://corunajug.org/feed.json",
+      "status": "ok",
+      "specVersion": "0.5.0",
+      "supported": true,
+      "licenses": [
+        "CC-BY-4.0"
+      ],
+      "cors": true,
+      "transport": {
+        "bytes": 12061,
+        "encoding": "gzip",
+        "revalidation": "etag+last-modified",
+        "cacheControl": "max-age=600",
+        "ttfbMs": 263,
+        "totalMs": 264
+      },
+      "failureKind": null,
+      "failingSince": null,
+      "error": null
+    },
+    {
+      "name": "Cascarilla Tech",
+      "url": "https://cascarillatech.org",
+      "feed": "https://cascarillatech.org/feed.json",
+      "status": "ok",
+      "specVersion": "0.5.0",
+      "supported": true,
+      "licenses": [
+        "CC-BY-4.0"
+      ],
+      "cors": true,
+      "transport": {
+        "bytes": 28711,
+        "encoding": "gzip",
+        "revalidation": "etag+last-modified",
+        "cacheControl": "max-age=600",
+        "ttfbMs": 82,
+        "totalMs": 84
       },
       "failureKind": null,
       "failingSince": null,
