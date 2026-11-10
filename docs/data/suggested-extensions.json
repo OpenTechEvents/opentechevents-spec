@@ -18,8 +18,8 @@
         }
       },
       "observedAdoption": {
-        "feeds": 0,
-        "asOf": "2026-11-09"
+        "feeds": 1,
+        "asOf": "2026-11-10"
       }
     },
     {
@@ -39,7 +39,7 @@
       },
       "observedAdoption": {
         "feeds": 0,
-        "asOf": "2026-11-09"
+        "asOf": "2026-11-10"
       }
     },
     {
@@ -59,7 +59,7 @@
       },
       "observedAdoption": {
         "feeds": 0,
-        "asOf": "2026-11-09"
+        "asOf": "2026-11-10"
       }
     },
     {
@@ -79,7 +79,7 @@
       },
       "observedAdoption": {
         "feeds": 0,
-        "asOf": "2026-11-09"
+        "asOf": "2026-11-10"
       }
     },
     {
@@ -99,7 +99,7 @@
       },
       "observedAdoption": {
         "feeds": 0,
-        "asOf": "2026-11-09"
+        "asOf": "2026-11-10"
       }
     },
     {
@@ -118,8 +118,8 @@
         }
       },
       "observedAdoption": {
-        "feeds": 0,
-        "asOf": "2026-11-09"
+        "feeds": 1,
+        "asOf": "2026-11-10"
       }
     },
     {
@@ -139,7 +139,7 @@
       },
       "observedAdoption": {
         "feeds": 0,
-        "asOf": "2026-11-09"
+        "asOf": "2026-11-10"
       }
     }
   ]
