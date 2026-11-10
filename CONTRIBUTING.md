@@ -53,7 +53,7 @@ Open a [support issue](https://github.com/OpenTechEvents/opentechevents-spec/iss
 - **Advice** — you are not going to implement anything, but you review drafts and bring your real case when the spec touches your territory.
 - **Resources** — hosting, a domain, design, illustration, a legal or accessibility review, a dump of historical events to test against, a slot at your event, a room for an adoption workshop. Not everything useful is code.
 
-And if you have a publishable sentence about why this matters in your community, leave it in [Discussions](https://github.com/OpenTechEvents/opentechevents-spec/discussions): testimonials are reviewed **by hand** and moved into [`docs/data/consumers.json`](docs/data/consumers.json) with your explicit permission.
+And if you have a publishable sentence about why this matters in your community, leave it in [Discussions](https://github.com/OpenTechEvents/opentechevents-spec/discussions): testimonials are reviewed **by hand** and moved into [`docs/data/testimonials.json`](docs/data/testimonials.json) with your explicit permission.
 
 All of this appears at [opentechevents.org#support](https://opentechevents.org#support), from [`docs/data/supporters.json`](docs/data/supporters.json).
 
@@ -135,8 +135,13 @@ The website's lists come from four JSON files. Adding yourself is a one-entry PR
 | --- | --- |
 | [`docs/data/adopters.json`](docs/data/adopters.json) | Communities that **already publish** their events in OTE |
 | [`docs/data/supporters.json`](docs/data/supporters.json) | Whoever supports the project: adoption pledges, endorsements, ambassadors, advisors, resources |
-| [`docs/data/consumers.json`](docs/data/consumers.json) | Whoever consumes OTE feeds (directories, apps, people) and their testimonials |
+| [`docs/data/testimonials.json`](docs/data/testimonials.json) | Quotes from adopters and consumers |
 | [`docs/data/tools.json`](docs/data/tools.json) | Ecosystem tools |
+
+Consuming OTE feeds has no file of its own: software goes in `tools.json` with category `Consume`,
+and an organisation that both publishes and ingests is a single `adopters.json` entry with
+`"consumes": true`. The site's consumers section is that join, so nobody is listed twice under two
+spellings.
 
 Free-text fields accept `{ "en": "…", "es": "…" }`. Details and examples in [`docs/README.md`](docs/README.md). If you would rather not touch JSON, open the matching issue and we'll add it for you.
 

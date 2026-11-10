@@ -22,6 +22,7 @@ import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 import { ajvOptions, annotationKeywords, customFormats, customKeywords, specVersion } from "../index.js";
 import { fieldsOf, loadSchemas, publishedVersions } from "./schema-model.mjs";
+import { expiringLogoReason } from "./logo-url.mjs";
 
 const VERSIONS = publishedVersions();
 const SPEC_DIR = "spec";
@@ -460,6 +461,59 @@ console.log("\ndocs/index.html code samples");
     log(valid, `${kind} sample${valid ? "" : "\n" + ajv.errorsText(validate.errors, { separator: "\n" })}`);
     if (valid) checkFieldOrder(`${kind} sample`, doc, order);
   }
+}
+
+// The adopters registry, which the landing page renders. What it cannot survive is a logo
+// URL that expires: PR #51 stored a GitHub upload link (`X-Amz-Expires=300`) and the image
+// was 403 before the PR merged — a broken image on the front page, and nothing to notice it.
+// scripts/register-adopter.mjs now mirrors such URLs into docs/logos/ instead of storing
+// them; this gate is the one that holds for the other route in, a hand-edited PR.
+console.log("\nadopters registry (docs/data/)");
+{
+  const registry = JSON.parse(readFileSync(join("docs", "data", "adopters.json"), "utf8"));
+  // What the entity IS. Deliberately a short closed list: it drives a badge and a filter,
+  // and an open vocabulary would grow a synonym per registration ("meetup", "user group").
+  const KINDS = ["community", "directory"];
+  // Consuming cannot be measured, only claimed — so intent is kept distinct from fact
+  // instead of collapsing both into `true`. "planned" renders as coming soon: the section
+  // promises "another place your events will reach", and a plan is not reach yet.
+  const CONSUMES = ["live", "planned"];
+  for (const adopter of registry.adopters) {
+    log(Boolean(adopter.name), `${adopter.name ?? "(unnamed)"} has a name`);
+    log(KINDS.includes(adopter.kind), `${adopter.name} declares kind (${KINDS.join(" | ")})${KINDS.includes(adopter.kind) ? "" : ` — got ${JSON.stringify(adopter.kind)}`}`);
+    // The two roles, and how each is established: publishing is derived from having a feed
+    // (the pipeline validated it, check-feeds re-measures it daily); consuming can only be
+    // declared. An entry with neither does nothing in either section of the page — it is in
+    // the wrong registry, and that is a mistake worth failing on rather than rendering blank.
+    const consumes = adopter.consumes === undefined || CONSUMES.includes(adopter.consumes);
+    log(consumes, `${adopter.name} declares consumes (${CONSUMES.join(" | ")}) or nothing${consumes ? "" : ` — got ${JSON.stringify(adopter.consumes)}`}`);
+    log(
+      Boolean(adopter.feed) || Boolean(adopter.consumes),
+      `${adopter.name} plays a role — publishes (has a feed) or consumes`
+    );
+    if (!adopter.logo) continue;
+    const expiring = expiringLogoReason(adopter.logo);
+    log(
+      expiring === null,
+      `${adopter.name} logo is a durable URL${expiring ? ` — ${expiring.replace(/`/g, "")}: ${adopter.logo}` : ""}`
+    );
+    // A relative logo is served from docs/, so the file has to be there.
+    if (!/^https?:\/\//i.test(adopter.logo)) {
+      const file = join("docs", adopter.logo);
+      log(existsSync(file), `${adopter.name} logo file exists (${file})`);
+    }
+  }
+}
+
+// "Who consumes OTE data" is rendered by joining two registries (docs/app.js,
+// consumerEntries()): tools whose English category is "Consume", and adopters declaring
+// `consumes`. The join key is a string in a data file, so a well-meant rewording of the
+// category would empty the section silently — nobody looks at a list that renders fine
+// and happens to be short. The catalogue must keep answering that key.
+{
+  const tools = JSON.parse(readFileSync(join("docs", "data", "tools.json"), "utf8")).tools;
+  const consume = tools.filter((tool) => tool.category?.en === "Consume" && tool.status === "working");
+  log(consume.length > 0, `tools.json still has working "Consume" tools for /#consumers (${consume.length})`);
 }
 
 // The suggested-extensions registry, which /extensions/ renders. Whether the adoption counts

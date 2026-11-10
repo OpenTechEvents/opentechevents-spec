@@ -88,8 +88,10 @@ const SECTIONS = [
     title: "Tools and ecosystem",
     entries: [
       { file: join("docs", "data", "tools.json"), as: "tools.json", lead: "The tools listed on the site: validators, generators, importers, and what each one does." },
-      { file: join("docs", "data", "adopters.json"), as: "adopters.json", lead: "Communities publishing an OTE feed today." },
-      { file: join("docs", "data", "consumers.json"), as: "consumers.json", lead: "Directories and calendars consuming OTE feeds today." },
+      // Who consumes OTE has no file of its own: the software is in tools.json (category
+      // "Consume") and the organisations are the adopters.json entries declaring `consumes`.
+      // The site's /#consumers section is that same join — see docs/app.js.
+      { file: join("docs", "data", "adopters.json"), as: "adopters.json", lead: "Communities and directories publishing an OTE feed today; `consumes: true` marks the ones that also ingest other feeds." },
       { file: join("docs", "data", "supporters.json"), as: "supporters.json", lead: "Who backs the spec without necessarily publishing yet: pledges to adopt, endorsements, ambassadors, advisors, offers of resources." },
       { file: "CONTRIBUTING.md", as: "contributing.md", lead: "How to propose a change to the spec, and what gets rejected." },
       { file: "CHANGELOG.md", as: "changelog.md", lead: "What changed between versions, and why." },

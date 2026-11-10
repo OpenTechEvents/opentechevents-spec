@@ -23,11 +23,12 @@
  * An invalid feed is a normal outcome, not a job failure: the script only exits
  * non-zero when it cannot do its work (missing fields, unreadable adopters.json).
  */
-import { readFileSync, writeFileSync, appendFileSync, readdirSync } from "node:fs";
+import { readFileSync, writeFileSync, appendFileSync, readdirSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 import { annotationKeywords, customFormats, customKeywords } from "../index.js";
+import { expiringLogoReason, logoSlug } from "./logo-url.mjs";
 
 /* A feed is measured against the version it declares, not against the newest one:
    every published version keeps its schemas here, and telling someone whose valid
@@ -46,6 +47,7 @@ const LATEST = [...byVersion.keys()].at(-1);
 const supported = [...byVersion.keys()].slice(-SUPPORT_WINDOW);
 
 const ADOPTERS = join("docs", "data", "adopters.json");
+const LOGOS = join("docs", "logos");
 const REPORT = process.env.REPORT_PATH || "adopter-report.md";
 
 /* The sticky comment's identity: the workflow finds its previous comment by this
@@ -70,8 +72,23 @@ const LABELS = {
   "Community name": "name",
   "Website": "url",
   "OTE feed URL": "feed",
+  "What it is": "kind",
+  "Also a consumer": "consumes",
   "Logo URL": "logo",
   "Community directory ID": "directory",
+};
+
+/* `kind` is what the entity IS; publishing is never declared here, it is derived from the
+   feed this run just validated. The closed list is the same one scripts/validate.mjs
+   enforces on the registry — an unknown value would fail the build after the PR exists. */
+const KINDS = { community: "community", directory: "directory" };
+
+/* Consuming is the one role nothing here can verify, so it is recorded as what it is: a
+   claim, with its own distinction between live and merely intended. Keeping "planned" out
+   of "live" is what stops the consumers section from counting plans as reach. */
+const CONSUMES = {
+  "yes, already consuming ote feeds": "live",
+  "planned, not yet live": "planned",
 };
 
 function parseIssue(body) {
@@ -99,6 +116,51 @@ function report(valid, lines) {
   console.log(readFileSync(REPORT, "utf8"));
 }
 
+/* ---------- logos ----------
+   A logo URL goes into a permanent record, so it has to still answer the same image next
+   year. The one people reach for most does not: dropping an image into a GitHub comment and
+   copying its address yields a pre-signed S3 URL that 403s after five minutes. #51 stored one
+   and the logo was dead before the PR merged. So an expiring URL is never written to the
+   registry — it is fetched once, here, and committed to docs/logos/ as a file we serve
+   ourselves. If the fetch fails (likely: it may already have expired), the entry gets no logo
+   at all and the report says so; initials are a worse logo than the real one and a far better
+   one than a broken image. scripts/validate.mjs fails the build if an expiring URL lands in
+   adopters.json by any other route. */
+
+const LOGO_TYPES = {
+  "image/png": "png",
+  "image/jpeg": "jpg",
+  "image/webp": "webp",
+  "image/gif": "gif",
+  "image/svg+xml": "svg",
+};
+const LOGO_MAX_BYTES = 2 * 1024 * 1024;
+
+async function mirrorLogo(url, name) {
+  let res;
+  try {
+    res = await fetch(url, { redirect: "follow", signal: AbortSignal.timeout(30000) });
+  } catch (err) {
+    return { error: `fetching it failed: ${err.message}` };
+  }
+  if (!res.ok) {
+    return {
+      error: `it answered HTTP ${res.status}${res.status === 403 || res.status === 404 ? " — the link had already expired" : ""}`,
+    };
+  }
+  const type = (res.headers.get("content-type") || "").split(";")[0].trim().toLowerCase();
+  const ext = LOGO_TYPES[type];
+  if (!ext) return { error: `it answered \`${type || "no content type"}\`, not an image` };
+  const bytes = Buffer.from(await res.arrayBuffer());
+  if (bytes.length > LOGO_MAX_BYTES) {
+    return { error: `it is ${Math.round(bytes.length / 1024)} KB, over the ${LOGO_MAX_BYTES / 1024 / 1024} MB limit` };
+  }
+  const file = `${logoSlug(name)}.${ext}`;
+  mkdirSync(LOGOS, { recursive: true });
+  writeFileSync(join(LOGOS, file), bytes);
+  return { path: `logos/${file}` };
+}
+
 /* ---------- main ---------- */
 
 const body = process.env.ISSUE_BODY;
@@ -110,11 +172,19 @@ if (!body) {
 const fields = parseIssue(body);
 setOutput("name", fields.name || "");
 
-if (!fields.name || !fields.feed) {
+const kind = KINDS[(fields.kind || "").trim().toLowerCase()];
+
+if (!fields.name || !fields.feed || !kind) {
   report(false, [
     "### ❌ Registration incomplete",
     "",
-    "Couldn't find the community name and/or the feed URL in the issue. Please edit the issue keeping the form's section headings intact.",
+    `Couldn't read ${[
+      !fields.name && "the community name",
+      !fields.feed && "the feed URL",
+      !kind && `what it is (\`${Object.keys(KINDS).join("` or `")}\`)`,
+    ]
+      .filter(Boolean)
+      .join(", ")} from the issue. Please edit it keeping the form's section headings intact, or open a fresh one from the [registration form](https://opentechevents.org/register/).`,
   ]);
   process.exit(0);
 }
@@ -239,22 +309,65 @@ if (!validateFeed(doc)) {
 // Valid → upsert into adopters.json, keyed by feed URL: re-registering an
 // existing feed updates its entry instead of duplicating it.
 const registry = JSON.parse(readFileSync(ADOPTERS, "utf8"));
-const entry = { name: fields.name };
+const entry = { name: fields.name, kind };
 if (fields.url) entry.url = fields.url;
 entry.feed = fields.feed;
 if (fields.logo) entry.logo = fields.logo;
 if (fields.directory) entry.directory = fields.directory;
+// Self-declared, and the only role that can be: nothing here can check that a site really
+// ingests OTE. Written only when true so an unticked box doesn't litter the registry.
+const consumes = CONSUMES[(fields.consumes || "").trim().toLowerCase()];
+if (consumes) entry.consumes = consumes;
+
+/* Resolved before the entry is written: `logoNote` carries whatever the report has to say
+   about it — nothing, in the normal case of a logo hosted on the publisher's own site. */
+let logoNote = [];
+if (fields.logo) {
+  const expiring = expiringLogoReason(fields.logo);
+  if (expiring) {
+    const mirrored = await mirrorLogo(fields.logo, fields.name);
+    if (mirrored.path) {
+      entry.logo = mirrored.path;
+      logoNote = [
+        "",
+        `> ℹ️ The logo URL you gave expires — ${expiring} — so the image was copied into the repository as \`docs/${mirrored.path}\` and the registry points there. Nothing for you to do; if you'd rather we linked your own copy, re-register with a permanent URL on your site.`,
+      ];
+    } else {
+      delete entry.logo;
+      logoNote = [
+        "",
+        `> ⚠️ **The logo was left out:** that URL expires — ${expiring} — and ${mirrored.error}. Your community will show its initials. To get the image in, re-register with a logo URL hosted on your own site (a link you can open tomorrow in a private window).`,
+      ];
+    }
+  }
+}
 
 const existing = registry.adopters.findIndex((a) => a.feed === fields.feed);
 if (existing === -1) registry.adopters.push(entry);
-else registry.adopters[existing] = { ...registry.adopters[existing], ...entry };
+else {
+  const merged = { ...registry.adopters[existing], ...entry };
+  // The spread keeps an old value when this run has none — which, for a logo that was
+  // dropped above, would restore the very URL we refused to write.
+  if (!entry.logo && fields.logo) delete merged.logo;
+  // Same for the consumer flag: unticking the box has to mean something.
+  if (!entry.consumes) delete merged.consumes;
+  registry.adopters[existing] = merged;
+}
 writeFileSync(ADOPTERS, JSON.stringify(registry, null, 2) + "\n");
 
 report(true, [
   `### ✅ Feed validates against OTE Spec ${SPEC_VERSION}`,
   "",
   `**${fields.name}** — \`${fields.feed}\` (${doc.events.length} event${doc.events.length === 1 ? "" : "s"})`,
+  `Listed as a ${kind}${
+    consumes === "live"
+      ? ', and under "Who consumes OTE data" too'
+      : consumes === "planned"
+        ? ', and under "Who consumes OTE data" as coming soon'
+        : ""
+  }.`,
   fields.directory ? `Linked to directory entry \`${fields.directory}\`.` : "No directory link.",
+  ...logoNote,
   "",
   "A pull request adding the community to the adopters registry follows; a maintainer will review and merge it.",
   "",

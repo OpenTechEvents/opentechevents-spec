@@ -106,7 +106,9 @@ jobs:
           SPEC: ${{ steps.register.outputs.spec }}
           VALIDATOR: ${{ steps.register.outputs.validator }}
         run: |
-          if git diff --quiet docs/data/adopters.json; then
+          # A newly mirrored logo counts as a change too, even when the entry itself
+          # is identical to the one already in the registry.
+          if git diff --quiet docs/data/adopters.json && [ -z "$(git status --porcelain docs/logos)" ]; then
             echo "Registry already up to date — nothing to PR."
             exit 0
           fi
@@ -115,7 +117,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -B "$BRANCH"
           npm run build-llms
-          git add docs/data/adopters.json docs/llms.txt docs/llms-full.txt docs/llms/
+          # docs/logos/ too: a logo URL that expires is mirrored into the repo by the
+          # script above, so the image is part of the change, not a link out of it.
+          git add docs/data/adopters.json docs/logos docs/llms.txt docs/llms-full.txt docs/llms/
           git commit -m "feat(adopters): register ${NAME} (#${NUMBER})"
           git push -f origin "$BRANCH"
           # Force-pushing the branch already refreshed an existing PR.

@@ -193,7 +193,13 @@
     "licenseCustom": "Licencia propia",
     "empty": "La spec acaba de nacer, así que esta lista todavía es corta. Sé de los primeros: quien llega pronto decide en qué se convierte el estándar.",
     "emptyCta": "Ser de los primeros",
-    "machine": "Esta lista es datos, no HTML: pinta <a href=\"/data/adopters.json\"><code>adopters.json</code></a>, un registro machine-readable sobre el que puedes construir. Mira la <a href=\"/developers/\">documentación para desarrolladores</a>."
+    "machine": "Esta lista es datos, no HTML: pinta <a href=\"/data/adopters.json\"><code>adopters.json</code></a>, un registro machine-readable sobre el que puedes construir. Mira la <a href=\"/developers/\">documentación para desarrolladores</a>.",
+    "kind": {
+      "community": "Comunidad",
+      "directory": "Directorio"
+    },
+    "preview": "Ver el feed →",
+    "subscribe": "Suscribirse →"
   },
   "consumers": {
     "title": "Quién consume datos OTE",
@@ -201,7 +207,11 @@
     "empty": "¿Estás montando un directorio, una newsletter o un bot? Consume feeds OTE y aparece aquí.",
     "emptyCta": "Añadir mi proyecto",
     "devDocs": "Docs para desarrolladores",
-    "note": "💡 <strong>¿Te preocupa que aún haya pocos consumidores OTE?</strong> Al publicar tu feed con las herramientas del ecosistema (como el <a href=\"#tools\">Kit del Organizador</a>), obtienes de forma automática exportación a <strong>iCalendar (.ics)</strong> y <strong>RSS</strong>. Tus eventos se pueden consumir desde el primer día en cualquier app de calendario o lector de feeds tradicional mientras el ecosistema OTE crece."
+    "note": "💡 <strong>¿Te preocupa que aún haya pocos consumidores OTE?</strong> Al publicar tu feed con las herramientas del ecosistema (como el <a href=\"#tools\">Kit del Organizador</a>), obtienes de forma automática exportación a <strong>iCalendar (.ics)</strong> y <strong>RSS</strong>. Tus eventos se pueden consumir desde el primer día en cualquier app de calendario o lector de feeds tradicional mientras el ecosistema OTE crece.",
+    "kindTool": "Herramienta",
+    "machine": "Esta lista es una vista, no un fichero: une las herramientas de <a href=\"/data/tools.json\"><code>tools.json</code></a> que consumen feeds con las entradas de <a href=\"/data/adopters.json\"><code>adopters.json</code></a> que declaran que también los ingieren.",
+    "planned": "Próximamente",
+    "plannedTitle": "Ha dicho que consumirá feeds OTE; todavía no lo hace. Se lista como intención, no como alcance que ya tengas."
   },
   "tools": {
     "title": "Ecosistema de herramientas",

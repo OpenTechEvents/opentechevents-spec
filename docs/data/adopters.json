@@ -1,31 +1,44 @@
 {
-  "_comment": "Communities/events publishing their data in OTE format. Add yours via PR or issue. Fields: name (required), url, feed, logo (path or URL; falls back to initials), desc {en,es}.",
+  "_comment": "Communities/events publishing their data in OTE format. Add yours via PR or issue. Fields: name (required), kind (community|directory — what the entity IS), url, feed, logo (path or URL; falls back to initials), desc {en,es}, directory, consumes. Roles are not stored twice: a `feed` means it PUBLISHES (verified by the registration pipeline and re-measured daily by scripts/check-feeds.mjs), and `consumes` (\"live\" | \"planned\") means it also INGESTS other OTE feeds. That one is self-declared — nothing here can verify it — so intent is listed as intent: \"planned\" renders as coming soon and never counts as reach you already have.",
   "adopters": [
     {
+      "name": "eventos.wiki",
+      "kind": "directory",
+      "url": "https://eventos.wiki",
+      "feed": "https://eventos.wiki/events.json",
+      "logo": "https://eventos.wiki/icon.png",
+      "consumes": "planned"
+    },
+    {
+      "name": "Sarao",
+      "kind": "directory",
+      "url": "https://saraoia.com/",
+      "feed": "https://saraoia.com/eventos-ote.json",
+      "logo": "logos/sarao.png"
+    },
+    {
       "name": "Community Builders Community Events",
+      "kind": "community",
       "url": "https://communitybuilders.dev/#events",
       "feed": "https://communitybuilders.dev/events/feed.json",
       "logo": "logos/community-builders.png",
-      "directory": "101"
-    },
-    {
-      "name": "eventos.wiki",
-      "url": "https://eventos.wiki",
-      "feed": "https://eventos.wiki/events.json",
-      "logo": "https://eventos.wiki/icon.png"
+      "directory": "combuilders:101"
     },
     {
       "name": "CoruñaJUG",
+      "kind": "community",
       "url": "https://corunajug.org/",
       "feed": "https://corunajug.org/feed.json",
       "logo": "https://corunajug.org/img/corunajug-logo.png",
       "directory": "combuilders:114"
     },
     {
-      "name": "Sarao",
-      "url": "https://saraoia.com/",
-      "feed": "https://saraoia.com/eventos-ote.json",
-      "logo": "https://github-production-user-asset-6210df.s3.amazonaws.com/826965/693622407-515f4570-aaa1-4915-aaf5-484ea0ce4007.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261103T150336Z&X-Amz-Expires=300&X-Amz-Signature=c8b37b616d177431ddb9a79663bea980a283cf15600db18ad9de001d890afb35&X-Amz-SignedHeaders=host&response-content-type=image%2Fpng"
+      "name": "Cascarilla Tech",
+      "kind": "community",
+      "url": "https://cascarillatech.org",
+      "feed": "https://cascarillatech.org/feed.json",
+      "logo": "https://cascarillatech.org/images/cascarillatech-hexagono.svg",
+      "directory": "combuilders:641"
     }
   ]
 }

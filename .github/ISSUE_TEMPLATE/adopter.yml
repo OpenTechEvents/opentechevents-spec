@@ -44,11 +44,41 @@ body:
       placeholder: https://pyalmeria.example/events.json
     validations:
       required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What it is
+      description: >-
+        What the entity is, which is separate from what it does with feeds. A community
+        organises its own events; a directory lists events from several organisers.
+      options:
+        - Community
+        - Directory
+    validations:
+      required: true
+  - type: dropdown
+    id: consumes
+    attributes:
+      label: Also a consumer
+      description: >-
+        Whether you also READ OTE feeds published by others. It lists you under "Who consumes
+        OTE data" too — same entry, no second registration. Intent is listed as intent: tell
+        us you plan to and the entry says "coming soon" until it is live.
+      options:
+        - "No"
+        - "Yes, already consuming OTE feeds"
+        - "Planned, not yet live"
+    validations:
+      required: false
   - type: input
     id: logo
     attributes:
       label: Logo URL
-      description: Square-ish image shown next to your community on opentechevents.org. Leave empty to show your initials instead.
+      description: >-
+        Square-ish image shown next to your community on opentechevents.org. Leave empty
+        to show your initials instead. Best is a permanent URL on your own site. A link to
+        an image you uploaded to GitHub works too — those expire after a few minutes, so
+        the check copies the image into the repository instead of linking it.
       placeholder: https://pyalmeria.example/logo.png
     validations:
       required: false

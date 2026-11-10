@@ -193,7 +193,13 @@
     "licenseCustom": "Custom licence",
     "empty": "The spec is brand new, so this list is still short. Be one of the first — early adopters get a say in what the standard becomes.",
     "emptyCta": "Be the first",
-    "machine": "This list is data, not markup: it renders <a href=\"/data/adopters.json\"><code>adopters.json</code></a>, a machine-readable registry you can build on. See the <a href=\"/developers/\">developer docs</a>."
+    "machine": "This list is data, not markup: it renders <a href=\"/data/adopters.json\"><code>adopters.json</code></a>, a machine-readable registry you can build on. See the <a href=\"/developers/\">developer docs</a>.",
+    "kind": {
+      "community": "Community",
+      "directory": "Directory"
+    },
+    "preview": "Preview feed →",
+    "subscribe": "Subscribe →"
   },
   "consumers": {
     "title": "Who consumes OTE data",
@@ -201,7 +207,11 @@
     "empty": "Building a directory, a newsletter or a bot? Consume OTE feeds and get listed here.",
     "emptyCta": "Add your project",
     "devDocs": "Developer docs",
-    "note": "💡 <strong>Worried there are few native OTE consumers yet?</strong> When you publish your feed using ecosystem tools (like the <a href=\"#tools\">Organizer Kit</a>), you automatically get export to <strong>iCalendar (.ics)</strong> and <strong>RSS</strong>. Your events can be consumed from day one in any calendar app or traditional feed reader while the OTE ecosystem grows."
+    "note": "💡 <strong>Worried there are few native OTE consumers yet?</strong> When you publish your feed using ecosystem tools (like the <a href=\"#tools\">Organizer Kit</a>), you automatically get export to <strong>iCalendar (.ics)</strong> and <strong>RSS</strong>. Your events can be consumed from day one in any calendar app or traditional feed reader while the OTE ecosystem grows.",
+    "kindTool": "Tool",
+    "machine": "This list is a view, not a file: it joins the tools in <a href=\"/data/tools.json\"><code>tools.json</code></a> that consume feeds with the entries in <a href=\"/data/adopters.json\"><code>adopters.json</code></a> that declare they ingest OTE too.",
+    "planned": "Coming soon",
+    "plannedTitle": "Has said it will consume OTE feeds; it does not yet. Listed as intent, not as reach you already have."
   },
   "tools": {
     "title": "Ecosystem of tools",
