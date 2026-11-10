@@ -2,9 +2,9 @@
 
 ## Contexto del proyecto
 
-OTE Spec es una especificación abierta para describir y publicar eventos de comunidades técnicas, pensada para ser compatible con RSS, iCalendar y schema.org `Event`. La versión vigente es [`spec/v0.5/`](spec/v0.5/README.md) — schemas ejecutables (JSON Schema 2020-12) + prosa normativa + ejemplos validados en CI.
+OTE Spec es una especificación abierta para describir y publicar eventos de comunidades técnicas, pensada para ser compatible con RSS, iCalendar y schema.org `Event`. La versión vigente es [`spec/v0.6/`](spec/v0.6/README.md) — schemas ejecutables (JSON Schema 2020-12) + prosa normativa + ejemplos validados en CI.
 
-Una auditoría previa (33 rondas, `P001`–`P033`, ver `RESUME-SCHEMA-AUDIT.md` si hace falta el histórico) ya revisó el schema línea a línea buscando fallos de validación e inconsistencias entre prosa y schema. Esa auditoría **no es tu misión** y no debes repetirla. Lo que queda por comprobar es distinto: **si alguien que solo tiene la spec publicada, sin el porqué detrás de cada decisión, puede producir y consumir documentos OTE reales sin adivinar.** Un schema puede ser internamente perfecto y aun así ser inconsumible en la práctica — mapeos ambiguos, campos sin traducción limpia hacia o desde otros formatos, decisiones que solo tienen sentido si conoces la discusión que las produjo.
+Una auditoría previa (33 rondas, `P001`–`P033`; su histórico está en [`docs/history/`](docs/history/README.md)) ya revisó el schema línea a línea buscando fallos de validación e inconsistencias entre prosa y schema. Esa auditoría **no es tu misión** y no debes repetirla. Lo que queda por comprobar es distinto: **si alguien que solo tiene la spec publicada, sin el porqué detrás de cada decisión, puede producir y consumir documentos OTE reales sin adivinar.** Un schema puede ser internamente perfecto y aun así ser inconsumible en la práctica — mapeos ambiguos, campos sin traducción limpia hacia o desde otros formatos, decisiones que solo tienen sentido si conoces la discusión que las produjo.
 
 ## Instrucciones operativas para agentes
 
@@ -38,11 +38,13 @@ En ambos casos, llegas a este repo sin más contexto que el que cualquier tercer
 
 **Regla dura de la que depende todo lo demás: NO leas `docs/history/CHANGES.log` ni `DECISIONS.md`.** Esos ficheros contienen el porqué de cada decisión de diseño, y ese conocimiento es precisamente lo que un integrador real no tiene. Si los lees, tu trabajo deja de medir lo que se supone que mide. Tu universo de lectura permitida es:
 
+Sin fijar la versión a mano: el ejercicio corre contra **la vigente**, y cuál es se averigua sin preguntar — la tabla de [`spec/README.md`](spec/README.md) la marca como `**Current**`, y `node -e "console.log(require('./package.json').version)"` la da como versión npm. Llámala `vN.N` abajo y sustitúyela por la que leas:
+
 1. [`README.md`](README.md) (raíz) — visión general.
-2. [`spec/v0.3/README.md`](spec/v0.3/README.md) — normativa.
+2. `spec/vN.N/README.md` — normativa.
 3. Los schemas: `event.schema.json`, `feed.schema.json`, `event.recommended.schema.json`, `feed.recommended.schema.json`.
-4. [`reference.en.md`](spec/v0.3/reference.en.md) / [`reference.es.md`](spec/v0.3/reference.es.md) — referencia de campos generada.
-5. [`spec/v0.3/examples/`](spec/v0.3/examples/) — documentos de ejemplo reales.
+4. `spec/vN.N/reference.en.md` / `reference.es.md` — referencia de campos generada.
+5. `spec/vN.N/examples/` — documentos de ejemplo reales.
 
 ## Qué construir
 

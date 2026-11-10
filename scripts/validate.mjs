@@ -22,6 +22,7 @@ import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 import { ajvOptions, annotationKeywords, customFormats, customKeywords, specVersion } from "../index.js";
 import { fieldsOf, loadSchemas, publishedVersions } from "./schema-model.mjs";
+import { expiringLogoReason } from "./logo-url.mjs";
 
 const VERSIONS = publishedVersions();
 const SPEC_DIR = "spec";
@@ -234,10 +235,86 @@ for (const version of VERSIONS) {
     ["README.md", /schema\/(v\d+\.\d+)\/event\.schema\.json/],
     ["spec/README.md", /current specification is \[`(v\d+\.\d+)\//],
     ["spec/README.md", /\| \[`(v\d+\.\d+)\/`\][^|]*\| \*\*Current/],
+    // The instruction files rot the same way and were two versions behind when this was added:
+    // AGENTS.md announced v0.5 and CONTRIBUTING.md v0.4 while v0.6 was published. They are the
+    // first thing a contributor or an agent reads, which makes them the worst place to be stale.
+    ["AGENTS.md", /La versión vigente es \[`spec\/(v\d+\.\d+)\//],
+    ["CLAUDE.md", /La versión vigente es \[`spec\/(v\d+\.\d+)\//],
+    ["CONTRIBUTING.md", /current specification is \*\*\[OTE Spec (v\d+\.\d+)\]/],
+    ["CONTRIBUTING.md", /Only `spec\/(v\d+\.\d+)\/` is current/],
   ];
   for (const [file, pattern] of claims) {
     const claimed = pattern.exec(readFileSync(file, "utf8"))?.[1];
     log(claimed === LATEST, `${file} presents ${LATEST} as current${claimed === LATEST ? "" : ` — says ${claimed ?? "nothing matching"}`}`);
+  }
+}
+
+// A published version is frozen: its directory must be byte-identical to the tag that marks its
+// publication (see spec/README.md). Checked against the tag and not against npm because the tag is
+// what CI already has — `fetch-depth: 0` in validate-spec.yml exists for this, and without it the
+// loop below would pass vacuously.
+//
+// The check starts at FREEZE_FROM. Earlier versions predate the rule and two of them drifted after
+// publication: v0.2 in a schema `description`, v0.3 in its prose. No exception list, no errata for
+// them, no time spent — v0.2 is declared by nobody, and v0.3's drift touched no schema byte. What
+// matters is that it cannot happen again, and that starts where the record is clean.
+{
+  const FREEZE_FROM = 4; // the minor; compared as a number, since "v0.10" < "v0.4" as a string
+  const minorOf = (version) => Number(version.split(".")[1]);
+  const git = (args) => spawnSync("git", args, { encoding: "utf8" });
+  for (const version of VERSIONS.filter((v) => minorOf(v) >= FREEZE_FROM)) {
+    const tag = `schema-${version}.0`;
+    if (git(["rev-parse", "-q", "--verify", `refs/tags/${tag}`]).status !== 0) {
+      // Not "cannot check, moving on": a published version with no tag has nothing anchoring its
+      // bytes, which is the state the rule exists to prevent.
+      log(false, `${version} has no ${tag} tag to be frozen against`);
+      continue;
+    }
+    const drift = git(["diff", "--name-only", tag, "--", join(SPEC_DIR, version)]).stdout.trim();
+    log(!drift, `spec/${version} is byte-identical to ${tag}${drift ? ` — drifted: ${drift.split("\n").join(", ")}` : ""}`);
+  }
+}
+
+// Dead relative links in the markdown that can still be edited. CLAUDE.md and AGENTS.md pointed
+// four times at a RESUME-SCHEMA-AUDIT.md that does not exist, which is worse than a broken link in
+// prose: those files are instructions, and an instruction to go read something unfindable sends
+// the reader to invent what it said. Published versions are excluded because they are frozen —
+// their dead links cannot be fixed, and listing them every run would train everyone to ignore it.
+{
+  const mds = spawnSync("git", ["ls-files", "*.md"], { encoding: "utf8" })
+    .stdout.split("\n")
+    .filter((f) => f && !f.startsWith("docs/llms/") && !f.startsWith("spec/v0."));
+  const dead = [];
+  for (const file of mds) {
+    const dir = join(file, "..");
+    // Code spans and fenced blocks first: `[Conference name](URL)` inside backticks is another
+    // project's format being quoted, not a link this repo can follow.
+    const prose = readFileSync(file, "utf8").replace(/```[\s\S]*?```/g, "").replace(/`[^`\n]*`/g, "");
+    for (const [, target] of prose.matchAll(/\]\(([^)#\s]+)(?:#[^)]*)?\)/g)) {
+      if (/^(https?:|mailto:)/.test(target)) continue;
+      // Resolved against the file and against the repo root: both spellings are used, and both
+      // are correct on GitHub.
+      if (!existsSync(join(dir, target)) && !existsSync(target.replace(/^\//, ""))) {
+        dead.push(`${file} → ${target}`);
+      }
+    }
+  }
+  log(dead.length === 0, `markdown links resolve (${mds.length} files)${dead.length ? ` — dead: ${dead.join(", ")}` : ""}`);
+}
+
+// Every `spec/vN.N/...` path cited by the files a human or an agent is told to read must exist.
+// A claim check cannot catch this: CONTRIBUTING.md linked v0.4's README anchors long after v0.4
+// stopped being current, and the link resolved to a real file, just the wrong one. What rots
+// silently is the pin itself, so the cheapest defence is "the pin points at something, and the
+// something is still there". Historical mentions (the CHANGELOG, the audit logs, a research
+// finding about v0.3) are not here on purpose: naming an old version is their job.
+{
+  const cited = ["README.md", "CLAUDE.md", "AGENTS.md", "CONTRIBUTING.md", "ERRATA.md", join("spec", "README.md")];
+  for (const file of cited) {
+    const paths = [...new Set(readFileSync(file, "utf8").match(/spec\/v\d+\.\d+\/[\w./-]*/g) ?? [])]
+      .map((p) => p.replace(/[.)]+$/, ""));
+    const dead = paths.filter((p) => !existsSync(p));
+    log(dead.length === 0, `${file} cites only spec paths that exist${dead.length ? ` — missing ${dead.join(", ")}` : ""}`);
   }
 }
 
@@ -255,8 +332,13 @@ const CURRENT_SPEC_PAGES = [
 // ("this page used to announce v0.4"), not something a reader ever sees. Only what reaches the
 // page counts. Crude but sufficient — these are our own files, with no regex literals or
 // strings carrying "//" next to a version number.
+// The generated field slot goes with them, and for the same reason the generated enums are
+// exempt elsewhere: a version named inside it is a datum from that version's own schema — nine
+// v0.6 field descriptions say "New in v0.5", which is a true statement about the field, not this
+// page claiming to describe v0.5. Stripped BEFORE the comments, since its markers are comments.
 const withoutComments = (source) =>
   source
+    .replace(/<!-- generated:fields -->[\s\S]*?<!-- \/generated:fields -->/g, "")
     .replace(/<!--[\s\S]*?-->/g, "")
     .replace(/\/\*[\s\S]*?\*\//g, "")
     .replace(/^\s*\/\/.*$/gm, "");
@@ -379,6 +461,59 @@ console.log("\ndocs/index.html code samples");
     log(valid, `${kind} sample${valid ? "" : "\n" + ajv.errorsText(validate.errors, { separator: "\n" })}`);
     if (valid) checkFieldOrder(`${kind} sample`, doc, order);
   }
+}
+
+// The adopters registry, which the landing page renders. What it cannot survive is a logo
+// URL that expires: PR #51 stored a GitHub upload link (`X-Amz-Expires=300`) and the image
+// was 403 before the PR merged — a broken image on the front page, and nothing to notice it.
+// scripts/register-adopter.mjs now mirrors such URLs into docs/logos/ instead of storing
+// them; this gate is the one that holds for the other route in, a hand-edited PR.
+console.log("\nadopters registry (docs/data/)");
+{
+  const registry = JSON.parse(readFileSync(join("docs", "data", "adopters.json"), "utf8"));
+  // What the entity IS. Deliberately a short closed list: it drives a badge and a filter,
+  // and an open vocabulary would grow a synonym per registration ("meetup", "user group").
+  const KINDS = ["community", "directory"];
+  // Consuming cannot be measured, only claimed — so intent is kept distinct from fact
+  // instead of collapsing both into `true`. "planned" renders as coming soon: the section
+  // promises "another place your events will reach", and a plan is not reach yet.
+  const CONSUMES = ["live", "planned"];
+  for (const adopter of registry.adopters) {
+    log(Boolean(adopter.name), `${adopter.name ?? "(unnamed)"} has a name`);
+    log(KINDS.includes(adopter.kind), `${adopter.name} declares kind (${KINDS.join(" | ")})${KINDS.includes(adopter.kind) ? "" : ` — got ${JSON.stringify(adopter.kind)}`}`);
+    // The two roles, and how each is established: publishing is derived from having a feed
+    // (the pipeline validated it, check-feeds re-measures it daily); consuming can only be
+    // declared. An entry with neither does nothing in either section of the page — it is in
+    // the wrong registry, and that is a mistake worth failing on rather than rendering blank.
+    const consumes = adopter.consumes === undefined || CONSUMES.includes(adopter.consumes);
+    log(consumes, `${adopter.name} declares consumes (${CONSUMES.join(" | ")}) or nothing${consumes ? "" : ` — got ${JSON.stringify(adopter.consumes)}`}`);
+    log(
+      Boolean(adopter.feed) || Boolean(adopter.consumes),
+      `${adopter.name} plays a role — publishes (has a feed) or consumes`
+    );
+    if (!adopter.logo) continue;
+    const expiring = expiringLogoReason(adopter.logo);
+    log(
+      expiring === null,
+      `${adopter.name} logo is a durable URL${expiring ? ` — ${expiring.replace(/`/g, "")}: ${adopter.logo}` : ""}`
+    );
+    // A relative logo is served from docs/, so the file has to be there.
+    if (!/^https?:\/\//i.test(adopter.logo)) {
+      const file = join("docs", adopter.logo);
+      log(existsSync(file), `${adopter.name} logo file exists (${file})`);
+    }
+  }
+}
+
+// "Who consumes OTE data" is rendered by joining two registries (docs/app.js,
+// consumerEntries()): tools whose English category is "Consume", and adopters declaring
+// `consumes`. The join key is a string in a data file, so a well-meant rewording of the
+// category would empty the section silently — nobody looks at a list that renders fine
+// and happens to be short. The catalogue must keep answering that key.
+{
+  const tools = JSON.parse(readFileSync(join("docs", "data", "tools.json"), "utf8")).tools;
+  const consume = tools.filter((tool) => tool.category?.en === "Consume" && tool.status === "working");
+  log(consume.length > 0, `tools.json still has working "Consume" tools for /#consumers (${consume.length})`);
 }
 
 // The suggested-extensions registry, which /extensions/ renders. Whether the adoption counts

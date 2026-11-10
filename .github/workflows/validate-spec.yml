@@ -12,6 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        # Tags and full history: the freeze checks compare a published version's directory against
+        # the tag that marks its publication, and the default shallow checkout fetches neither —
+        # which would not fail, it would pass vacuously.
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 20

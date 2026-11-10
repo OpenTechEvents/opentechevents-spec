@@ -95,6 +95,14 @@
     return get(state.dict, 'adopters.licenseCustom') || 'Custom licence';
   }
 
+  function feedLink(className, label, href) {
+    var a = el('a', 'entry-meta ' + className, label);
+    a.href = href;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    return a;
+  }
+
   function renderEntries(items, containerId, emptyId) {
     var container = document.getElementById(containerId);
     var empty = document.getElementById(emptyId);
@@ -136,14 +144,28 @@
       if (item.desc) body.appendChild(el('p', 'entry-desc', t(item.desc)));
 
       var metas = el('div', 'entry-metas');
+      // What the entity is (community, directory) or — for a tool — its own label. Used to
+      // be an either/or with the feed links below, which meant giving an adopter a `kind`
+      // silently took its feed links away.
       if (item.kind) {
-        metas.appendChild(el('span', 'entry-meta', t(item.kind)));
-      } else if (item.feed) {
-        var preview = el('a', 'entry-meta entry-preview', 'Preview feed →');
-        preview.href = 'https://tools.opentechevents.org/preview?feed=' + encodeURIComponent(item.feed);
-        preview.target = '_blank';
-        preview.rel = 'noopener';
-        metas.appendChild(preview);
+        var kindLabel = typeof item.kind === 'string'
+          ? (get(state.dict, 'adopters.kind.' + item.kind) || item.kind)
+          : t(item.kind);
+        metas.appendChild(el('span', 'entry-meta', kindLabel));
+      }
+      // Two different acts on the same feed: inspect it, or start following it. Preview is
+      // for someone evaluating the format; subscribe is the one an attendee wants, and the
+      // reader's applySubscribeParam() reads exactly this parameter — it prefills the
+      // subscribe dialog, and does nothing if the feed is already in their list.
+      if (item.feed) {
+        metas.appendChild(
+          feedLink('entry-preview', get(state.dict, 'adopters.preview') || 'Preview feed \u2192',
+            'https://tools.opentechevents.org/preview?feed=' + encodeURIComponent(item.feed))
+        );
+        metas.appendChild(
+          feedLink('entry-subscribe', get(state.dict, 'adopters.subscribe') || 'Subscribe \u2192',
+            'https://reader.opentechevents.org/?subscribe=' + encodeURIComponent(item.feed))
+        );
       }
       // Which version of the spec this feed speaks, from the daily health check. It
       // says what a consumer needs before subscribing and nothing about being behind:
@@ -153,6 +175,13 @@
         var title = get(state.dict, 'adopters.specVersionBadge');
         if (title) badge.title = title.replace('{version}', item.specVersion);
         metas.appendChild(badge);
+      }
+      // Said once, where the claim is made: this entity intends to consume, it does not yet.
+      if (item.consumes === 'planned' && containerId === 'consumers-list') {
+        var soon = el('span', 'entry-meta entry-badge entry-badge-planned', get(state.dict, 'consumers.planned') || 'Coming soon');
+        var soonTitle = get(state.dict, 'consumers.plannedTitle');
+        if (soonTitle) soon.title = soonTitle;
+        metas.appendChild(soon);
       }
       // What may be done with the data, which is the other half of "can I consume this
       // feed". A feed whose events carry different licences says so instead of picking
@@ -307,12 +336,41 @@
     });
   }
 
+  /* "Who consumes OTE data" has no file behind it any more, on purpose: its one entry
+     (the Feed Reader) was a copy of a row in tools.json, which calls itself the canonical
+     tools catalogue — two spellings of one product, one of them bound to go stale. The
+     section is a view over the two registries that CAN be kept true:
+       · tools.json, software whose job is consuming feeds (working ones only — a proposed
+         tool is an idea, and listing it here would promise a reach that doesn't exist yet);
+       · adopters.json entries that declare `consumes`, i.e. an organisation that both
+         publishes and ingests. A directory is the normal case of being in both sections.
+     An entity therefore appears once in the data, with one name and one logo, and twice on
+     the page only when both halves are true of it. */
+  function consumerEntries() {
+    var tools = ((state.data.tools && state.data.tools.tools) || []).filter(function (tool) {
+      // Matched on the English category, the canonical key in tools.json — comparing the
+      // translated label would make a reworded es string empty this list without a sound.
+      // scripts/validate.mjs fails if nothing in the catalogue matches it any more.
+      return (tool.category || {}).en === 'Consume' && tool.status === 'working';
+    }).map(function (tool) {
+      return { name: t(tool.name), url: tool.url, desc: tool.desc, kind: get(state.dict, 'consumers.kindTool') || 'Tool' };
+    });
+    // "planned" sorts last and carries a badge: listing intent as if it were live would
+    // overstate the reach the section exists to show.
+    var adopters = ((state.data.adopters && state.data.adopters.adopters) || []).filter(function (a) {
+      return a.consumes === 'live' || a.consumes === 'planned';
+    }).sort(function (a, b) {
+      return (a.consumes === 'planned' ? 1 : 0) - (b.consumes === 'planned' ? 1 : 0);
+    });
+    return tools.concat(withSpecVersion(adopters));
+  }
+
   function renderAll() {
     applyDict();
     renderEntries(withSpecVersion((state.data.adopters || {}).adopters), 'adopters-list', 'adopters-empty');
-    renderEntries((state.data.consumers || {}).consumers, 'consumers-list', 'consumers-empty');
+    renderEntries(consumerEntries(), 'consumers-list', 'consumers-empty');
     renderSupporters((state.data.supporters || {}).supporters);
-    renderTestimonials((state.data.consumers || {}).testimonials);
+    renderTestimonials((state.data.testimonials || {}).testimonials);
     renderTools();
     renderFaq();
   }
@@ -523,7 +581,7 @@
   Promise.all([
     loadJson('i18n/' + state.lang + '.json'),
     loadJson('data/adopters.json'),
-    loadJson('data/consumers.json'),
+    loadJson('data/testimonials.json'),
     loadJson('data/tools.json'),
     loadJson('data/supporters.json'),
     // Health is a nice-to-have overlay on the registry: if it is missing or stale the
@@ -531,7 +589,7 @@
     loadJson('data/feed-health.json').catch(function () { return null; })
   ]).then(function (results) {
     state.dict = results[0];
-    state.data = { adopters: results[1], consumers: results[2], tools: results[3], supporters: results[4], health: results[5] };
+    state.data = { adopters: results[1], testimonials: results[2], tools: results[3], supporters: results[4], health: results[5] };
     renderAll();
   }).catch(function (err) {
     console.error('[OTE] failed to load site data', err);

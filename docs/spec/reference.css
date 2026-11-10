@@ -396,6 +396,38 @@
   background: var(--card, #fff);
   color: inherit;
 }
+/* The unresolved fragment, said out loud. A notice and not a silent no-op: the whole point is
+   that "nothing happened" was indistinguishable from "the field is not there". */
+.ref-unknown {
+  margin: 0 0 1rem;
+  padding: .6rem .8rem;
+  border-left: 3px solid var(--accent, #3d7dff);
+  background: var(--card, #fff);
+  font-size: .9rem;
+}
+.ref-unknown a { color: var(--accent-ink); }
+
+/* The server-rendered fields: what a crawler, an agent or a curl reads, and what a browser
+   shows until reference.js replaces the lot with the rich cards. Styled enough to be legible,
+   not enough to pretend to be the cards — they share no class name with them on purpose. */
+.static-ref h2 { font-size: 1.1rem; margin: 1.5rem 0 .5rem; }
+.static-ref h2 code { font-family: var(--mono); }
+.static-fields { list-style: none; margin: 0; padding: 0; }
+.static-field { padding: .6rem 0; border-top: 1px solid var(--line, #d7dbe0); }
+.static-field p { margin: .25rem 0 0; color: var(--ink-soft); font-size: .9rem; }
+.static-path { font-family: var(--mono); font-size: .95rem; font-weight: 650; }
+.static-type { font-family: var(--mono); font-size: .78rem; color: var(--ink-faint); }
+.static-level { font: 500 .72rem/1 var(--mono); color: var(--ink-faint); }
+
+.version-pick .version-permalink {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+}
+.version-pick .version-errata {
+  font-size: 0.85rem;
+  color: var(--accent-ink);
+}
 .version-pick .version-note {
   flex: 1 1 22rem;
   color: var(--muted, #5b6672);

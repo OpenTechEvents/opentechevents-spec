@@ -18,6 +18,12 @@ otherwise fetch the pieces you need from the list).
 ## Versions
 
 - [spec-versions.md](https://opentechevents.org/llms/spec-versions.md): Which spec versions exist and what stability each one carries.
+- [v0.1](https://opentechevents.org/spec/v0.1/): Frozen — published, immutable, and still correct for documents that declare it. Field reference for v0.1. Normative schemas: https://opentechevents.org/schema/v0.1/event.schema.json and https://opentechevents.org/schema/v0.1/feed.schema.json — validate a document declaring this version against those, not against the current ones.
+- [v0.2](https://opentechevents.org/spec/v0.2/): Frozen — published, immutable, and still correct for documents that declare it. Field reference for v0.2. Normative schemas: https://opentechevents.org/schema/v0.2/event.schema.json and https://opentechevents.org/schema/v0.2/feed.schema.json — validate a document declaring this version against those, not against the current ones.
+- [v0.3](https://opentechevents.org/spec/v0.3/): Frozen — published, immutable, and still correct for documents that declare it. Field reference for v0.3. Normative schemas: https://opentechevents.org/schema/v0.3/event.schema.json and https://opentechevents.org/schema/v0.3/feed.schema.json — validate a document declaring this version against those, not against the current ones.
+- [v0.4](https://opentechevents.org/spec/v0.4/): Frozen — published, immutable, and still correct for documents that declare it. Field reference for v0.4. Normative schemas: https://opentechevents.org/schema/v0.4/event.schema.json and https://opentechevents.org/schema/v0.4/feed.schema.json — validate a document declaring this version against those, not against the current ones.
+- [v0.5](https://opentechevents.org/spec/v0.5/): Frozen — published, immutable, and still correct for documents that declare it. Field reference for v0.5. Normative schemas: https://opentechevents.org/schema/v0.5/event.schema.json and https://opentechevents.org/schema/v0.5/feed.schema.json — validate a document declaring this version against those, not against the current ones.
+- [v0.6](https://opentechevents.org/spec/v0.6/): Current. Field reference for v0.6. Normative schemas: https://opentechevents.org/schema/v0.6/event.schema.json and https://opentechevents.org/schema/v0.6/feed.schema.json — validate a document declaring this version against those, not against the current ones.
 
 ## Schemas
 
@@ -53,8 +59,7 @@ otherwise fetch the pieces you need from the list).
 ## Tools and ecosystem
 
 - [tools.json](https://opentechevents.org/llms/tools.json): The tools listed on the site: validators, generators, importers, and what each one does.
-- [adopters.json](https://opentechevents.org/llms/adopters.json): Communities publishing an OTE feed today.
-- [consumers.json](https://opentechevents.org/llms/consumers.json): Directories and calendars consuming OTE feeds today.
+- [adopters.json](https://opentechevents.org/llms/adopters.json): Communities and directories publishing an OTE feed today; `consumes: true` marks the ones that also ingest other feeds.
 - [supporters.json](https://opentechevents.org/llms/supporters.json): Who backs the spec without necessarily publishing yet: pledges to adopt, endorsements, ambassadors, advisors, offers of resources.
 - [contributing.md](https://opentechevents.org/llms/contributing.md): How to propose a change to the spec, and what gets rejected.
 - [changelog.md](https://opentechevents.org/llms/changelog.md): What changed between versions, and why.

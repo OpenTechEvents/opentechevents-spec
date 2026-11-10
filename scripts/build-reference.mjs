@@ -341,24 +341,106 @@ const outputs = [
   ...(VERSION === LATEST ? [[join("docs", "data", "reference.json"), JSON.stringify(model, null, 2) + "\n"]] : []),
 ];
 
+const INDEX_PAGE = join("docs", "spec", "index.html");
+/**
+ * The generated region inside `<div id="reference">`. Everything outside the two markers is
+ * hand-written; what is between them is this script's, on every page including /spec/ itself.
+ */
+/** The <link> that offers the markdown reference, dropped from the version-pinned copies. */
+const MARKDOWN_ALTERNATE = /<link rel="alternate" type="text\/markdown"[^>]*>\n/;
+
+const FIELD_SLOT = /(<!-- generated:fields -->)[\s\S]*?(<!-- \/generated:fields -->)/;
+
+const escapeHtml = (text) =>
+  String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+/**
+ * The fields, in the served bytes. Until now the 120 of them existed only after the fetch
+ * resolved, so a crawler, an agent or a curl read a page with no field in it — which is how
+ * `#event-speakers` could scroll in a browser and be reported as a non-existent field by
+ * something reading the HTML. Both halves were right, and neither could see the other.
+ *
+ * Deliberately NOT the rich card's markup: id, name, type, level, description and nothing else.
+ * Two renderers producing the same DOM would be a hydration contract to keep in sync, and
+ * reference.js throws this away wholesale (`replaceChildren`) the moment the data lands. The
+ * static rows have their own class names for the same reason — the scrollspy queries `.field`
+ * and `.ref-schema`, and must not find these.
+ *
+ * English only: it renders the schema's own `description`, which is the base language. The page
+ * swaps in the translation on render, as it does for every other string.
+ */
+function staticFields(version) {
+  const model = JSON.parse(readFileSync(join("docs", "data", `reference-${version}.json`), "utf8"));
+  const lines = [];
+  for (const schema of model.schemas) {
+    lines.push(`<section class="static-ref" lang="en">`);
+    lines.push(`<h2 id="${escapeHtml(schema.name)}"><code>${escapeHtml(schema.name)}</code> — ${escapeHtml(schema.title.en)}</h2>`);
+    lines.push(`<ul class="static-fields">`);
+    for (const field of schema.fields) {
+      // The level, said the way the cards say it: a field required inside an optional object is
+      // neither plainly required nor plainly optional, and flattening that to "optional" is the
+      // misreading the badge exists to prevent.
+      const level = field.required
+        ? "required"
+        : field.requiredIn
+          ? `required in ${field.requiredIn}`
+          : field.recommended
+            ? "recommended"
+            : "optional";
+      lines.push(
+        `<li class="static-field" id="${escapeHtml(schema.name + "-" + field.path)}">` +
+          `<code class="static-path">${escapeHtml(field.path)}</code> ` +
+          `<span class="static-type">${escapeHtml(field.type)}</span> ` +
+          `<span class="static-level">${escapeHtml(level)}</span>` +
+          `<p>${escapeHtml(field.description.en)}</p>` +
+          `</li>`
+      );
+    }
+    lines.push(`</ul>`);
+    lines.push(`</section>`);
+  }
+  return lines.join("\n");
+}
+
 /**
  * Orchestrator: no OTE_SPEC_VERSION in the environment means "do the whole site". It runs this
- * same script once per version and then writes the per-version pages, which are copies of
- * /spec/index.html — the one hand-written page — with the three things that must differ per
- * version rewritten: the canonical URL, the version label, and the relative depth of its assets.
- * Copies are generated rather than hand-kept for the obvious reason: five hand-kept pages are
- * five pages to forget.
+ * same script once per version and then writes the pages — /spec/index.html, whose generated
+ * slot it fills, and one copy per version with the three things that must differ rewritten: the
+ * canonical URL, the version label, and the relative depth of its assets. Copies are generated
+ * rather than hand-kept for the obvious reason: five hand-kept pages are five pages to forget.
  */
 function versionPages() {
-  const template = readFileSync(join("docs", "spec", "index.html"), "utf8");
-  return VERSIONS.filter((version) => version !== LATEST).map((version) => {
+  // Read with the slot EMPTIED. This is the hard rule, not a tidiness preference: the replace
+  // below substitutes the version string globally, and nine field descriptions say "New in
+  // v0.5". Fill first and /spec/v0.1/ ships a page claiming "New in v0.1" — a version number
+  // inside a datum is not OTE's version, the copyleft-next-0.3.0 failure again. So: empty,
+  // replace, then fill from that version's own model. Emptying first is also what makes the
+  // generator idempotent, since the template it reads is one of the files it writes.
+  const template = readFileSync(INDEX_PAGE, "utf8").replace(FIELD_SLOT, "$1$2");
+  const fill = (html, version) =>
+    html.replace(FIELD_SLOT, (_, open, close) => `${open}\n${staticFields(version)}\n${close}`);
+  // The latest gets a page too, even though /spec/ already shows it. Without it the same URL
+  // 404s today and resolves the day the next version forks — a citation that heals itself is
+  // indistinguishable from an invented one, so /spec/v0.6/ has to exist while v0.6 is current.
+  // The version replace below is the identity for it, so the hard rule is not in play here.
+  const pages = VERSIONS.map((version) => {
     const html = template
       // One level deeper than /spec/, so every relative asset gains a ../ .
       .replace(/(href|src)="\.\.\//g, '$1="../../')
       .replace(/(href|src)="(reference\.(?:css|js))"/g, '$1="../$2"')
+      // Dropped from every copy but the latest's: /llms/ carries only the current version's
+      // markdown, so on an older page this would resolve to a file that does not exist. The
+      // comment above it stays, and says why it is absent.
+      .replace(MARKDOWN_ALTERNATE, version === LATEST ? "$&" : "")
+      // Self-referential, except for the latest: /spec/ and /spec/<latest>/ serve the same page,
+      // and the friendly URL is the one to index. It self-heals at fork time — the day the next
+      // version ships this page stops being the latest, is regenerated, and its canonical turns
+      // self-referential, exactly when it stops being an alias and becomes the original.
       .replace(
         '<link rel="canonical" href="https://opentechevents.org/spec/">',
-        `<link rel="canonical" href="https://opentechevents.org/spec/${version}/">`
+        version === LATEST
+          ? '<link rel="canonical" href="https://opentechevents.org/spec/">'
+          : `<link rel="canonical" href="https://opentechevents.org/spec/${version}/">`
       )
       // The static label a crawler or a curl reads before any JavaScript runs; the live page
       // relabels itself from the data, but a fetcher never gets that far.
@@ -366,8 +448,11 @@ function versionPages() {
       // Which data file this page loads, read back by reference.js. Absent on /spec/, which
       // means "the latest one".
       .replace("<head>", `<head>\n<meta name="ote-spec-version" content="${version}">`);
-    return [join("docs", "spec", version, "index.html"), html];
+    return [join("docs", "spec", version, "index.html"), fill(html, version)];
   });
+  // /spec/ last, and from the untransformed template: it is the only page that keeps the
+  // friendly URL, the shallow asset paths and no version pin. Its slot carries the latest.
+  return [...pages, [INDEX_PAGE, fill(template, LATEST)]];
 }
 
 if (!process.env.OTE_SPEC_VERSION) {
@@ -379,6 +464,21 @@ if (!process.env.OTE_SPEC_VERSION) {
   );
   const pages = versionPages();
   let pageFailures = 0;
+  // Every published version has a page, and exactly one of those pages claims /spec/ as its
+  // canonical. The staleness diff below does not cover either: it compares the pages that were
+  // generated against disk, so a refactor that re-special-cased the latest, or that pointed two
+  // pages at the friendly URL, would be consistent with itself and still wrong.
+  const versioned = pages.filter(([path]) => path !== INDEX_PAGE);
+  const missingPages = VERSIONS.filter((version) => !versioned.some(([path]) => path.includes(join("spec", version))));
+  // /spec/index.html is excluded on purpose: it IS the friendly URL, so its own canonical is not
+  // an alias. What must hold is that exactly one of the version-pinned copies points at it.
+  const aliases = versioned.filter(([, html]) => html.includes('<link rel="canonical" href="https://opentechevents.org/spec/">'));
+  for (const version of missingPages) console.log(`  FAIL  ${version} has no page under docs/spec/`);
+  if (aliases.length !== 1) {
+    console.log(`  FAIL  ${aliases.length} per-version page(s) claim /spec/ as canonical — expected exactly 1 (${LATEST})`);
+  }
+  pageFailures += missingPages.length + (aliases.length === 1 ? 0 : 1);
+  if (!pageFailures) console.log(`  ok    every version has a page, and only ${LATEST}'s is canonically /spec/`);
   if (check) {
     for (const [path, html] of pages) {
       if (!existsSync(path) || readFileSync(path, "utf8") !== html) {
@@ -386,7 +486,7 @@ if (!process.env.OTE_SPEC_VERSION) {
         pageFailures++;
       }
     }
-    if (!pageFailures) console.log(`  ok    ${pages.length} per-version page(s) match /spec/index.html`);
+    if (!pageFailures) console.log(`  ok    /spec/ and its ${versioned.length} version-pinned copies are up to date`);
   } else {
     for (const [path, html] of pages) {
       mkdirSync(join(path, ".."), { recursive: true });

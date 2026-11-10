@@ -1587,12 +1587,47 @@ Each published version lives frozen in its own folder and under its own `$id`. A
 
 | Version | Status |
 | --- | --- |
-| [`v0.6/`](v0.6/README.md) | **Current.** Schemas, normative prose, recommended-field profiles and examples. |
+| [`v0.6/`](v0.6/README.md) | **Current** — and frozen: `schema-v0.6.0`, on npm. Schemas, normative prose, recommended-field profiles and examples. |
 | [`v0.5/`](v0.5/README.md) | Frozen — `schema-v0.5.0`, on npm. |
 | [`v0.4/`](v0.4/README.md) | Frozen. |
 | [`v0.3/`](v0.3/README.md) | Frozen. |
 | [`v0.2/`](v0.2/README.md) | Frozen. |
 | [`v0.1/`](v0.1/README.md) | Frozen. |
+
+## A published version is frozen
+
+**Freeze attaches when the version is published to npm, and it covers the whole directory, byte for
+byte.** The `schema-vX.Y.0` tag is the repo-side marker of that moment and must agree with it; the
+npm version is the part that cannot be undone, because an npm version is immutable and carries an
+integrity hash. "Current" and "frozen" are not opposites, and the current version is both: it is
+what new documents should declare, and it is already published.
+
+There is **no exception** — not for a `description`, not for prose a reader might call
+non-normative, not for correcting a demonstrable error. Two reasons:
+
+- **The `$id` has minor granularity.** `https://opentechevents.org/schema/v0.6/event.schema.json`
+  is one URL per minor, and `docs/schema/v0.6/` is its byte-identical copy. Change bytes inside a
+  published minor and two different files answer to one `$id`, which is the exact integrity the
+  per-version `$id` exists to provide. A patch release is not an escape hatch either: `0.6.1` would
+  be a second immutable tarball serving different bytes under the *same* `$id`, so instead of one
+  correction there are two published versions disagreeing about what v0.6 says, and one URL that
+  matches only one of them.
+- **`description` is not non-normative in practice.** `scripts/build-reference.mjs` generates
+  `reference.en.md`, `reference.es.md` and the website's field table from those strings. The
+  `description` *is* the published field reference, whatever a reader calls it.
+
+A "clarifications only" carve-out would not survive contact with reality: every edit looks like a
+clarification to whoever is making it.
+
+`npm run validate` enforces this from **v0.4** onward: each of those directories must be
+byte-identical to its `schema-vX.Y.0` tag, and a published version with no tag fails too. The
+earlier ones predate the rule and are not reconciled: nothing in production declares them that the
+rule would protect, and the time is better spent making sure it cannot happen again.
+
+So a correction goes into the **next** version, and anything that cannot wait goes into
+[`../ERRATA.md`](../ERRATA.md) — a new file that states what the published text says and what it
+should say, and modifies nothing. That is what it means for a demonstrably wrong paragraph to stay
+where it is.
 
 ## The earlier sketch, removed
 
@@ -7715,66 +7750,52 @@ Source: docs/data/tools.json — The tools listed on the site: validators, gener
 
 ## adopters.json
 
-Source: docs/data/adopters.json — Communities publishing an OTE feed today.
+Source: docs/data/adopters.json — Communities and directories publishing an OTE feed today; `consumes: true` marks the ones that also ingest other feeds.
 
 ```json
 {
-  "_comment": "Communities/events publishing their data in OTE format. Add yours via PR or issue. Fields: name (required), url, feed, logo (path or URL; falls back to initials), desc {en,es}.",
+  "_comment": "Communities/events publishing their data in OTE format. Add yours via PR or issue. Fields: name (required), kind (community|directory — what the entity IS), url, feed, logo (path or URL; falls back to initials), desc {en,es}, directory, consumes. Roles are not stored twice: a `feed` means it PUBLISHES (verified by the registration pipeline and re-measured daily by scripts/check-feeds.mjs), and `consumes` (\"live\" | \"planned\") means it also INGESTS other OTE feeds. That one is self-declared — nothing here can verify it — so intent is listed as intent: \"planned\" renders as coming soon and never counts as reach you already have.",
   "adopters": [
     {
+      "name": "eventos.wiki",
+      "kind": "directory",
+      "url": "https://eventos.wiki",
+      "feed": "https://eventos.wiki/events.json",
+      "logo": "https://eventos.wiki/icon.png",
+      "consumes": "planned"
+    },
+    {
+      "name": "Sarao",
+      "kind": "directory",
+      "url": "https://saraoia.com/",
+      "feed": "https://saraoia.com/eventos-ote.json",
+      "logo": "logos/sarao.png"
+    },
+    {
       "name": "Community Builders Community Events",
+      "kind": "community",
       "url": "https://communitybuilders.dev/#events",
       "feed": "https://communitybuilders.dev/events/feed.json",
       "logo": "logos/community-builders.png",
-      "directory": "101"
-    },
-    {
-      "name": "eventos.wiki",
-      "url": "https://eventos.wiki",
-      "feed": "https://eventos.wiki/events.json",
-      "logo": "https://eventos.wiki/icon.png"
+      "directory": "combuilders:101"
     },
     {
       "name": "CoruñaJUG",
+      "kind": "community",
       "url": "https://corunajug.org/",
       "feed": "https://corunajug.org/feed.json",
       "logo": "https://corunajug.org/img/corunajug-logo.png",
       "directory": "combuilders:114"
     },
     {
-      "name": "Sarao",
-      "url": "https://saraoia.com/",
-      "feed": "https://saraoia.com/eventos-ote.json",
-      "logo": "https://github-production-user-asset-6210df.s3.amazonaws.com/826965/693622407-515f4570-aaa1-4915-aaf5-484ea0ce4007.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261103T150336Z&X-Amz-Expires=300&X-Amz-Signature=c8b37b616d177431ddb9a79663bea980a283cf15600db18ad9de001d890afb35&X-Amz-SignedHeaders=host&response-content-type=image%2Fpng"
+      "name": "Cascarilla Tech",
+      "kind": "community",
+      "url": "https://cascarillatech.org",
+      "feed": "https://cascarillatech.org/feed.json",
+      "logo": "https://cascarillatech.org/images/cascarillatech-hexagono.svg",
+      "directory": "combuilders:641"
     }
   ]
-}
-```
-
-## consumers.json
-
-Source: docs/data/consumers.json — Directories and calendars consuming OTE feeds today.
-
-```json
-{
-  "_comment": "Directories, aggregators, apps and individuals consuming OTE feeds. Fields: name (required), url, logo, desc {en,es}, kind {en,es} (e.g. Directory / Aggregator / Newsletter).",
-  "consumers": [
-    {
-      "name": "OTE Feed Reader",
-      "url": "https://reader.opentechevents.org/",
-      "desc": {
-        "en": "Web application (PWA) to explore and view events from published OTE feeds, optimized for mobile and desktop.",
-        "es": "Aplicación web (PWA) para explorar y visualizar eventos de feeds OTE publicados, optimizada para móvil y escritorio."
-      },
-      "kind": {
-        "en": "Feed reader (PWA)",
-        "es": "Lector de feeds (PWA)"
-      }
-    }
-  ],
-
-  "_comment_testimonials": "Quotes from adopters or consumers. Fields: quote {en,es}, name, role {en,es}, avatar (URL), url.",
-  "testimonials": []
 }
 ```
 
@@ -7799,9 +7820,9 @@ Source: CONTRIBUTING.md — How to propose a change to the spec, and what gets r
 
 Thanks for dropping by. OTE Spec is in its **design phase**: nothing is settled, which is why an opinion is worth more than a *pull request* right now. If you organise events, run a directory or maintain a tool, you have exactly the context this project is missing.
 
-> ⚠️ **Important notice.** The current specification is **[OTE Spec v0.4](spec/v0.4/README.md)** and it is a **`0.x` draft: it can break without warning**. It was published so that real implementations exist and so they break whatever is wrong. The debate is still open in issues [#5 (event)](https://github.com/OpenTechEvents/opentechevents-spec/issues/5) and [#6 (feed)](https://github.com/OpenTechEvents/opentechevents-spec/issues/6).
+> ⚠️ **Important notice.** The current specification is **[OTE Spec v0.6](spec/v0.6/README.md)** and it is a **`0.x` draft: it can break without warning**. It was published so that real implementations exist and so they break whatever is wrong. The debate is still open in issues [#5 (event)](https://github.com/OpenTechEvents/opentechevents-spec/issues/5) and [#6 (feed)](https://github.com/OpenTechEvents/opentechevents-spec/issues/6).
 >
-> The earlier, non-normative sketch that used to live in `spec/data-model.md`, `spec/feed.md` and `spec/examples/` has been removed — see [`spec/README.md`](spec/README.md) for where it went and why. Only `spec/v0.4/` is current; older published versions stay frozen under `spec/v0.*/`.
+> The earlier, non-normative sketch that used to live in `spec/data-model.md`, `spec/feed.md` and `spec/examples/` has been removed — see [`spec/README.md`](spec/README.md) for where it went and why. Only `spec/v0.6/` is current; older published versions stay frozen under `spec/v0.*/`.
 
 ## What is most needed right now
 
@@ -7850,7 +7871,7 @@ Open a [support issue](https://github.com/OpenTechEvents/opentechevents-spec/iss
 - **Advice** — you are not going to implement anything, but you review drafts and bring your real case when the spec touches your territory.
 - **Resources** — hosting, a domain, design, illustration, a legal or accessibility review, a dump of historical events to test against, a slot at your event, a room for an adoption workshop. Not everything useful is code.
 
-And if you have a publishable sentence about why this matters in your community, leave it in [Discussions](https://github.com/OpenTechEvents/opentechevents-spec/discussions): testimonials are reviewed **by hand** and moved into [`docs/data/consumers.json`](docs/data/consumers.json) with your explicit permission.
+And if you have a publishable sentence about why this matters in your community, leave it in [Discussions](https://github.com/OpenTechEvents/opentechevents-spec/discussions): testimonials are reviewed **by hand** and moved into [`docs/data/testimonials.json`](docs/data/testimonials.json) with your explicit permission.
 
 All of this appears at [opentechevents.org#support](https://opentechevents.org#support), from [`docs/data/supporters.json`](docs/data/supporters.json).
 
@@ -7882,16 +7903,16 @@ A change to the spec is **not just editing a `.md`**. The current version has fo
 
 | Piece | File |
 | --- | --- |
-| The executable schema | `spec/v0.5/event.schema.json` / `feed.schema.json` |
-| The normative prose (what a validator cannot check) | `spec/v0.5/README.md` |
-| The examples, including those that **must fail** | `spec/v0.5/examples/` and `examples/invalid/` |
+| The executable schema | `spec/v0.6/event.schema.json` / `feed.schema.json` |
+| The normative prose (what a validator cannot check) | `spec/v0.6/README.md` |
+| The examples, including those that **must fail** | `spec/v0.6/examples/` and `examples/invalid/` |
 | The example's entry in the website gallery (EN + translations) | `spec/<version>/examples/catalog/` → `npm run build-examples` |
 | The Spanish reference translation for any new field | `spec/<version>/i18n/es.json` → `npm run build-reference -- --check` |
 | The published copies (the `$id`s must resolve) | `docs/schema/` → `npm run publish-schemas` |
 
 Before submitting: `npm run validate`. **If the change does not come with an example demonstrating it, it is not finished** — and if it relaxes a rule, remove the example in `invalid/` that must no longer fail.
 
-**A new field is declared where it belongs.** The order in which the schema declares its `properties` is the canonical field order: the generated reference and the editor's autocompletion inherit it, and the examples must follow it (`npm run validate` fails otherwise). It is explained, with its blocks and the reasoning, in ["Field order"](spec/v0.4/README.md#field-order-is-not-normative-but-there-is-one). Putting it at the end "because it's new" is the one thing that does not work.
+**A new field is declared where it belongs.** The order in which the schema declares its `properties` is the canonical field order: the generated reference and the editor's autocompletion inherit it, and the examples must follow it (`npm run validate` fails otherwise). It is explained, with its blocks and the reasoning, in ["Field order"](spec/v0.6/README.md#field-order-is-not-normative-but-there-is-one). Putting it at the end "because it's new" is the one thing that does not work.
 
 **Adding a field does not require changing the schema.** The schemas do not forbid additional fields: if your community needs `tags` or `cfp` today, you add them and your document stays valid. The spec grows with **fields somebody already really uses**, not with fields we imagine will be needed. Bring the real usage and we'll talk about standardising it.
 
@@ -7900,7 +7921,7 @@ Before submitting: `npm run validate`. **If the change does not come with an exa
 ### Versioning
 
 - **`0.x` can break.** There is no compatibility commitment until 1.0.
-- **A published version is not touched.** Breaking changes go into a new directory (`spec/v0.5/`), not on top of `spec/v0.4/`. That is what lets a document say `specVersion: "0.4.0"` and lets someone know three years from now what to validate it against.
+- **A published version is not touched.** Breaking changes go into the next directory (`spec/vN.N/`), not on top of the published one. That is what lets a document say `specVersion: "0.6.0"` and lets someone know three years from now what to validate it against.
 - Corrections that do **not** change which documents are valid (a typo in the prose, a description) do go on top of the current version.
 
 ### Adopting it: publishing your events in OTE
@@ -7918,7 +7939,7 @@ npm install
 npm run validate -- my-feed.json
 ```
 
-It detects whether it is a standalone event or a feed, and tells you what is missing (`data/events/0 must have required property 'timezone'`). From code, with the `@opentechevents/schema` package: see [spec/v0.4/README.md](spec/v0.4/README.md#consuming-the-schemas).
+It detects whether it is a standalone event or a feed, and tells you what is missing (`data/events/0 must have required property 'timezone'`). From code, with the `@opentechevents/schema` package: see [spec/v0.6/README.md](spec/v0.6/README.md#consuming-the-schemas).
 
 > 🗓️ **Already have an `.ics` and don't want to write JSON?** The aggregator — which converts existing calendars to OTE — is one of the catalogue's tools and is **still to be built**. Tell us your calendar's URL in a [support issue](https://github.com/OpenTechEvents/opentechevents-spec/issues/new?template=supporter.yml) and we'll register it as a source as soon as it exists: it is the cheapest way in and commits you to nothing.
 
@@ -7932,8 +7953,13 @@ The website's lists come from four JSON files. Adding yourself is a one-entry PR
 | --- | --- |
 | [`docs/data/adopters.json`](docs/data/adopters.json) | Communities that **already publish** their events in OTE |
 | [`docs/data/supporters.json`](docs/data/supporters.json) | Whoever supports the project: adoption pledges, endorsements, ambassadors, advisors, resources |
-| [`docs/data/consumers.json`](docs/data/consumers.json) | Whoever consumes OTE feeds (directories, apps, people) and their testimonials |
+| [`docs/data/testimonials.json`](docs/data/testimonials.json) | Quotes from adopters and consumers |
 | [`docs/data/tools.json`](docs/data/tools.json) | Ecosystem tools |
+
+Consuming OTE feeds has no file of its own: software goes in `tools.json` with category `Consume`,
+and an organisation that both publishes and ingests is a single `adopters.json` entry with
+`"consumes": true`. The site's consumers section is that join, so nobody is listed twice under two
+spellings.
 
 Free-text fields accept `{ "en": "…", "es": "…" }`. Details and examples in [`docs/README.md`](docs/README.md). If you would rather not touch JSON, open the matching issue and we'll add it for you.
 
@@ -7948,8 +7974,8 @@ English and Spanish. There are **three separate places**, and they don't mix:
 | What | Where |
 | --- | --- |
 | The website's copy | [`docs/i18n/`](docs/i18n/) — see [`docs/README.md`](docs/README.md) |
-| The descriptions of the spec's fields | [`spec/v0.4/i18n/`](spec/v0.4/i18n/) |
-| The entries in the example gallery | [`spec/v0.4/examples/catalog/`](spec/v0.4/examples/catalog/) |
+| The descriptions of the spec's fields | [`spec/v0.6/i18n/`](spec/v0.6/i18n/) |
+| The entries in the example gallery | [`spec/v0.6/examples/catalog/`](spec/v0.6/examples/catalog/) |
 
 The `description`s **inside the schemas stay in English**: they travel in the npm package to implementers all over the world. Translations live apart, indexed by field, and `npm run validate` **fails if any is missing**. After translating: `npm run build-reference` regenerates `reference.<language>.md` and the reference page, and `npm run build-examples` regenerates the gallery at <https://opentechevents.org/examples/>.
 
@@ -8018,6 +8044,13 @@ Each published version lives frozen in its own folder (`spec/v0.1/`, `spec/v0.2/
 and under its own `$id` (`https://opentechevents.org/schema/vX.Y/…`). A document declares
 which one it adheres to with `specVersion`, so **nothing breaks when a new
 version is published**: `0.1.0` documents keep validating against `spec/v0.1/`.
+
+## [Unreleased]
+
+Nothing in the schemas. Two statements in published versions are known to be wrong and, because a
+published version is frozen, they are recorded rather than fixed — see [`ERRATA.md`](ERRATA.md):
+the `speakers` description in v0.6 reads as forbidding a valid import (its replacement is candidate
+**D043** for the next version), and v0.6's own freeze paragraph describes v0.5.
 
 ## [0.6.0] — 2026-11-03
 

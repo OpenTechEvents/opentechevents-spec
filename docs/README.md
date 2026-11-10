@@ -56,10 +56,17 @@ Two of them render **generated** data, and neither is edited by hand:
 | --- | --- |
 | [`data/adopters.json`](data/adopters.json) | Communities publishing their events in OTE |
 | [`data/supporters.json`](data/supporters.json) | Who backs the project without necessarily publishing: pledges, endorsements, ambassadors, advisors, offers of resources |
-| [`data/consumers.json`](data/consumers.json) | Directories/apps/people consuming OTE feeds, plus testimonials |
+| [`data/testimonials.json`](data/testimonials.json) | Quotes from adopters and consumers, shown under the consumers list |
 | [`data/tools.json`](data/tools.json) | Ecosystem tools (`status`: `working` \| `wip` \| `proposed`) |
 
-Free-text fields accept either a plain string or a `{ "en": …, "es": … }` object. Adopters and consumers render an empty "be the first" state while the lists are empty, so both are safe to leave as `[]`.
+Free-text fields accept either a plain string or a `{ "en": …, "es": … }` object. Adopters render an empty
+"be the first" state while the list is empty, so it is safe to leave as `[]`.
+
+There is no `consumers.json`: "Who consumes OTE data" is a **view**, not a registry. It joins the
+`tools.json` entries whose category is `Consume` with the `adopters.json` entries that declare
+`"consumes": true` — so a directory that both publishes and ingests is one entry, with one name and
+one logo, appearing in both sections. An entry's `kind` (`community` or `directory`) says what it is;
+publishing is never declared, it is derived from having a `feed`.
 
 Adding yourself is a one-entry PR:
 

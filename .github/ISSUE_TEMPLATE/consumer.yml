@@ -12,6 +12,10 @@ body:
 
         The [developer docs](https://opentechevents.org/developers/) cover discovery,
         validation and the published schemas.
+
+        Where this lands: a tool or app is added to `tools.json` under the *Consume*
+        category; an organisation that also publishes its own OTE feed gets
+        `"consumes": true` on its existing `adopters.json` entry instead of a second one.
   - type: input
     id: name
     attributes:

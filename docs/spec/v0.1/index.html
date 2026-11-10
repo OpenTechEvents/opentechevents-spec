@@ -7,6 +7,9 @@
 <title>OTE Spec v0.1 — field reference</title>
 <meta name="description" content="Field reference for OTE Spec v0.1, generated from the JSON Schemas.">
 <link rel="canonical" href="https://opentechevents.org/spec/v0.1/">
+<!-- The same reference as markdown, for something that would rather read prose than parse this
+     page. Only the current version has one: docs/llms/ publishes the latest's reference.en.md and
+     nothing older, so the generator drops this line from the version-pinned copies. -->
 <link rel="stylesheet" href="../../styles.css">
 <link rel="stylesheet" href="../reference.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
@@ -62,7 +65,15 @@
     <p class="version-pick">
       <label for="spec-version" data-t="versionLabel">Spec version</label>
       <select id="spec-version"></select>
+      <!-- The version-pinned URL of the page you are on. /spec/ means "whichever version is
+           current", so a citation written against it comes to describe the next one; this is the
+           URL to paste in an issue, a post or a skill file. Visible rather than only canonical:
+           a crawler reads the <link>, a human and an agent have to be shown. -->
+      <a class="version-permalink" href="/spec/v0.1/" data-v-href="/spec/{version}/"><span data-t="versionPermalink">Permalink</span>: <code>/spec/v0.1/</code></a>
       <span class="version-note" data-t="versionNote">Older versions are frozen: what they say is what a document declaring them was validated against.</span>
+      <!-- Frozen means a wrong statement stays wrong, so the corrections live outside the versions.
+           One file for every version, which is why it is not version-pinned like the links above. -->
+      <a class="version-errata" href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/ERRATA.md" data-t="errata">Known errata</a>
     </p>
   </div>
 
@@ -94,7 +105,53 @@
       </div>
       <p class="ref-count" id="ref-count" role="status" aria-live="polite"></p>
 
-      <div id="reference"></div>
+      <!-- The rows between the markers are GENERATED, by scripts/build-reference.mjs, from the
+           same docs/data/reference-<version>.json this page then fetches. They exist so that the
+           120 fields are in the served bytes: a crawler, an agent or a curl saw none of them
+           before, which is how a field could be deep-linkable and simultaneously reported as
+           non-existent. Everything outside the markers stays hand-written; reference.js replaces
+           the whole region with the rich cards as soon as the data lands. Do not hand-edit the
+           slot — `npm run build-reference -- --check` fails on it. -->
+      <div id="reference"><!-- generated:fields -->
+<section class="static-ref" lang="en">
+<h2 id="event"><code>event</code> — OTE Event</h2>
+<ul class="static-fields">
+<li class="static-field" id="event-specVersion"><code class="static-path">specVersion</code> <span class="static-type">const: &quot;0.1.0&quot;</span> <span class="static-level">required</span><p>Version of OTE Spec this document adheres to.</p></li>
+<li class="static-field" id="event-id"><code class="static-path">id</code> <span class="static-type">string (uri)</span> <span class="static-level">required</span><p>Stable, globally unique identifier. A URI under a domain the publisher controls. Minted once, never rewritten — this is what lets consumers update an event instead of duplicating it.</p></li>
+<li class="static-field" id="event-url"><code class="static-path">url</code> <span class="static-type">string (uri)</span> <span class="static-level">optional</span><p>Canonical URL where the event is described today. May change over time; id may not.</p></li>
+<li class="static-field" id="event-name"><code class="static-path">name</code> <span class="static-type">string</span> <span class="static-level">required</span><p>Display name of the event.</p></li>
+<li class="static-field" id="event-description"><code class="static-path">description</code> <span class="static-type">string</span> <span class="static-level">optional</span><p>Short description. Plain text or Markdown.</p></li>
+<li class="static-field" id="event-timezone"><code class="static-path">timezone</code> <span class="static-type">string</span> <span class="static-level">required</span><p>IANA timezone (e.g. Europe/Madrid). Turns a wall-clock startDate into an unambiguous instant. For all-day events it contextualises the date — it does not shift it.</p></li>
+<li class="static-field" id="event-startDate"><code class="static-path">startDate</code> <span class="static-type">string</span> <span class="static-level">required</span><p>Wall-clock start: a date (2026-10-15) for all-day events, or a local date-time (2026-10-15T09:00:00). Never carries a UTC offset — timezone does that.</p></li>
+<li class="static-field" id="event-endDate"><code class="static-path">endDate</code> <span class="static-type">string</span> <span class="static-level">optional</span><p>Wall-clock end, in the SAME form as startDate (both dates, or both date-times). If absent, the event is assumed to end on the day it starts.</p></li>
+<li class="static-field" id="event-license"><code class="static-path">license</code> <span class="static-type">string</span> <span class="static-level">required</span><p>License of THIS DATA, not of the event. SPDX identifier (CC0-1.0, CC-BY-4.0…) or a URL.</p></li>
+<li class="static-field" id="event-location"><code class="static-path">location</code> <span class="static-type">object</span> <span class="static-level">optional</span><p>What is KNOWN about where the event happens. Not the same question as attendanceMode, which states the organiser's intent.</p></li>
+<li class="static-field" id="event-location.venue"><code class="static-path">location.venue</code> <span class="static-type">string</span> <span class="static-level">optional</span><p>Human-readable physical location. Its presence means the event has a physical venue.</p></li>
+<li class="static-field" id="event-location.onlineUrl"><code class="static-path">location.onlineUrl</code> <span class="static-type">string (uri)</span> <span class="static-level">optional</span><p>URL to attend online. Its presence means the event has online access.</p></li>
+<li class="static-field" id="event-attendanceMode"><code class="static-path">attendanceMode</code> <span class="static-type">enum: in-person | online | hybrid</span> <span class="static-level">optional</span><p>What the organiser says this event is. NO DEFAULT: absent means unknown, never in-person.</p></li>
+<li class="static-field" id="event-languages"><code class="static-path">languages</code> <span class="static-type">string[]</span> <span class="static-level">optional</span><p>BCP 47 tags, e.g. [&quot;es&quot;,&quot;en&quot;]. No default: absent means unknown.</p></li>
+<li class="static-field" id="event-status"><code class="static-path">status</code> <span class="static-type">enum: scheduled | cancelled | postponed | rescheduled</span> <span class="static-level">optional</span><p>A cancelled or postponed event MUST stay published: removing it leaves a dead event in subscribers' calendars.</p></li>
+<li class="static-field" id="event-source"><code class="static-path">source</code> <span class="static-type">object</span> <span class="static-level">optional</span><p>Provenance. Required when the event was imported or aggregated from elsewhere; omitted when the organiser describes their own event — they are the source.</p></li>
+<li class="static-field" id="event-source.name"><code class="static-path">source.name</code> <span class="static-type">string</span> <span class="static-level">required</span><p>Name of the origin (e.g. &quot;Rust Madrid&quot;, &quot;Meetup&quot;).</p></li>
+<li class="static-field" id="event-source.url"><code class="static-path">source.url</code> <span class="static-type">string (uri)</span> <span class="static-level">optional</span><p>Link to the original record, so the data can be verified and corrected upstream.</p></li>
+<li class="static-field" id="event-source.license"><code class="static-path">source.license</code> <span class="static-type">string</span> <span class="static-level">optional</span><p>License under which the ORIGIN publishes the data. Constrains what may be republished: declaring a license does not grant rights the origin never gave.</p></li>
+<li class="static-field" id="event-source.retrievedAt"><code class="static-path">source.retrievedAt</code> <span class="static-type">string</span> <span class="static-level">optional</span><p>When the data was fetched.</p></li>
+</ul>
+</section>
+<section class="static-ref" lang="en">
+<h2 id="feed"><code>feed</code> — OTE Feed</h2>
+<ul class="static-fields">
+<li class="static-field" id="feed-specVersion"><code class="static-path">specVersion</code> <span class="static-type">const: &quot;0.1.0&quot;</span> <span class="static-level">required</span><p>Version of OTE Spec this feed adheres to. Applies to every event in it.</p></li>
+<li class="static-field" id="feed-title"><code class="static-path">title</code> <span class="static-type">string</span> <span class="static-level">required</span><p>Human-readable name of the feed.</p></li>
+<li class="static-field" id="feed-description"><code class="static-path">description</code> <span class="static-type">string</span> <span class="static-level">optional</span><p>Short description of the feed.</p></li>
+<li class="static-field" id="feed-url"><code class="static-path">url</code> <span class="static-type">string (uri)</span> <span class="static-level">optional</span><p>Canonical URL of the community, directory or organisation publishing the feed.</p></li>
+<li class="static-field" id="feed-license"><code class="static-path">license</code> <span class="static-type">string</span> <span class="static-level">required</span><p>License for the feed's contents. Acts as the DEFAULT for every event that does not declare its own. SPDX identifier or URL.</p></li>
+<li class="static-field" id="feed-licenseUrl"><code class="static-path">licenseUrl</code> <span class="static-type">string (uri)</span> <span class="static-level">optional</span><p>URL of the full license text.</p></li>
+<li class="static-field" id="feed-updatedAt"><code class="static-path">updatedAt</code> <span class="static-type">string</span> <span class="static-level">required</span><p>When this feed was generated.</p></li>
+<li class="static-field" id="feed-events"><code class="static-path">events</code> <span class="static-type">object[]</span> <span class="static-level">required</span><p>Events in this feed. Each one inherits the feed's specVersion and license unless it declares its own.</p></li>
+</ul>
+</section>
+<!-- /generated:fields --></div>
 
       <!-- Hand-written, unlike everything above it: the schemas cannot state a promise about
            names they will never mint. Sits AFTER the fields because that is where the question

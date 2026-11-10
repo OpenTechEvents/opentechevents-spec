@@ -1,31 +1,8 @@
 {
   "_comment": "Health of the registered adopter feeds, refreshed daily by scripts/check-feeds.mjs. Feeds are validated against the spec version they declare; `supported` false means older than the supported window, which is information, not a failure. `specVersion` and `licenses` are the last values seen, kept through an outage; `licenses` lists every licence a consumer ends up with, feed-level inheritance already resolved. `updated` is when this status last changed.",
-  "updated": "2026-11-09",
+  "updated": "2026-11-10",
   "latestSpecVersion": "0.6.0",
   "feeds": [
-    {
-      "name": "Community Builders Community Events",
-      "url": "https://communitybuilders.dev/#events",
-      "feed": "https://communitybuilders.dev/events/feed.json",
-      "status": "ok",
-      "specVersion": "0.3.0",
-      "supported": false,
-      "licenses": [
-        "CC0-1.0"
-      ],
-      "cors": true,
-      "transport": {
-        "bytes": 76918,
-        "encoding": "gzip",
-        "revalidation": "etag+last-modified",
-        "cacheControl": "max-age=600",
-        "ttfbMs": 493,
-        "totalMs": 499
-      },
-      "failureKind": null,
-      "failingSince": null,
-      "error": null
-    },
     {
       "name": "eventos.wiki",
       "url": "https://eventos.wiki",
@@ -42,8 +19,54 @@
         "encoding": null,
         "revalidation": null,
         "cacheControl": "public, max-age=1800",
-        "ttfbMs": 23932,
-        "totalMs": 24778
+        "ttfbMs": 23135,
+        "totalMs": 23515
+      },
+      "failureKind": null,
+      "failingSince": null,
+      "error": null
+    },
+    {
+      "name": "Sarao",
+      "url": "https://saraoia.com/",
+      "feed": "https://saraoia.com/eventos-ote.json",
+      "status": "ok",
+      "specVersion": "0.4.0",
+      "supported": true,
+      "licenses": [
+        "CC-BY-4.0"
+      ],
+      "cors": true,
+      "transport": {
+        "bytes": 352929,
+        "encoding": "br",
+        "revalidation": "etag+last-modified",
+        "cacheControl": "public, max-age=0, must-revalidate",
+        "ttfbMs": 186,
+        "totalMs": 221
+      },
+      "failureKind": null,
+      "failingSince": null,
+      "error": null
+    },
+    {
+      "name": "Community Builders Community Events",
+      "url": "https://communitybuilders.dev/#events",
+      "feed": "https://communitybuilders.dev/events/feed.json",
+      "status": "ok",
+      "specVersion": "0.3.0",
+      "supported": false,
+      "licenses": [
+        "CC0-1.0"
+      ],
+      "cors": true,
+      "transport": {
+        "bytes": 76918,
+        "encoding": "gzip",
+        "revalidation": "etag+last-modified",
+        "cacheControl": "max-age=600",
+        "ttfbMs": 352,
+        "totalMs": 354
       },
       "failureKind": null,
       "failingSince": null,
@@ -65,31 +88,31 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 385,
-        "totalMs": 386
+        "ttfbMs": 164,
+        "totalMs": 165
       },
       "failureKind": null,
       "failingSince": null,
       "error": null
     },
     {
-      "name": "Sarao",
-      "url": "https://saraoia.com/",
-      "feed": "https://saraoia.com/eventos-ote.json",
+      "name": "Cascarilla Tech",
+      "url": "https://cascarillatech.org",
+      "feed": "https://cascarillatech.org/feed.json",
       "status": "ok",
-      "specVersion": "0.4.0",
+      "specVersion": "0.5.0",
       "supported": true,
       "licenses": [
         "CC-BY-4.0"
       ],
       "cors": true,
       "transport": {
-        "bytes": 283012,
-        "encoding": "br",
+        "bytes": 28711,
+        "encoding": "gzip",
         "revalidation": "etag+last-modified",
-        "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 396,
-        "totalMs": 411
+        "cacheControl": "max-age=600",
+        "ttfbMs": 128,
+        "totalMs": 130
       },
       "failureKind": null,
       "failingSince": null,
