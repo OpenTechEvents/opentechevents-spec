@@ -1,6 +1,6 @@
 {
   "_comment": "Health of the registered adopter feeds, refreshed daily by scripts/check-feeds.mjs. Feeds are validated against the spec version they declare; `supported` false means older than the supported window, which is information, not a failure. `specVersion` and `licenses` are the last values seen, kept through an outage; `licenses` lists every licence a consumer ends up with, feed-level inheritance already resolved. `updated` is when this status last changed.",
-  "updated": "2026-11-11",
+  "updated": "2026-11-12",
   "latestSpecVersion": "0.6.0",
   "feeds": [
     {
@@ -15,12 +15,12 @@
       ],
       "cors": true,
       "transport": {
-        "bytes": 569773,
+        "bytes": 569774,
         "encoding": null,
         "revalidation": null,
         "cacheControl": "public, max-age=1800",
-        "ttfbMs": 23435,
-        "totalMs": 24191
+        "ttfbMs": 23625,
+        "totalMs": 24348
       },
       "failureKind": null,
       "failingSince": null,
@@ -38,12 +38,12 @@
       ],
       "cors": true,
       "transport": {
-        "bytes": 364853,
+        "bytes": 359515,
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 350,
-        "totalMs": 369
+        "ttfbMs": 338,
+        "totalMs": 372
       },
       "failureKind": null,
       "failingSince": null,
@@ -65,8 +65,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 370,
-        "totalMs": 372
+        "ttfbMs": 256,
+        "totalMs": 257
       },
       "failureKind": null,
       "failingSince": null,
@@ -88,8 +88,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 308,
-        "totalMs": 308
+        "ttfbMs": 524,
+        "totalMs": 525
       },
       "failureKind": null,
       "failingSince": null,
@@ -107,12 +107,12 @@
       ],
       "cors": true,
       "transport": {
-        "bytes": 28711,
+        "bytes": 28743,
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 225,
-        "totalMs": 226
+        "ttfbMs": 241,
+        "totalMs": 242
       },
       "failureKind": null,
       "failingSince": null,
