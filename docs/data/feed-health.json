@@ -1,6 +1,6 @@
 {
   "_comment": "Health of the registered adopter feeds, refreshed daily by scripts/check-feeds.mjs. Feeds are validated against the spec version they declare; `supported` false means older than the supported window, which is information, not a failure. `specVersion` and `licenses` are the last values seen, kept through an outage; `licenses` lists every licence a consumer ends up with, feed-level inheritance already resolved. `updated` is when this status last changed.",
-  "updated": "2026-11-14",
+  "updated": "2026-11-15",
   "latestSpecVersion": "0.6.0",
   "feeds": [
     {
@@ -19,8 +19,8 @@
         "encoding": "gzip",
         "revalidation": null,
         "cacheControl": "public, max-age=1800",
-        "ttfbMs": 4688,
-        "totalMs": 4844
+        "ttfbMs": 7351,
+        "totalMs": 7524
       },
       "failureKind": null,
       "failingSince": null,
@@ -38,12 +38,12 @@
       ],
       "cors": true,
       "transport": {
-        "bytes": 376389,
+        "bytes": 349374,
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 456,
-        "totalMs": 460
+        "ttfbMs": 257,
+        "totalMs": 264
       },
       "failureKind": null,
       "failingSince": null,
@@ -65,8 +65,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 269,
-        "totalMs": 270
+        "ttfbMs": 420,
+        "totalMs": 422
       },
       "failureKind": null,
       "failingSince": null,
@@ -88,8 +88,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 311,
-        "totalMs": 311
+        "ttfbMs": 304,
+        "totalMs": 305
       },
       "failureKind": null,
       "failingSince": null,
@@ -111,8 +111,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 418,
-        "totalMs": 419
+        "ttfbMs": 448,
+        "totalMs": 449
       },
       "failureKind": null,
       "failingSince": null,
