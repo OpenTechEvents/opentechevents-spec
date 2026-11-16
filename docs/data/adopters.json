@@ -2,6 +2,13 @@
   "_comment": "Communities/events publishing their data in OTE format. Add yours via PR or issue. Fields: name (required), kind (community|directory — what the entity IS), url, feed, logo (path or URL; falls back to initials), desc {en,es}, directory, consumes. Roles are not stored twice: a `feed` means it PUBLISHES (verified by the registration pipeline and re-measured daily by scripts/check-feeds.mjs), and `consumes` (\"live\" | \"planned\") means it also INGESTS other OTE feeds. That one is self-declared — nothing here can verify it — so intent is listed as intent: \"planned\" renders as coming soon and never counts as reach you already have.",
   "adopters": [
     {
+      "name": "TechConf",
+      "kind": "directory",
+      "url": "https://www.techconf.es/",
+      "feed": "https://www.techconf.es/events.json",
+      "logo": "https://www.techconf.es/favicon.svg"
+    },
+    {
       "name": "eventos.wiki",
       "kind": "directory",
       "url": "https://eventos.wiki",

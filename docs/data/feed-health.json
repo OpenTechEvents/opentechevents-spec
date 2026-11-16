@@ -1,8 +1,33 @@
 {
-  "_comment": "Health of the registered adopter feeds, refreshed daily by scripts/check-feeds.mjs. Feeds are validated against the spec version they declare; `supported` false means older than the supported window, which is information, not a failure. `specVersion` and `licenses` are the last values seen, kept through an outage; `licenses` lists every licence a consumer ends up with, feed-level inheritance already resolved. `updated` is when this status last changed.",
-  "updated": "2026-11-15",
+  "_comment": "Health of the registered adopter feeds, refreshed daily by scripts/check-feeds.mjs. Feeds are validated against the spec version they declare; `supported` false means older than the supported window, which is information, not a failure. `specVersion` and `licenses` are the last values seen, kept through an outage; `licenses` lists every licence a consumer ends up with, feed-level inheritance already resolved. `eventCount` counts entries in the last validated response (all dates and statuses, no deduplication across feeds); null means not measured. `eventCountCheckedAt` is the UTC date of that measurement, retained with the count when a response cannot be validated. `updated` is when this status last changed.",
+  "updated": "2026-11-16",
   "latestSpecVersion": "0.6.0",
   "feeds": [
+    {
+      "name": "TechConf",
+      "url": "https://www.techconf.es/",
+      "feed": "https://www.techconf.es/events.json",
+      "status": "ok",
+      "specVersion": "0.6.0",
+      "supported": true,
+      "licenses": [
+        "CC-BY-4.0"
+      ],
+      "eventCount": 460,
+      "eventCountCheckedAt": "2026-11-16",
+      "cors": true,
+      "transport": {
+        "bytes": 468611,
+        "encoding": "br",
+        "revalidation": "etag+last-modified",
+        "cacheControl": "public, max-age=0, must-revalidate",
+        "ttfbMs": 210,
+        "totalMs": 226
+      },
+      "failureKind": null,
+      "failingSince": null,
+      "error": null
+    },
     {
       "name": "eventos.wiki",
       "url": "https://eventos.wiki",
@@ -13,6 +38,8 @@
       "licenses": [
         "CC-BY-4.0"
       ],
+      "eventCount": 58,
+      "eventCountCheckedAt": "2026-11-16",
       "cors": true,
       "transport": {
         "bytes": 78350,
@@ -36,6 +63,8 @@
       "licenses": [
         "CC-BY-4.0"
       ],
+      "eventCount": 196,
+      "eventCountCheckedAt": "2026-11-16",
       "cors": true,
       "transport": {
         "bytes": 349374,
@@ -59,6 +88,8 @@
       "licenses": [
         "CC0-1.0"
       ],
+      "eventCount": null,
+      "eventCountCheckedAt": null,
       "cors": true,
       "transport": {
         "bytes": 76918,
@@ -82,6 +113,8 @@
       "licenses": [
         "CC-BY-4.0"
       ],
+      "eventCount": 11,
+      "eventCountCheckedAt": "2026-11-16",
       "cors": true,
       "transport": {
         "bytes": 12061,
@@ -105,6 +138,8 @@
       "licenses": [
         "CC-BY-4.0"
       ],
+      "eventCount": 12,
+      "eventCountCheckedAt": "2026-11-16",
       "cors": true,
       "transport": {
         "bytes": 28743,

@@ -215,7 +215,12 @@ async function attempt(url) {
   if (!validate(doc)) {
     return hard("schema errors:\n" + ajv.errorsText(validate.errors, { separator: "\n" }), { cors, transport, version });
   }
-  return ok({ cors, transport, version, licenses: licensesIn(doc) });
+  return ok({
+    cors, transport, version, licenses: licensesIn(doc),
+    // Count entries in this validated response, including past/cancelled events.
+    // This is neither a unique-event total across feeds nor a community count.
+    eventCount: doc.events.length,
+  });
 }
 
 /* Every licence a consumer would actually end up with, inheritance resolved. An event
@@ -257,7 +262,10 @@ const state = existsSync(STATE) ? JSON.parse(readFileSync(STATE, "utf8")) : {};
 const previous = existsSync(PUBLIC_STATE) ? JSON.parse(readFileSync(PUBLIC_STATE, "utf8")) : {};
 // A feed that times out tells us nothing about its version: keep the last one we saw
 // rather than blanking it, so the public status stays useful through an outage.
-const lastKnown = new Map((previous.feeds || []).map((f) => [f.feed, { specVersion: f.specVersion, licenses: f.licenses, transport: f.transport }]));
+const lastKnown = new Map((previous.feeds || []).map((f) => [f.feed, {
+  specVersion: f.specVersion, licenses: f.licenses, transport: f.transport,
+  eventCount: f.eventCount, eventCountCheckedAt: f.eventCountCheckedAt,
+}]));
 const today = new Date().toISOString().slice(0, 10);
 const next = {};
 const status = [];
@@ -265,7 +273,7 @@ let failing = 0;
 const noCors = [];
 
 for (const adopter of adopters) {
-  const { error, kind, cors, transport, version, licenses } = await checkFeed(adopter.feed);
+  const { error, kind, cors, transport, version, licenses, eventCount } = await checkFeed(adopter.feed);
   const prev = state[adopter.feed];
   const last = lastKnown.get(adopter.feed) || {};
   const stale = version && !supported.has(version);
@@ -283,6 +291,10 @@ for (const adopter of adopters) {
     // Inheritance resolved, so a feed whose events carry different licences reports all
     // of them: whoever aggregates has to look at each event, not only at feed.license.
     licenses: licenses && licenses.length ? licenses : last.licenses || null,
+    // A failed/unvalidated response cannot replace the last validated measurement.
+    // Null means never measured, whereas zero is a validated empty feed.
+    eventCount: eventCount ?? last.eventCount ?? null,
+    eventCountCheckedAt: eventCount !== undefined ? today : last.eventCountCheckedAt || null,
     cors: error ? null : cors === null,
     // How it is served, not what it says: size, whether the server compressed it, whether a
     // consumer can revalidate instead of re-downloading, and where the time went. Kept through
@@ -382,7 +394,7 @@ writeFileSync(
   JSON.stringify(
     {
       _comment:
-        "Health of the registered adopter feeds, refreshed daily by scripts/check-feeds.mjs. Feeds are validated against the spec version they declare; `supported` false means older than the supported window, which is information, not a failure. `specVersion` and `licenses` are the last values seen, kept through an outage; `licenses` lists every licence a consumer ends up with, feed-level inheritance already resolved. `updated` is when this status last changed.",
+        "Health of the registered adopter feeds, refreshed daily by scripts/check-feeds.mjs. Feeds are validated against the spec version they declare; `supported` false means older than the supported window, which is information, not a failure. `specVersion` and `licenses` are the last values seen, kept through an outage; `licenses` lists every licence a consumer ends up with, feed-level inheritance already resolved. `eventCount` counts entries in the last validated response (all dates and statuses, no deduplication across feeds); null means not measured. `eventCountCheckedAt` is the UTC date of that measurement, retained with the count when a response cannot be validated. `updated` is when this status last changed.",
       updated: unchanged && previous.updated ? previous.updated : today,
       latestSpecVersion: LATEST,
       feeds: status,

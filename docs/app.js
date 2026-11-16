@@ -176,6 +176,12 @@
         if (title) badge.title = title.replace('{version}', item.specVersion);
         metas.appendChild(badge);
       }
+      if (Number.isInteger(item.eventCount) && item.eventCount >= 0 && item.eventCountCheckedAt) {
+        var countLabel = get(state.dict, item.eventCount === 1 ? 'adopters.eventCountOne' : 'adopters.eventCount');
+        var countBadge = el('span', 'entry-meta entry-badge', countLabel.replace('{count}', item.eventCount));
+        countBadge.title = get(state.dict, 'adopters.eventCountTitle').replace('{date}', item.eventCountCheckedAt);
+        metas.appendChild(countBadge);
+      }
       // Said once, where the claim is made: this entity intends to consume, it does not yet.
       if (item.consumes === 'planned' && containerId === 'consumers-list') {
         var soon = el('span', 'entry-meta entry-badge entry-badge-planned', get(state.dict, 'consumers.planned') || 'Coming soon');
@@ -332,7 +338,10 @@
     return (adopters || []).map(function (adopter) {
       var entry = health.find(function (f) { return f.feed === adopter.feed; });
       if (!entry) return adopter;
-      return Object.assign({}, adopter, { specVersion: entry.specVersion, licenses: entry.licenses });
+      return Object.assign({}, adopter, {
+        specVersion: entry.specVersion, licenses: entry.licenses,
+        eventCount: entry.eventCount, eventCountCheckedAt: entry.eventCountCheckedAt
+      });
     });
   }
 

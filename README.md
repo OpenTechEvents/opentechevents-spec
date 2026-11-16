@@ -71,13 +71,13 @@ Got a feed and want to check it? `npm run validate -- my-feed.json`.
 
 ## Project status
 
-🚧 **Early stage.** There is an **implementable v0.6**, and the work is now focused on **building on top of it** (the aggregator and its `.ics` importer) to find out what is wrong. The name, the scope and the governance are all still provisional and open to debate; the [licence](#licence) is already settled.
+🚧 **Early stage.** There is an **implementable v0.6**, and the work is now focused on **building on top of it** — the registered adopter feeds, their daily health check and the importers in [ote-tools](https://github.com/OpenTechEvents/ote-tools) — to find out what is wrong. The name, the scope and the governance are all still provisional and open to debate; the [licence](#licence) is already settled.
 
 ## Roadmap
 
 1. ✅ **Initial research** — an analysis of existing standards (RSS, iCalendar, schema.org/Event…), platforms and real use cases. → [research/](research/README.md)
 2. ✅ **v0.1 of the specification** — a minimal data model, an executable JSON Schema and examples. → [spec/v0.1/](spec/v0.1/README.md)
-3. 🔜 **Validation against real implementations** — the [aggregator](https://github.com/OpenTechEvents/opentechevents-data) and its `.ics` importer are the test bench: if the model cannot handle a real ingestion, the model is wrong. That is where [v0.2](CHANGELOG.md) (`tags`, `location.geo`, `updatedAt`) and v0.3 (`organizers`) came from. Still open.
+3. 🔜 **Validation against real implementations** — real feeds and real importers are the test bench: if the model cannot handle a real ingestion, the model is wrong. That is where [v0.2](CHANGELOG.md) (`tags`, `location.geo`, `updatedAt`) and v0.3 (`organizers`) came from, via an early aggregation proof of concept that is now archived; the bench today is the [adopter registry](https://opentechevents.org/data/adopters.json), its [daily health check](https://opentechevents.org/data/feed-health.json) and the importers in [ote-tools](https://github.com/OpenTechEvents/ote-tools). Still open.
 4. 🔜 **Adoption** — communities publishing feeds and directories consuming them. Without real data, a standard is theory.
 5. 🔜 **A tool ecosystem** — ingestion, transformation and automated publishing. → [catalogue on the website](https://opentechevents.org/#tools)
 
