@@ -21,8 +21,8 @@
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 455,
-        "totalMs": 470
+        "ttfbMs": 435,
+        "totalMs": 443
       },
       "failureKind": null,
       "failingSince": null,
@@ -46,8 +46,8 @@
         "encoding": "gzip",
         "revalidation": null,
         "cacheControl": "public, max-age=1800",
-        "ttfbMs": 5085,
-        "totalMs": 5215
+        "ttfbMs": 4583,
+        "totalMs": 4758
       },
       "failureKind": null,
       "failingSince": null,
@@ -71,8 +71,8 @@
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 245,
-        "totalMs": 258
+        "ttfbMs": 474,
+        "totalMs": 483
       },
       "failureKind": null,
       "failingSince": null,
@@ -96,8 +96,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 173,
-        "totalMs": 175
+        "ttfbMs": 184,
+        "totalMs": 185
       },
       "failureKind": null,
       "failingSince": null,
@@ -121,8 +121,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 321,
-        "totalMs": 322
+        "ttfbMs": 341,
+        "totalMs": 342
       },
       "failureKind": null,
       "failingSince": null,
@@ -146,8 +146,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 302,
-        "totalMs": 303
+        "ttfbMs": 241,
+        "totalMs": 242
       },
       "failureKind": null,
       "failingSince": null,
