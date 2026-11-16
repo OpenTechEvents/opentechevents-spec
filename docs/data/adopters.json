@@ -46,6 +46,14 @@
       "feed": "https://cascarillatech.org/feed.json",
       "logo": "https://cascarillatech.org/images/cascarillatech-hexagono.svg",
       "directory": "combuilders:641"
+    },
+    {
+      "name": "HackBarna Digest",
+      "kind": "directory",
+      "url": "https://digest.hackbarna.com",
+      "feed": "https://digest.hackbarna.com/events.json",
+      "logo": "https://www.hackbarna.com/brand/wordmark-black.svg",
+      "consumes": "planned"
     }
   ]
 }
