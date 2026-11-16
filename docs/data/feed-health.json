@@ -21,8 +21,8 @@
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 435,
-        "totalMs": 443
+        "ttfbMs": 513,
+        "totalMs": 522
       },
       "failureKind": null,
       "failingSince": null,
@@ -46,8 +46,33 @@
         "encoding": "gzip",
         "revalidation": null,
         "cacheControl": "public, max-age=1800",
-        "ttfbMs": 4583,
-        "totalMs": 4758
+        "ttfbMs": 4365,
+        "totalMs": 4488
+      },
+      "failureKind": null,
+      "failingSince": null,
+      "error": null
+    },
+    {
+      "name": "HackBarna Digest",
+      "url": "https://digest.hackbarna.com/en",
+      "feed": "https://digest.hackbarna.com/events.json",
+      "status": "ok",
+      "specVersion": "0.6.0",
+      "supported": true,
+      "licenses": [
+        "CC-BY-4.0"
+      ],
+      "eventCount": 208,
+      "eventCountCheckedAt": "2026-11-16",
+      "cors": true,
+      "transport": {
+        "bytes": 696881,
+        "encoding": null,
+        "revalidation": null,
+        "cacheControl": "public, max-age=3600",
+        "ttfbMs": 2144,
+        "totalMs": 2167
       },
       "failureKind": null,
       "failingSince": null,
@@ -71,8 +96,8 @@
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 474,
-        "totalMs": 483
+        "ttfbMs": 191,
+        "totalMs": 201
       },
       "failureKind": null,
       "failingSince": null,
@@ -96,8 +121,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 184,
-        "totalMs": 185
+        "ttfbMs": 239,
+        "totalMs": 240
       },
       "failureKind": null,
       "failingSince": null,
@@ -121,8 +146,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 341,
-        "totalMs": 342
+        "ttfbMs": 2166,
+        "totalMs": 2167
       },
       "failureKind": null,
       "failingSince": null,
@@ -146,8 +171,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 241,
-        "totalMs": 242
+        "ttfbMs": 143,
+        "totalMs": 144
       },
       "failureKind": null,
       "failingSince": null,
