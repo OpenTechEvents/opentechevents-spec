@@ -117,15 +117,8 @@ function report(valid, lines) {
 }
 
 /* ---------- logos ----------
-   A logo URL goes into a permanent record, so it has to still answer the same image next
-   year. The one people reach for most does not: dropping an image into a GitHub comment and
-   copying its address yields a pre-signed S3 URL that 403s after five minutes. #51 stored one
-   and the logo was dead before the PR merged. So an expiring URL is never written to the
-   registry — it is fetched once, here, and committed to docs/logos/ as a file we serve
-   ourselves. If the fetch fails (likely: it may already have expired), the entry gets no logo
-   at all and the report says so; initials are a worse logo than the real one and a far better
-   one than a broken image. scripts/validate.mjs fails the build if an expiring URL lands in
-   adopters.json by any other route. */
+  Keep a local copy as fallback for ordinary logo URLs. Temporary upload URLs cannot be
+  primary, so those use the local copy directly. */
 
 const LOGO_TYPES = {
   "image/png": "png",
@@ -324,21 +317,30 @@ if (consumes) entry.consumes = consumes;
 let logoNote = [];
 if (fields.logo) {
   const expiring = expiringLogoReason(fields.logo);
-  if (expiring) {
-    const mirrored = await mirrorLogo(fields.logo, fields.name);
-    if (mirrored.path) {
-      entry.logo = mirrored.path;
-      logoNote = [
-        "",
-        `> ℹ️ The logo URL you gave expires — ${expiring} — so the image was copied into the repository as \`docs/${mirrored.path}\` and the registry points there. Nothing for you to do; if you'd rather we linked your own copy, re-register with a permanent URL on your site.`,
-      ];
-    } else {
-      delete entry.logo;
-      logoNote = [
-        "",
-        `> ⚠️ **The logo was left out:** that URL expires — ${expiring} — and ${mirrored.error}. Your community will show its initials. To get the image in, re-register with a logo URL hosted on your own site (a link you can open tomorrow in a private window).`,
-      ];
-    }
+  const mirrored = await mirrorLogo(fields.logo, fields.name);
+  if (mirrored.path && expiring) {
+    entry.logo = mirrored.path;
+    logoNote = [
+      "",
+      `> ℹ️ The logo URL you gave expires — ${expiring} — so the image was copied into the repository as \`docs/${mirrored.path}\` and the registry uses that copy directly.`,
+    ];
+  } else if (mirrored.path) {
+    entry.logoFallback = mirrored.path;
+    logoNote = [
+      "",
+      `> ℹ️ The supplied URL remains the primary logo; a local copy at \`docs/${mirrored.path}\` will be used if it stops loading.`,
+    ];
+  } else if (expiring) {
+    delete entry.logo;
+    logoNote = [
+      "",
+      `> ⚠️ **The logo was left out:** that URL expires — ${expiring} — and ${mirrored.error}. Your community will show its initials. To get the image in, re-register with a permanent URL on your site.`,
+    ];
+  } else {
+    logoNote = [
+      "",
+      `> ℹ️ Could not make a local logo fallback (${mirrored.error}); the supplied URL remains the primary logo.`,
+    ];
   }
 }
 
@@ -346,9 +348,10 @@ const existing = registry.adopters.findIndex((a) => a.feed === fields.feed);
 if (existing === -1) registry.adopters.push(entry);
 else {
   const merged = { ...registry.adopters[existing], ...entry };
-  // The spread keeps an old value when this run has none — which, for a logo that was
-  // dropped above, would restore the very URL we refused to write.
-  if (!entry.logo && fields.logo) delete merged.logo;
+  if (fields.logo) {
+    if (!entry.logo) delete merged.logo;
+    if (!entry.logoFallback) delete merged.logoFallback;
+  }
   // Same for the consumer flag: unticking the box has to mean something.
   if (!entry.consumes) delete merged.consumes;
   registry.adopters[existing] = merged;

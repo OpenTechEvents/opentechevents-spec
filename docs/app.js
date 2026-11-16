@@ -127,6 +127,14 @@
         img.src = item.logo;
         img.alt = '';
         img.loading = 'lazy';
+        img.onerror = function () {
+          if (item.logoFallback && !img.dataset.fallbackUsed) {
+            img.dataset.fallbackUsed = 'true';
+            img.src = item.logoFallback;
+            return;
+          }
+          img.replaceWith(el('div', 'entry-logo', initials(item.name)));
+        };
         card.appendChild(img);
       } else {
         card.appendChild(el('div', 'entry-logo', initials(item.name)));

@@ -76,9 +76,9 @@ body:
       label: Logo URL
       description: >-
         Square-ish image shown next to your community on opentechevents.org. Leave empty
-        to show your initials instead. Best is a permanent URL on your own site. A link to
-        an image you uploaded to GitHub works too — those expire after a few minutes, so
-        the check copies the image into the repository instead of linking it.
+        to show your initials instead. Best is a permanent URL on your own site. The check
+        keeps a local copy as fallback; temporary GitHub upload links use the local copy
+        directly because those expire after a few minutes.
       placeholder: https://pyalmeria.example/logo.png
     validations:
       required: false

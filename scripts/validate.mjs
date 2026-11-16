@@ -491,13 +491,20 @@ console.log("\nadopters registry (docs/data/)");
       Boolean(adopter.feed) || Boolean(adopter.consumes),
       `${adopter.name} plays a role — publishes (has a feed) or consumes`
     );
+    const fallback = adopter.logoFallback;
+    const fallbackIsLocal = typeof fallback === "string" && /^logos\/[A-Za-z0-9._-]+$/.test(fallback);
+    const fallbackFile = fallbackIsLocal ? join("docs", fallback) : null;
+    const fallbackExists = Boolean(fallbackFile && existsSync(fallbackFile));
+    if (fallback) {
+      log(fallbackExists, `${adopter.name} logo fallback is a local file (${fallbackFile || fallback})`);
+      log(Boolean(adopter.logo), `${adopter.name} logo fallback has a primary logo`);
+    }
     if (!adopter.logo) continue;
     const expiring = expiringLogoReason(adopter.logo);
     log(
-      expiring === null,
-      `${adopter.name} logo is a durable URL${expiring ? ` — ${expiring.replace(/`/g, "")}: ${adopter.logo}` : ""}`
+      expiring === null || fallbackExists,
+      `${adopter.name} logo is durable or has a local fallback${expiring ? ` — ${expiring.replace(/`/g, "")}: ${adopter.logo}` : ""}`
     );
-    // A relative logo is served from docs/, so the file has to be there.
     if (!/^https?:\/\//i.test(adopter.logo)) {
       const file = join("docs", adopter.logo);
       log(existsSync(file), `${adopter.name} logo file exists (${file})`);
