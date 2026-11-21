@@ -1,6 +1,6 @@
 {
   "_comment": "Health of the registered adopter feeds, refreshed daily by scripts/check-feeds.mjs. Feeds are validated against the spec version they declare; `supported` false means older than the supported window, which is information, not a failure. `specVersion` and `licenses` are the last values seen, kept through an outage; `licenses` lists every licence a consumer ends up with, feed-level inheritance already resolved. `eventCount` counts entries in the last validated response (all dates and statuses, no deduplication across feeds); null means not measured. `eventCountCheckedAt` is the UTC date of that measurement, retained with the count when a response cannot be validated. `updated` is when this status last changed.",
-  "updated": "2026-11-20",
+  "updated": "2026-11-21",
   "latestSpecVersion": "0.6.0",
   "feeds": [
     {
@@ -14,15 +14,15 @@
         "CC-BY-4.0"
       ],
       "eventCount": 460,
-      "eventCountCheckedAt": "2026-11-20",
+      "eventCountCheckedAt": "2026-11-21",
       "cors": true,
       "transport": {
         "bytes": 468611,
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 499,
-        "totalMs": 508
+        "ttfbMs": 271,
+        "totalMs": 284
       },
       "failureKind": null,
       "failingSince": null,
@@ -39,15 +39,15 @@
         "CC-BY-4.0"
       ],
       "eventCount": 58,
-      "eventCountCheckedAt": "2026-11-20",
+      "eventCountCheckedAt": "2026-11-21",
       "cors": true,
       "transport": {
         "bytes": 78350,
         "encoding": null,
         "revalidation": null,
         "cacheControl": "public, max-age=1800",
-        "ttfbMs": 2172,
-        "totalMs": 2454
+        "ttfbMs": 2287,
+        "totalMs": 2460
       },
       "failureKind": null,
       "failingSince": null,
@@ -63,16 +63,16 @@
       "licenses": [
         "CC-BY-4.0"
       ],
-      "eventCount": 230,
-      "eventCountCheckedAt": "2026-11-20",
+      "eventCount": 219,
+      "eventCountCheckedAt": "2026-11-21",
       "cors": true,
       "transport": {
-        "bytes": 759003,
+        "bytes": 725477,
         "encoding": null,
         "revalidation": null,
         "cacheControl": "public, max-age=3600",
-        "ttfbMs": 3381,
-        "totalMs": 3445
+        "ttfbMs": 2219,
+        "totalMs": 2231
       },
       "failureKind": null,
       "failingSince": null,
@@ -88,16 +88,16 @@
       "licenses": [
         "CC-BY-4.0"
       ],
-      "eventCount": 180,
-      "eventCountCheckedAt": "2026-11-20",
+      "eventCount": 178,
+      "eventCountCheckedAt": "2026-11-21",
       "cors": true,
       "transport": {
-        "bytes": 321953,
+        "bytes": 318382,
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 320,
-        "totalMs": 330
+        "ttfbMs": 171,
+        "totalMs": 181
       },
       "failureKind": null,
       "failingSince": null,
@@ -121,8 +121,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 246,
-        "totalMs": 247
+        "ttfbMs": 94,
+        "totalMs": 96
       },
       "failureKind": null,
       "failingSince": null,
@@ -139,15 +139,15 @@
         "CC-BY-4.0"
       ],
       "eventCount": 11,
-      "eventCountCheckedAt": "2026-11-20",
+      "eventCountCheckedAt": "2026-11-21",
       "cors": true,
       "transport": {
         "bytes": 12061,
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 287,
-        "totalMs": 288
+        "ttfbMs": 484,
+        "totalMs": 485
       },
       "failureKind": null,
       "failingSince": null,
@@ -164,15 +164,15 @@
         "CC-BY-4.0"
       ],
       "eventCount": 12,
-      "eventCountCheckedAt": "2026-11-20",
+      "eventCountCheckedAt": "2026-11-21",
       "cors": true,
       "transport": {
         "bytes": 28743,
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 288,
-        "totalMs": 289
+        "ttfbMs": 389,
+        "totalMs": 390
       },
       "failureKind": null,
       "failingSince": null,
