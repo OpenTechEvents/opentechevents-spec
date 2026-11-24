@@ -4,7 +4,8 @@
     "description": "Una especificación abierta para describir, publicar y compartir eventos de comunidades tecnológicas. Publica una vez, aparece en todas partes."
   },
   "a11y": {
-    "skip": "Saltar al contenido"
+    "skip": "Saltar al contenido",
+    "sectionLink": "Enlace a esta sección"
   },
   "draft": {
     "pill": "Borrador 0.x",
@@ -211,6 +212,7 @@
     "previewAction": "Previsualizar eventos",
     "reader": "Abrir en OTE Reader",
     "validate": "Validar feed",
+    "publish": "Promocionar eventos",
     "embed": "Crear widget (pega la URL)"
   },
   "consumers": {
@@ -219,7 +221,6 @@
     "empty": "¿Estás montando un directorio, una newsletter o un bot? Consume feeds OTE y aparece aquí.",
     "emptyCta": "Añadir mi proyecto",
     "devDocs": "Docs para desarrolladores",
-    "note": "💡 <strong>¿Te preocupa que aún haya pocos consumidores OTE?</strong> Al publicar tu feed con las herramientas del ecosistema (como el <a href=\"#tools\">Kit del Organizador</a>), obtienes de forma automática exportación a <strong>iCalendar (.ics)</strong> y <strong>RSS</strong>. Tus eventos se pueden consumir desde el primer día en cualquier app de calendario o lector de feeds tradicional mientras el ecosistema OTE crece.",
     "kindTool": "Herramienta",
     "machine": "Esta lista es una vista, no un fichero: une las herramientas de <a href=\"/data/tools.json\"><code>tools.json</code></a> que consumen feeds con las entradas de <a href=\"/data/adopters.json\"><code>adopters.json</code></a> que declaran que también los ingieren.",
     "planned": "Próximamente",

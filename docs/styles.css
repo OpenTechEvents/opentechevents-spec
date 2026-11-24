@@ -240,6 +240,11 @@ t { color: #e08a6b; }
 .section-alt { background: var(--bg-alt); border-block: 1px solid var(--line); }
 .section-dark { background: var(--bg-dark); color: #d5dae4; }
 .section-dark h2, .section-dark h3, .section-dark strong { color: #fff; }
+.heading-anchor { color: var(--ink-faint); text-decoration: none; font-weight: 500; opacity: 0; }
+h2:hover .heading-anchor, .heading-anchor:focus-visible { opacity: 1; }
+.heading-anchor:hover, .heading-anchor:focus-visible { color: var(--accent); text-decoration: none; }
+.heading-anchor:focus-visible { outline: 3px solid #80a1ff; outline-offset: 3px; border-radius: 2px; }
+.section-dark .heading-anchor { color: #b5c7f5; }
 .section-dark .section-lead { color: #9aa3b4; }
 /* Inline code only — a bare `code` selector here also hit the snippets inside
    .code-block and turned them all light blue. */

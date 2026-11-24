@@ -149,7 +149,7 @@
         nameEl.classList.add('entry-name-link');
       }
       body.appendChild(nameEl);
-      if (item.desc) body.appendChild(el('p', 'entry-desc', t(item.desc)));
+      if (item.desc && containerId !== 'adopters-list') body.appendChild(el('p', 'entry-desc', t(item.desc)));
 
       var metas = el('div', 'entry-metas');
       // What the entity is (community, directory) or — for a tool — its own label. Used to
@@ -161,6 +161,12 @@
           : t(item.kind);
         metas.appendChild(el('span', 'entry-meta', kindLabel));
       }
+      if (Number.isInteger(item.eventCount) && item.eventCount >= 0 && item.eventCountCheckedAt) {
+        var countLabel = get(state.dict, item.eventCount === 1 ? 'adopters.eventCountOne' : 'adopters.eventCount');
+        var countBadge = el('span', 'entry-meta entry-badge', countLabel.replace('{count}', item.eventCount));
+        countBadge.title = get(state.dict, 'adopters.eventCountTitle').replace('{date}', item.eventCountCheckedAt);
+        metas.appendChild(countBadge);
+      }
       // Which version of the spec this feed speaks, from the daily health check. It
       // says what a consumer needs before subscribing and nothing about being behind:
       // every published version stays supported, so this is never a mark of shame.
@@ -169,12 +175,6 @@
         var title = get(state.dict, 'adopters.specVersionBadge');
         if (title) badge.title = title.replace('{version}', item.specVersion);
         metas.appendChild(badge);
-      }
-      if (Number.isInteger(item.eventCount) && item.eventCount >= 0 && item.eventCountCheckedAt) {
-        var countLabel = get(state.dict, item.eventCount === 1 ? 'adopters.eventCountOne' : 'adopters.eventCount');
-        var countBadge = el('span', 'entry-meta entry-badge', countLabel.replace('{count}', item.eventCount));
-        countBadge.title = get(state.dict, 'adopters.eventCountTitle').replace('{date}', item.eventCountCheckedAt);
-        metas.appendChild(countBadge);
       }
       // Said once, where the claim is made: this entity intends to consume, it does not yet.
       if (item.consumes === 'planned' && containerId === 'consumers-list') {
@@ -234,6 +234,7 @@
           ['previewAction', 'https://tools.opentechevents.org/preview?feed=' + encodedFeed],
           ['reader', 'https://reader.opentechevents.org/?subscribe=' + encodedFeed],
           ['validate', 'https://validator.opentechevents.org/?doc=' + encodedFeed],
+          ['publish', 'https://tools.opentechevents.org/publish/?feed=' + encodedFeed],
           ['embed', 'https://tools.opentechevents.org/embed/']
         ].forEach(function (action) {
           panel.appendChild(feedLink('feed-menu-link', get(state.dict, 'adopters.' + action[0]), action[1]));
