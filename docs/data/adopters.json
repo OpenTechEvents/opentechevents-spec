@@ -6,7 +6,12 @@
       "kind": "directory",
       "url": "https://confs.rauljimenez.info/",
       "feed": "https://confs.rauljimenez.info/events.json",
-      "logo": "logos/confwatch.svg"
+      "logo": "logos/confwatch.svg",
+      "consumes": "live",
+      "desc": {
+        "en": "Tracks conferences using OTE feeds and other sources, consolidating dates and changes into a single view, including conferences without an official data feed.",
+        "es": "Hace seguimiento de conferencias mediante feeds OTE y otras fuentes, y consolida fechas y cambios en una única vista, también para conferencias sin un feed de datos oficial."
+      }
     },
     {
       "name": "TechConf",

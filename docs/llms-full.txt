@@ -7386,6 +7386,23 @@ Source: docs/data/tools.json — The tools listed on the site: validators, gener
   "tools": [
     {
       "status": "working",
+      "audience": ["organizers", "developers"],
+      "name": {
+        "en": "OTE event agent skill",
+        "es": "Skill de eventos OTE para agentes"
+      },
+      "desc": {
+        "en": "The ote-event skill helps an agent create and validate an OTE event from an event page, an iCalendar export or a description, and can help add it to a website. The repository includes installation instructions.",
+        "es": "La skill ote-event ayuda a un agente a crear y validar un evento OTE a partir de una página, una exportación iCalendar o una descripción, y puede ayudar a incorporarlo a una web. El repositorio incluye instrucciones de instalación."
+      },
+      "category": {
+        "en": "Create & validate",
+        "es": "Crear y validar"
+      },
+      "url": "https://github.com/OpenTechEvents/ote-tools/tree/main/skills"
+    },
+    {
+      "status": "working",
       "audience": ["attendees"],
       "name": {
         "en": "Community Builders Directory",
@@ -7601,7 +7618,7 @@ Source: docs/data/tools.json — The tools listed on the site: validators, gener
       "linkKind": "npm"
     },
     {
-      "status": "proposed",
+      "status": "working",
       "audience": ["organizers", "developers"],
       "order": 15,
       "name": {
@@ -7609,14 +7626,15 @@ Source: docs/data/tools.json — The tools listed on the site: validators, gener
         "es": "OTE → schema.org/Event"
       },
       "desc": {
-        "en": "Generate a schema.org/Event JSON-LD snippet from an OTE event, ready to paste into an event page. It is what turns an event you already wrote into Google's event rich results — date, venue and price shown in search — with no hand-written markup to keep in sync.",
-        "es": "Genera un snippet JSON-LD schema.org/Event desde un evento OTE, listo para pegar en la página del evento. Es lo que convierte un evento que ya has escrito en los resultados enriquecidos de Google —fecha, sede y precio en la búsqueda— sin marcado a mano que mantener sincronizado."
+        "en": "Convert OTE events or feeds to schema.org/Event JSON-LD and generate a script ready to paste into a page. Available as a library and CLI in @opentechevents/export-jsonld.",
+        "es": "Convierte eventos o feeds OTE a JSON-LD schema.org/Event y genera un script listo para pegar en una página. Disponible como librería y CLI en @opentechevents/export-jsonld."
       },
       "category": {
         "en": "Transform",
         "es": "Transformar"
       },
-      "url": "https://github.com/OpenTechEvents/opentechevents-spec/issues/11"
+      "url": "https://www.npmjs.com/package/@opentechevents/export-jsonld",
+      "linkKind": "npm"
     },
     {
       "status": "proposed",
@@ -7637,22 +7655,23 @@ Source: docs/data/tools.json — The tools listed on the site: validators, gener
       "url": "https://github.com/OpenTechEvents/opentechevents-spec/issues/37"
     },
     {
-      "status": "proposed",
+      "status": "wip",
       "audience": ["organizers"],
       "order": 10,
       "name": {
-        "en": "Publishing assistant",
-        "es": "Asistente de publicación"
+        "en": "Broadcast · Publishing assistant",
+        "es": "Broadcast · Asistente de publicación"
       },
       "desc": {
-        "en": "Turn an OTE event into organiser-reviewed outputs for non-OTE channels: copy-paste cheat sheets, email text, contact-form fields, issue links or pull request drafts.",
-        "es": "Convierte un evento OTE en salidas revisadas por el organizador para canales que no usan OTE: chuletas de copy-paste, texto de email, campos de formulario, enlaces a issues o borradores de pull request."
+        "en": "MVP for promoting an OTE event across platforms, directories and social channels. Prepare content to copy or use alongside destination forms; the organizer reviews and publishes it.",
+        "es": "MVP para promocionar un evento OTE en plataformas, directorios y canales sociales. Prepara contenido para copiar o usar junto a formularios de destino; el organizador lo revisa y publica."
       },
       "category": {
         "en": "Publish",
         "es": "Publicar"
       },
-      "url": "https://github.com/OpenTechEvents/opentechevents-spec/issues/12"
+      "url": "https://tools.opentechevents.org/publish/",
+      "linkKind": "app"
     },
     {
       "status": "proposed",
@@ -7752,8 +7771,8 @@ Source: docs/data/tools.json — The tools listed on the site: validators, gener
         "es": "SDKs de referencia"
       },
       "desc": {
-        "en": "The JS/TS SDK is published under the @opentechevents/* npm scope: validate, export-ics, export-rss, import-ics, import-jsonld, build-feed — pure functions to read, write and validate OTE. Python and an online playground still pending.",
-        "es": "El SDK JS/TS está publicado en el scope npm @opentechevents/*: validate, export-ics, export-rss, import-ics, import-jsonld, build-feed — funciones puras para leer, escribir y validar OTE. Python y un playground online siguen pendientes."
+        "en": "The JS/TS SDK is published under the @opentechevents/* npm scope: validate, export-ics, export-rss, export-jsonld, import-ics, import-jsonld, build-feed — pure functions to read, write and validate OTE. Python and an online playground still pending.",
+        "es": "El SDK JS/TS está publicado en el scope npm @opentechevents/*: validate, export-ics, export-rss, export-jsonld, import-ics, import-jsonld, build-feed — funciones puras para leer, escribir y validar OTE. Python y un playground online siguen pendientes."
       },
       "category": {
         "en": "Libraries",
@@ -7779,7 +7798,12 @@ Source: docs/data/adopters.json — Communities and directories publishing an OT
       "kind": "directory",
       "url": "https://confs.rauljimenez.info/",
       "feed": "https://confs.rauljimenez.info/events.json",
-      "logo": "logos/confwatch.svg"
+      "logo": "logos/confwatch.svg",
+      "consumes": "live",
+      "desc": {
+        "en": "Tracks conferences using OTE feeds and other sources, consolidating dates and changes into a single view, including conferences without an official data feed.",
+        "es": "Hace seguimiento de conferencias mediante feeds OTE y otras fuentes, y consolida fechas y cambios en una única vista, también para conferencias sin un feed de datos oficial."
+      }
     },
     {
       "name": "TechConf",
