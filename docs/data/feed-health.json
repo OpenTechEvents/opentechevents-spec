@@ -21,8 +21,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=900",
-        "ttfbMs": 417,
-        "totalMs": 431
+        "ttfbMs": 676,
+        "totalMs": 697
       },
       "failureKind": null,
       "failingSince": null,
@@ -46,8 +46,8 @@
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 204,
-        "totalMs": 243
+        "ttfbMs": 162,
+        "totalMs": 167
       },
       "failureKind": null,
       "failingSince": null,
@@ -71,8 +71,8 @@
         "encoding": null,
         "revalidation": null,
         "cacheControl": "public, max-age=1800",
-        "ttfbMs": 2513,
-        "totalMs": 2611
+        "ttfbMs": 2719,
+        "totalMs": 2910
       },
       "failureKind": null,
       "failingSince": null,
@@ -96,8 +96,8 @@
         "encoding": null,
         "revalidation": null,
         "cacheControl": "public, max-age=3600",
-        "ttfbMs": 1678,
-        "totalMs": 1832
+        "ttfbMs": 2304,
+        "totalMs": 2315
       },
       "failureKind": null,
       "failingSince": null,
@@ -121,8 +121,8 @@
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 224,
-        "totalMs": 256
+        "ttfbMs": 201,
+        "totalMs": 205
       },
       "failureKind": null,
       "failingSince": null,
@@ -146,8 +146,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 471,
-        "totalMs": 472
+        "ttfbMs": 302,
+        "totalMs": 303
       },
       "failureKind": null,
       "failingSince": null,
@@ -171,8 +171,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 307,
-        "totalMs": 308
+        "ttfbMs": 244,
+        "totalMs": 246
       },
       "failureKind": null,
       "failingSince": null,
@@ -196,8 +196,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 422,
-        "totalMs": 424
+        "ttfbMs": 349,
+        "totalMs": 350
       },
       "failureKind": null,
       "failingSince": null,
@@ -221,8 +221,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 540,
-        "totalMs": 541
+        "ttfbMs": 292,
+        "totalMs": 293
       },
       "failureKind": null,
       "failingSince": null,
