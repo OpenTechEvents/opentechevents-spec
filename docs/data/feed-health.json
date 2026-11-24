@@ -21,8 +21,8 @@
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 443,
-        "totalMs": 452
+        "ttfbMs": 409,
+        "totalMs": 425
       },
       "failureKind": null,
       "failingSince": null,
@@ -46,8 +46,8 @@
         "encoding": null,
         "revalidation": null,
         "cacheControl": "public, max-age=1800",
-        "ttfbMs": 3114,
-        "totalMs": 3408
+        "ttfbMs": 2498,
+        "totalMs": 2672
       },
       "failureKind": null,
       "failingSince": null,
@@ -71,8 +71,8 @@
         "encoding": null,
         "revalidation": null,
         "cacheControl": "public, max-age=3600",
-        "ttfbMs": 3389,
-        "totalMs": 3409
+        "ttfbMs": 1909,
+        "totalMs": 1933
       },
       "failureKind": null,
       "failingSince": null,
@@ -96,8 +96,8 @@
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 294,
-        "totalMs": 304
+        "ttfbMs": 202,
+        "totalMs": 211
       },
       "failureKind": null,
       "failingSince": null,
@@ -121,8 +121,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 194,
-        "totalMs": 195
+        "ttfbMs": 183,
+        "totalMs": 185
       },
       "failureKind": null,
       "failingSince": null,
@@ -146,8 +146,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 259,
-        "totalMs": 260
+        "ttfbMs": 211,
+        "totalMs": 212
       },
       "failureKind": null,
       "failingSince": null,
@@ -171,8 +171,33 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 301,
-        "totalMs": 302
+        "ttfbMs": 345,
+        "totalMs": 347
+      },
+      "failureKind": null,
+      "failingSince": null,
+      "error": null
+    },
+    {
+      "name": "CoruñaWTF",
+      "url": "https://corunawtf.github.io/page/",
+      "feed": "https://corunawtf.github.io/page/feed.json",
+      "status": "ok",
+      "specVersion": "0.6.0",
+      "supported": true,
+      "licenses": [
+        "CC-BY-4.0"
+      ],
+      "eventCount": 23,
+      "eventCountCheckedAt": "2026-11-24",
+      "cors": true,
+      "transport": {
+        "bytes": 22275,
+        "encoding": "gzip",
+        "revalidation": "etag+last-modified",
+        "cacheControl": "max-age=600",
+        "ttfbMs": 134,
+        "totalMs": 135
       },
       "failureKind": null,
       "failingSince": null,
