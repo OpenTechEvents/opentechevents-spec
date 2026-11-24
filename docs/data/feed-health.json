@@ -4,6 +4,31 @@
   "latestSpecVersion": "0.6.0",
   "feeds": [
     {
+      "name": "confwatch",
+      "url": "https://confs.rauljimenez.info/",
+      "feed": "https://confs.rauljimenez.info/events.json",
+      "status": "ok",
+      "specVersion": "0.6.0",
+      "supported": true,
+      "licenses": [
+        "CC0-1.0"
+      ],
+      "eventCount": 96,
+      "eventCountCheckedAt": "2026-11-24",
+      "cors": true,
+      "transport": {
+        "bytes": 192102,
+        "encoding": "gzip",
+        "revalidation": "etag+last-modified",
+        "cacheControl": "public, max-age=900",
+        "ttfbMs": 417,
+        "totalMs": 431
+      },
+      "failureKind": null,
+      "failingSince": null,
+      "error": null
+    },
+    {
       "name": "TechConf",
       "url": "https://www.techconf.es/",
       "feed": "https://www.techconf.es/events.json",
@@ -21,8 +46,8 @@
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 409,
-        "totalMs": 425
+        "ttfbMs": 204,
+        "totalMs": 243
       },
       "failureKind": null,
       "failingSince": null,
@@ -46,8 +71,8 @@
         "encoding": null,
         "revalidation": null,
         "cacheControl": "public, max-age=1800",
-        "ttfbMs": 2498,
-        "totalMs": 2672
+        "ttfbMs": 2513,
+        "totalMs": 2611
       },
       "failureKind": null,
       "failingSince": null,
@@ -71,8 +96,8 @@
         "encoding": null,
         "revalidation": null,
         "cacheControl": "public, max-age=3600",
-        "ttfbMs": 1909,
-        "totalMs": 1933
+        "ttfbMs": 1678,
+        "totalMs": 1832
       },
       "failureKind": null,
       "failingSince": null,
@@ -88,16 +113,16 @@
       "licenses": [
         "CC-BY-4.0"
       ],
-      "eventCount": 175,
+      "eventCount": 176,
       "eventCountCheckedAt": "2026-11-24",
       "cors": true,
       "transport": {
-        "bytes": 312391,
+        "bytes": 314074,
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 202,
-        "totalMs": 211
+        "ttfbMs": 224,
+        "totalMs": 256
       },
       "failureKind": null,
       "failingSince": null,
@@ -121,8 +146,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 183,
-        "totalMs": 185
+        "ttfbMs": 471,
+        "totalMs": 472
       },
       "failureKind": null,
       "failingSince": null,
@@ -146,8 +171,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 211,
-        "totalMs": 212
+        "ttfbMs": 307,
+        "totalMs": 308
       },
       "failureKind": null,
       "failingSince": null,
@@ -171,8 +196,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 345,
-        "totalMs": 347
+        "ttfbMs": 422,
+        "totalMs": 424
       },
       "failureKind": null,
       "failingSince": null,
@@ -196,8 +221,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 134,
-        "totalMs": 135
+        "ttfbMs": 540,
+        "totalMs": 541
       },
       "failureKind": null,
       "failingSince": null,

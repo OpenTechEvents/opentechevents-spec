@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="confwatch">
+  <rect width="128" height="128" rx="28" fill="#17375e"/>
+  <rect x="22" y="28" width="84" height="78" rx="12" fill="#fff"/>
+  <path d="M22 40a12 12 0 0 1 12-12h60a12 12 0 0 1 12 12v12H22z" fill="#59c6c1"/>
+  <path d="M43 21v16M85 21v16" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+  <path d="M35 78s11-15 29-15 29 15 29 15-11 15-29 15-29-15-29-15z" fill="none" stroke="#17375e" stroke-width="5" stroke-linejoin="round"/>
+  <circle cx="64" cy="78" r="7" fill="#17375e"/>
+</svg>

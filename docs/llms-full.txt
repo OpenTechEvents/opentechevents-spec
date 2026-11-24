@@ -7386,6 +7386,24 @@ Source: docs/data/tools.json — The tools listed on the site: validators, gener
   "tools": [
     {
       "status": "working",
+      "audience": ["attendees"],
+      "name": {
+        "en": "Community Builders Directory",
+        "es": "Directorio de Community Builders"
+      },
+      "desc": {
+        "en": "A directory of tech communities that reads and displays events from the OTE JSON feeds published by communities.",
+        "es": "Directorio de comunidades tecnológicas que lee y muestra eventos de los feeds JSON OTE publicados por las comunidades."
+      },
+      "category": {
+        "en": "Consume",
+        "es": "Consumir"
+      },
+      "url": "https://directory.communitybuilders.dev/",
+      "linkKind": "app"
+    },
+    {
+      "status": "working",
       "audience": ["organizers"],
       "name": {
         "en": "Organizer kit",
@@ -7756,6 +7774,13 @@ Source: docs/data/adopters.json — Communities and directories publishing an OT
 {
   "_comment": "Communities/events publishing their data in OTE format. Add yours via PR or issue. Fields: name (required), kind (community|directory — what the entity IS), url, feed, logo (path or URL; falls back to initials), logoFallback (local path tried if logo fails), desc {en,es}, directory, consumes. Roles are not stored twice: a `feed` means it PUBLISHES (verified by the registration pipeline and re-measured daily by scripts/check-feeds.mjs), and `consumes` (\"live\" | \"planned\") means it also INGESTS other OTE feeds. That one is self-declared — nothing here can verify it — so intent is listed as intent: \"planned\" renders as coming soon and never counts as reach you already have.",
   "adopters": [
+    {
+      "name": "confwatch",
+      "kind": "directory",
+      "url": "https://confs.rauljimenez.info/",
+      "feed": "https://confs.rauljimenez.info/events.json",
+      "logo": "logos/confwatch.svg"
+    },
     {
       "name": "TechConf",
       "kind": "directory",

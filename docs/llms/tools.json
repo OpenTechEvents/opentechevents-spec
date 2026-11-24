@@ -3,6 +3,24 @@
   "tools": [
     {
       "status": "working",
+      "audience": ["attendees"],
+      "name": {
+        "en": "Community Builders Directory",
+        "es": "Directorio de Community Builders"
+      },
+      "desc": {
+        "en": "A directory of tech communities that reads and displays events from the OTE JSON feeds published by communities.",
+        "es": "Directorio de comunidades tecnológicas que lee y muestra eventos de los feeds JSON OTE publicados por las comunidades."
+      },
+      "category": {
+        "en": "Consume",
+        "es": "Consumir"
+      },
+      "url": "https://directory.communitybuilders.dev/",
+      "linkKind": "app"
+    },
+    {
+      "status": "working",
       "audience": ["organizers"],
       "name": {
         "en": "Organizer kit",
