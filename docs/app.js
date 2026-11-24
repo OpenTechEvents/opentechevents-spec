@@ -140,7 +140,7 @@
         card.appendChild(el('div', 'entry-logo', initials(item.name)));
       }
 
-      var body = el('div');
+      var body = el('div', 'entry-body');
       var nameEl = el(item.url ? 'a' : 'div', 'entry-name', item.name);
       if (item.url) {
         nameEl.href = item.url;
@@ -160,20 +160,6 @@
           ? (get(state.dict, 'adopters.kind.' + item.kind) || item.kind)
           : t(item.kind);
         metas.appendChild(el('span', 'entry-meta', kindLabel));
-      }
-      // Two different acts on the same feed: inspect it, or start following it. Preview is
-      // for someone evaluating the format; subscribe is the one an attendee wants, and the
-      // reader's applySubscribeParam() reads exactly this parameter — it prefills the
-      // subscribe dialog, and does nothing if the feed is already in their list.
-      if (item.feed) {
-        metas.appendChild(
-          feedLink('entry-preview', get(state.dict, 'adopters.preview') || 'Preview feed \u2192',
-            'https://tools.opentechevents.org/preview?feed=' + encodeURIComponent(item.feed))
-        );
-        metas.appendChild(
-          feedLink('entry-subscribe', get(state.dict, 'adopters.subscribe') || 'Subscribe \u2192',
-            'https://reader.opentechevents.org/?subscribe=' + encodeURIComponent(item.feed))
-        );
       }
       // Which version of the spec this feed speaks, from the daily health check. It
       // says what a consumer needs before subscribing and nothing about being behind:
@@ -212,11 +198,73 @@
         metas.appendChild(lic);
       }
       if (metas.childNodes.length) body.appendChild(metas);
+      if (item.feed) {
+        var menu = el('details', 'feed-menu');
+        var summary = el('summary', 'feed-menu-trigger', get(state.dict, 'adopters.feedActions'));
+        summary.setAttribute('aria-label', get(state.dict, 'adopters.feedActionsFor').replace('{name}', item.name));
+        menu.appendChild(summary);
+        var panel = el('div', 'feed-menu-panel');
+        var encodedFeed = encodeURIComponent(item.feed);
+        var copy = el('button', 'feed-menu-link feed-menu-copy', get(state.dict, 'adopters.copyFeed'));
+        copy.type = 'button';
+        var copyStatus = el('span', 'feed-menu-status');
+        copyStatus.setAttribute('role', 'status');
+        copy.addEventListener('click', function () {
+          function fallback() {
+            copyStatus.textContent = get(state.dict, 'adopters.copyFallback');
+            copyStatus.hidden = false;
+            var input = el('input', 'feed-menu-url');
+            input.type = 'text';
+            input.value = item.feed;
+            input.readOnly = true;
+            copyStatus.replaceChildren(document.createTextNode(get(state.dict, 'adopters.copyFallback')), input);
+            input.focus();
+            input.select();
+          }
+          if (!navigator.clipboard || !navigator.clipboard.writeText) return fallback();
+          navigator.clipboard.writeText(item.feed).then(function () {
+            copyStatus.textContent = get(state.dict, 'adopters.copied');
+            copyStatus.hidden = false;
+          }).catch(fallback);
+        });
+        panel.appendChild(copy);
+        copyStatus.hidden = true;
+        panel.appendChild(copyStatus);
+        [
+          ['previewAction', 'https://tools.opentechevents.org/preview?feed=' + encodedFeed],
+          ['reader', 'https://reader.opentechevents.org/?subscribe=' + encodedFeed],
+          ['validate', 'https://validator.opentechevents.org/?doc=' + encodedFeed],
+          ['embed', 'https://tools.opentechevents.org/embed/']
+        ].forEach(function (action) {
+          panel.appendChild(feedLink('feed-menu-link', get(state.dict, 'adopters.' + action[0]), action[1]));
+        });
+        // Add converter links here once the production service has a stable URL.
+        menu.appendChild(panel);
+        menu.addEventListener('toggle', function () {
+          if (!menu.open) return;
+          document.querySelectorAll('.feed-menu[open]').forEach(function (other) {
+            if (other !== menu) other.open = false;
+          });
+        });
+        menu.addEventListener('keydown', function (event) {
+          if (event.key === 'Escape' && menu.open) {
+            menu.open = false;
+            summary.focus();
+          }
+        });
+        body.appendChild(menu);
+      }
       card.appendChild(body);
 
       container.appendChild(card);
     });
   }
+
+  document.addEventListener('click', function (event) {
+    document.querySelectorAll('.feed-menu[open]').forEach(function (menu) {
+      if (!menu.contains(event.target)) menu.open = false;
+    });
+  });
 
   /* Supporters are the same card as an adopter, with one difference: their meta line is not
      free text but their tier(s), so "pledged to adopt" cannot quietly read as "already adopted". */

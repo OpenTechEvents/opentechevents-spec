@@ -202,7 +202,16 @@
       "directory": "Directory"
     },
     "preview": "Preview feed →",
-    "subscribe": "Subscribe →"
+    "subscribe": "Subscribe →",
+    "feedActions": "Explore feed",
+    "feedActionsFor": "Explore feed for {name}",
+    "copyFeed": "Copy feed URL",
+    "copied": "Feed URL copied.",
+    "copyFallback": "Copy the selected URL:",
+    "previewAction": "Preview events",
+    "reader": "Open in OTE Reader",
+    "validate": "Validate feed",
+    "embed": "Create a widget (paste URL)"
   },
   "consumers": {
     "title": "Who consumes OTE data",

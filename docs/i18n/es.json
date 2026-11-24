@@ -202,7 +202,16 @@
       "directory": "Directorio"
     },
     "preview": "Ver el feed →",
-    "subscribe": "Suscribirse →"
+    "subscribe": "Suscribirse →",
+    "feedActions": "Explorar feed",
+    "feedActionsFor": "Explorar el feed de {name}",
+    "copyFeed": "Copiar URL del feed",
+    "copied": "URL del feed copiada.",
+    "copyFallback": "Copia la URL seleccionada:",
+    "previewAction": "Previsualizar eventos",
+    "reader": "Abrir en OTE Reader",
+    "validate": "Validar feed",
+    "embed": "Crear widget (pega la URL)"
   },
   "consumers": {
     "title": "Quién consume datos OTE",
