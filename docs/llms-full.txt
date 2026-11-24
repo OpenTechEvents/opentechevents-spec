@@ -7814,6 +7814,14 @@ Source: docs/data/adopters.json — Communities and directories publishing an OT
       "logo": "https://cascarillatech.org/images/cascarillatech-hexagono.svg",
       "logoFallback": "logos/cascarilla-tech.svg",
       "directory": "combuilders:641"
+    },
+    {
+      "name": "CoruñaWTF",
+      "kind": "community",
+      "url": "https://corunawtf.github.io/page/",
+      "feed": "https://corunawtf.github.io/page/feed.json",
+      "logo": "https://corunawtf.github.io/page/files/logos/logo-crop.png",
+      "logoFallback": "logos/corunawtf.png"
     }
   ]
 }
