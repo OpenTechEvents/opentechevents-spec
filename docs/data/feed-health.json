@@ -1,6 +1,6 @@
 {
   "_comment": "Health of the registered adopter feeds, refreshed daily by scripts/check-feeds.mjs. Feeds are validated against the spec version they declare; `supported` false means older than the supported window, which is information, not a failure. `specVersion` and `licenses` are the last values seen, kept through an outage; `licenses` lists every licence a consumer ends up with, feed-level inheritance already resolved. `eventCount` counts entries in the last validated response (all dates and statuses, no deduplication across feeds); null means not measured. `eventCountCheckedAt` is the UTC date of that measurement, retained with the count when a response cannot be validated. `updated` is when this status last changed.",
-  "updated": "2026-11-24",
+  "updated": "2026-11-25",
   "latestSpecVersion": "0.6.0",
   "feeds": [
     {
@@ -14,15 +14,15 @@
         "CC0-1.0"
       ],
       "eventCount": 96,
-      "eventCountCheckedAt": "2026-11-24",
+      "eventCountCheckedAt": "2026-11-25",
       "cors": true,
       "transport": {
-        "bytes": 192102,
+        "bytes": 192233,
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=900",
-        "ttfbMs": 676,
-        "totalMs": 697
+        "ttfbMs": 770,
+        "totalMs": 797
       },
       "failureKind": null,
       "failingSince": null,
@@ -39,15 +39,15 @@
         "CC-BY-4.0"
       ],
       "eventCount": 460,
-      "eventCountCheckedAt": "2026-11-24",
+      "eventCountCheckedAt": "2026-11-25",
       "cors": true,
       "transport": {
         "bytes": 468611,
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 162,
-        "totalMs": 167
+        "ttfbMs": 333,
+        "totalMs": 339
       },
       "failureKind": null,
       "failingSince": null,
@@ -57,7 +57,7 @@
       "name": "eventos.wiki",
       "url": "https://eventos.wiki",
       "feed": "https://eventos.wiki/events.json",
-      "status": "ok",
+      "status": "failing",
       "specVersion": "0.6.0",
       "supported": true,
       "licenses": [
@@ -65,7 +65,7 @@
       ],
       "eventCount": 58,
       "eventCountCheckedAt": "2026-11-24",
-      "cors": true,
+      "cors": null,
       "transport": {
         "bytes": 78350,
         "encoding": null,
@@ -74,9 +74,9 @@
         "ttfbMs": 2719,
         "totalMs": 2910
       },
-      "failureKind": null,
-      "failingSince": null,
-      "error": null
+      "failureKind": "transient",
+      "failingSince": "2026-11-25",
+      "error": "fetch failed: fetch failed"
     },
     {
       "name": "HackBarna Digest",
@@ -88,16 +88,16 @@
       "licenses": [
         "CC-BY-4.0"
       ],
-      "eventCount": 214,
-      "eventCountCheckedAt": "2026-11-24",
+      "eventCount": 218,
+      "eventCountCheckedAt": "2026-11-25",
       "cors": true,
       "transport": {
-        "bytes": 708430,
+        "bytes": 724000,
         "encoding": null,
         "revalidation": null,
         "cacheControl": "public, max-age=3600",
-        "ttfbMs": 2304,
-        "totalMs": 2315
+        "ttfbMs": 2843,
+        "totalMs": 2855
       },
       "failureKind": null,
       "failingSince": null,
@@ -113,16 +113,16 @@
       "licenses": [
         "CC-BY-4.0"
       ],
-      "eventCount": 176,
-      "eventCountCheckedAt": "2026-11-24",
+      "eventCount": 175,
+      "eventCountCheckedAt": "2026-11-25",
       "cors": true,
       "transport": {
-        "bytes": 314074,
+        "bytes": 310453,
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 201,
-        "totalMs": 205
+        "ttfbMs": 290,
+        "totalMs": 295
       },
       "failureKind": null,
       "failingSince": null,
@@ -146,8 +146,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 302,
-        "totalMs": 303
+        "ttfbMs": 162,
+        "totalMs": 164
       },
       "failureKind": null,
       "failingSince": null,
@@ -164,15 +164,15 @@
         "CC-BY-4.0"
       ],
       "eventCount": 11,
-      "eventCountCheckedAt": "2026-11-24",
+      "eventCountCheckedAt": "2026-11-25",
       "cors": true,
       "transport": {
         "bytes": 12061,
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 244,
-        "totalMs": 246
+        "ttfbMs": 282,
+        "totalMs": 283
       },
       "failureKind": null,
       "failingSince": null,
@@ -189,15 +189,15 @@
         "CC-BY-4.0"
       ],
       "eventCount": 12,
-      "eventCountCheckedAt": "2026-11-24",
+      "eventCountCheckedAt": "2026-11-25",
       "cors": true,
       "transport": {
         "bytes": 28743,
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 349,
-        "totalMs": 350
+        "ttfbMs": 300,
+        "totalMs": 301
       },
       "failureKind": null,
       "failingSince": null,
@@ -213,16 +213,16 @@
       "licenses": [
         "CC-BY-4.0"
       ],
-      "eventCount": 23,
-      "eventCountCheckedAt": "2026-11-24",
+      "eventCount": 24,
+      "eventCountCheckedAt": "2026-11-25",
       "cors": true,
       "transport": {
-        "bytes": 22275,
+        "bytes": 23290,
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 292,
-        "totalMs": 293
+        "ttfbMs": 134,
+        "totalMs": 135
       },
       "failureKind": null,
       "failingSince": null,

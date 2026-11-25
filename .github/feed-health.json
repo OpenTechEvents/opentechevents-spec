@@ -1,1 +1,10 @@
-{}
+{
+  "https://eventos.wiki/events.json": {
+    "failures": 1,
+    "since": "2026-11-25",
+    "lastError": "fetch failed: fetch failed",
+    "kind": "transient",
+    "window": "x",
+    "alerted": false
+  }
+}
