@@ -8,8 +8,24 @@
   var WIDGETS_URL = 'https://tools.opentechevents.org/embed/';
   var WIDGETS_MODULE_URL = WIDGETS_URL + 'latest/ote-events.js';
   var CONVERTER_URL = 'https://convert.opentechevents.org/';
+  var directoryFeeds = {
+    'https://eventos.wiki/events.json': {
+      chip: 'byOrganisation',
+      catalogue: 'https://eventos.wiki/organizations',
+      catalogueLabel: 'organisations',
+      groups: organisationFeedGroups
+    },
+    'https://confs.rauljimenez.info/events.json': {
+      chip: 'filtered',
+      catalogue: 'https://confs.rauljimenez.info/subscribe',
+      catalogueLabel: 'filters',
+      history: 'https://confs.rauljimenez.info/events.json?show=all',
+      groups: conferenceFeedGroups
+    }
+  };
 
   var state = { lang: FALLBACK, dict: {}, data: {}, filter: 'all' };
+  var directoryDocuments = new Map();
   var adopterCards = new Map();
   var activeFeedDialog;
 
@@ -107,12 +123,13 @@
   }
 
   function eventCountLabel(item) {
-    if (!Number.isInteger(item.eventCount) || item.eventCount < 0 || !item.eventCountCheckedAt) return '';
+    if (!Number.isInteger(item.eventCount) || item.eventCount < 0 || (!item.eventCountCheckedAt && !item.liveMetadata)) return '';
     return get(state.dict, item.eventCount === 1 ? 'adopters.eventCountOne' : 'adopters.eventCount')
       .replace('{count}', new Intl.NumberFormat(state.lang).format(item.eventCount));
   }
 
   function eventCountHint(item) {
+    if (item.liveMetadata) return get(state.dict, 'adopters.eventCountLiveTitle');
     return get(state.dict, 'adopters.eventCountTitle').replace('{date}', item.eventCountCheckedAt);
   }
 
@@ -228,10 +245,16 @@
     return summary;
   }
 
-  function feedUrlLine(item, dict) {
+  function feedUrlLine(item, label, action) {
     var line = el('div', 'feed-dialog-source');
-    line.append(el('span', 'feed-dialog-source-label', dict.source + ': '),
-      el('code', 'feed-dialog-url', item.feed));
+    var address = el('span', 'feed-dialog-address');
+    var code = el('code', 'feed-dialog-url');
+    var link = el('a', null, item.feed);
+    link.href = item.feed;
+    code.appendChild(link);
+    address.append(el('span', 'feed-dialog-source-label', label + ': '), code);
+    line.appendChild(address);
+    if (action) line.appendChild(action);
     return line;
   }
 
@@ -408,12 +431,305 @@
     return utilities;
   }
 
-  function openFeedDialog(item, trigger) {
-    var dict = state.dict.feedDialog;
-    var dialog = el('dialog', 'feed-dialog');
-    dialog.setAttribute('aria-labelledby', 'feed-dialog-title');
-    dialog.setAttribute('closedby', 'any');
+  function directoryOption(name, id, origin, route, suffix) {
+    if (typeof name !== 'string' || !name.trim() || typeof id !== 'string') return;
+    var url;
+    try { url = new URL(id); } catch (e) { return; }
+    var path = url.pathname.replace(/\/$/, '');
+    if (url.origin !== origin || url.username || url.password || !route.test(path)) return;
+    return { name: name.trim(), feed: origin + path + suffix };
+  }
 
+  function organisationFeedGroups(data, origin) {
+    var organisers = [].concat(data.organizers || []);
+    data.events.forEach(function (event) {
+      if (Array.isArray(event?.organizers)) organisers.push.apply(organisers, event.organizers);
+    });
+    return { listedOrganisations: organisers.map(function (organiser) {
+      return directoryOption(organiser?.name, organiser?.url, origin, /^\/organizations\/[^/]+$/, '/events.json');
+    }) };
+  }
+
+  function conferenceFeedGroups(data, origin) {
+    var series = new Map();
+    var editions = new Map();
+    data.events.forEach(function (event) {
+      var parent = event?.partOf;
+      var multipart = parent?.type === 'multipart';
+      var conference = multipart ? event['confwatch:series'] : parent;
+      var seriesFeed = directoryOption(conference?.name, conference?.id, origin, /^\/conf\/[^/]+$/, '.json');
+      if (seriesFeed && !series.has(seriesFeed.feed)) series.set(seriesFeed.feed, seriesFeed);
+      // confwatch gives each part a fragment ID. The edition feed serves all of those parts.
+      var edition = directoryOption(multipart ? parent.name : event?.name, multipart ? parent.id : event?.id,
+        origin, /^\/e\/[^/]+$/, '.json');
+      if (!edition) return;
+      var start = event.startDate?.slice(0, 10);
+      var end = event.endDate?.slice(0, 10) || start;
+      var existing = editions.get(edition.feed);
+      if (existing) {
+        if (start && (!existing.start || start < existing.start)) existing.start = start;
+        if (end && (!existing.end || end > existing.end)) existing.end = end;
+        return;
+      }
+      edition.start = start;
+      edition.end = end;
+      edition.series = seriesFeed?.feed;
+      edition.seriesName = seriesFeed?.name;
+      editions.set(edition.feed, edition);
+    });
+    editions.forEach(function (edition) {
+      var conference = series.get(edition.series);
+      if (!conference) return;
+      if (!conference.editions) conference.editions = [];
+      conference.editions.push(edition);
+    });
+    return { series: Array.from(series.values()), editions: Array.from(editions.values()) };
+  }
+
+  function loadDirectoryGroups(directory, feed) {
+    if (!directory.loadedGroups) {
+      directory.loadedGroups = loadDirectoryDocument(directory.history || feed).then(function (data) {
+        return directory.groups(data, new URL(feed).origin);
+      }).catch(function (error) {
+        delete directory.loadedGroups;
+        throw error;
+      });
+    }
+    return directory.loadedGroups;
+  }
+
+  function loadDirectoryDocument(feed) {
+    if (!directoryDocuments.has(feed)) {
+      directoryDocuments.set(feed, loadJson(feed).then(function (data) {
+        if (!Array.isArray(data?.events)) throw new Error('Missing OTE events');
+        return data;
+      }).catch(function (error) {
+        directoryDocuments.delete(feed);
+        throw error;
+      }));
+    }
+    return directoryDocuments.get(feed);
+  }
+
+  function directoryMetadata(item, data) {
+    var languages = new Set();
+    var licenses = new Set();
+    function addLicense(value) { if (typeof value === 'string' && value.trim()) licenses.add(value); }
+    if (!data.events.length) addLicense(data.license);
+    data.events.forEach(function (event) {
+      addLicense(event?.license ?? data.license);
+      if (!Array.isArray(event?.languages)) return;
+      event.languages.forEach(function (tag) {
+        if (typeof tag !== 'string') return;
+        try { languages.add(Intl.getCanonicalLocales(tag)[0]); } catch (e) { /* Invalid tag */ }
+      });
+    });
+    var translations = Object.entries(data.translations || {}).filter(function (pair) {
+      return typeof pair[1]?.description === 'string';
+    }).map(function (pair) { return [pair[0], pair[1].description]; });
+    function date(value) {
+      return typeof value === 'string' && Number.isFinite(Date.parse(value)) ? value : undefined;
+    }
+    return Object.assign({}, item, {
+      liveMetadata: true,
+      specVersion: typeof data.specVersion === 'string' ? data.specVersion : undefined,
+      eventCount: data.events.length,
+      licenses: Array.from(licenses).sort(),
+      metadata: {
+        description: typeof data.description === 'string' ? data.description : undefined,
+        textLanguage: typeof data.textLanguage === 'string' ? data.textLanguage : undefined,
+        translations: Object.fromEntries(translations),
+        updatedAt: date(data.updatedAt),
+        covers: { from: date(data.covers?.from), to: date(data.covers?.to) },
+        eventLanguages: Array.from(languages).sort()
+      }
+    });
+  }
+
+  function catalogueResults(entries, key, onSelect) {
+    var dict = state.dict.directoryFeeds;
+    var numbers = new Intl.NumberFormat(state.lang);
+    var section = el('section', 'feed-catalogue-group');
+    var heading = el('h3', null, dict[key]);
+    var list = el('ul', 'feed-catalogue-list');
+    list.setAttribute('role', 'list');
+    var count = el('p', 'feed-catalogue-count');
+    var more = el('button', 'feed-dialog-close feed-catalogue-more', dict.more);
+    more.type = 'button';
+    var shown = 0;
+
+    function result(choice) {
+      var row = el('li', 'feed-catalogue-row');
+      var button = el('button', 'feed-catalogue-result');
+      button.type = 'button';
+      button.appendChild(el('span', 'feed-catalogue-name', choice.name));
+      button.appendChild(el('span', 'feed-catalogue-arrow', '→')).setAttribute('aria-hidden', 'true');
+      if (choice.start && Number.isFinite(Date.parse(choice.start))) {
+        var date = el('time', 'feed-catalogue-date', formatFeedDate(choice.start, true));
+        date.dateTime = choice.start;
+        button.appendChild(date);
+      }
+      button.addEventListener('click', function () { onSelect(choice, button); });
+      row.appendChild(button);
+      return row;
+    }
+
+    function addPage() {
+      var first;
+      entries.slice(shown, shown + 20).forEach(function (choice) {
+        var row = result(choice);
+        if (!first) first = row.firstElementChild;
+        if (choice.editions?.length) {
+          var details = el('details', 'feed-catalogue-editions');
+          var label = dict.editionList.replace('{count}', numbers.format(choice.editions.length));
+          var children = el('ul', 'feed-catalogue-list');
+          children.setAttribute('role', 'list');
+          details.append(el('summary', null, label), children);
+          details.addEventListener('toggle', function () {
+            if (!details.open || children.children.length) return;
+            choice.editions.slice().sort(function (a, b) {
+              return (b.start || '').localeCompare(a.start || '');
+            }).forEach(function (edition) { children.appendChild(result(edition)); });
+          });
+          row.appendChild(details);
+        }
+        list.appendChild(row);
+        shown += 1;
+      });
+      count.textContent = dict.showing
+        .replace('{shown}', numbers.format(shown)).replace('{total}', numbers.format(entries.length));
+      more.hidden = shown === entries.length;
+      return first;
+    }
+
+    more.addEventListener('click', function () { addPage()?.focus(); });
+    section.append(heading, list, count, more);
+    addPage();
+    return section;
+  }
+
+  function directoryCatalogue(publisher, onSelect, onBack) {
+    var directory = directoryFeeds[publisher.feed];
+    var dict = state.dict.directoryFeeds;
+    var page = el('div', 'feed-catalogue');
+    var header = el('div', 'feed-dialog-header feed-catalogue-header');
+    var heading = el('div', 'feed-dialog-heading');
+    var title = el('h2', null, dict.catalogueTitle.replace('{publisher}', publisher.name));
+    title.id = 'directory-catalogue-title';
+    title.tabIndex = -1;
+    var back = el('button', 'feed-dialog-close feed-catalogue-back', dict.back);
+    back.type = 'button';
+    back.addEventListener('click', function () { onBack(); });
+    heading.append(title, back);
+    header.appendChild(heading);
+
+    var content = el('div', 'feed-dialog-content feed-catalogue-content');
+    var shortcuts = el('div', 'feed-catalogue-shortcuts');
+    var link = el('a', 'feed-catalogue-external', dict[directory.catalogueLabel]);
+    link.href = directory.catalogue;
+    function shortcut(choice, label) {
+      var button = el('button', 'feed-dialog-close', label || choice.name);
+      button.type = 'button';
+      button.addEventListener('click', function () { onSelect(choice, button); });
+      shortcuts.appendChild(button);
+    }
+    shortcut(publisher, directory.history ? dict.upcomingFeed : dict.full);
+    if (directory.history) {
+      shortcut({ name: dict.archive, feed: directory.history }, dict.history);
+      shortcut({ name: dict.spain, feed: publisher.feed + '?country=Spain' });
+    }
+    shortcuts.appendChild(link);
+
+    var search = el('input', 'feed-catalogue-search');
+    search.type = 'search';
+    search.id = 'directory-search';
+    search.autocomplete = 'off';
+    search.placeholder = directory.history ? dict.searchConferencesHint : dict.searchOrganisationsHint;
+    var label = el('label', 'feed-catalogue-label', directory.history ? dict.searchConferences : dict.searchOrganisations);
+    label.htmlFor = search.id;
+    var views = el('div', 'feed-catalogue-views');
+    views.setAttribute('role', 'group');
+    views.setAttribute('aria-label', dict.views);
+    var status = el('p', 'feed-catalogue-status', dict.loading);
+    status.setAttribute('role', 'status');
+    var results = el('div', 'feed-catalogue-results');
+    content.append(shortcuts, label, search, views, status, results);
+    page.append(header, content);
+    search.disabled = true;
+    views.hidden = true;
+
+    loadDirectoryGroups(directory, publisher.feed).then(function (sourceGroups) {
+      var collator = new Intl.Collator(state.lang, { numeric: true, sensitivity: 'base' });
+      var groupKeys = Object.keys(sourceGroups);
+      var groups = {};
+      groupKeys.forEach(function (key) {
+        var unique = new Map();
+        sourceGroups[key].forEach(function (choice) {
+          if (choice && !unique.has(choice.feed)) unique.set(choice.feed, choice);
+        });
+        groups[key] = Array.from(unique.values()).sort(function (a, b) { return collator.compare(a.name, b.name); });
+      });
+      var viewKeys = groupKeys;
+      if (directory.history) {
+        var now = new Date();
+        var today = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+        groups.upcoming = groups.editions.filter(function (edition) { return edition.start && edition.end >= today; })
+          .sort(function (a, b) { return a.start.localeCompare(b.start); });
+        viewKeys = ['series', 'upcoming', 'editions'];
+      }
+      var selectedView = viewKeys[0];
+      var viewButtons = new Map();
+      if (viewKeys.length > 1) viewKeys.forEach(function (key) {
+        var button = el('button', 'feed-dialog-close', dict[key]);
+        button.type = 'button';
+        button.addEventListener('click', function () {
+          selectedView = key;
+          renderResults();
+        });
+        viewButtons.set(key, button);
+        views.appendChild(button);
+      });
+
+      function searchable(text) {
+        return text.normalize('NFD').replace(/\p{M}/gu, '').toLocaleLowerCase(state.lang);
+      }
+
+      function renderResults() {
+        var query = searchable(search.value.trim());
+        var terms = query ? query.split(/\s+/) : [];
+        views.hidden = viewButtons.size === 0 || !!query;
+        viewButtons.forEach(function (button, key) {
+          button.setAttribute('aria-pressed', String(key === selectedView));
+        });
+        var keys = query ? groupKeys : [selectedView];
+        var matches = 0;
+        results.replaceChildren();
+        keys.forEach(function (key) {
+          var entries = groups[key].filter(function (choice) {
+            var name = searchable([choice.name, choice.seriesName].filter(Boolean).join(' '));
+            return terms.every(function (term) { return name.includes(term); });
+          });
+          matches += entries.length;
+          if (entries.length) results.appendChild(catalogueResults(entries, key, onSelect));
+        });
+        status.textContent = matches
+          ? dict[matches === 1 ? 'oneMatch' : 'matches'].replace('{count}', new Intl.NumberFormat(state.lang).format(matches))
+          : (query ? dict.noMatches : selectedView === 'upcoming' ? dict.noUpcoming : dict.empty);
+      }
+      search.disabled = false;
+      search.addEventListener('input', renderResults);
+      renderResults();
+    }).catch(function () {
+      status.textContent = dict.unavailable;
+    });
+    return page;
+  }
+
+  function renderFeedDialog(dialog, page, publisher, item, onBrowse) {
+    var dict = state.dict.feedDialog;
+    var directory = directoryFeeds[publisher.feed];
+    var directoryDict = state.dict.directoryFeeds;
+    var isMainFeed = item === publisher;
     var header = el('div', 'feed-dialog-header');
     var title = el('h2');
     title.id = 'feed-dialog-title';
@@ -425,7 +741,8 @@
       website.rel = 'noopener';
       site = website;
     }
-    var parts = dict.title.split('{site}');
+    var template = isMainFeed ? dict.title : directoryDict.variantTitle.replace('{publisher}', publisher.name);
+    var parts = template.split('{site}');
     title.append(parts[0], site, parts[1]);
     // Open on the heading, not on "Close": the first thing announced should be what this is.
     title.tabIndex = -1;
@@ -439,12 +756,11 @@
     var widgetUrl = embedUrl(item.feed);
     var preview = feedPreview(item, dict, widgetUrl);
     var events = preview.querySelector('ote-events');
-    var description = feedDescription(item);
     var localized = [];
     var utilities = feedUtilities(item, dict, widgetUrl, localized, function () {
       dialog.close('developer-tools');
     });
-    var chips = feedChips(item, dict, function (language) {
+    function onExportLanguage(language) {
       // An explicit language uses the converter. For original text the footer
       // can pick up publisher-supplied alternates from the feed again.
       ['ics', 'rss'].forEach(function (format) {
@@ -454,9 +770,49 @@
       localized.forEach(function (entry) {
         entry.link.href = conversionUrl(item.feed, entry.format, language);
       });
-    });
-    header.append(heading, feedUrlLine(item, dict), chips);
-    if (description) content.appendChild(description);
+    }
+    header.appendChild(heading);
+    var browse;
+    if (onBrowse) {
+      browse = el('button', 'feed-catalogue-open', directoryDict[isMainFeed ? 'browse' : 'backToCatalogue']);
+      browse.type = 'button';
+      browse.addEventListener('click', onBrowse);
+    }
+    var sourceLabel = dict.source;
+    if (directory) {
+      var sourceKey = isMainFeed ? (directory.history ? 'sourceUpcoming' : 'sourceFull') : 'sourceVariant';
+      sourceLabel = directoryDict[sourceKey].replace('{publisher}', function () { return publisher.name; })
+        .replace('{name}', function () { return item.name; });
+    }
+    header.appendChild(feedUrlLine(item, sourceLabel, browse));
+
+    var chips;
+    var description;
+    function renderMetadata(feedItem) {
+      var nextChips = feedChips(feedItem, dict, onExportLanguage);
+      if (chips) {
+        var previousDetails = chips.querySelector('details');
+        var nextDetails = nextChips.querySelector('details');
+        nextDetails.open = previousDetails.open;
+        var restoreFocus = chips.contains(document.activeElement);
+        chips.replaceWith(nextChips);
+        if (restoreFocus) nextDetails.querySelector('summary').focus({ preventScroll: true });
+      } else {
+        header.appendChild(nextChips);
+      }
+      chips = nextChips;
+
+      var nextDescription = feedDescription(feedItem);
+      if (description) description.remove();
+      description = nextDescription;
+      if (description) content.prepend(description);
+    }
+    renderMetadata(item);
+    if (directory && !item.metadata) {
+      loadDirectoryDocument(item.feed).then(function (data) {
+        if (dialog.isConnected && page.firstElementChild === header) renderMetadata(directoryMetadata(item, data));
+      }).catch(function () { /* Existing metadata and the preview remain available. */ });
+    }
     /* Two columns on a wide viewport: the preview no longer pushes every action below the
        fold, which is what made the dialog a 2000px scroll on a busy feed. */
     var body = el('div', 'feed-dialog-body');
@@ -466,11 +822,56 @@
     aside.appendChild(utilities);
     body.append(main, aside);
     content.appendChild(body);
-    dialog.append(header, content);
+    page.replaceChildren(header, content);
+  }
+
+  function openFeedDialog(item, trigger) {
+    var dialog = el('dialog', 'feed-dialog');
+    dialog.setAttribute('aria-labelledby', 'feed-dialog-title');
+    dialog.setAttribute('closedby', 'any');
+    var page = el('div');
+    var catalogue;
+    var catalogueFocus;
+    var catalogueScroll = 0;
+    var previewScroll = 0;
+    function showCatalogue() {
+      previewScroll = dialog.scrollTop;
+      if (!catalogue) {
+        catalogue = directoryCatalogue(item, function (selected, source) {
+          catalogueFocus = source;
+          renderFeedDialog(dialog, page, item, selected, showCatalogue);
+          previewScroll = 0;
+          showPreview(page.querySelector('h2'));
+        }, showPreview);
+        dialog.appendChild(catalogue);
+      }
+      page.hidden = true;
+      catalogue.hidden = false;
+      dialog.setAttribute('aria-labelledby', 'directory-catalogue-title');
+      var focus = catalogue.contains(catalogueFocus) ? catalogueFocus : catalogue.querySelector('h2');
+      focus.focus({ preventScroll: true });
+      dialog.scrollTop = catalogueScroll;
+    }
+    function showPreview(focus) {
+      catalogueScroll = dialog.scrollTop;
+      catalogue.hidden = true;
+      page.hidden = false;
+      dialog.setAttribute('aria-labelledby', 'feed-dialog-title');
+      (focus || page.querySelector('.feed-catalogue-open')).focus({ preventScroll: true });
+      dialog.scrollTop = previewScroll;
+    }
+    dialog.appendChild(page);
+    renderFeedDialog(dialog, page, item, item, directoryFeeds[item.feed] && showCatalogue);
     // The widget can replace its focused trigger when it opens the menu. Listen at
     // the document so Escape reaches the menu first even if focus moved to the body.
     function handleEscape(event) {
       if (event.key !== 'Escape' || !dialog.open) return;
+      if (page.hidden) {
+        event.preventDefault();
+        showPreview();
+        return;
+      }
+      var events = dialog.querySelector('ote-events');
       var subscribe = events.shadowRoot?.querySelector('ote-subscribe');
       if (subscribe?.shadowRoot?.querySelector('[aria-expanded="true"]')
         || events.shadowRoot?.querySelector('[aria-modal="true"]')) event.preventDefault();
@@ -589,7 +990,10 @@
         adopterCards.set(item.feed, { item: item, trigger: card });
         var displayedCount = count || state.dict.feedDialog.countUnknown;
         if (!count) metas.appendChild(el('span', 'entry-meta entry-badge', displayedCount));
-        card.setAttribute('aria-description', [kind, displayedCount].filter(Boolean).join(' · '));
+        var directory = directoryFeeds[item.feed];
+        var directoryLabel = directory && state.dict.directoryFeeds[directory.chip];
+        if (directoryLabel) metas.appendChild(el('span', 'entry-meta entry-badge entry-directory-chip', directoryLabel));
+        card.setAttribute('aria-description', [kind, displayedCount, directoryLabel].filter(Boolean).join(' · '));
         card.appendChild(metas);
         container.appendChild(card);
         return;
