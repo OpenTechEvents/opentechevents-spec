@@ -186,7 +186,7 @@
   },
   "adopters": {
     "title": "Who publishes in OTE",
-    "lead": "Communities, conferences and directories exposing their event data in this format.",
+    "lead": "Communities, conferences and directories publishing their events in OTE. Select a logo to see its feed and try the tools.",
     "specVersionBadge": "Publishes OTE {version}. Every published version stays supported — feeds are validated against the one they declare.",
     "licenseBadge": "Licence of the data: {licenses}. It is what lets you reuse the feed, not the licence of the event.",
     "licenseMixed": "{count} licences",
@@ -205,15 +205,96 @@
     "preview": "Preview feed →",
     "subscribe": "Subscribe →",
     "feedActions": "Explore feed",
-    "feedActionsFor": "Explore feed for {name}",
-    "copyFeed": "Copy feed URL",
-    "copied": "Feed URL copied.",
-    "copyFallback": "Copy the selected URL:",
-    "previewAction": "Preview events",
-    "reader": "Open in OTE Reader",
-    "validate": "Validate feed",
-    "publish": "Promote events",
-    "embed": "Create a widget (paste URL)"
+    "feedActionsFor": "Explore feed for {name}"
+  },
+  "feedDialog": {
+    "title": "{site} OTE feed",
+    "close": "Close",
+    "source": "OTE feed URL",
+    "kind": "Type",
+    "version": "OTE version",
+    "license": "Data licence",
+    "licenses": "Data licences",
+    "events": "Events in the feed",
+    "eventLanguages": "Event languages",
+    "languagesUnknown": "No data",
+    "countUnknown": "Count unavailable",
+    "updated": "Last updated",
+    "coverage": "Declared coverage",
+    "coverageFrom": "From {date}",
+    "coverageTo": "Through {date}",
+    "coverageUnknown": "No period declared",
+    "utilities": "What you can do with this feed",
+    "preview": {
+      "title": "Widget preview",
+      "layout": "Event view",
+      "layouts": {
+        "calendar": "Calendar",
+        "list": "List",
+        "cards": "Cards"
+      },
+      "appearance": "Widget theme",
+      "themes": {
+        "auto": "Auto",
+        "light": "Light",
+        "dark": "Dark"
+      },
+      "loading": "Loading the calendar…",
+      "unavailable": "The calendar could not load.",
+      "subscribe": "Subscribe to the calendar",
+      "widgetsNote": "These are two OTE widgets running on this feed: the agenda and the subscribe button.",
+      "widgetsCta": "Get their code and options"
+    },
+    "exportLanguage": "Exported text language",
+    "originalLanguage": "Original text",
+    "exportLanguageHint": "Choose the language the exports are served in (ICS, RSS and Schema.org). Where a translation is missing, the original text is kept.",
+    "tabs": {
+      "explore": "Explore",
+      "share": "Share",
+      "build": "Build"
+    },
+    "actions": {
+      "reader": {
+        "title": "Explore in OTE Reader",
+        "desc": "Filter and save events from {name} that interest you."
+      },
+      "broadcast": {
+        "title": "Promote events",
+        "desc": "Use Broadcast to prepare content for social channels and directories."
+      },
+      "schema": {
+        "title": "Generate structured data",
+        "desc": "Get Schema.org JSON-LD for your event pages."
+      },
+      "embed": {
+        "title": "Embed a calendar or button",
+        "desc": "Paste the feed URL into the widget to show events or offer a subscription."
+      },
+      "preview": {
+        "title": "Preview the feed",
+        "desc": "Browse the events from {name} in your browser."
+      },
+      "validate": {
+        "title": "Validate the data",
+        "desc": "Check the feed against the OTE specification and find any errors."
+      },
+      "options": {
+        "title": "Configure an export",
+        "desc": "See how to choose a language, event or output format."
+      }
+    },
+    "chipKeys": {
+      "kind": "Kind",
+      "version": "OTE",
+      "license": "Licence",
+      "events": "Events",
+      "languages": "Languages",
+      "updated": "Updated",
+      "coverage": "Coverage",
+      "text": "Text"
+    },
+    "utilitiesLead": "Examples of what the ecosystem's tools can do with this feed.",
+    "exportLanguageCoverage": "{count} of {total} events carry their text in {language}; the rest keep their original language."
   },
   "consumers": {
     "title": "Who consumes OTE data",

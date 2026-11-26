@@ -39,10 +39,33 @@ test("feed inventory measures validated entries and preserves the dated snapshot
       assert.equal(result.status, 0, result.stderr || result.stdout);
       return { ...JSON.parse(readFileSync(join(cwd, "docs/data/feed-health.json"))).feeds[0], output: result.stdout };
     }
-    const measured = run(fixture);
+    const withCoverage = {
+      ...fixture,
+      covers: { from: "2026-01-01", to: "2026-12-31" },
+      textLanguage: "fr",
+      translations: { "en-GB": { title: "Community events" } },
+      events: fixture.events.map((event, index) => index ? event : {
+        ...event,
+        textLanguage: "ca",
+        translations: { es: { name: "Encuentro de Rust" } },
+        image: [{ url: event.image[0], alt: "Cartell", translations: { de: { alt: "Plakat" } } }],
+      }),
+    };
+    const measured = run(withCoverage);
     assert.equal(measured.status, "ok");
     assert.equal(measured.eventCount, fixture.events.length);
     assert.match(measured.eventCountCheckedAt, /^\d{4}-\d{2}-\d{2}$/);
+    assert.equal(measured.metadata.description, fixture.description);
+    assert.equal(measured.metadata.updatedAt, fixture.updatedAt);
+    assert.deepEqual(measured.metadata.covers, withCoverage.covers);
+    assert.deepEqual(measured.metadata.eventLanguages, ["en", "es"]);
+    assert.deepEqual(measured.metadata.textLanguages, ["ca", "de", "en-GB", "es", "fr"]);
+    /* Coverage counts the event's own prose, never a nested entry's: the first event is
+       written in `ca` and translated to `es`, so `de` — which exists only as an image alt —
+       is in the list with no events behind it. The rest inherit the feed's `fr`. */
+    assert.deepEqual(measured.metadata.textLanguageEvents, {
+      ca: 1, es: 1, fr: fixture.events.length - 1,
+    });
 
     // A stale count must retain its original date, not the date of the failed check.
     const oldDate = "2000-01-01";
@@ -54,22 +77,32 @@ test("feed inventory measures validated entries and preserves the dated snapshot
     assert.match(invalid.output, /FAIL.*schema errors/);
     assert.equal(invalid.eventCount, measured.eventCount);
     assert.equal(invalid.eventCountCheckedAt, oldDate);
+    assert.deepEqual(invalid.metadata, measured.metadata);
     const unavailable = run(null, 503);
     assert.equal(unavailable.status, "failing");
     assert.equal(unavailable.eventCount, measured.eventCount);
     assert.equal(unavailable.eventCountCheckedAt, oldDate);
+    assert.deepEqual(unavailable.metadata, measured.metadata);
 
     const empty = run({ ...fixture, events: [] });
     assert.equal(empty.status, "ok");
     assert.equal(empty.eventCount, 0);
     assert.equal(empty.eventCountCheckedAt, measured.eventCountCheckedAt);
+    assert.equal(empty.metadata.covers, undefined);
 
-    // Unsupported responses are not validated; never infer inventory from their shape.
+    const legacy = JSON.parse(readFileSync(join(root, "spec/v0.1/examples/feed.json")));
+    const legacyResult = run(legacy);
+    assert.equal(legacyResult.supported, false);
+    assert.equal(legacyResult.eventCount, legacy.events.length);
+    assert.equal(legacyResult.metadata.updatedAt, legacy.updatedAt);
+
+    // An invalid older feed keeps its health status without claiming validated metadata.
     rmSync(join(cwd, "docs/data/feed-health.json"));
     const unsupported = run({ specVersion: "0.1.0", events: [{}, {}] });
     assert.equal(unsupported.supported, false);
     assert.equal(unsupported.eventCount, null);
     assert.equal(unsupported.eventCountCheckedAt, null);
+    assert.equal(unsupported.metadata, null);
     const unknown = run({ events: [] });
     assert.equal(unknown.status, "failing");
     assert.equal(unknown.eventCount, null);

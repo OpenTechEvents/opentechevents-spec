@@ -207,12 +207,11 @@ async function attempt(url) {
     return hard(`unknown specVersion: ${JSON.stringify(doc.specVersion ?? null)}`, { cors, transport });
   }
 
-  // Older than the support window: reachable, and that is all we claim. Judging it
-  // against rules we no longer support would report a failure nobody agreed to fix.
-  if (!supported.has(version)) return ok({ cors, transport, version, licenses: licensesIn(doc) });
-
   const { ajv, validate } = validatorFor(version);
   if (!validate(doc)) {
+    // Older feeds can contribute a validated inventory without generating health
+    // alerts on schema errors outside the support window.
+    if (!supported.has(version)) return ok({ cors, transport, version, licenses: licensesIn(doc) });
     return hard("schema errors:\n" + ajv.errorsText(validate.errors, { separator: "\n" }), { cors, transport, version });
   }
   return ok({
@@ -220,7 +219,78 @@ async function attempt(url) {
     // Count entries in this validated response, including past/cancelled events.
     // This is neither a unique-event total across feeds nor a community count.
     eventCount: doc.events.length,
+    metadata: {
+      ...languagesIn(doc),
+      description: doc.description,
+      textLanguage: doc.textLanguage,
+      translations: doc.translations && Object.fromEntries(Object.entries(doc.translations)
+        .filter(([, translation]) => translation.description)
+        .map(([lang, translation]) => [lang, translation.description])),
+      updatedAt: doc.updatedAt,
+      covers: doc.covers && { from: doc.covers.from, to: doc.covers.to },
+    },
   });
+}
+
+/* `textLanguages` has to be scanned rather than read: `textLanguage` is one tag by design,
+   and the other languages exist only as `translations` keys, per event, never inherited from
+   the feed (spec/v0.6/feed.schema.json). A publisher has no way to declare the set — the gap
+   is D049 in proposals/v0.7-scope.md.
+
+   `textLanguageEvents` is what keeps the derived list from overstating: a feed can offer `es`
+   because 36 of its 96 events carry a Spanish translation, and a consumer that renders a bare
+   "Spanish" promises a translated calendar it will not deliver. Counted at event level only —
+   an image's alt text in German does not make the event's description German, so nested
+   entries widen the list but never the coverage. */
+function languagesIn(doc) {
+  const eventLanguages = new Set();
+  const textLanguages = new Set();
+  const textLanguageEvents = new Map();
+  function canonical(tag) {
+    if (typeof tag !== "string") return undefined;
+    try {
+      return Intl.getCanonicalLocales(tag)[0];
+    } catch {
+      // Older schemas allow strings that cannot be used as language tags.
+      return undefined;
+    }
+  }
+  function add(target, tag) {
+    const value = canonical(tag);
+    if (value) target.add(value);
+  }
+  function inspectText(value) {
+    add(textLanguages, value?.textLanguage);
+    Object.keys(value?.translations || {}).forEach(tag => add(textLanguages, tag));
+  }
+  function count(tag) {
+    const value = canonical(tag);
+    if (value) textLanguageEvents.set(value, (textLanguageEvents.get(value) || 0) + 1);
+  }
+  inspectText(doc);
+  for (const event of doc.events) {
+    for (const tag of event.languages || []) add(eventLanguages, tag);
+    inspectText(event);
+    for (const field of ["image", "offers", "recordings"]) {
+      if (Array.isArray(event[field])) event[field].forEach(inspectText);
+    }
+    inspectText(event.eligibility);
+    inspectText(event.partOf);
+    // The event's own prose: what it is written in, plus what it has been translated into.
+    const own = new Set();
+    const effective = canonical(event.textLanguage ?? doc.textLanguage);
+    if (effective) own.add(effective);
+    Object.keys(event.translations || {}).forEach(tag => {
+      const value = canonical(tag);
+      if (value) own.add(value);
+    });
+    own.forEach(count);
+  }
+  return {
+    eventLanguages: [...eventLanguages].sort(),
+    textLanguages: [...textLanguages].sort(),
+    textLanguageEvents: Object.fromEntries([...textLanguageEvents].sort(([a], [b]) => a.localeCompare(b))),
+  };
 }
 
 /* Every licence a consumer would actually end up with, inheritance resolved. An event
@@ -264,7 +334,7 @@ const previous = existsSync(PUBLIC_STATE) ? JSON.parse(readFileSync(PUBLIC_STATE
 // rather than blanking it, so the public status stays useful through an outage.
 const lastKnown = new Map((previous.feeds || []).map((f) => [f.feed, {
   specVersion: f.specVersion, licenses: f.licenses, transport: f.transport,
-  eventCount: f.eventCount, eventCountCheckedAt: f.eventCountCheckedAt,
+  eventCount: f.eventCount, eventCountCheckedAt: f.eventCountCheckedAt, metadata: f.metadata,
 }]));
 const today = new Date().toISOString().slice(0, 10);
 const next = {};
@@ -273,7 +343,7 @@ let failing = 0;
 const noCors = [];
 
 for (const adopter of adopters) {
-  const { error, kind, cors, transport, version, licenses, eventCount } = await checkFeed(adopter.feed);
+  const { error, kind, cors, transport, version, licenses, eventCount, metadata } = await checkFeed(adopter.feed);
   const prev = state[adopter.feed];
   const last = lastKnown.get(adopter.feed) || {};
   const stale = version && !supported.has(version);
@@ -295,6 +365,7 @@ for (const adopter of adopters) {
     // Null means never measured, whereas zero is a validated empty feed.
     eventCount: eventCount ?? last.eventCount ?? null,
     eventCountCheckedAt: eventCount !== undefined ? today : last.eventCountCheckedAt || null,
+    metadata: metadata ?? last.metadata ?? null,
     cors: error ? null : cors === null,
     // How it is served, not what it says: size, whether the server compressed it, whether a
     // consumer can revalidate instead of re-downloading, and where the time went. Kept through
@@ -394,7 +465,7 @@ writeFileSync(
   JSON.stringify(
     {
       _comment:
-        "Health of the registered adopter feeds, refreshed daily by scripts/check-feeds.mjs. Feeds are validated against the spec version they declare; `supported` false means older than the supported window, which is information, not a failure. `specVersion` and `licenses` are the last values seen, kept through an outage; `licenses` lists every licence a consumer ends up with, feed-level inheritance already resolved. `eventCount` counts entries in the last validated response (all dates and statuses, no deduplication across feeds); null means not measured. `eventCountCheckedAt` is the UTC date of that measurement, retained with the count when a response cannot be validated. `updated` is when this status last changed.",
+        "Health of the registered adopter feeds, refreshed daily by scripts/check-feeds.mjs. Feeds are validated against the spec version they declare; `supported` false means older than the supported window, which is information, not a failure. `specVersion` and `licenses` are the last values seen, kept through an outage; `licenses` lists every licence a consumer ends up with, feed-level inheritance already resolved. `eventCount` counts entries in the last validated response (all dates and statuses, no deduplication across feeds); null means not measured. `eventCountCheckedAt` is the UTC date of that measurement. `metadata` holds the publisher's description, its translations keyed by language, the feed generation time, the declared coverage window, event languages and available text languages from that same validated response. These values are retained when a response cannot be validated. `updated` is when this status last changed.",
       updated: unchanged && previous.updated ? previous.updated : today,
       latestSpecVersion: LATEST,
       feeds: status,

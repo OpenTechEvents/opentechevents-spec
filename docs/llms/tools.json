@@ -254,22 +254,23 @@
       "linkKind": "npm"
     },
     {
-      "status": "proposed",
+      "status": "working",
       "audience": ["organizers", "developers"],
       "order": 25,
       "name": {
-        "en": "Hosted conversion service",
-        "es": "Servicio de conversión alojado"
+        "en": "OTE Converter",
+        "es": "Conversor OTE"
       },
       "desc": {
-        "en": "Point it at your OTE feed URL and get back live, cached .ics, RSS/Atom and schema.org JSON-LD at their own derived URLs — for organisers and directories who don't want to run and maintain their own exporter.",
-        "es": "Le das la URL de tu feed OTE y te devuelve, en vivo y cacheado, .ics, RSS/Atom y JSON-LD schema.org en sus propias URLs derivadas — para organizadores y directorios que no quieren mantener su propio exportador."
+        "en": "Convert a public OTE feed into subscribable iCalendar and RSS feeds or schema.org JSON-LD. You can also generate JSON-LD for an individual event.",
+        "es": "Convierte un feed OTE público en un calendario iCalendar o un feed RSS al que puedes suscribirte, o en JSON-LD de schema.org. También puedes generar JSON-LD para un evento individual."
       },
       "category": {
         "en": "Transform",
         "es": "Transformar"
       },
-      "url": "https://github.com/OpenTechEvents/opentechevents-spec/issues/37"
+      "url": "https://convert.opentechevents.org/",
+      "linkKind": "app"
     },
     {
       "status": "wip",

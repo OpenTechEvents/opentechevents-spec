@@ -1,5 +1,5 @@
 {
-  "_comment": "Health of the registered adopter feeds, refreshed daily by scripts/check-feeds.mjs. Feeds are validated against the spec version they declare; `supported` false means older than the supported window, which is information, not a failure. `specVersion` and `licenses` are the last values seen, kept through an outage; `licenses` lists every licence a consumer ends up with, feed-level inheritance already resolved. `eventCount` counts entries in the last validated response (all dates and statuses, no deduplication across feeds); null means not measured. `eventCountCheckedAt` is the UTC date of that measurement, retained with the count when a response cannot be validated. `updated` is when this status last changed.",
+  "_comment": "Health of the registered adopter feeds, refreshed daily by scripts/check-feeds.mjs. Feeds are validated against the spec version they declare; `supported` false means older than the supported window, which is information, not a failure. `specVersion` and `licenses` are the last values seen, kept through an outage; `licenses` lists every licence a consumer ends up with, feed-level inheritance already resolved. `eventCount` counts entries in the last validated response (all dates and statuses, no deduplication across feeds); null means not measured. `eventCountCheckedAt` is the UTC date of that measurement. `metadata` holds the publisher's description, its translations keyed by language, the feed generation time, the declared coverage window, event languages and available text languages from that same validated response. These values are retained when a response cannot be validated. `updated` is when this status last changed.",
   "updated": "2026-11-26",
   "latestSpecVersion": "0.6.0",
   "feeds": [
@@ -15,14 +15,37 @@
       ],
       "eventCount": 96,
       "eventCountCheckedAt": "2026-11-26",
+      "metadata": {
+        "eventLanguages": [
+          "de",
+          "en",
+          "es",
+          "fr",
+          "pt"
+        ],
+        "textLanguages": [
+          "en",
+          "es"
+        ],
+        "textLanguageEvents": {
+          "en": 96,
+          "es": 36
+        },
+        "description": "Conference dates and CFP deadlines we track — pick the ones you care about and subscribe",
+        "textLanguage": "en",
+        "updatedAt": "2026-11-25T14:53:19+00:00",
+        "covers": {
+          "from": "2026-11-26"
+        }
+      },
       "cors": true,
       "transport": {
         "bytes": 192233,
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=900",
-        "ttfbMs": 669,
-        "totalMs": 690
+        "ttfbMs": 333,
+        "totalMs": 348
       },
       "failureKind": null,
       "failingSince": null,
@@ -40,14 +63,26 @@
       ],
       "eventCount": 460,
       "eventCountCheckedAt": "2026-11-26",
+      "metadata": {
+        "eventLanguages": [
+          "ca",
+          "en",
+          "es",
+          "gl"
+        ],
+        "textLanguages": [],
+        "textLanguageEvents": {},
+        "description": "Listado curado por la comunidad de conferencias de desarrollo de software celebradas en España: pasadas, presentes y futuras.",
+        "updatedAt": "2026-11-13T17:37:31.206Z"
+      },
       "cors": true,
       "transport": {
         "bytes": 468611,
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 226,
-        "totalMs": 232
+        "ttfbMs": 166,
+        "totalMs": 208
       },
       "failureKind": null,
       "failingSince": null,
@@ -76,7 +111,8 @@
       },
       "failureKind": null,
       "failingSince": null,
-      "error": null
+      "error": null,
+      "metadata": null
     },
     {
       "name": "HackBarna Digest",
@@ -90,14 +126,34 @@
       ],
       "eventCount": 216,
       "eventCountCheckedAt": "2026-11-26",
+      "metadata": {
+        "eventLanguages": [
+          "en",
+          "es"
+        ],
+        "textLanguages": [
+          "ca",
+          "en",
+          "es"
+        ],
+        "textLanguageEvents": {
+          "ca": 50,
+          "en": 216,
+          "es": 70
+        },
+        "description": "In-person tech, startup and AI meetups, hackathons, conferences and workshops in Barcelona.",
+        "textLanguage": "en",
+        "translations": {},
+        "updatedAt": "2026-11-26T00:40:44.432Z"
+      },
       "cors": true,
       "transport": {
         "bytes": 721030,
         "encoding": null,
         "revalidation": null,
         "cacheControl": "public, max-age=3600",
-        "ttfbMs": 1269,
-        "totalMs": 1292
+        "ttfbMs": 890,
+        "totalMs": 1042
       },
       "failureKind": null,
       "failingSince": null,
@@ -113,16 +169,34 @@
       "licenses": [
         "CC-BY-4.0"
       ],
-      "eventCount": 158,
+      "eventCount": 175,
       "eventCountCheckedAt": "2026-11-26",
+      "metadata": {
+        "eventLanguages": [
+          "ca",
+          "en",
+          "es"
+        ],
+        "textLanguages": [
+          "en",
+          "es"
+        ],
+        "textLanguageEvents": {
+          "en": 175,
+          "es": 175
+        },
+        "description": "Encuentros de IA presenciales, abiertos a cualquiera y gratis o casi.",
+        "textLanguage": "es",
+        "updatedAt": "2026-11-25T22:47:38Z"
+      },
       "cors": true,
       "transport": {
-        "bytes": 278859,
+        "bytes": 310415,
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 198,
-        "totalMs": 207
+        "ttfbMs": 182,
+        "totalMs": 221
       },
       "failureKind": null,
       "failingSince": null,
@@ -138,16 +212,32 @@
       "licenses": [
         "CC0-1.0"
       ],
-      "eventCount": null,
-      "eventCountCheckedAt": null,
+      "eventCount": 25,
+      "eventCountCheckedAt": "2026-11-26",
+      "metadata": {
+        "eventLanguages": [],
+        "textLanguages": [
+          "en",
+          "es"
+        ],
+        "textLanguageEvents": {
+          "es": 25
+        },
+        "description": "Encuentros celebrados entre las personas que forman parte de Community Builders (personas que contribuyen a dinamizar las comunidades técnicas: encuentros, conferencias, grupos de colaboración, etc.)",
+        "textLanguage": "es",
+        "translations": {
+          "en": "Meetings held among members of the Community Builders community (people who help energize technical communities: meetups, conferences, collaborative groups, etc.)"
+        },
+        "updatedAt": "2026-08-24T04:19:16Z"
+      },
       "cors": true,
       "transport": {
         "bytes": 76918,
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 111,
-        "totalMs": 112
+        "ttfbMs": 105,
+        "totalMs": 107
       },
       "failureKind": null,
       "failingSince": null,
@@ -165,14 +255,29 @@
       ],
       "eventCount": 11,
       "eventCountCheckedAt": "2026-11-26",
+      "metadata": {
+        "eventLanguages": [
+          "es",
+          "gl"
+        ],
+        "textLanguages": [
+          "es"
+        ],
+        "textLanguageEvents": {
+          "es": 11
+        },
+        "description": "Charlas y meetups de la comunidad Coruña Java User Group.",
+        "textLanguage": "es",
+        "updatedAt": "2026-11-03T00:00:00Z"
+      },
       "cors": true,
       "transport": {
         "bytes": 12061,
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 397,
-        "totalMs": 398
+        "ttfbMs": 114,
+        "totalMs": 115
       },
       "failureKind": null,
       "failingSince": null,
@@ -190,14 +295,24 @@
       ],
       "eventCount": 12,
       "eventCountCheckedAt": "2026-11-26",
+      "metadata": {
+        "eventLanguages": [
+          "es",
+          "gl"
+        ],
+        "textLanguages": [],
+        "textLanguageEvents": {},
+        "description": "Charlas e xuntanzas da comunidade tecnolóxica Cascarilla Tech.",
+        "updatedAt": "2026-11-11T13:50:34Z"
+      },
       "cors": true,
       "transport": {
         "bytes": 28743,
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 317,
-        "totalMs": 317
+        "ttfbMs": 330,
+        "totalMs": 332
       },
       "failureKind": null,
       "failingSince": null,
@@ -215,14 +330,31 @@
       ],
       "eventCount": 24,
       "eventCountCheckedAt": "2026-11-26",
+      "metadata": {
+        "eventLanguages": [
+          "es"
+        ],
+        "textLanguages": [
+          "es"
+        ],
+        "textLanguageEvents": {
+          "es": 24
+        },
+        "description": "Comunidad de A Coruña sobre desarrollo y diseño web. Charlas y encuentros mensuales.",
+        "textLanguage": "es",
+        "updatedAt": "2026-11-25T13:24:12Z",
+        "covers": {
+          "from": "2024-09-01"
+        }
+      },
       "cors": true,
       "transport": {
         "bytes": 23290,
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 133,
-        "totalMs": 134
+        "ttfbMs": 515,
+        "totalMs": 516
       },
       "failureKind": null,
       "failingSince": null,
