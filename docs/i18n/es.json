@@ -225,25 +225,14 @@
     "coverageTo": "Hasta el {date}",
     "coverageUnknown": "Sin periodo declarado",
     "utilities": "Qué puedes hacer con este feed",
+    "moreDeveloperTools": "Ver más herramientas para desarrolladores",
+    "moreChips": "+{count} más",
+    "moreMetadata": "{label} sobre el feed",
     "preview": {
-      "title": "Vista previa del widget",
-      "layout": "Vista de los eventos",
-      "layouts": {
-        "calendar": "Calendario",
-        "list": "Lista",
-        "cards": "Tarjetas"
-      },
-      "appearance": "Tema de los widgets",
-      "themes": {
-        "auto": "Automático",
-        "light": "Claro",
-        "dark": "Oscuro"
-      },
+      "title": "Vista previa del {widget}",
+      "widget": "widget",
       "loading": "Cargando la agenda…",
-      "unavailable": "No se pudo cargar la agenda.",
-      "subscribe": "Suscribirse al calendario",
-      "widgetsNote": "Esto son dos widgets de OTE funcionando con este feed: la agenda y el botón de suscripción.",
-      "widgetsCta": "Consigue su código y sus opciones"
+      "unavailable": "No se pudo cargar la agenda."
     },
     "exportLanguage": "Idioma del texto exportado",
     "originalLanguage": "Texto original",
@@ -263,12 +252,12 @@
         "desc": "Prepara contenido para redes y directorios con Broadcast."
       },
       "schema": {
-        "title": "Generar datos estructurados",
-        "desc": "Obtén JSON-LD de Schema.org para las páginas de tus eventos."
+        "title": "Mejorar el SEO de tus eventos",
+        "desc": "Añade el JSON-LD de schema.org a la página de cada evento para que los buscadores puedan indexarlo y los rastreadores entiendan sus datos clave."
       },
       "embed": {
-        "title": "Insertar una agenda o un botón",
-        "desc": "Pega la URL del feed en el widget para mostrar eventos u ofrecer una suscripción."
+        "title": "Insertar el widget de la vista previa",
+        "desc": "Personaliza el widget y copia el código para insertarlo en tu web."
       },
       "preview": {
         "title": "Previsualizar el feed",
@@ -279,8 +268,8 @@
         "desc": "Comprueba que el feed cumpla la especificación OTE y localiza errores."
       },
       "options": {
-        "title": "Configurar una exportación",
-        "desc": "Consulta cómo elegir el idioma, el evento o el formato de salida."
+        "title": "Exportar este feed a ICS o RSS",
+        "desc": "Pega la URL del feed en el conversor y elige el formato y el idioma del texto."
       }
     },
     "chipKeys": {

@@ -6,7 +6,7 @@
   var FALLBACK = 'en';
   var STORAGE_KEY = 'ote-lang';
   var WIDGETS_URL = 'https://tools.opentechevents.org/embed/';
-  var WIDGETS_VERSION_URL = WIDGETS_URL + 'v0.10.0/';
+  var WIDGETS_MODULE_URL = WIDGETS_URL + 'latest/ote-events.js';
   var CONVERTER_URL = 'https://convert.opentechevents.org/';
 
   var state = { lang: FALLBACK, dict: {}, data: {}, filter: 'all' };
@@ -165,47 +165,54 @@
     return entry;
   }
 
-  /* The facts of a feed — spec version, licence, freshness, how many events — are what
-     makes the card credible, so they ride at the top as chips rather than inside a closed
-     <details>: hiding them put the strongest evidence behind the least likely click. */
   function feedChips(item, dict, onExportLanguage) {
     var chips = el('ul', 'feed-dialog-chips');
     chips.setAttribute('role', 'list');
+    var extra = el('ul', 'feed-dialog-chips feed-dialog-extra-chips');
+    extra.setAttribute('role', 'list');
     /* Short key on screen, full label in the tooltip: "0.6.0" or a bare timestamp says
        nothing on its own, and a touch visitor never sees a title attribute. */
-    function chip(key, label, value, hint) {
+    function chip(list, key, label, value, hint) {
       if (!value) return;
       var entry = el('li', 'feed-chip');
       entry.title = label + ': ' + value + (hint ? ' — ' + hint : '');
       entry.append(el('span', 'feed-chip-key', dict.chipKeys[key]), el('span', 'feed-chip-value', value));
-      chips.appendChild(entry);
+      list.appendChild(entry);
     }
     var metadata = item.metadata || {};
-    chip('kind', dict.kind, entryKind(item));
-    chip('version', dict.version, item.specVersion);
-    if (item.licenses && item.licenses.length) {
-      chip('license', item.licenses.length === 1 ? dict.license : dict.licenses, item.licenses.join(', '));
-    }
     var count = eventCountLabel(item);
-    chip('events', dict.events, count || dict.countUnknown, count && eventCountHint(item));
+    chip(chips, 'events', dict.events, count || dict.countUnknown, count && eventCountHint(item));
+    chip(chips, 'kind', dict.kind, entryKind(item));
+    if (metadata.updatedAt) chip(chips, 'updated', dict.updated, formatFeedDate(metadata.updatedAt, false), metadata.updatedAt);
+    if (item.licenses && item.licenses.length) {
+      chip(chips, 'license', item.licenses.length === 1 ? dict.license : dict.licenses,
+        item.licenses.join(', '));
+    }
+    chip(extra, 'version', dict.version, item.specVersion);
     var eventLanguages = metadata.eventLanguages || [];
     var languageNames = new Intl.DisplayNames(state.lang, { type: 'language' });
     var languageList = new Intl.ListFormat(state.lang);
-    chip('languages', dict.eventLanguages, eventLanguages.length
+    chip(extra, 'languages', dict.eventLanguages, eventLanguages.length
       ? languageList.format(eventLanguages.map(function (tag) { return languageNames.of(tag); }))
       : dict.languagesUnknown);
-    if (metadata.updatedAt) chip('updated', dict.updated, formatFeedDate(metadata.updatedAt, false), metadata.updatedAt);
     var covers = metadata.covers || {};
     if (covers.from && covers.to) {
-      chip('coverage', dict.coverage, formatFeedDate(covers.from, true) + ' – ' + formatFeedDate(covers.to, true));
+      chip(extra, 'coverage', dict.coverage, formatFeedDate(covers.from, true) + ' – ' + formatFeedDate(covers.to, true));
     } else if (covers.from || covers.to) {
       var bound = covers.from ? dict.coverageFrom : dict.coverageTo;
-      chip('coverage', dict.coverage, bound.replace('{date}', formatFeedDate(covers.from || covers.to, true)));
+      chip(extra, 'coverage', dict.coverage, bound.replace('{date}', formatFeedDate(covers.from || covers.to, true)));
     } else if (item.metadata) {
-      chip('coverage', dict.coverage, dict.coverageUnknown);
+      chip(extra, 'coverage', dict.coverage, dict.coverageUnknown);
     }
     var exportLanguage = exportLanguageChip(item, dict, onExportLanguage);
     if (exportLanguage) chips.appendChild(exportLanguage);
+    var entry = el('li', 'feed-chip-disclosure');
+    var details = el('details');
+    var summary = el('summary', 'feed-chip-value', dict.moreChips.replace('{count}', extra.children.length));
+    summary.setAttribute('aria-label', dict.moreMetadata.replace('{label}', summary.textContent));
+    details.append(summary, extra);
+    entry.appendChild(details);
+    chips.appendChild(entry);
     return chips;
   }
 
@@ -221,13 +228,11 @@
     return summary;
   }
 
-  /* The feed URL is what the visitor came for, so it reads as plain text under the title
-     rather than as a widget: `user-select: all` makes one click select the whole URL, which
-     is the copy button's job without the button. */
   function feedUrlLine(item, dict) {
-    var url = el('code', 'feed-dialog-url', item.feed);
-    url.setAttribute('aria-label', dict.source + ': ' + item.feed);
-    return url;
+    var line = el('div', 'feed-dialog-source');
+    line.append(el('span', 'feed-dialog-source-label', dict.source + ': '),
+      el('code', 'feed-dialog-url', item.feed));
+    return line;
   }
 
   function conversionUrl(feed, format, language) {
@@ -237,106 +242,60 @@
     return url.href;
   }
 
-  function updateSubscription(subscribe, feed, language) {
-    var ics = conversionUrl(feed, 'ics', language);
-    subscribe.setAttribute('feed-ics', ics);
-    subscribe.setAttribute('feed-rss', conversionUrl(feed, 'rss', language));
-    if (subscribe.firstElementChild) subscribe.firstElementChild.href = ics;
+  function embedUrl(feed) {
+    var url = new URL(WIDGETS_URL);
+    url.searchParams.set('feed', feed);
+    return url.href;
   }
 
-  function feedPreview(item, dict, subscribe, tools) {
+  function feedPreview(item, dict, widgetUrl) {
     var preview = el('section', 'feed-dialog-preview');
-    var heading = el('h3', '', dict.preview.title);
+    var heading = el('h3');
     heading.id = 'feed-preview-title';
     preview.setAttribute('aria-labelledby', heading.id);
+    var parts = dict.preview.title.split('{widget}');
+    var link = el('a', 'feed-widget-link', dict.preview.widget);
+    link.href = widgetUrl;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    var icon = el('span', 'feed-widget-link-icon', '↗');
+    icon.setAttribute('aria-hidden', 'true');
+    link.appendChild(icon);
+    heading.append(parts[0], link, parts[1]);
     var header = el('div', 'feed-widget-header');
-    /* Nothing on screen says the agenda and the button are themselves OTE widgets, running
-       on this feed — without that sentence the preview reads as a screenshot of the site. */
-    var note = el('p', 'feed-widget-note', dict.preview.widgetsNote + ' ');
-    var reveal = el('button', 'feed-widget-note-cta', dict.preview.widgetsCta);
-    reveal.type = 'button';
-    reveal.addEventListener('click', function () {
-      if (tools.reveal) tools.reveal('share', 'embed');
-    });
-    note.appendChild(reveal);
-    header.append(heading, subscribe, note);
+    header.appendChild(heading);
 
-    /* `responsive="off"` because this preview has a segmented control: letting the widget
-       pick the layout by container width made the toolbar lie — the left column is ~580px, so
-       "Calendar" rendered an agenda. The widget's own degradation is right for an embed that
-       has no control; here the control is the contract, and the narrow case is handled by
-       choosing `list` outright below 640px, which keeps the pressed button true. */
-    var narrow = window.matchMedia('(max-width: 640px)').matches;
-    var defaultLayout = narrow ? 'list' : 'calendar';
     var events = el('ote-events');
     events.setAttribute('feed', item.feed);
     events.setAttribute('lang', state.lang);
-    events.setAttribute('layout', defaultLayout);
-    events.setAttribute('theme', 'auto');
     events.setAttribute('responsive', 'off');
-    /* The widget bounds itself (ote-tools#168). `48dvh` and not `min(520px, 48dvh)`: the
-       attribute refuses calc() and %, and a refused value falls back to unbounded. */
+    events.setAttribute('density', 'compact');
+    events.setAttribute('footer', 'on');
+    events.setAttribute('subscribe-layout', 'menu');
     events.setAttribute('max-height', '48dvh');
 
     var status = el('p', 'feed-widget-status', dict.preview.loading);
     status.setAttribute('role', 'status');
     var frame = el('div', 'feed-widget-frame');
-    frame.dataset.theme = 'auto';
-    frame.dataset.layout = defaultLayout;
     frame.append(status, events);
-
-    var toolbar = el('div', 'feed-widget-toolbar');
-    [
-      [dict.preview.layout, dict.preview.layouts, defaultLayout, function (layout) {
-        events.setAttribute('layout', layout);
-        frame.dataset.layout = layout;
-      }],
-      [dict.preview.appearance, dict.preview.themes, 'auto', function (theme) {
-        events.setAttribute('theme', theme);
-        subscribe.setAttribute('theme', theme);
-        frame.dataset.theme = theme;
-      }]
-    ].forEach(function (control) {
-      var group = el('div', 'feed-widget-control');
-      group.setAttribute('role', 'group');
-      group.setAttribute('aria-label', control[0]);
-      Object.keys(control[1]).forEach(function (value) {
-        var button = el('button', 'feed-widget-option', control[1][value]);
-        button.type = 'button';
-        button.setAttribute('aria-pressed', String(value === control[2]));
-        button.addEventListener('click', function () {
-          group.querySelector('[aria-pressed="true"]').setAttribute('aria-pressed', 'false');
-          button.setAttribute('aria-pressed', 'true');
-          control[3](value);
-        });
-        group.appendChild(button);
-      });
-      toolbar.appendChild(group);
-    });
-
-    preview.append(header, toolbar, frame);
-    import(WIDGETS_VERSION_URL + 'ote-events.js').then(function () {
+    preview.append(header, frame);
+    import(WIDGETS_MODULE_URL).then(function () {
       status.remove();
     }).catch(function () {
       status.textContent = dict.preview.unavailable;
-      toolbar.hidden = true;
-    });
-    import(WIDGETS_VERSION_URL + 'ote-subscribe.js').catch(function () {
-      var fallback = el('a', 'feed-widget-install', dict.preview.subscribe);
-      fallback.href = subscribe.getAttribute('feed-ics');
-      fallback.target = '_blank';
-      fallback.rel = 'noopener';
-      subscribe.appendChild(fallback);
     });
     return preview;
   }
 
-  function feedUtilities(item, dict, localized, tools) {
+  function developerToolsUrl() {
+    var url = new URL(location.href);
+    url.searchParams.delete('adopter');
+    url.hash = 'tools';
+    return url;
+  }
+
+  function feedUtilities(item, dict, widgetUrl, localized, onDeveloperTools) {
     var feed = encodeURIComponent(item.feed);
-    /* Not a <details>: what the ecosystem can do with the feed is the reason the dialog
-       exists, and it used to sit behind a closed disclosure under a full screen of calendar.
-       Nothing here subscribes: that is the one job of the widget's own menu, and three cards
-       repeating its destinations made the same action look like two different offers. */
     var utilities = el('section', 'feed-dialog-utilities');
     var title = el('h3', 'feed-dialog-utilities-title', dict.utilities);
     title.id = 'feed-utilities-title';
@@ -350,26 +309,22 @@
     body.appendChild(tabs);
     utilities.append(title, body);
 
-    var textLanguages = (item.metadata || {}).textLanguages || [];
-
     var icons = {
       reader: '≡', broadcast: '↗', schema: '{ }', embed: '⊞', validate: '✓'
     };
-    /* Grouped by who the visitor is, not by output format — and the embedded-calendar
-       example is gone: the live preview two columns to the left is the same demo, running. */
     var groups = [
       ['explore', [
-        ['preview', 'https://tools.opentechevents.org/preview?feed=' + feed],
-        ['reader', 'https://reader.opentechevents.org/?subscribe=' + feed]
+        ['reader', 'https://reader.opentechevents.org/?subscribe=' + feed],
+        ['preview', 'https://tools.opentechevents.org/preview?feed=' + feed]
       ]],
       ['share', [
         ['broadcast', 'https://tools.opentechevents.org/publish/?feed=' + feed],
-        ['embed', WIDGETS_URL]
+        ['embed', widgetUrl],
+        ['schema', conversionUrl(item.feed, 'schema'), 'schema']
       ]],
       ['build', [
-        ['validate', 'https://validator.opentechevents.org/?doc=' + feed],
-        ['schema', conversionUrl(item.feed, 'schema'), 'schema'],
-        ['options', CONVERTER_URL + '#parameters']
+        ['options', CONVERTER_URL + '#convert-form'],
+        ['validate', 'https://validator.opentechevents.org/?doc=' + feed]
       ]]
     ].map(function (group) {
       var key = group[0];
@@ -386,12 +341,11 @@
 
       var actions = el('ul', 'feed-dialog-actions');
       actions.setAttribute('role', 'list');
-      var actionsByKey = {};
       group[1].forEach(function (action) {
         var info = dict.actions[action[0]];
         var link = el('a', 'feed-dialog-action');
         link.href = action[1];
-        if (action[2] && textLanguages.length) localized.links.push({ link: link, format: action[2] });
+        if (action[2]) localized.push({ link: link, format: action[2] });
         link.target = '_blank';
         link.rel = 'noopener';
         var description = info.desc.replace('{name}', function () { return item.name; });
@@ -400,16 +354,28 @@
         var copy = el('span', 'feed-action-copy');
         copy.append(el('strong', '', info.title), el('span', 'feed-action-description', description));
         link.append(icon, copy);
-        actionsByKey[action[0]] = link;
         var listItem = el('li');
         listItem.appendChild(link);
         actions.appendChild(listItem);
       });
       panel.appendChild(actions);
+      if (key === 'build') {
+        var more = el('a', 'feed-dialog-more-tools', dict.moreDeveloperTools);
+        more.href = developerToolsUrl().href;
+        var arrow = el('span', '', ' →');
+        arrow.setAttribute('aria-hidden', 'true');
+        more.appendChild(arrow);
+        more.addEventListener('click', function (event) {
+          if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+          onDeveloperTools();
+        });
+        panel.appendChild(more);
+      }
       tab.addEventListener('click', function () { selectTab(tab); });
       tabs.appendChild(tab);
       body.appendChild(panel);
-      return { tab: tab, panel: panel, key: key, actions: actionsByKey };
+      return { tab: tab, panel: panel };
     });
 
     function selectTab(tab) {
@@ -439,26 +405,6 @@
     });
     selectTab(groups[0].tab);
 
-    /* The preview's note points here. Selecting the tab is not enough: the visitor's eye has
-       to land on the one action that answers the sentence they just clicked, so the link is
-       focused and flashes once. */
-    tools.reveal = function (tabKey, actionKey) {
-      var group = groups.find(function (entry) { return entry.key === tabKey; });
-      if (!group) return;
-      selectTab(group.tab);
-      var link = group.actions[actionKey];
-      if (!link) return;
-      var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      utilities.scrollIntoView({ block: 'nearest', behavior: still ? 'auto' : 'smooth' });
-      link.focus({ preventScroll: true });
-      if (still) return;
-      link.classList.remove('is-highlighted');
-      void link.offsetWidth; // restarts the animation when the note is clicked twice
-      link.classList.add('is-highlighted');
-      link.addEventListener('animationend', function () {
-        link.classList.remove('is-highlighted');
-      }, { once: true });
-    };
     return utilities;
   }
 
@@ -487,37 +433,29 @@
     var close = el('button', 'feed-dialog-close', dict.close);
     close.type = 'button';
     close.addEventListener('click', function () { dialog.close(); });
-    header.append(title, close);
-
+    var heading = el('div', 'feed-dialog-heading');
+    heading.append(title, close);
     var content = el('div', 'feed-dialog-content');
-    // Below the sticky header, not inside it: the header stays one line tall.
-    content.appendChild(feedUrlLine(item, dict));
-    var subscribe = el('ote-subscribe');
-    subscribe.setAttribute('feed-json', item.feed);
-    subscribe.setAttribute('name', item.name);
-    subscribe.setAttribute('lang', state.lang);
-    /* Google Calendar is back: it was suppressed while the widget nested the ICS URL in `cid`
-       raw, which truncated it at the first `&` — and the language chip appends one. Fixed in
-       ote-tools#166, served from v0.9.0 (verified in the published bundle, not in its source).
-       `ote-preview` stays out on purpose: previewing is not subscribing, and the "Explora" tab
-       already offers it with the explanation. */
-    subscribe.setAttribute('show', 'google,webcal,ics-download,feedly,feed-protocol,rss-download,ote-reader,json-download');
-    updateSubscription(subscribe, item.feed);
-    var tools = {};
-    var preview = feedPreview(item, dict, subscribe, tools);
+    var widgetUrl = embedUrl(item.feed);
+    var preview = feedPreview(item, dict, widgetUrl);
     var events = preview.querySelector('ote-events');
     var description = feedDescription(item);
-    /* One language choice drives every export the converter serves — the ICS and RSS the
-       widget's menu hands out, and the schema.org card. The tools that take no `lang`
-       (Reader, validator, Broadcast) are unaffected, and say so in their own UI. */
-    var localized = { links: [] };
-    var utilities = feedUtilities(item, dict, localized, tools);
-    content.appendChild(feedChips(item, dict, function (language) {
-      updateSubscription(subscribe, item.feed, language);
-      localized.links.forEach(function (entry) {
+    var localized = [];
+    var utilities = feedUtilities(item, dict, widgetUrl, localized, function () {
+      dialog.close('developer-tools');
+    });
+    var chips = feedChips(item, dict, function (language) {
+      // An explicit language uses the converter. For original text the footer
+      // can pick up publisher-supplied alternates from the feed again.
+      ['ics', 'rss'].forEach(function (format) {
+        if (language) events.setAttribute('feed-' + format, conversionUrl(item.feed, format, language));
+        else events.removeAttribute('feed-' + format);
+      });
+      localized.forEach(function (entry) {
         entry.link.href = conversionUrl(item.feed, entry.format, language);
       });
-    }));
+    });
+    header.append(heading, feedUrlLine(item, dict), chips);
     if (description) content.appendChild(description);
     /* Two columns on a wide viewport: the preview no longer pushes every action below the
        fold, which is what made the dialog a 2000px scroll on a busy feed. */
@@ -529,17 +467,31 @@
     body.append(main, aside);
     content.appendChild(body);
     dialog.append(header, content);
-    // Let the widget close its own menu or event overlay before the outer dialog.
-    dialog.addEventListener('keydown', function (event) {
-      if (event.key !== 'Escape') return;
-      if (subscribe.shadowRoot?.querySelector('[aria-expanded="true"]')
+    // The widget can replace its focused trigger when it opens the menu. Listen at
+    // the document so Escape reaches the menu first even if focus moved to the body.
+    function handleEscape(event) {
+      if (event.key !== 'Escape' || !dialog.open) return;
+      var subscribe = events.shadowRoot?.querySelector('ote-subscribe');
+      if (subscribe?.shadowRoot?.querySelector('[aria-expanded="true"]')
         || events.shadowRoot?.querySelector('[aria-modal="true"]')) event.preventDefault();
-    }, true);
+    }
+    document.addEventListener('keydown', handleEscape, true);
     activeFeedDialog = { feed: item.feed, dialog: dialog };
     dialog.addEventListener('close', function () {
+      document.removeEventListener('keydown', handleEscape, true);
       dialog.remove();
       if (!activeFeedDialog || activeFeedDialog.dialog !== dialog) return;
       activeFeedDialog = undefined;
+      if (dialog.returnValue === 'developer-tools') {
+        var toolsState = Object.assign({}, history.state);
+        delete toolsState.oteAdopter;
+        history.replaceState(toolsState, '', developerToolsUrl().href);
+        setToolFilter('developers');
+        var tools = document.getElementById('tools');
+        tools.querySelector('h2').focus({ preventScroll: true });
+        tools.scrollIntoView({ behavior: 'instant' });
+        return;
+      }
       var card = adopterCards.get(item.feed);
       var focusTarget = trigger.isConnected ? trigger : card && card.trigger;
       if (focusTarget) focusTarget.focus({ preventScroll: true });
@@ -734,6 +686,16 @@
       fig.appendChild(cap);
       container.appendChild(fig);
     });
+  }
+
+  function setToolFilter(filter) {
+    state.filter = filter;
+    document.querySelectorAll('.tools-filters .chip[data-filter]').forEach(function (chip) {
+      var active = chip.dataset.filter === filter;
+      chip.classList.toggle('is-active', active);
+      chip.setAttribute('aria-pressed', String(active));
+    });
+    renderTools();
   }
 
   function renderTools() {
@@ -1065,11 +1027,7 @@
 
   document.querySelectorAll('.tools-filters .chip').forEach(function (chip) {
     chip.addEventListener('click', function () {
-      state.filter = chip.dataset.filter;
-      document.querySelectorAll('.tools-filters .chip').forEach(function (c) {
-        c.classList.toggle('is-active', c === chip);
-      });
-      renderTools();
+      setToolFilter(chip.dataset.filter);
     });
   });
 

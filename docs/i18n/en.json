@@ -225,25 +225,14 @@
     "coverageTo": "Through {date}",
     "coverageUnknown": "No period declared",
     "utilities": "What you can do with this feed",
+    "moreDeveloperTools": "See more developer tools",
+    "moreChips": "+{count} more",
+    "moreMetadata": "{label} feed details",
     "preview": {
-      "title": "Widget preview",
-      "layout": "Event view",
-      "layouts": {
-        "calendar": "Calendar",
-        "list": "List",
-        "cards": "Cards"
-      },
-      "appearance": "Widget theme",
-      "themes": {
-        "auto": "Auto",
-        "light": "Light",
-        "dark": "Dark"
-      },
+      "title": "{widget} preview",
+      "widget": "Widget",
       "loading": "Loading the calendar…",
-      "unavailable": "The calendar could not load.",
-      "subscribe": "Subscribe to the calendar",
-      "widgetsNote": "These are two OTE widgets running on this feed: the agenda and the subscribe button.",
-      "widgetsCta": "Get their code and options"
+      "unavailable": "The calendar could not load."
     },
     "exportLanguage": "Exported text language",
     "originalLanguage": "Original text",
@@ -263,12 +252,12 @@
         "desc": "Use Broadcast to prepare content for social channels and directories."
       },
       "schema": {
-        "title": "Generate structured data",
-        "desc": "Get Schema.org JSON-LD for your event pages."
+        "title": "Improve SEO for your events",
+        "desc": "Add schema.org JSON-LD to each event page to help search engines index it and crawlers understand its key details."
       },
       "embed": {
-        "title": "Embed a calendar or button",
-        "desc": "Paste the feed URL into the widget to show events or offer a subscription."
+        "title": "Embed the preview widget",
+        "desc": "Customize the widget and copy the code to embed it on your site."
       },
       "preview": {
         "title": "Preview the feed",
@@ -279,8 +268,8 @@
         "desc": "Check the feed against the OTE specification and find any errors."
       },
       "options": {
-        "title": "Configure an export",
-        "desc": "See how to choose a language, event or output format."
+        "title": "Export this feed to ICS or RSS",
+        "desc": "Paste the feed URL into the converter and choose the output format and text language."
       }
     },
     "chipKeys": {

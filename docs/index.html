@@ -470,14 +470,14 @@
   <!-- TOOLS -->
   <section class="section" id="tools">
     <div class="wrap">
-      <h2><span data-i18n="tools.title">Ecosystem of tools</span> <a class="heading-anchor" href="#tools" aria-label="Link to this section" data-i18n-aria="a11y.sectionLink">#</a></h2>
+      <h2 tabindex="-1"><span data-i18n="tools.title">Ecosystem of tools</span> <a class="heading-anchor" href="#tools" aria-label="Link to this section" data-i18n-aria="a11y.sectionLink">#</a></h2>
       <p class="section-lead" data-i18n="tools.lead">What exists today, and what's up for grabs. Claim one by opening an issue.</p>
 
       <div class="tools-filters" role="group" aria-label="Filter tools by audience">
-        <button type="button" class="chip is-active" data-filter="all" data-i18n="tools.f.all">All</button>
-        <button type="button" class="chip" data-filter="organizers" data-i18n="tools.f.organizers">Organizers</button>
-        <button type="button" class="chip" data-filter="attendees" data-i18n="tools.f.attendees">Attendees</button>
-        <button type="button" class="chip" data-filter="developers" data-i18n="tools.f.developers">Developers</button>
+        <button type="button" class="chip is-active" data-filter="all" aria-pressed="true" data-i18n="tools.f.all">All</button>
+        <button type="button" class="chip" data-filter="organizers" aria-pressed="false" data-i18n="tools.f.organizers">Organizers</button>
+        <button type="button" class="chip" data-filter="attendees" aria-pressed="false" data-i18n="tools.f.attendees">Attendees</button>
+        <button type="button" class="chip" data-filter="developers" aria-pressed="false" data-i18n="tools.f.developers">Developers</button>
       </div>
 
       <div id="tools-list" class="tools-grid"></div>
