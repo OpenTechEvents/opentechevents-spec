@@ -22,7 +22,9 @@
     "priorArt": "Trabajo previo",
     "extensions": "Extensiones",
     "support": "Apoya",
-    "menu": "Menú"
+    "menu": "Menú",
+    "why": "Por qué OTE",
+    "docs": "Docs"
   },
   "hero": {
     "eyebrow": "Especificación abierta · Borrador 0.x",
@@ -77,42 +79,14 @@
     "min": {
       "title": "El mínimo es de verdad mínimo",
       "body": "Un evento válido necesita poco más que un nombre, una fecha de inicio, una zona horaria y dónde ocurre. Los campos opcionales —precio y entradas, convocatoria de charlas, imágenes, series— cubren el resto cuando los necesitas.",
-      "caveat": "Ojo, porque preferimos decírtelo de frente: ese borrador —tanto los campos del núcleo como los módulos opcionales— todavía no está acordado. Está ahí para enseñar la pinta que tiene la cosa y abrir el debate, y va a cambiar. Lo que te pedimos que adoptes hoy es la idea, y que vengas a romperla antes de que cuaje.",
       "b1": "JSON plano. Sin SDK, sin cuenta, sin servidor: basta con un archivo estático.",
       "b2": "Diseñada para mapearse limpiamente a RSS, iCalendar y schema.org/Event.",
-      "b3": "Sirve igual para un meetup recurrente, una conferencia de varios días o un taller online.",
       "b4": "Licencia abierta, sin restricciones de uso — en la línea de RSS o iCal.",
       "link": "Leer el modelo de datos",
       "caption": "Evento mínimo válido"
-    },
-    "priorArt": {
-      "title": "El patrón no lo inventamos nosotros",
-      "body": "<a href=\"https://bioschemas.org\" target=\"_blank\" rel=\"noopener\">Bioschemas</a> hace algo parecido en ciencias de la vida: parte de schema.org, define perfiles sobre tipos existentes indicando qué propiedades son obligatorias, recomendadas u opcionales, y consigue que los recursos científicos se encuentren en la web. OTE hace lo mismo con los eventos de comunidades tech — y suma iCalendar y RSS, más un feed que cualquiera puede descubrir. No somos un proyecto de adopción de schema.org; pero cada feed publicado en OTE deja el marcado <code>schema.org/Event</code> válido al alcance de la mano de un sitio más, a coste casi cero. Ese efecto colateral lo firmamos. El resto del vecindario — iCalendar, h-event, ActivityPub y los agregadores que ya hacen esto — está en <a href=\"/prior-art/\">trabajo previo</a>."
     }
   },
   "docs": {
-    "title": "Consulta la especificación completa",
-    "lead": "Todo es público y está a la vista, incluido lo que aún no está decidido. La spec va por la versión 0.x: da por hecho que cambiará, y da por hecho que tu opinión es lo que la cambiará.",
-    "d1": {
-      "title": "Referencia de campos",
-      "body": "Todos los campos de un evento y de un feed: tipo, si es obligatorio, ejemplos. Generada a partir de los schemas, así que no puede separarse de ellos."
-    },
-    "d2": {
-      "title": "Formato de feed",
-      "body": "Cómo agrupar varios eventos en un feed: metadatos, paginación, licencia y descubrimiento."
-    },
-    "d3": {
-      "title": "Ejemplos prácticos",
-      "body": "Documentos completos para copiar, uno por cada caso real: meetups pequeños y recurrentes, conferencias, eventos online e híbridos, eventos multi-parte, hackathones, coorganizados y feeds."
-    },
-    "d4": {
-      "title": "Investigación",
-      "body": "El análisis detrás de las decisiones: los estándares, plataformas y directorios que estudiamos."
-    },
-    "d5": {
-      "title": "Trabajo previo",
-      "body": "Quién más está resolviendo esto y cómo se relaciona OTE con ello: iCalendar, schema.org, h-event, ActivityPub — y los agregadores que ya ingieren datos de eventos. Incluido lo que todavía no podemos afirmar."
-    },
     "contrib": {
       "title": "¿Algo no encaja con tu comunidad?",
       "body": "Entonces la que está mal es la spec, no tu comunidad. Sigue en borrador precisamente para que quien organiza pueda protestar antes de que nada quede grabado en piedra: un campo que falta, un formato que rompe tu caso, un nombre que no tiene sentido. Dilo en un issue.",
@@ -154,10 +128,9 @@
   },
   "adopt": {
     "title": "Cómo adherirte",
-    "lead": "Tres pasos. El primero es el único con trabajo real, y es un archivo de texto.",
+    "lead": "Cuatro pasos, el cuarto opcional. El primero es el único que da trabajo de verdad, y es un fichero de texto.",
     "s1": {
       "title": "Publica un feed OTE",
-      "body": "Crea un archivo JSON con tus eventos y alójalo donde ya publiques: tu web, GitHub Pages, un gist. ¿La vía más rápida? El <a href=\"https://github.com/OpenTechEvents/ote-template\">kit del organizador</a>: un repositorio listo para publicar en minutos, con feeds OTE, ICS y RSS ya montados. Y si tus eventos viven en un Google Calendar o en Meetup, te ayudamos a importarlos para generar el feed.",
       "serving": {
         "title": "Sírvelo para que también lo lean los navegadores",
         "body": "Un feed sin acceso cross-origin sigue siendo válido, y quien lo consume desde un servidor lo lee sin problema — pero un lector en el navegador, un widget empotrable o un directorio estático no pueden ni descargarlo. Por eso un feed OTE público <strong>debería</strong> responder con <code>Access-Control-Allow-Origin: *</code>. Eso es lo que permite que cualquier herramienta OTE, presente o futura, consuma tu feed sin que tengas que enterarte antes.",
@@ -174,14 +147,78 @@
       "title": "Avísanos y aparece en la lista",
       "body": "Abre un issue con la URL de tu feed. Lo validamos y listamos tu comunidad en esta página; y, a medida que aparezcan agregadores, empezarán a recoger tus eventos.",
       "cta": "Registrar mi feed",
-      "cta2": "Copiar un ejemplo que funciona",
+      "cta2": "Copiar un ejemplo que funciona"
+    },
+    "s4": {
+      "title": "Dale a la gente una forma de suscribirse",
+      "optional": "opcional",
+      "body": "Un feed es para máquinas; un botón de suscripción es lo que lo convierte en algo que un visitante puede usar. Este widget lee tu feed OTE y ofrece esos mismos eventos como suscripción de calendario, descarga .ics o RSS — también a quien use herramientas que sólo hablan esos formatos, y aunque tú nunca hayas publicado un .ics ni un RSS. Cuál de los tres ofreces, y si ofreces alguno, lo decides tú.",
+      "caption": "En la página donde listas tus eventos",
+      "supporter": "Y si lo que quieres es apoyar al proyecto, no sólo anunciar tu feed, el <a href=\"https://github.com/OpenTechEvents/opentechevents-spec/tree/main/docs/badge\">badge de supporter</a> o un enlace en tu footer son la forma más barata de contarle a la siguiente comunidad que esto existe.",
       "badge": "Opcional: añade el <a href=\"https://github.com/OpenTechEvents/opentechevents-spec/tree/main/docs/badge\">badge de feed</a> a tu README o al pie de tu web — una señal visible, al estilo RSS, de que publicas OTE, junto a la legible por máquinas del paso 2."
     },
-    "ics": {
-      "tag": "¿Tienes dudas de si merecerá la pena el esfuerzo? Lee esto primero.",
-      "title": "Sigue usando lo que ya tienes, impórtalo fácilmente, mejóralo un poco y obtén grandes beneficios.",
-      "body": "No tienes que escribir JSON ni cambiar de herramienta: tus eventos de Meetup, tu <code>.ics</code>, Eventbrite… te ayudamos a importarlos tal cual. Con solo añadir unos pocos datos más —temas (<code>tags</code>), modalidad, idioma, coordenadas— multiplicas su alcance.",
-      "discovery": "Son los que dejan que alguien filtre por tags, modalidad o coordenadas; y al ser un estándar abierto y gratuito —y como tampoco es una plataforma concreta ni con APIs restringidas, sino una especificación al estilo RSS pero diseñada específicamente para resolver los problemas de la comunidad y los eventos técnicos—, es mucho más fácil que te encuentren y se suscriban a lo que les interesa, igual que otros directorios que podrán dar visibilidad a tu evento sin esfuerzo."
+    "paths": {
+      "title": "Cuatro vías para producir ese fichero",
+      "lead": "Los otros dos pasos son iguales elijas la que elijas. Lo que cambia aquí es quién acaba teniendo el fichero — y quién lo mantiene cierto el mes que viene.",
+      "manual": {
+        "name": "A mano",
+        "body": "Escribes el JSON y lo publicas donde ya publicas.",
+        "pro": "Control total: expones exactamente los campos que quieres, con toda la spec a tu alcance.",
+        "con": "Lo escribes tú, y lo mantienes al día tú, evento a evento.",
+        "cta": "Ver el fichero que publicas"
+      },
+      "agent": {
+        "name": "Agent Skill",
+        "body": "Le pides a un agente que construya el feed desde tu web, tu .ics o el sistema que uses hoy.",
+        "pro": "Te quita de encima el primer arranque y el mapeo de tus propios datos.",
+        "con": "Lo que produce lo sigues manteniendo tú: cada cambio es volver a pedírselo.",
+        "cta": "Ver la Agent Skill"
+      },
+      "wiki": {
+        "name": "eventos.wiki",
+        "body": "Das de alta tu comunidad y conectas Meetup, Luma o tu .ics; ellos generan el feed.",
+        "pro": "Ningún fichero que mantener: si tus eventos ya viven en otro sitio, importas y listo.",
+        "con": "Lo aloja y lo modela otro, así que la forma de tus datos la decide esa herramienta.",
+        "cta": "Ir a eventos.wiki"
+      },
+      "kit": {
+        "name": "Organizer kit",
+        "body": "Un repositorio listo que publica en GitHub Pages con OTE, ICS y RSS ya cableados, y los eventos se editan desde el editor OTE.",
+        "pro": "En marcha en minutos, y el fichero sigue siendo tuyo.",
+        "con": "Es un sitio más que mantener vivo, salvo que te mudes del todo a él.",
+        "cta": "Abrir el organizer kit"
+      },
+      "yours": {
+        "title": "Si el fichero lo vas a generar tú",
+        "body": "Lo que viene — qué forma tiene el fichero y cómo servirlo — es para las dos vías en las que lo generas tú: a mano, o con la Agent Skill. El organizer kit te da un editor y lo publica por ti; una herramienta alojada hace las dos cosas sin que toques el fichero."
+      },
+      "any": "sea cual sea la vía",
+      "table": {
+        "caption": "Algunas diferencias",
+        "hosts": "Quién aloja el fichero",
+        "maintains": "Quién lo mantiene al día",
+        "fields": "Quién decide qué campos expones",
+        "ics": "Calendario (.ics)",
+        "rss": "RSS",
+        "jsonld": "schema.org (JSON-LD)",
+        "extra": "¿Un sitio más que mantener?",
+        "change": "Cambiar un evento es",
+        "you": "Tú",
+        "them": "Ellos",
+        "yours": "Tu repo",
+        "youAgent": "Tú, con el agente",
+        "tool": "La herramienta",
+        "yes": "Sí",
+        "no": "No",
+        "converter": "con el Converter",
+        "auto": "en cada push",
+        "wikiIcs": "un calendario por comunidad",
+        "editJson": "editar el JSON",
+        "theirUi": "editarlo en su interfaz",
+        "commit": "un commit",
+        "askAgain": "volver a pedírselo al agente",
+        "note": "Sea cual sea la vía, el feed es el mismo feed OTE — así que todas las herramientas del ecosistema funcionan con las cuatro."
+      }
     }
   },
   "adopters": {
@@ -206,7 +243,12 @@
     "preview": "Ver el feed →",
     "subscribe": "Suscribirse →",
     "feedActions": "Explorar feed",
-    "feedActionsFor": "Explorar el feed de {name}"
+    "feedActionsFor": "Explorar el feed de {name}",
+    "stats": {
+      "publishers": "publicadores",
+      "events": "eventos publicados",
+      "feeds": "feeds OTE disponibles"
+    }
   },
   "directoryFeeds": {
     "byOrganisation": "Feeds por organización",
@@ -325,15 +367,19 @@
     "exportLanguageCoverage": "{count} de {total} eventos tienen el texto en {language}; el resto conserva su idioma original."
   },
   "consumers": {
-    "title": "Quién consume datos OTE",
-    "lead": "Directorios, agregadores, aplicaciones y personas que reutilizan feeds publicados en este formato. Cada uno de ellos es un sitio más al que tus eventos podrán llegar gratis.",
+    "title": "Quién lee los feeds OTE",
+    "lead": "Dos cosas distintas, separadas a propósito: los directorios y agregadores que ya ingieren tus eventos, y las herramientas con las que cualquiera puede leer un feed OTE.",
     "empty": "¿Estás montando un directorio, una newsletter o un bot? Consume feeds OTE y aparece aquí.",
     "emptyCta": "Añadir mi proyecto",
     "devDocs": "Docs para desarrolladores",
     "kindTool": "Herramienta",
     "machine": "Esta lista es una vista, no un fichero: une las herramientas de <a href=\"/data/tools.json\"><code>tools.json</code></a> que consumen feeds con las entradas de <a href=\"/data/adopters.json\"><code>adopters.json</code></a> que declaran que también los ingieren.",
     "planned": "Próximamente",
-    "plannedTitle": "Ha dicho que consumirá feeds OTE; todavía no lo hace. Se lista como intención, no como alcance que ya tengas."
+    "plannedTitle": "Ha dicho que consumirá feeds OTE; todavía no lo hace. Se lista como intención, no como alcance que ya tengas.",
+    "groups": {
+      "ingesting": "Quienes ingieren o se integran con fuentes OTE",
+      "tools": "Herramientas que leen feeds OTE"
+    }
   },
   "tools": {
     "title": "Ecosistema de herramientas",
@@ -466,5 +512,18 @@
     "note": "Una iniciativa de <a href=\"https://combuilderses.github.io/\">Community Builders</a>. Especificación en borrador: el nombre, el alcance y la licencia son provisionales.",
     "spec": "Especificación",
     "issues": "Issues"
+  },
+  "why": {
+    "meta": {
+      "title": "Por qué OTE — el problema, los beneficios, las preguntas",
+      "description": "Por qué un formato abierto para eventos de comunidades técnicas: el problema que ya tienes como organizador, qué te da publicar un feed OTE y las preguntas que la gente hace antes de adoptarlo."
+    },
+    "ics": {
+      "tag": "¿Tienes dudas de si merecerá la pena el esfuerzo? Lee esto primero.",
+      "title": "Sigue usando lo que ya tienes, impórtalo fácilmente, mejóralo un poco y obtén grandes beneficios.",
+      "body": "No tienes que escribir JSON ni cambiar de herramienta: tus eventos de Meetup, tu <code>.ics</code>, Eventbrite… te ayudamos a importarlos tal cual. Con solo añadir unos pocos datos más —temas (<code>tags</code>), modalidad, idioma, coordenadas— multiplicas su alcance.",
+      "discovery": "Son los que dejan que alguien filtre por tags, modalidad o coordenadas; y al ser un estándar abierto y gratuito —y como tampoco es una plataforma concreta ni con APIs restringidas, sino una especificación al estilo RSS pero diseñada específicamente para resolver los problemas de la comunidad y los eventos técnicos—, es mucho más fácil que te encuentren y se suscriban a lo que les interesa, igual que otros directorios que podrán dar visibilidad a tu evento sin esfuerzo.",
+      "fragmentation": "Es también lo que ganas al pasar de un <code>.ics</code> a OTE. Un <code>VEVENT</code> dice cuándo y dónde, y todo aquello para lo que no tiene campo — una llamada a ponencias con sus fechas, si es online o presencial, quién organiza, bajo qué licencia, en qué idioma — acaba como prosa dentro de <code>DESCRIPTION</code>, donde ninguna herramienta puede filtrar. El mundo de los eventos está cada año más fragmentado y con más silos; un feed de datos abiertos bien etiquetados, en un vocabulario pensado para este dominio, es lo que hace que dentro de un año te encuentre alguien: una persona que busca justo tu tema, o una empresa que busca eventos como el tuyo para apoyar."
+    }
   }
 }

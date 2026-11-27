@@ -18,6 +18,12 @@
       follow: "Follow the discussion",
       navSpec: "How it works",
       navAdopt: "Adopt it",
+      "bioschemas.title": "We're not inventing the pattern",
+      "bioschemas.body":
+        "<a href=\"https://bioschemas.org\" target=\"_blank\" rel=\"noopener\">Bioschemas</a> does something similar in the life sciences: it starts from schema.org, defines profiles over existing types saying which properties are required, recommended or optional, and gets research resources found on the web. OTE does the same for tech community events — and adds iCalendar and RSS to the mix, plus a feed anyone can discover. We're not a schema.org adoption project; but every feed published in OTE puts valid <code>schema.org/Event</code> markup within arm's reach of one more site, at close to zero extra cost. We'll take that side effect.",
+      navWhy: "Why OTE",
+      navDocs: "Docs",
+      navSupport: "Support it",
       navExamples: "Examples",
       navReference: "Reference",
       navDevelopers: "Developers",
@@ -41,7 +47,6 @@
       "lbl.repo": "Repository",
       "lbl.fix": "Correct this →",
       "badge.shipped": "Mapping shipped",
-      "badge.half": "Import shipped, export proposed",
       "badge.notbuilt": "Mapping not built",
       "badge.notanalysed": "Not yet analysed",
       "badge.export": "Export shipped",
@@ -59,7 +64,8 @@
       "schema.solves": "A widely understood vocabulary for describing an event on a web page, and the one search engines actually read: embed it as JSON-LD and you can get <a href=\"https://developers.google.com/search/docs/appearance/structured-data/event\">event rich results</a>. It has the best online/hybrid modelling of anything we surveyed (<code>eventAttendanceMode</code>, <code>VirtualLocation</code>), plus <code>eventStatus</code>, <code>performer</code> and <code>offers</code>.",
       "schema.reuses": "The data model, close to one-to-one. Attendance mode, status, offers, organiser and location are shaped so that serialising an OTE event to <code>schema.org/Event</code> is a rename, not a redesign. This is our primary mapping target.",
       "schema.adds": "A <em>feed</em>. schema.org describes one event inside one HTML page; there is no notion of \"all of this community's events\" you can subscribe to without scraping. OTE adds the container (one URL, N events, an <code>updatedAt</code>), a small <strong>validatable</strong> core with real JSON Schemas — schema.org ships a huge and almost entirely optional vocabulary with no validation — plus CFP and a data licence.",
-      "schema.stand": "<a href=\"https://www.npmjs.com/package/@opentechevents/import-jsonld\"><code>import-jsonld</code></a> is published and extracts <code>Event</code> JSON-LD from real pages. The exporter (OTE → <code>schema.org/Event</code>) is still <em>proposed</em>, not built — see the <a href=\"/#tools\">tools section</a>. Until it exists, \"maps 1:1\" is a claim backed by the field survey, not by running code.",
+      "schema.stand":
+        "<a href=\"https://www.npmjs.com/package/@opentechevents/import-jsonld\"><code>import-jsonld</code></a> extracts <code>Event</code> JSON-LD from real pages, and <a href=\"https://www.npmjs.com/package/@opentechevents/export-jsonld\"><code>export-jsonld</code></a> goes the other way — as a library, as a CLI and inside the <a href=\"https://convert.opentechevents.org/\">Converter</a>, which will give you the <code>&lt;script type=\"application/ld+json\"&gt;</code> for a feed or for a single event. So \"maps 1:1\" is now backed by running code in both directions, which is what we said we were waiting for.",
 
       "hevent.name": "h-event &amp; POSSE <span class=\"pa-rfc\">IndieWeb / microformats2</span>",
       "hevent.solves": "Marking up an event in the HTML you already publish, with no parallel file to maintain — the page <em>is</em> the data. Around it, IndieWeb has a decade of practice on the questions OTE also cares about: who owns the canonical copy (<a href=\"https://indieweb.org/POSSE\">POSSE</a> — publish on your own site, syndicate elsewhere), RSVPs, and replies via Webmention.",
@@ -80,6 +86,8 @@
 
       "s2.title": "2 · Aggregators, directories and tools",
       "s2.lead": "Projects solving the same problem from the consuming end. None of these is a competing format; several are the reason a format would be worth having. We describe them in a couple of sentences and link out — deliberately no adoption metrics, because we have not measured any and star counts are not adoption. <strong>If your project is here and we got it wrong, correct us</strong> — every card links to an issue.",
+      "s2.collab":
+        "<strong>We would rather work with these projects than past them.</strong> Two concrete offers, for any of them: we can contribute events into your directory — that is what the <a href=\"https://tools.opentechevents.org/publish/\">publishing assistant</a> is for — and we can help you read OTE feeds, or publish your own, so whatever you already aggregate becomes reusable by everyone else. Neither requires you to adopt anything as your internal model. Open an issue, or ask us to open it.",
       "s2.more": "More directories, platforms and their export capabilities — EventosWiki, Event Garden, CFP Tracker, CallingAllPapers, dev.events, Meetup, Sessionize, Luma, joind.in, PaperCall — are catalogued in the <a href=\"https://github.com/OpenTechEvents/opentechevents-spec/tree/main/research\">research folder</a>, which is the raw evidence behind this page.",
 
       "cc.desc": "An aggregator built on the premise that <em>event producers are the authoritative sources for their own events</em>: publish once, individuals and aggregators pull. Its gold standard is iCalendar, with scrapers for sites that do not publish a feed. Udell has been making this argument since roughly 2008 — \"ICS is RSS for events\".",
@@ -138,6 +146,12 @@
       follow: "Sigue la discusión",
       navSpec: "Cómo funciona",
       navAdopt: "Adhiérete",
+      "bioschemas.title": "El patrón no lo inventamos nosotros",
+      "bioschemas.body":
+        "<a href=\"https://bioschemas.org\" target=\"_blank\" rel=\"noopener\">Bioschemas</a> hace algo parecido en ciencias de la vida: parte de schema.org, define perfiles sobre tipos existentes indicando qué propiedades son obligatorias, recomendadas u opcionales, y consigue que los recursos científicos se encuentren en la web. OTE hace lo mismo con los eventos de comunidades tech — y suma iCalendar y RSS, más un feed que cualquiera puede descubrir. No somos un proyecto de adopción de schema.org; pero cada feed publicado en OTE deja el marcado <code>schema.org/Event</code> válido al alcance de la mano de un sitio más, a coste casi cero. Ese efecto colateral lo firmamos.",
+      navWhy: "Por qué OTE",
+      navDocs: "Docs",
+      navSupport: "Apoya",
       navExamples: "Ejemplos",
       navReference: "Referencia",
       navDevelopers: "Desarrolladores",
@@ -161,7 +175,6 @@
       "lbl.repo": "Repositorio",
       "lbl.fix": "Corrígenos →",
       "badge.shipped": "Mapeo publicado",
-      "badge.half": "Importador publicado, exportador propuesto",
       "badge.notbuilt": "Mapeo sin construir",
       "badge.notanalysed": "Todavía sin analizar",
       "badge.export": "Exportador publicado",
@@ -179,7 +192,8 @@
       "schema.solves": "Un vocabulario ampliamente entendido para describir un evento en una página web, y el que los buscadores leen de verdad: si lo incrustas como JSON-LD puedes obtener <a href=\"https://developers.google.com/search/docs/appearance/structured-data/event\">resultados enriquecidos de evento</a>. Tiene el mejor modelado de online/híbrido de todo lo que analizamos (<code>eventAttendanceMode</code>, <code>VirtualLocation</code>), además de <code>eventStatus</code>, <code>performer</code> y <code>offers</code>.",
       "schema.reuses": "El modelo de datos, casi uno a uno. El modo de asistencia, el estado, las entradas, el organizador y la ubicación están modelados para que serializar un evento OTE a <code>schema.org/Event</code> sea un renombrado, no un rediseño. Es nuestro objetivo de mapeo principal.",
       "schema.adds": "Un <em>feed</em>. schema.org describe un evento dentro de una página HTML; no existe la noción de «todos los eventos de esta comunidad» a la que puedas suscribirte sin hacer scraping. OTE añade el contenedor (una URL, N eventos, un <code>updatedAt</code>), un núcleo pequeño y <strong>validable</strong> con JSON Schemas de verdad —schema.org ofrece un vocabulario enorme, casi todo opcional y sin validación— más el CFP y una licencia de datos.",
-      "schema.stand": "<a href=\"https://www.npmjs.com/package/@opentechevents/import-jsonld\"><code>import-jsonld</code></a> está publicado y extrae JSON-LD de <code>Event</code> de páginas reales. El exportador (OTE → <code>schema.org/Event</code>) sigue <em>propuesto</em>, sin construir — ver la <a href=\"/#tools\">sección de herramientas</a>. Hasta que exista, «mapea 1:1» es una afirmación respaldada por la investigación, no por código que se ejecute.",
+      "schema.stand":
+        "<a href=\"https://www.npmjs.com/package/@opentechevents/import-jsonld\"><code>import-jsonld</code></a> extrae JSON-LD de <code>Event</code> de páginas reales, y <a href=\"https://www.npmjs.com/package/@opentechevents/export-jsonld\"><code>export-jsonld</code></a> hace el camino inverso — como librería, como CLI y dentro del <a href=\"https://convert.opentechevents.org/\">Converter</a>, que te da el <code>&lt;script type=\"application/ld+json\"&gt;</code> de un feed o de un evento suelto. Así que «mapea 1:1» ya lo sostiene código que corre en las dos direcciones, que es justo lo que decíamos estar esperando.",
 
       "hevent.name": "h-event y POSSE <span class=\"pa-rfc\">IndieWeb / microformats2</span>",
       "hevent.solves": "Marcar un evento en el HTML que ya publicas, sin un fichero paralelo que mantener: la página <em>es</em> el dato. Alrededor, IndieWeb lleva una década de práctica sobre las preguntas que también le importan a OTE: quién posee la copia canónica (<a href=\"https://indieweb.org/POSSE\">POSSE</a> — publica en tu sitio, sindica fuera), los RSVP y las respuestas vía Webmention.",
@@ -200,6 +214,8 @@
 
       "s2.title": "2 · Agregadores, directorios y herramientas",
       "s2.lead": "Proyectos que resuelven el mismo problema desde el lado de quien consume. Ninguno es un formato rival; varios son justamente la razón por la que un formato tendría sentido. Los describimos en dos frases y enlazamos fuera — a propósito sin métricas de adopción, porque no hemos medido ninguna y las estrellas de GitHub no son adopción. <strong>Si tu proyecto está aquí y lo hemos contado mal, corrígenos</strong>: cada ficha enlaza a un issue.",
+      "s2.collab":
+        "<strong>Preferimos trabajar con estos proyectos que a su lado.</strong> Dos ofertas concretas, para cualquiera de ellos: podemos aportar eventos a tu directorio — para eso está el <a href=\"https://tools.opentechevents.org/publish/\">asistente de publicación</a> — y podemos ayudarte a leer feeds OTE, o a publicar el tuyo, para que lo que ya agregas lo pueda reutilizar cualquiera. Ninguna de las dos cosas te obliga a adoptar nada como modelo interno. Abre un issue, o pídenos que lo abramos nosotros.",
       "s2.more": "Más directorios, plataformas y sus capacidades de exportación —EventosWiki, Event Garden, CFP Tracker, CallingAllPapers, dev.events, Meetup, Sessionize, Luma, joind.in, PaperCall— están catalogados en la <a href=\"https://github.com/OpenTechEvents/opentechevents-spec/tree/main/research\">carpeta de investigación</a>, que es la evidencia en bruto detrás de esta página.",
 
       "cc.desc": "Un agregador construido sobre la premisa de que <em>quien produce el evento es la fuente autoritativa de sus propios eventos</em>: publica una vez, y tanto personas como agregadores tiran del dato. Su estándar de referencia es iCalendar, con scrapers para los sitios que no publican feed. Udell defiende este argumento desde alrededor de 2008: «ICS es el RSS de los eventos».",

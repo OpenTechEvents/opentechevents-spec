@@ -33,14 +33,23 @@
       <span class="brand-name">OpenTechEvents</span>
     </a>
     <nav class="nav" id="site-nav">
+      <a href="/why/" data-nav="why" data-i18n="nav.why">Why OTE</a>
       <a href="/#spec" data-nav="spec" data-i18n="nav.spec">How it works</a>
       <a href="/#adopt" data-nav="adopt" data-i18n="nav.adopt">Adopt it</a>
-      <a href="/examples/" data-nav="examples" data-i18n="nav.examples">Examples</a>
-      <a href="/spec/" data-nav="reference" data-i18n="nav.reference">Reference</a>
-      <a href="/developers/" data-nav="developers" data-i18n="nav.developers">Developers</a>
+      <div class="nav-group" data-nav-group>
+        <button type="button" class="nav-group-toggle" aria-expanded="false" aria-controls="nav-docs">
+          <span data-i18n="nav.docs">Docs</span>
+          <span class="nav-caret" aria-hidden="true"></span>
+        </button>
+        <div class="nav-group-panel" id="nav-docs">
+          <a href="/examples/" data-nav="examples" data-i18n="nav.examples">Examples</a>
+          <a href="/spec/" data-nav="reference" data-i18n="nav.reference">Reference</a>
+          <a href="/developers/" data-nav="developers" data-i18n="nav.developers">Developers</a>
+          <a href="/extensions/" data-nav="extensions" data-i18n="nav.extensions">Extensions</a>
+          <a href="/prior-art/" data-nav="prior-art" data-i18n="nav.priorArt">Prior art</a>
+        </div>
+      </div>
       <a href="/#tools" data-nav="tools" data-i18n="nav.tools">Tools</a>
-      <a href="/prior-art/" data-nav="prior-art" data-i18n="nav.priorArt">Prior art</a>
-      <a href="/extensions/" data-nav="extensions" data-i18n="nav.extensions">Extensions</a>
       <a href="/#support" data-nav="support" data-i18n="nav.support">Support it</a>
       <a class="nav-repo" href="https://github.com/OpenTechEvents/opentechevents-spec">GitHub</a>
     </nav>
@@ -66,8 +75,9 @@
         <div class="cta-row">
           <a class="btn btn-primary" href="#adopt" data-i18n="hero.ctaPrimary">Adopt the spec</a>
           <a class="btn btn-ghost" href="#spec" data-i18n="hero.ctaSecondary">See the format</a>
+          <a class="btn btn-ghost" href="/why/" data-i18n="nav.why">Why OTE</a>
         </div>
-        <p class="hero-note"><span data-i18n="hero.note">No platform to sign up for. No tool to install: a file you publish, plus a line in your site's &lt;head&gt; so others can find it.</span> <a href="#shortcut" data-i18n="hero.shortcut">Already use Meetup, Luma, Eventbrite…? We'll help you import it without leaving it →</a></p>
+        <p class="hero-note"><span data-i18n="hero.note">No platform to sign up for. No tool to install: a file you publish, plus a line in your site's &lt;head&gt; so others can find it.</span> <a href="/why/#shortcut" data-i18n="hero.shortcut">Already use Meetup, Luma, Eventbrite…? We'll help you import it without leaving it →</a></p>
       </div>
 
       <div class="hero-samples">
@@ -178,31 +188,39 @@
     </div>
   </section>
 
-  <!-- PROBLEM -->
-  <section class="section" id="problem">
+  <!-- PROOF -->
+  <!-- The first thing after the headline is evidence, not argument: three measured figures,
+       filled by app.js from feed-health.json. The band is hidden until they are. -->
+  <section class="proof">
     <div class="wrap">
-      <h2><span data-i18n="problem.title">You already know the problem</span> <a class="heading-anchor" href="#problem" aria-label="Link to this section" data-i18n-aria="a11y.sectionLink">#</a></h2>
-      <p class="section-lead" data-i18n="problem.lead">You organise one event. Then you announce it over and over, by hand, across several networks whose algorithms decide who even sees it. In today's attention economy, your message competes against all the noise — and you still miss half the people who would have come.</p>
+      <dl class="proof-stats" id="proof-stats" hidden>
+        <div class="proof-stat">
+          <dt data-i18n="adopters.stats.publishers">publishers</dt>
+          <dd data-stat="publishers">—</dd>
+        </div>
+        <div class="proof-stat">
+          <dt data-i18n="adopters.stats.events">events published</dt>
+          <dd data-stat="events">—</dd>
+        </div>
+        <div class="proof-stat">
+          <dt data-i18n="adopters.stats.feeds">OTE feeds available</dt>
+          <dd data-stat="feeds">—</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
 
-      <div class="cards cards-3">
-        <article class="card">
-          <div class="card-icon">📋</div>
-          <h3 data-i18n="problem.c1.title">The same event, announced again and again</h3>
-          <p data-i18n="problem.c1.body">Your website, Meetup, LinkedIn, Instagram, X, several WhatsApp and Telegram groups… The same information on platforms where content can easily go unnoticed.</p>
-        </article>
-        <article class="card">
-          <div class="card-icon">🕳️</div>
-          <h3 data-i18n="problem.c2.title">Directories can't find you</h3>
-          <p data-i18n="problem.c2.body">Event directories want to list you. But they'd have to find your event, or wait for you to submit a form, open a pull request, send an email, and so on… So they almost never do.</p>
-        </article>
-        <article class="card">
-          <div class="card-icon">🔁</div>
-          <h3 data-i18n="problem.c3.title">Every change means doing it all over</h3>
-          <p data-i18n="problem.c3.body">Venue moved. Speaker cancelled. New date. Now go update every single platform — or live with the stale copies out there.</p>
-        </article>
+  <!-- ADOPTERS -->
+  <section class="section" id="adopters">
+    <div class="wrap">
+      <h2><span data-i18n="adopters.title">Who publishes in OTE</span> <a class="heading-anchor" href="#adopters" aria-label="Link to this section" data-i18n-aria="a11y.sectionLink">#</a></h2>
+      <p class="section-lead" data-i18n="adopters.lead">Select a publisher to explore its OTE feeds. Some communities use eventos.wiki to generate their feed automatically. confwatch offers a full directory feed and feeds by conference, edition, country or topic.</p>
+      <div id="adopters-list" class="logo-grid"></div>
+      <div class="empty-cta" id="adopters-empty" hidden>
+        <p data-i18n="adopters.empty">The spec is brand new, so this list is still short. Be one of the first — early adopters get a say in what the standard becomes.</p>
+        <a class="btn btn-primary" href="#adopt" data-i18n="adopters.emptyCta">Be the first</a>
       </div>
-
-      <p class="pull" data-i18n="problem.pull">There is no shortage of information about your events. What's missing is <strong>interoperability</strong>.</p>
+      <p class="data-note" data-i18n="adopters.machine">This list is data, not markup: it renders <a href="/data/adopters.json"><code>adopters.json</code></a>, a machine-readable registry you can build on. See the <a href="/developers/">developer docs</a>.</p>
     </div>
   </section>
 
@@ -245,11 +263,9 @@
           <ul class="ticks">
             <li data-i18n="spec.min.b1">Plain JSON. No SDK, no account, no server required — a static file is enough.</li>
             <li data-i18n="spec.min.b2">Designed to map cleanly onto RSS, iCalendar and schema.org/Event.</li>
-            <li data-i18n="spec.min.b3">Works the same for a recurring meetup, a multi-day conference or an online workshop.</li>
             <li data-i18n="spec.min.b4">Open licence, no usage restrictions — in the spirit of RSS and iCal.</li>
           </ul>
-          <p class="caveat" data-i18n="spec.min.caveat">Careful, because we'd rather be straight with you: that draft — the core fields and the optional modules alike — has not been agreed yet. It's there to show the shape of the thing and to open the debate, and it will change. What we're asking you to adopt today is the idea, and to come and break it before it sets.</p>
-          <a class="link-arrow" href="https://github.com/OpenTechEvents/opentechevents-spec/tree/main/spec" data-i18n="spec.min.link">Read the data model</a>
+          <a class="link-arrow" href="/spec/" data-i18n="spec.min.link">Read the data model</a>
         </div>
         <figure class="code-block">
           <figcaption data-i18n="spec.min.caption">Minimal valid event</figcaption>
@@ -264,102 +280,7 @@
         </figure>
       </div>
 
-      <aside class="contribute">
-        <div>
-          <h3 data-i18n="spec.priorArt.title">We're not inventing the pattern</h3>
-          <p data-i18n="spec.priorArt.body"><a href="https://bioschemas.org" target="_blank" rel="noopener">Bioschemas</a> does something similar in the life sciences: it starts from schema.org, defines profiles over existing types saying which properties are required, recommended or optional, and gets research resources found on the web. OTE does the same for tech community events — and adds iCalendar and RSS to the mix, plus a feed anyone can discover. We're not a schema.org adoption project; but every feed published in OTE puts valid <code>schema.org/Event</code> markup within arm's reach of one more site, at close to zero extra cost. We'll take that side effect.</p>
-        </div>
-      </aside>
 
-      <div class="docs-block">
-        <h3 data-i18n="docs.title">Read the full specification</h3>
-        <p data-i18n="docs.lead">Everything is public and in the open — including what's still undecided. The spec is at version 0.x: expect it to change, and expect your feedback to be what changes it.</p>
-
-        <div class="docs-grid">
-          <a class="doc-card" href="spec/">
-            <span class="doc-icon">📐</span>
-            <span class="doc-name" data-i18n="docs.d1.title">Data model</span>
-            <span class="doc-desc" data-i18n="docs.d1.body">Every field of an event: what's required, what's optional, and how it maps to iCalendar, RSS and schema.org.</span>
-          </a>
-          <a class="doc-card" href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/spec/v0.6/README.md#the-feed">
-            <span class="doc-icon">📡</span>
-            <span class="doc-name" data-i18n="docs.d2.title">Feed format</span>
-            <span class="doc-desc" data-i18n="docs.d2.body">How to group several events into a feed: metadata, pagination, licence and discovery.</span>
-          </a>
-          <a class="doc-card" href="/examples/">
-            <span class="doc-icon">📄</span>
-            <span class="doc-name" data-i18n="docs.d3.title">Practical examples</span>
-            <span class="doc-desc" data-i18n="docs.d3.body">Complete documents to copy, one per real case: small and recurring meetups, conferences, online and hybrid events, multi-part events, hackathons, co-organised events and feeds.</span>
-          </a>
-          <a class="doc-card" href="https://github.com/OpenTechEvents/opentechevents-spec/tree/main/research">
-            <span class="doc-icon">🔬</span>
-            <span class="doc-name" data-i18n="docs.d4.title">Research</span>
-            <span class="doc-desc" data-i18n="docs.d4.body">The analysis behind the decisions: existing standards, platforms and directories we studied.</span>
-          </a>
-          <a class="doc-card" href="/prior-art/">
-            <span class="doc-icon">🧭</span>
-            <span class="doc-name" data-i18n="docs.d5.title">Prior art</span>
-            <span class="doc-desc" data-i18n="docs.d5.body">Who else is solving this, and how OTE relates to them: iCalendar, schema.org, h-event, ActivityPub — and the aggregators already ingesting event data. Including what we still can't claim.</span>
-          </a>
-        </div>
-
-        <aside class="contribute">
-          <div>
-            <h3 data-i18n="docs.contrib.title">Something doesn't fit your community?</h3>
-            <p data-i18n="docs.contrib.body">Then the spec is wrong, not your community. It's still a draft precisely so that organisers can push back before anything is set in stone — a missing field, a format that breaks your case, a name that makes no sense. Say so in an issue.</p>
-          </div>
-          <div class="cta-row">
-            <a class="btn btn-primary" href="https://github.com/OpenTechEvents/opentechevents-spec/issues" data-i18n="docs.contrib.cta">Open an issue</a>
-            <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/CONTRIBUTING.md" data-i18n="docs.contrib.cta2">How to contribute</a>
-          </div>
-        </aside>
-      </div>
-    </div>
-  </section>
-
-  <!-- BENEFITS -->
-  <section class="section" id="benefits">
-    <div class="wrap">
-      <h2><span data-i18n="benefits.title">What you get out of it</span> <a class="heading-anchor" href="#benefits" aria-label="Link to this section" data-i18n-aria="a11y.sectionLink">#</a></h2>
-      <p class="section-lead" data-i18n="benefits.lead">Adopting OTE is under an hour of work the first time. After that, a couple of minutes per event you publish. Here's what it buys you.</p>
-
-      <div class="cards cards-2">
-        <article class="card">
-          <div class="card-icon">⏱️</div>
-          <h3 data-i18n="benefits.b1.title">Stop doing data entry</h3>
-          <p data-i18n="benefits.b1.body">Write the event once. Let tooling push it to directories, calendars and feeds instead of you copy-pasting it into yet another form.</p>
-        </article>
-        <article class="card">
-          <div class="card-icon">📣</div>
-          <h3 data-i18n="benefits.b2.title">Reach beyond your own bubble</h3>
-          <p data-i18n="benefits.b2.body">Directories and aggregators will be able to pick up your events the moment you publish them, and reach each person in the channel they already use — not the one you happen to pick. Your meetup can show up where people are actually looking.</p>
-        </article>
-        <article class="card">
-          <div class="card-icon">🔍</div>
-          <h3 data-i18n="benefits.b7.title">And you show up better in Google</h3>
-          <p data-i18n="benefits.b7.body">Google and other search engines read <code>schema.org/Event</code> to show <a href="https://developers.google.com/search/docs/appearance/structured-data/event" target="_blank" rel="noopener">event rich results</a>: date, venue and price right there in the search results. OTE wasn't designed for SEO, but it maps onto that vocabulary almost 1:1 — so if you can touch your site's HTML, the same tooling that builds your feed will be able to generate the JSON-LD for you to paste in. One file, four destinations.</p>
-        </article>
-        <article class="card">
-          <div class="card-icon">🔓</div>
-          <h3 data-i18n="benefits.b3.title">Own your data</h3>
-          <p data-i18n="benefits.b3.body">Your events live at your URL, in an open format. If a platform shuts down, changes its API or its pricing, your history and your feed are still yours.</p>
-        </article>
-        <article class="card">
-          <div class="card-icon">🧩</div>
-          <h3 data-i18n="benefits.b4.title">An open, community-owned ecosystem</h3>
-          <p data-i18n="benefits.b4.body">Because OTE is an open spec owned by the community itself, it has the potential for a whole ecosystem of free, open integrations. Every new tool built on it — an .ics export, a website widget, a Telegram bot — works for you without you lifting a finger.</p>
-        </article>
-        <article class="card">
-          <div class="card-icon">✅</div>
-          <h3 data-i18n="benefits.b5.title">Accurate everywhere</h3>
-          <p data-i18n="benefits.b5.body">Change the date in one place and every consumer that re-reads your feed gets the correction. No more zombie listings with stale information.</p>
-        </article>
-        <article class="card">
-          <div class="card-icon">🌱</div>
-          <h3 data-i18n="benefits.b6.title">Shape the standard</h3>
-          <p data-i18n="benefits.b6.body">The spec is in draft. Early adopters decide what it looks like — if something doesn't fit your community, it can still be changed.</p>
-        </article>
-      </div>
     </div>
   </section>
 
@@ -367,13 +288,78 @@
   <section class="section section-dark" id="adopt">
     <div class="wrap">
       <h2><span data-i18n="adopt.title">How to adopt it</span> <a class="heading-anchor" href="#adopt" aria-label="Link to this section" data-i18n-aria="a11y.sectionLink">#</a></h2>
-      <p class="section-lead" data-i18n="adopt.lead">Three steps. The first one is the only one that takes real work, and it's a text file.</p>
+      <p class="section-lead" data-i18n="adopt.lead">Four steps, the fourth optional. The first one is the only one that takes real work, and it's a text file.</p>
 
       <ol class="steps">
         <li>
           <h3><span class="step-num">1</span> <span data-i18n="adopt.s1.title">Publish an OTE feed</span></h3>
-          <p data-i18n="adopt.s1.body">Create a JSON file with your events and host it anywhere you already publish — your site, GitHub Pages, a gist. The fastest path? The <a href="https://github.com/OpenTechEvents/ote-template">organizer kit</a>: a ready-made repository to publish in minutes, with OTE, ICS and RSS feeds already wired up. And if your events live in a Google Calendar or Meetup, we'll help you import them to generate the feed.</p>
-          <figure class="code-block code-block-sm">
+
+          <div class="paths">
+            <h4 data-i18n="adopt.paths.title">Four ways to produce that file</h4>
+            <p data-i18n="adopt.paths.lead">The other two steps are the same whichever you pick. What changes here is who ends up holding the file — and who keeps it true next month.</p>
+
+            <div class="path-grid">
+              <article class="path">
+                <h4 data-i18n="adopt.paths.wiki.name">eventos.wiki</h4>
+                <p class="path-body" data-i18n="adopt.paths.wiki.body">You register your community and connect Meetup, Luma or your .ics; they generate the feed.</p>
+                <p class="path-pro" data-i18n="adopt.paths.wiki.pro">No file to maintain: if your events already live somewhere else, you import and you're done.</p>
+                <p class="path-con" data-i18n="adopt.paths.wiki.con">Someone else hosts it and models it, so the shape of your data is theirs to decide.</p>
+                <a class="link-arrow" href="https://eventos.wiki/" target="_blank" rel="noopener" data-i18n="adopt.paths.wiki.cta">Go to eventos.wiki</a>
+              </article>
+              <article class="path">
+                <h4 data-i18n="adopt.paths.kit.name">Organizer kit</h4>
+                <p class="path-body" data-i18n="adopt.paths.kit.body">A ready-made repository that publishes on GitHub Pages with OTE, ICS and RSS already wired up, and events edited through the OTE editor.</p>
+                <p class="path-pro" data-i18n="adopt.paths.kit.pro">Running in minutes, and the file is still yours.</p>
+                <p class="path-con" data-i18n="adopt.paths.kit.con">It is one more site to keep alive, unless you move to it altogether.</p>
+                <a class="link-arrow" href="https://github.com/OpenTechEvents/ote-template" target="_blank" rel="noopener" data-i18n="adopt.paths.kit.cta">Open the organizer kit</a>
+              </article>
+              <article class="path">
+                <h4 data-i18n="adopt.paths.agent.name">Agent Skill</h4>
+                <p class="path-body" data-i18n="adopt.paths.agent.body">You ask an agent to build the feed from your site, your .ics or whatever system you use today.</p>
+                <p class="path-pro" data-i18n="adopt.paths.agent.pro">It takes the first run and the mapping of your own data off your hands.</p>
+                <p class="path-con" data-i18n="adopt.paths.agent.con">What it produces is still yours to maintain: every change means asking again.</p>
+                <a class="link-arrow" href="https://github.com/OpenTechEvents/ote-tools/tree/main/skills" target="_blank" rel="noopener" data-i18n="adopt.paths.agent.cta">See the Agent Skill</a>
+              </article>
+              <article class="path">
+                <h4 data-i18n="adopt.paths.manual.name">By hand</h4>
+                <p class="path-body" data-i18n="adopt.paths.manual.body">You write the JSON and publish it wherever you already publish.</p>
+                <p class="path-pro" data-i18n="adopt.paths.manual.pro">Full control: exactly the fields you want to expose, with the whole spec within reach.</p>
+                <p class="path-con" data-i18n="adopt.paths.manual.con">You write it, and you keep it current, event by event.</p>
+                <a class="link-arrow" href="#adopt-feed-example" data-i18n="adopt.paths.manual.cta">See the file you publish</a>
+              </article>
+            </div>
+
+            <!-- Structural facts only: who hosts it, who keeps it current, who decides its
+                 shape. Nothing here claims what any third-party tool does or does not
+                 support — that changes without telling us, and a stale claim about someone
+                 else's product on our own page is the expensive kind of wrong. -->
+            <div class="path-table-scroll">
+              <table class="path-table">
+                <caption data-i18n="adopt.paths.table.caption">Some of the differences</caption>
+                <thead>
+                  <tr>
+                    <td></td><th scope="col" data-i18n="adopt.paths.wiki.name">eventos.wiki</th><th scope="col" data-i18n="adopt.paths.kit.name">Organizer kit</th><th scope="col" data-i18n="adopt.paths.agent.name">Agent Skill</th><th scope="col" data-i18n="adopt.paths.manual.name">By hand</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><th scope="row" data-i18n="adopt.paths.table.hosts">Who hosts the file</th><td data-i18n="adopt.paths.table.them">They do</td><td data-i18n="adopt.paths.table.yours">Your repo</td><td data-i18n="adopt.paths.table.you">You</td><td data-i18n="adopt.paths.table.you">You</td></tr>
+                  <tr><th scope="row" data-i18n="adopt.paths.table.maintains">Who keeps it current</th><td data-i18n="adopt.paths.table.them">They do</td><td data-i18n="adopt.paths.table.you">You</td><td data-i18n="adopt.paths.table.youAgent">You, with the agent</td><td data-i18n="adopt.paths.table.you">You</td></tr>
+                  <tr><th scope="row" data-i18n="adopt.paths.table.fields">Who decides which fields you expose</th><td data-i18n="adopt.paths.table.tool">The tool</td><td data-i18n="adopt.paths.table.you">You</td><td data-i18n="adopt.paths.table.you">You</td><td data-i18n="adopt.paths.table.you">You</td></tr>
+                  <tr><th scope="row" data-i18n="adopt.paths.table.ics">Calendar (.ics)</th><td data-i18n="adopt.paths.table.wikiIcs">one calendar per community</td><td data-i18n="adopt.paths.table.auto">on every push</td><td data-i18n="adopt.paths.table.converter">with the Converter</td><td data-i18n="adopt.paths.table.converter">with the Converter</td></tr>
+                  <tr><th scope="row" data-i18n="adopt.paths.table.rss">RSS</th><td data-i18n="adopt.paths.table.converter">with the Converter</td><td data-i18n="adopt.paths.table.auto">on every push</td><td data-i18n="adopt.paths.table.converter">with the Converter</td><td data-i18n="adopt.paths.table.converter">with the Converter</td></tr>
+                  <tr><th scope="row" data-i18n="adopt.paths.table.jsonld">schema.org (JSON-LD)</th><td data-i18n="adopt.paths.table.converter">with the Converter</td><td data-i18n="adopt.paths.table.converter">with the Converter</td><td data-i18n="adopt.paths.table.converter">with the Converter</td><td data-i18n="adopt.paths.table.converter">with the Converter</td></tr>
+                  <tr><th scope="row" data-i18n="adopt.paths.table.extra">One more site to maintain?</th><td data-i18n="adopt.paths.table.no">No</td><td data-i18n="adopt.paths.table.yes">Yes</td><td data-i18n="adopt.paths.table.no">No</td><td data-i18n="adopt.paths.table.no">No</td></tr>
+                  <tr><th scope="row" data-i18n="adopt.paths.table.change">Changing an event means</th><td data-i18n="adopt.paths.table.theirUi">editing it in their interface</td><td data-i18n="adopt.paths.table.commit">a commit</td><td data-i18n="adopt.paths.table.askAgain">asking the agent again</td><td data-i18n="adopt.paths.table.editJson">editing the JSON</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="data-note" data-i18n="adopt.paths.table.note">Whichever path you take, the feed is the same OTE feed — so every tool in the ecosystem works with all four.</p>
+          </div>
+
+          <div class="path-manual">
+            <h4 data-i18n="adopt.paths.yours.title">If you are the one producing the file</h4>
+            <p data-i18n="adopt.paths.yours.body">What follows — the shape of the file, and how to serve it — is for the two paths where you produce it: by hand, or with the Agent Skill. The organizer kit gives you an editor and publishes it for you; a hosted tool does both without you touching the file.</p>
+          <figure class="code-block code-block-sm" id="adopt-feed-example">
             <figcaption><code>https://tucomunidad.dev/events.json</code></figcaption>
             <pre data-ote="feed"><code>{
   <k>"specVersion"</k>: <s>"0.6.0"</s>,
@@ -403,9 +389,10 @@
             </figure>
             <p class="data-note" data-i18n="adopt.s1.serving.scope">This is about the feed file, not your whole site: it's a recommendation for the public feed resource, not a reason to open up your website or your API. And because the feed is public, it must never depend on cookies or credentials — <code>Access-Control-Allow-Credentials</code> is neither needed nor wanted here (and is incompatible with <code>*</code> anyway).</p>
           </div>
+          </div>
         </li>
         <li>
-          <h3><span class="step-num">2</span> <span data-i18n="adopt.s2.title">Make it discoverable</span></h3>
+          <h3><span class="step-num">2</span> <span data-i18n="adopt.s2.title">Make it discoverable</span> <span class="step-any" data-i18n="adopt.paths.any">whichever path you chose</span></h3>
           <p data-i18n="adopt.s2.body">Add one line to the <code>&lt;head&gt;</code> of your website so tools can find the feed on their own — the same way RSS readers do.</p>
           <figure class="code-block code-block-sm">
             <figcaption data-i18n="adopt.s2.caption">In your site's &lt;head&gt;</figcaption>
@@ -415,44 +402,37 @@
           </figure>
         </li>
         <li>
-          <h3><span class="step-num">3</span> <span data-i18n="adopt.s3.title">Tell us, and get listed</span></h3>
+          <h3><span class="step-num">3</span> <span data-i18n="adopt.s3.title">Tell us, and get listed</span> <span class="step-any" data-i18n="adopt.paths.any">whichever path you chose</span></h3>
           <p data-i18n="adopt.s3.body">Open an issue with your feed URL. We'll validate it and list your community on this page; and as aggregators come online, they'll start picking up your events.</p>
           <div class="cta-row">
             <a class="btn btn-primary" href="/register/" data-i18n="adopt.s3.cta">Register my feed</a>
             <a class="btn btn-ghost" href="/examples/" data-i18n="adopt.s3.cta2">Copy a working example</a>
           </div>
-          <p class="data-note" data-i18n="adopt.s3.badge">Optional: add the <a href="https://github.com/OpenTechEvents/opentechevents-spec/tree/main/docs/badge">feed badge</a> to your README or site footer — a visible, RSS-style signal that you publish OTE, next to the machine-readable one from step 2.</p>
+        </li>
+        <li>
+          <h3><span class="step-num">4</span> <span data-i18n="adopt.s4.title">Give people a way to subscribe</span> <span class="step-optional" data-i18n="adopt.s4.optional">optional</span></h3>
+          <p data-i18n="adopt.s4.body">A feed is for machines; a subscribe button is what turns it into something a visitor can use. This widget reads your OTE feed and offers those same events as a calendar subscription, an .ics download or RSS — including to people whose tools only speak those formats, and even if you never published an .ics or an RSS yourself. Which of the three you offer, and whether you offer any, is yours to decide.</p>
+          <figure class="code-block code-block-sm">
+            <figcaption data-i18n="adopt.s4.caption">On the page where you list your events</figcaption>
+            <pre><code><t>&lt;script</t> <k>type</k>=<s>"module"</s>
+        <k>src</k>=<s>"https://tools.opentechevents.org/embed/latest/ote-subscribe.js"</s><t>&gt;&lt;/script&gt;</t>
+
+<t>&lt;ote-subscribe</t> <k>feed-json</k>=<s>"https://tucomunidad.dev/events.json"</s><t>&gt;&lt;/ote-subscribe&gt;</t></code></pre>
+          </figure>
+          <p class="data-note" data-i18n="adopt.s4.badge">Optional: add the <a href="https://github.com/OpenTechEvents/opentechevents-spec/tree/main/docs/badge">feed badge</a> to your README or site footer — a visible, RSS-style signal that you publish OTE, next to the machine-readable one from step 2.</p>
+          <p class="data-note" data-i18n="adopt.s4.supporter">And if you want to back the project itself rather than only announce your feed, the <a href="https://github.com/OpenTechEvents/opentechevents-spec/tree/main/docs/badge">supporter badge</a> or a link in your footer are the cheapest way to tell the next community this exists.</p>
         </li>
       </ol>
 
-      <aside class="shortcut" id="shortcut">
-        <p class="shortcut-tag" data-i18n="adopt.ics.tag">Not sure it's worth the effort? Read this first.</p>
-        <h3 data-i18n="adopt.ics.title">Keep using what you already have, import it easily, improve it a little and get big benefits.</h3>
-        <p data-i18n="adopt.ics.body">No JSON to write, no tool to change: your events from Meetup, your <code>.ics</code>, Eventbrite… we help you import them as they are. By adding just a few more fields — topics (<code>tags</code>), attendance mode, language, coordinates — you multiply their reach.</p>
-        <p data-i18n="adopt.ics.discovery">Those are the fields that let someone filter by tags, attendance mode or coordinates; and because it's an open, free standard —and because it isn't a specific platform or one with restricted APIs, but an RSS-style specification designed specifically to solve the problems of tech communities and events—, it's far easier for people to find you and subscribe to what interests them, just as other directories can give your event visibility with no effort.</p>
-      </aside>
-    </div>
-  </section>
-
-  <!-- ADOPTERS -->
-  <section class="section" id="adopters">
-    <div class="wrap">
-      <h2><span data-i18n="adopters.title">Who publishes in OTE</span> <a class="heading-anchor" href="#adopters" aria-label="Link to this section" data-i18n-aria="a11y.sectionLink">#</a></h2>
-      <p class="section-lead" data-i18n="adopters.lead">Select a publisher to explore its OTE feeds. Some communities use eventos.wiki to generate their feed automatically. confwatch offers a full directory feed and feeds by conference, edition, country or topic.</p>
-      <div id="adopters-list" class="logo-grid"></div>
-      <div class="empty-cta" id="adopters-empty" hidden>
-        <p data-i18n="adopters.empty">The spec is brand new, so this list is still short. Be one of the first — early adopters get a say in what the standard becomes.</p>
-        <a class="btn btn-primary" href="#adopt" data-i18n="adopters.emptyCta">Be the first</a>
-      </div>
-      <p class="data-note" data-i18n="adopters.machine">This list is data, not markup: it renders <a href="/data/adopters.json"><code>adopters.json</code></a>, a machine-readable registry you can build on. See the <a href="/developers/">developer docs</a>.</p>
     </div>
   </section>
 
   <!-- CONSUMERS -->
   <section class="section section-alt" id="consumers">
     <div class="wrap">
-      <h2><span data-i18n="consumers.title">Who consumes OTE data</span> <a class="heading-anchor" href="#consumers" aria-label="Link to this section" data-i18n-aria="a11y.sectionLink">#</a></h2>
-      <p class="section-lead" data-i18n="consumers.lead">Directories, aggregators and people reusing feeds published in this format. Every one of them is another place your events will be able to reach for free.</p>
+      <h2><span data-i18n="consumers.title">Who reads OTE feeds</span> <a class="heading-anchor" href="#consumers" aria-label="Link to this section" data-i18n-aria="a11y.sectionLink">#</a></h2>
+      <p class="section-lead" data-i18n="consumers.lead">Two different things, kept apart on purpose: the directories and aggregators that already ingest your events, and the tools anyone can use to read an OTE feed.</p>
+      <h3 class="group-title" data-i18n="consumers.groups.ingesting">Who ingests or integrates OTE sources</h3>
       <div id="consumers-list" class="logo-grid"></div>
       <div class="empty-cta" id="consumers-empty" hidden>
         <p data-i18n="consumers.empty">Building a directory, a newsletter or a bot? Consume OTE feeds and get listed here.</p>
@@ -460,6 +440,12 @@
           <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/issues/new?title=%5BConsumer%5D%20" data-i18n="consumers.emptyCta">Add your project</a>
           <a class="btn btn-ghost" href="/developers/" data-i18n="consumers.devDocs">Developer docs</a>
         </div>
+      </div>
+
+      <h3 class="group-title" data-i18n="consumers.groups.tools">Tools that read OTE feeds</h3>
+      <div id="consumer-tools-list" class="logo-grid"></div>
+      <div class="empty-cta" id="consumer-tools-empty" hidden>
+        <p data-i18n="consumers.empty">Building a directory, a newsletter or a bot? Consume OTE feeds and get listed here.</p>
       </div>
 
       <div id="testimonials" class="testimonials"></div>
@@ -493,6 +479,17 @@
     <div class="wrap">
       <h2><span data-i18n="support.title">Ways to help that aren't publishing a feed</span> <a class="heading-anchor" href="#support" aria-label="Link to this section" data-i18n-aria="a11y.sectionLink">#</a></h2>
       <p class="section-lead" data-i18n="support.lead">Publishing a feed is the biggest step, and it isn't the first one. A spec this early needs people who break it, people who talk about it, and people who say out loud that they'd use it — that last one is what makes a directory decide the format is worth reading. Pick whichever costs you least.</p>
+
+      <aside class="contribute">
+        <div>
+          <h3 data-i18n="docs.contrib.title">Something doesn't fit your community?</h3>
+          <p data-i18n="docs.contrib.body">Then the spec is wrong, not your community. It's still a draft precisely so that organisers can push back before anything is set in stone — a missing field, a format that breaks your case, a name that makes no sense. Say so in an issue.</p>
+        </div>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://github.com/OpenTechEvents/opentechevents-spec/issues" data-i18n="docs.contrib.cta">Open an issue</a>
+          <a class="btn btn-ghost" href="https://github.com/OpenTechEvents/opentechevents-spec/blob/main/CONTRIBUTING.md" data-i18n="docs.contrib.cta2">How to contribute</a>
+        </div>
+      </aside>
 
       <div class="support-grid">
         <a class="support-card" href="https://github.com/OpenTechEvents/opentechevents-spec/issues/new?template=supporter.yml">
@@ -550,21 +547,15 @@
       <p class="support-badge-note" data-i18n="support.talk">Prefer talking to writing? <a href="https://calendar.app.google/ZQuRkVw53h8nC2uQA">Book twenty minutes</a> — and if no slot suits you, <a href="https://github.com/OpenTechEvents/opentechevents-spec/discussions">say so in a discussion</a> and we'll find one.</p>
       <p class="support-badge-note" data-i18n="support.badge">Already backing it? Put a <a href="https://github.com/OpenTechEvents/opentechevents-spec/tree/main/docs/badge">badge in your README</a> — it's the cheapest way to tell the next community this exists.</p>
 
-      <h3 class="support-wall-title" data-i18n="support.wall.title">Who's backing it</h3>
-      <div id="supporters-list" class="logo-grid"></div>
-      <div class="empty-cta" id="supporters-empty" hidden>
-        <p data-i18n="support.wall.empty">Nobody listed here yet — the honest state of a project this young. Being early is visible: this list is short, and it's public.</p>
-        <a class="btn btn-primary" href="https://github.com/OpenTechEvents/opentechevents-spec/issues/new?template=supporter.yml" data-i18n="support.wall.emptyCta">Add your name</a>
+      <div class="support-wall" id="support-wall" hidden>
+        <h3 class="support-wall-title" data-i18n="support.wall.title">Who's backing it</h3>
+        <div id="supporters-list" class="logo-grid"></div>
+        <div class="empty-cta" id="supporters-empty" hidden>
+          <p data-i18n="support.wall.empty">Nobody listed here yet — the honest state of a project this young. Being early is visible: this list is short, and it's public.</p>
+          <a class="btn btn-primary" href="https://github.com/OpenTechEvents/opentechevents-spec/issues/new?template=supporter.yml" data-i18n="support.wall.emptyCta">Add your name</a>
+        </div>
+        <p class="data-note" data-i18n="support.wall.machine">This list is data too: it renders <a href="/data/supporters.json"><code>supporters.json</code></a>. Pledges, endorsements, ambassadors and offers of help — listed separately from <a href="#adopters">who already publishes</a>, because promising and shipping are not the same thing.</p>
       </div>
-      <p class="data-note" data-i18n="support.wall.machine">This list is data too: it renders <a href="/data/supporters.json"><code>supporters.json</code></a>. Pledges, endorsements, ambassadors and offers of help — listed separately from <a href="#adopters">who already publishes</a>, because promising and shipping are not the same thing.</p>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="section" id="faq">
-    <div class="wrap wrap-narrow">
-      <h2><span data-i18n="faq.title">Frequently asked questions</span> <a class="heading-anchor" href="#faq" aria-label="Link to this section" data-i18n-aria="a11y.sectionLink">#</a></h2>
-      <div id="faq-list" class="faq"></div>
     </div>
   </section>
 

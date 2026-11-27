@@ -83,9 +83,13 @@ a:hover { text-decoration: underline; }
 }
 .brand-name { font-size: .98rem; }
 
-/* Tight on purpose: nine entries in Spanish need ~1230px, and the header .wrap caps at
-   1120 — the nav bleeds into the right margin rather than squeezing anything. Below the
-   1340px breakpoint it collapses instead, which is what keeps the toggle on screen. */
+/* The top row is five entries plus GitHub. It was nine, which in Spanish needed ~1230px
+   against a header .wrap that caps at 1120 — the nav bled into the right margin rather
+   than squeezing anything. The five documentation pages now live in the Docs group below,
+   so the row fits: measured in Spanish, the longer of the two, brand + nav + language switch
+   need 939px of header content. That is what let the collapse breakpoint drop from 1340px to
+   1000px — a laptop no longer gets the mobile hamburger. Keep that number in sync with the
+   media query below and with nav.js. */
 .nav { display: flex; align-items: center; gap: 2px; margin-left: auto; font-size: .92rem; }
 .nav a {
   color: var(--ink-soft); font-weight: 500; white-space: nowrap;
@@ -100,6 +104,37 @@ a:hover { text-decoration: underline; }
   color: var(--ink) !important; font-weight: 600 !important;
   margin-left: 8px; border-left: 1px solid var(--line); border-radius: 0 7px 7px 0;
 }
+
+/* Docs group — Examples, Reference, Developers, Extensions and Prior art. Five flat links
+   in the header weighed five times "Adopt it", which is the one thing the header is for.
+   The panel's links stay in the served HTML (display: none, not a JS-built menu): a nav
+   that only exists after JavaScript is a nav an agent or a crawler never sees. */
+.nav-group { position: relative; display: flex; align-items: center; }
+.nav-group-toggle {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 0; background: none; cursor: pointer;
+  color: var(--ink-soft); font: 500 .92rem/1.2 var(--sans); white-space: nowrap;
+  padding: 7px 9px; border-radius: 7px;
+}
+.nav-group-toggle:hover { color: var(--ink); background: var(--bg-alt); }
+.nav-group.is-open > .nav-group-toggle { color: var(--ink); background: var(--bg-alt); }
+.nav-caret {
+  width: 6px; height: 6px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg); transition: transform .15s ease;
+}
+.nav-group.is-open .nav-caret { transform: translateY(1px) rotate(225deg); }
+.nav-group-panel {
+  display: none; position: absolute; top: calc(100% + 8px); left: 0;
+  min-width: 196px; flex-direction: column; gap: 2px; padding: 8px;
+  background: #fff; border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: 0 16px 32px -16px rgba(16, 19, 26, .24);
+}
+.nav-group.is-open > .nav-group-panel { display: flex; }
+/* is-current = one of the five pages in the group is the page you are on. It highlights the
+   group the way aria-current highlights a link, and it does NOT open the panel here: a menu
+   that unfolds over the page on load is noise. Inside the collapsed nav it does expand it
+   (below), because there the panel costs nothing and hiding the current page would. */
+.nav-group.is-current > .nav-group-toggle { color: var(--accent-ink); background: var(--accent-soft); font-weight: 600; }
 
 /* margin-left: auto lives here too (not just on .nav): once .nav leaves flex flow behind
    .nav-toggle on mobile, .lang still needs to anchor itself — and whatever follows it — right. */
@@ -241,7 +276,12 @@ t { color: #e08a6b; }
 .section-dark { background: var(--bg-dark); color: #d5dae4; }
 .section-dark h2, .section-dark h3, .section-dark strong { color: #fff; }
 .heading-anchor { color: var(--ink-faint); text-decoration: none; font-weight: 500; opacity: 0; }
-h2:hover .heading-anchor, .heading-anchor:focus-visible { opacity: 1; }
+h1:hover .heading-anchor, h2:hover .heading-anchor, .heading-anchor:focus-visible { opacity: 1; }
+
+/* /why/ opens on a section heading promoted to <h1> — the page needed a first-level heading
+   and the alternative was inventing a title for prose that already had one. Sized between a
+   section h2 and the hero's h1: it is the page title, not a hero. */
+.section h1 { font-size: clamp(1.75rem, 3.4vw, 2.5rem); }
 .heading-anchor:hover, .heading-anchor:focus-visible { color: var(--accent); text-decoration: none; }
 .heading-anchor:focus-visible { outline: 3px solid #80a1ff; outline-offset: 3px; border-radius: 2px; }
 .section-dark .heading-anchor { color: #b5c7f5; }
@@ -329,6 +369,9 @@ p > code, li > code {
   background: #fff; border: 1px solid var(--line); border-left: 3px solid var(--accent);
   border-radius: 0 var(--radius) var(--radius) 0;
 }
+/* In #support it introduces the ten cards rather than closing a section, so it needs the
+   gap below that a closing aside never did. */
+#support .contribute { margin-bottom: 28px; }
 .contribute h3 { margin-bottom: .35em; }
 .contribute p { margin: 0; color: var(--ink-soft); font-size: .95rem; max-width: 46em; }
 .contribute .cta-row { margin-top: 0; flex: none; }
@@ -343,7 +386,9 @@ p > code, li > code {
   font: 600 .78rem/1 var(--mono); letter-spacing: .04em; text-transform: uppercase;
   color: #7fb3ff; margin-bottom: 12px;
 }
-.shortcut h3 { margin-bottom: .5em; }
+/* Colour stated here, not inherited: the card is dark wherever it sits, and on /why/ it
+   no longer sits inside .section-dark. */
+.shortcut h3 { margin-bottom: .5em; color: #fff; }
 .shortcut p { color: #9aa3b4; font-size: .96rem; max-width: 62em; }
 .shortcut-caveat {
   margin: 18px 0 0; padding: 14px 16px; border-radius: 8px;
@@ -383,6 +428,124 @@ p > code, li > code {
 }
 
 /* ---------- logo grid (adopters / consumers) ---------- */
+/* The proof band: the three measured figures, full width, directly under the hero. Dark on
+   purpose — it is the one place on the page carrying evidence rather than argument, and the
+   break in rhythm is what makes a scroll stop there. Values are filled by app.js from
+   feed-health.json; the band ships hidden and never carries a literal in the markup. */
+.proof { background: var(--bg-dark); color: #d5dae4; padding: 38px 0; }
+.proof-stats {
+  /* Auto columns, not repeat(3): a figure whose measurement failed is hidden (see
+     renderProofStats), and a fixed three-column band would keep its empty slot. */
+  display: grid; grid-auto-flow: column; grid-auto-columns: 1fr;
+  margin: 0;
+}
+/* Grid rather than column-reverse: the rows are what keep the three numbers on one baseline
+   when a label wraps to two lines, and placing <dd> in row 1 reorders the pair visually while
+   the DOM order stays <dt> then <dd>. */
+.proof-stat {
+  display: grid; grid-template-rows: auto auto; gap: 6px;
+  justify-items: center; text-align: center; padding: 0 18px;
+}
+.proof-stat dd { grid-row: 1; }
+.proof-stat dt { grid-row: 2; }
+.proof-stat + .proof-stat { border-left: 1px solid rgba(255, 255, 255, .12); }
+.proof-stat dd {
+  margin: 0; font: 700 clamp(2.3rem, 4.6vw, 3.2rem)/1 var(--sans); letter-spacing: -.03em;
+  color: #fff;
+  /* Tabular figures, or every tick of the count-up in app.js reflows the label under it. */
+  font-variant-numeric: tabular-nums;
+}
+.proof-stat dt {
+  font-size: .78rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+  color: #9aa6b8; max-width: 14em;
+}
+@media (max-width: 760px) {
+  /* Three columns at phone width give each number ~100px and break the longest label onto
+     four lines; stacked, each figure keeps its full line. */
+  .proof { padding: 28px 0; }
+  .proof-stats { grid-auto-flow: row; grid-auto-columns: auto; gap: 22px; }
+  .proof-stat + .proof-stat { border-left: 0; border-top: 1px solid rgba(255, 255, 255, .12); padding-top: 22px; }
+}
+
+/* The half of step 1 that is instructions rather than a choice: what the file looks like and
+   how to serve it. Boxed and labelled because three of the four paths leave the file in your
+   hands and one does not — without the frame, a reader coming from eventos.wiki could not tell
+   which of the two halves was still addressed to them. */
+.path-manual {
+  margin-top: 26px; padding: 20px 20px 4px;
+  border: 1px dashed rgba(255, 255, 255, .2); border-radius: var(--radius);
+}
+.path-manual > h4 { margin: 0 0 6px; font-size: 1rem; color: #fff; }
+.path-manual > p { margin: 0 0 18px; color: #aab4c4; font-size: .92rem; max-width: 52em; }
+
+/* Same pill as .step-optional, different claim: this step is the same for everyone. */
+.step-any {
+  font-size: .7rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+  color: #9aa6b8; border: 1px solid rgba(255, 255, 255, .22);
+  padding: 3px 8px; border-radius: 999px; vertical-align: middle; white-space: nowrap;
+}
+
+/* "optional" next to a step number: the fourth step is a recommendation, and a numbered
+   item that looks mandatory would be the page overstating what adopting costs. */
+.step-optional {
+  font-size: .7rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+  color: #9aa6b8; border: 1px solid rgba(255, 255, 255, .22);
+  padding: 3px 8px; border-radius: 999px; vertical-align: middle;
+}
+
+/* The four ways to produce the feed, inside step 1 — the only step they change. Cards for
+   the shape of each choice, table for comparing them without clicking four times: the
+   differences here are factual, and chips would hide exactly what a reader came to compare.
+   Lives on .section-dark, hence the translucent surfaces rather than #fff. */
+.paths { margin: 26px 0 30px; }
+.paths > h4 { margin: 0 0 6px; font-size: 1.05rem; color: #fff; }
+.paths > p { margin: 0 0 20px; color: #aab4c4; font-size: .95rem; max-width: 52em; }
+
+.path-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.path {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 18px 18px 16px;
+  background: rgba(255, 255, 255, .04); border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: var(--radius);
+}
+.path h4 { margin: 0; font-size: .98rem; color: #fff; }
+.path p { margin: 0; font-size: .88rem; line-height: 1.5; }
+.path-body { color: #c3cbd8; }
+/* The trade-off is the point of the card, so the two sides are marked, not just listed. */
+.path-pro, .path-con { padding-left: 18px; position: relative; color: #aab4c4; }
+.path-pro::before, .path-con::before {
+  position: absolute; left: 0; font-weight: 700;
+}
+.path-pro::before { content: "+"; color: #6ee7a8; }
+.path-con::before { content: "−"; color: #f0a98c; }
+.path .link-arrow { margin-top: auto; padding-top: 6px; color: #9db8ff; font-size: .88rem; }
+
+/* Horizontal scroll belongs to the table, never to the page. */
+.path-table-scroll { margin-top: 22px; overflow-x: auto; }
+.path-table { width: 100%; border-collapse: collapse; font-size: .88rem; min-width: 640px; }
+.path-table caption {
+  text-align: left; padding-bottom: 10px; color: #aab4c4;
+  font-size: .78rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+}
+.path-table th, .path-table td {
+  padding: 10px 14px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, .1);
+}
+.path-table thead th { color: #fff; font-size: .9rem; }
+.path-table tbody th { font-weight: 500; color: #aab4c4; }
+.path-table tbody td { color: #e4e9f1; }
+.path-table tbody tr:last-child th, .path-table tbody tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 980px) {
+  .path-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .path-grid { grid-template-columns: 1fr; }
+}
+
+/* Group heading inside a section that renders two different lists (see #consumers). */
+.group-title { margin: 30px 0 14px; font-size: 1.05rem; }
+.group-title:first-of-type { margin-top: 22px; }
+
 .logo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
 .entry {
   position: relative; display: flex; gap: 14px; align-items: flex-start;
@@ -422,6 +585,21 @@ p > code, li > code {
 .entry-adopter:hover { border-color: #91a9df; background: var(--accent-soft); }
 .entry-adopter .entry-logo { width: min(100%, 132px); height: 60px; border-radius: 0; background: transparent; }
 .entry-adopter .entry-metas { justify-content: center; margin: 0; }
+/* A consumer card carries a logo, a name and a type, and opens its description in a
+   dialog — same affordance as an adopter card, which is also a button. */
+.entry-consumer {
+  display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;
+  font: inherit; cursor: pointer; appearance: none;
+}
+.entry-consumer:hover { border-color: var(--accent); background: var(--accent-soft); }
+.entry-consumer .entry-name { font-weight: 600; font-size: .95rem; color: var(--ink); }
+
+.entry-dialog { max-width: 38rem; }
+.entry-dialog-content { padding: 0 26px 26px; }
+.entry-dialog-content p { margin: 0 0 16px; color: var(--ink-soft); }
+.entry-dialog-content .link-arrow { display: inline-block; }
+.entry-dialog-content .feed-dialog-trigger { display: block; margin-top: 18px; }
+
 .feed-dialog-trigger, .feed-dialog-close {
   cursor: pointer; border: 1px solid #cbd5e1; border-radius: 7px;
   padding: 9px 12px; background: var(--bg); color: var(--accent-ink);
@@ -773,7 +951,7 @@ p > code, li > code {
 .ask-ai-close:hover { border-color: var(--line); color: var(--ink); }
 
 /* ---------- responsive ---------- */
-@media (max-width: 1340px) {
+@media (max-width: 1000px) {
   .nav-toggle { display: inline-flex; }
 
   /* .site-header (sticky) is the positioned ancestor, so left/right span the full header
@@ -791,6 +969,24 @@ p > code, li > code {
   .nav-repo {
     margin: 6px 0 0; padding-top: 16px;
     border-left: 0; border-top: 1px solid var(--line); border-radius: 8px;
+  }
+  /* Inside the collapsed nav the group is a row like any other, and its panel opens in
+     flow instead of floating over it — a popover anchored inside a scrolling panel ends
+     up clipped by it. It stays collapsible here too, rather than being flattened into a
+     decorative label: a button that looks interactive and does nothing is worse than one
+     more tap. The five docs pages ship with the group already open (see the generator in
+     the nav markup), so the page you are on is never hidden behind that tap. */
+  .nav-group { flex-direction: column; align-items: stretch; }
+  .nav-group-toggle {
+    justify-content: space-between; padding: 12px 10px; font-size: 1rem; border-radius: 8px;
+  }
+  .nav-group.is-current > .nav-group-panel { display: flex; }
+  /* ...and the caret has to agree with it: the panel is open, so it points up. */
+  .nav-group.is-current .nav-caret { transform: translateY(1px) rotate(225deg); }
+  .nav-group-panel {
+    position: static; padding: 0 0 4px 12px; min-width: 0;
+    border: 0; border-left: 2px solid var(--line); border-radius: 0;
+    margin-left: 10px; box-shadow: none; background: none;
   }
 }
 @media (max-width: 980px) {

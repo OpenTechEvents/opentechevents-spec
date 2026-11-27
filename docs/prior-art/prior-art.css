@@ -7,6 +7,27 @@
 
 .pa-intro { color: var(--ink-soft); margin-top: 28px; }
 
+/* The offer to the projects listed below: contribute events to them, or help them read and
+   publish OTE. Set apart from the section lead because it is addressed to them, not to the
+   reader deciding whether to adopt. */
+.pa-collab {
+  margin: 16px 0 0; padding: 16px 18px;
+  background: var(--accent-soft); border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  color: var(--accent-ink); font-size: .95rem;
+}
+
+/* The Bioschemas precedent, moved off the landing page. Same card as .contribute on the
+   home page rather than a .pull: it is an aside about someone else's project, not this
+   page raising its voice. */
+.pa-precedent {
+  margin: 34px 0 0; padding: 24px 26px;
+  background: #fff; border: 1px solid var(--line); border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.pa-precedent h2 { margin: 0 0 .4em; font-size: clamp(1.25rem, 2.2vw, 1.5rem); }
+.pa-precedent p { margin: 0; color: var(--ink-soft); font-size: .97rem; }
+
 .pa-section { margin-top: 72px; padding-top: 8px; }
 .pa-section h2 { margin-bottom: .4em; }
 .pa-section-lead { color: var(--ink-soft); max-width: 60em; }

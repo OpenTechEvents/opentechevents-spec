@@ -33,14 +33,24 @@
       <span class="brand-name">OpenTechEvents</span>
     </a>
     <nav class="nav" id="site-nav">
+      <a href="/why/" data-nav="why" data-t="navWhy">Why OTE</a>
       <a href="/#spec" data-nav="spec" data-t="navSpec">How it works</a>
       <a href="/#adopt" data-nav="adopt" data-t="navAdopt">Adopt it</a>
-      <a href="/examples/" data-nav="examples" data-t="navExamples">Examples</a>
-      <a href="/spec/" data-nav="reference" data-t="navReference">Reference</a>
-      <a href="/developers/" data-nav="developers" data-t="navDevelopers">Developers</a>
+      <div class="nav-group is-current" data-nav-group>
+        <button type="button" class="nav-group-toggle" aria-expanded="false" aria-controls="nav-docs">
+          <span data-t="navDocs">Docs</span>
+          <span class="nav-caret" aria-hidden="true"></span>
+        </button>
+        <div class="nav-group-panel" id="nav-docs">
+          <a href="/examples/" data-nav="examples" data-t="navExamples">Examples</a>
+          <a href="/spec/" data-nav="reference" data-t="navReference">Reference</a>
+          <a href="/developers/" data-nav="developers" data-t="navDevelopers">Developers</a>
+          <a href="/extensions/" data-nav="extensions" data-t="navExtensions">Extensions</a>
+          <a href="/prior-art/" data-nav="prior-art" aria-current="page" data-t="navPriorArt">Prior art</a>
+        </div>
+      </div>
       <a href="/#tools" data-nav="tools" data-t="navTools">Tools</a>
-      <a href="/prior-art/" data-nav="prior-art" aria-current="true" data-t="navPriorArt">Prior art</a>
-      <a href="/extensions/" data-nav="extensions" data-t="navExtensions">Extensions</a>
+      <a href="/#support" data-nav="support" data-t="navSupport">Support it</a>
       <a class="nav-repo" href="https://github.com/OpenTechEvents/opentechevents-spec">GitHub</a>
     </nav>
     <div class="lang" role="group" aria-label="Language">
@@ -60,6 +70,13 @@
   <div class="pull" data-t="pull"><strong>OTE exists in an ecosystem, not in a vacuum.</strong> Calendar standards, structured web vocabularies, IndieWeb conventions and federation protocols already solve important parts of this problem. Wherever a concept exists somewhere else, we would rather map to it than invent a second, incompatible version of it. This page is what we read before writing the spec — and an invitation to tell us where we got it wrong.</div>
 
   <p class="pa-intro" data-t="intro">Two things are deliberately kept apart below. <strong>Standards and protocols</strong> are what OTE maps to: they define vocabularies, serialisations and distribution mechanisms. <strong>Aggregators, directories and tools</strong> are software that already ingests event data from somewhere. They are not competing formats, and comparing the two in a single table would be comparing things that live in different layers. The <a href="#layers">layer matrix</a> at the end is there to make those layers explicit.</p>
+
+  <!-- Moved here from the landing page: the precedent belongs with the rest of the
+       neighbourhood, not in the middle of "how it works". -->
+  <aside class="pa-precedent">
+    <h2 data-t="bioschemas.title">We're not inventing the pattern</h2>
+    <p data-t="bioschemas.body"><a href="https://bioschemas.org" target="_blank" rel="noopener">Bioschemas</a> does something similar in the life sciences: it starts from schema.org, defines profiles over existing types saying which properties are required, recommended or optional, and gets research resources found on the web. OTE does the same for tech community events — and adds iCalendar and RSS to the mix, plus a feed anyone can discover. We're not a schema.org adoption project; but every feed published in OTE puts valid <code>schema.org/Event</code> markup within arm's reach of one more site, at close to zero extra cost. We'll take that side effect.</p>
+  </aside>
 
   <!-- ============ 1. Standards ============ -->
   <section class="pa-section" id="standards">
@@ -87,7 +104,7 @@
     <article class="pa-std">
       <div class="pa-std-head">
         <h3 data-t="schema.name">schema.org / <code>Event</code> <span class="pa-rfc">JSON-LD</span></h3>
-        <span class="badge badge-wip" data-t="badge.half">Import shipped, export proposed</span>
+        <span class="badge badge-working" data-t="badge.shipped">Mapping shipped</span>
       </div>
       <dl class="pa-dl">
         <dt data-t="lbl.solves">Solves</dt>
@@ -97,9 +114,24 @@
         <dt data-t="lbl.adds">OTE adds</dt>
         <dd data-t="schema.adds">A <em>feed</em>. schema.org describes one event inside one HTML page; there is no notion of "all of this community's events" you can subscribe to without scraping. OTE adds the container (one URL, N events, an <code>updatedAt</code>), a small <strong>validatable</strong> core with real JSON Schemas — schema.org ships a huge and almost entirely optional vocabulary with no validation — plus CFP and a data licence.</dd>
         <dt data-t="lbl.stand">Where we stand</dt>
-        <dd data-t="schema.stand"><a href="https://www.npmjs.com/package/@opentechevents/import-jsonld"><code>import-jsonld</code></a> is published and extracts <code>Event</code> JSON-LD from real pages. The exporter (OTE → <code>schema.org/Event</code>) is still <em>proposed</em>, not built — see the <a href="/#tools">tools section</a>. Until it exists, "maps 1:1" is a claim backed by the field survey, not by running code.</dd>
+        <dd data-t="schema.stand"><a href="https://www.npmjs.com/package/@opentechevents/import-jsonld"><code>import-jsonld</code></a> extracts <code>Event</code> JSON-LD from real pages, and <a href="https://www.npmjs.com/package/@opentechevents/export-jsonld"><code>export-jsonld</code></a> goes the other way â as a library, as a CLI and inside the <a href="https://convert.opentechevents.org/">Converter</a>, which will give you the <code>&lt;script type="application/ld+json"&gt;</code> for a feed or for a single event. So "maps 1:1" is now backed by running code in both directions, which is what we said we were waiting for.</dd>
       </dl>
       <p class="pa-links"><a href="https://schema.org/Event">schema.org/Event</a></p>
+    </article>
+
+    <article class="pa-std">
+      <div class="pa-std-head">
+        <h3 data-t="rss.name">RSS 2.0 &amp; JSON Feed</h3>
+        <span class="badge badge-working" data-t="badge.export">Export shipped</span>
+      </div>
+      <dl class="pa-dl">
+        <dt data-t="lbl.solves">Solves</dt>
+        <dd data-t="rss.solves">Syndication as a settled problem: one URL, many items, subscribers pull. Readers, bots and newsletters already speak it.</dd>
+        <dt data-t="lbl.nots">What they don't do</dt>
+        <dd data-t="rss.nots">Model an event. There is no start date, no end date, no venue, no timezone — an event is just an <code>&lt;item&gt;</code> with a title and a link. They are a distribution format, not a data model.</dd>
+        <dt data-t="lbl.stand">Where we stand</dt>
+        <dd data-t="rss.stand"><a href="https://www.npmjs.com/package/@opentechevents/export-rss"><code>export-rss</code></a> is published: an OTE feed becomes RSS or JSON Feed, one event per item, with the structured data carried alongside and a link back to the full entry.</dd>
+      </dl>
     </article>
 
     <article class="pa-std">
@@ -137,27 +169,13 @@
       </dl>
       <p class="pa-links"><a href="https://event-federation.eu/">event-federation.eu</a> · <a href="https://nlnet.nl/project/Fediverse-event-interop/">NLnet project</a> · <a href="https://socialhub.activitypub.rocks/t/events-interoperability-validation-minimum-requirements-common-extensions/3849">SocialHub discussion</a></p>
     </article>
-
-    <article class="pa-std">
-      <div class="pa-std-head">
-        <h3 data-t="rss.name">RSS 2.0 &amp; JSON Feed</h3>
-        <span class="badge badge-working" data-t="badge.export">Export shipped</span>
-      </div>
-      <dl class="pa-dl">
-        <dt data-t="lbl.solves">Solves</dt>
-        <dd data-t="rss.solves">Syndication as a settled problem: one URL, many items, subscribers pull. Readers, bots and newsletters already speak it.</dd>
-        <dt data-t="lbl.nots">What they don't do</dt>
-        <dd data-t="rss.nots">Model an event. There is no start date, no end date, no venue, no timezone — an event is just an <code>&lt;item&gt;</code> with a title and a link. They are a distribution format, not a data model.</dd>
-        <dt data-t="lbl.stand">Where we stand</dt>
-        <dd data-t="rss.stand"><a href="https://www.npmjs.com/package/@opentechevents/export-rss"><code>export-rss</code></a> is published: an OTE feed becomes RSS or JSON Feed, one event per item, with the structured data carried alongside and a link back to the full entry.</dd>
-      </dl>
-    </article>
   </section>
 
   <!-- ============ 2. Projects ============ -->
   <section class="pa-section" id="projects">
     <h2 data-t="s2.title">2 · Aggregators, directories and tools</h2>
     <p class="pa-section-lead" data-t="s2.lead">Projects solving the same problem from the consuming end. None of these is a competing format; several are the reason a format would be worth having. We describe them in a couple of sentences and link out — deliberately no adoption metrics, because we have not measured any and star counts are not adoption. <strong>If your project is here and we got it wrong, correct us</strong> — every card links to an issue.</p>
+    <p class="pa-collab" data-t="s2.collab"><strong>We would rather work with these projects than past them.</strong> Two concrete offers, for any of them: we can contribute events into your directory â that is what the <a href="https://tools.opentechevents.org/publish/">publishing assistant</a> is for â and we can help you read OTE feeds, or publish your own, so whatever you already aggregate becomes reusable by everyone else. Neither requires you to adopt anything as your internal model. Open an issue, or ask us to open it.</p>
 
     <div class="pa-grid">
 

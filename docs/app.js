@@ -2,6 +2,16 @@
 (function () {
   'use strict';
 
+  /* #problem, #benefits and #faq moved to /why/ when the landing was restructured. Old
+     bookmarks and external links still carry those fragments, and a fragment that matches
+     nothing scrolls nowhere without saying why — so they are forwarded. The querySelector
+     check means this costs nothing the day a section comes back to the home page. */
+  var MOVED_TO_WHY = ['#problem', '#benefits', '#faq', '#shortcut'];
+  if (MOVED_TO_WHY.indexOf(location.hash) !== -1 && !document.querySelector(location.hash)) {
+    location.replace('/why/' + location.hash);
+    return;
+  }
+
   var SUPPORTED = ['en', 'es'];
   var FALLBACK = 'en';
   var STORAGE_KEY = 'ote-lang';
@@ -940,6 +950,74 @@
     });
   }
 
+  /* The card for a consumer is a logo, a name and a type, and nothing else: the entries are
+     a directory, a widget and a reader, and the one-line descriptions they carry turned the
+     grid into seven paragraphs nobody read. The description is still there — it opens on
+     click, which is also where the feed actions live for an entry that publishes one. */
+  function openEntryDialog(item, trigger) {
+    var dict = state.dict.feedDialog;
+    var dialog = el('dialog', 'feed-dialog entry-dialog');
+    dialog.setAttribute('aria-labelledby', 'entry-dialog-title');
+    dialog.setAttribute('closedby', 'any');
+
+    var title = el('h2', null, item.name);
+    title.id = 'entry-dialog-title';
+    // Opens on the heading, not on "Close": the first thing announced should be what this is.
+    title.tabIndex = -1;
+    title.autofocus = true;
+    var close = el('button', 'feed-dialog-close', dict.close);
+    close.type = 'button';
+    close.addEventListener('click', function () { dialog.close(); });
+    var heading = el('div', 'feed-dialog-heading');
+    heading.append(title, close);
+    var header = el('div', 'feed-dialog-header');
+    header.appendChild(heading);
+
+    var metas = el('div', 'entry-metas');
+    var kind = entryKind(item);
+    if (kind) metas.appendChild(el('span', 'entry-meta', kind));
+    if (item.consumes === 'planned') {
+      var soon = el('span', 'entry-meta entry-badge entry-badge-planned',
+        get(state.dict, 'consumers.planned') || 'Coming soon');
+      var soonTitle = get(state.dict, 'consumers.plannedTitle');
+      if (soonTitle) soon.title = soonTitle;
+      metas.appendChild(soon);
+    }
+    if (metas.childNodes.length) header.appendChild(metas);
+    dialog.appendChild(header);
+
+    var content = el('div', 'entry-dialog-content');
+    if (item.desc) content.appendChild(el('p', null, t(item.desc)));
+    // The hostname is the link text, as in the feed dialog: no string to translate, and it
+    // says where the click goes before it is clicked.
+    if (item.url) {
+      var site = el('a', 'link-arrow', new URL(item.url).hostname);
+      site.href = item.url;
+      site.target = '_blank';
+      site.rel = 'noopener';
+      content.appendChild(site);
+    }
+    // An entry that publishes a feed gets the same actions as in the adopters grid, one
+    // dialog at a time: this one closes before the feed dialog opens over it.
+    if (item.feed) {
+      var explore = el('button', 'feed-dialog-trigger', get(state.dict, 'adopters.feedActions'));
+      explore.type = 'button';
+      explore.addEventListener('click', function () {
+        dialog.close();
+        openFeedDialog(item, trigger);
+      });
+      content.appendChild(explore);
+    }
+    dialog.appendChild(content);
+
+    dialog.addEventListener('close', function () {
+      dialog.remove();
+      if (trigger.isConnected) trigger.focus({ preventScroll: true });
+    });
+    document.body.appendChild(dialog);
+    dialog.showModal();
+  }
+
   function renderEntries(items, containerId, emptyId) {
     var container = document.getElementById(containerId);
     var empty = document.getElementById(emptyId);
@@ -953,9 +1031,12 @@
     container.hidden = false;
     empty.hidden = true;
 
+    var consumer = containerId === 'consumers-list' || containerId === 'consumer-tools-list';
+
     items.forEach(function (item) {
       var compact = containerId === 'adopters-list' && item.feed;
-      var card = el(compact ? 'button' : 'div', compact ? 'entry entry-adopter' : 'entry');
+      var card = el(compact || consumer ? 'button' : 'div',
+        compact ? 'entry entry-adopter' : consumer ? 'entry entry-consumer' : 'entry');
 
       if (item.logo) {
         var img = el('img', 'entry-logo');
@@ -983,6 +1064,29 @@
         var countBadge = el('span', 'entry-meta entry-badge', count);
         countBadge.title = eventCountHint(item);
         metas.appendChild(countBadge);
+      }
+
+      if (consumer) {
+        // Type only — no event count, no licence, no spec version. Those belong to the
+        // adopters grid, where the question is "can I subscribe to this"; here the question
+        // is "who is this", and the rest is one click away in the dialog.
+        var consumerMetas = el('span', 'entry-metas');
+        if (kind) consumerMetas.appendChild(el('span', 'entry-meta', kind));
+        // The one badge that stays on the card: "planned" is a truth claim, not detail.
+        // Hidden behind a click, two intentions would read as reach that already exists.
+        if (item.consumes === 'planned') {
+          var planned = el('span', 'entry-meta entry-badge entry-badge-planned',
+            get(state.dict, 'consumers.planned') || 'Coming soon');
+          var plannedTitle = get(state.dict, 'consumers.plannedTitle');
+          if (plannedTitle) planned.title = plannedTitle;
+          consumerMetas.appendChild(planned);
+        }
+        card.type = 'button';
+        card.setAttribute('aria-haspopup', 'dialog');
+        card.append(el('span', 'entry-name', item.name), consumerMetas);
+        card.addEventListener('click', function () { openEntryDialog(item, card); });
+        container.appendChild(card);
+        return;
       }
 
       if (compact) {
@@ -1062,11 +1166,17 @@
       }).join(' · ');
       return Object.assign({}, item, { kind: label || undefined });
     });
+    /* The wall stays out of the document while supporters.json is empty. Its copy and its
+       empty state are untouched below: an empty registry is honest in a file and corrosive
+       on a page that, three screens earlier, shows nine communities already publishing. */
+    var wall = document.getElementById('support-wall');
+    if (wall) wall.hidden = labelled.length === 0;
     renderEntries(labelled, 'supporters-list', 'supporters-empty');
   }
 
   function renderTestimonials(items) {
     var container = document.getElementById('testimonials');
+    if (!container) return;
     container.replaceChildren();
     if (!items || !items.length) return;
 
@@ -1090,6 +1200,81 @@
       fig.appendChild(cap);
       container.appendChild(fig);
     });
+  }
+
+  /* The three figures under the adopters heading. Every one of them is measured, not
+     written: eventCount and subscribableFeeds come from feed-health.json (rewritten daily by
+     scripts/check-feeds.mjs), the publisher count from adopters.json. If the health file
+     fails to load the row stays hidden rather than showing a stale or invented number —
+     a wrong figure here costs more than a missing one.
+
+     "Feeds" is deliberately not the number of publishers: two of the nine are directories
+     that serve a feed per conference, per edition or per organisation, so what a person can
+     actually subscribe to is an order of magnitude bigger than who publishes. check-feeds.mjs
+     samples those derived URLs daily and reports null if they stop answering, and a null here
+     drops that one figure instead of substituting a smaller true-looking number. */
+  function renderProofStats() {
+    var row = document.getElementById('proof-stats');
+    if (!row) return;
+    var adopters = (state.data.adopters && state.data.adopters.adopters) || [];
+    var feeds = (state.data.health && state.data.health.feeds) || [];
+    if (!adopters.length || !feeds.length) {
+      row.hidden = true;
+      return;
+    }
+
+    var counted = feeds.filter(function (feed) { return typeof feed.eventCount === 'number'; });
+    var events = counted.reduce(function (sum, feed) { return sum + feed.eventCount; }, 0);
+    var unmeasured = feeds.some(function (feed) { return typeof feed.subscribableFeeds !== 'number'; });
+    var subscribable = unmeasured ? null : feeds.reduce(function (sum, feed) {
+      return sum + feed.subscribableFeeds;
+    }, 0);
+
+    var values = {
+      publishers: adopters.length,
+      events: events,
+      feeds: subscribable
+    };
+    row.querySelectorAll('.proof-stat').forEach(function (stat) {
+      var value = values[stat.querySelector('[data-stat]').dataset.stat];
+      stat.hidden = value === null;
+      if (value !== null) countUp(stat.querySelector('[data-stat]'), value);
+    });
+    row.hidden = false;
+  }
+
+  /* Counts up to the figure once the row is on screen. The number is the point of the band,
+     and a number that lands is read; one that is simply there is scenery. Three guards keep
+     it from being decoration that costs something: it runs once, it is skipped entirely for
+     anyone who asked for reduced motion, and the final value is written synchronously first
+     so the DOM never holds a half-count — what a screenshot, a crawler or a stopped tab sees
+     is always the real figure. */
+  function countUp(node, value) {
+    var text = value.toLocaleString(state.lang);
+    node.textContent = text;
+    if (node.dataset.counted === String(value)) return;
+    node.dataset.counted = String(value);
+
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced || !('IntersectionObserver' in window) || value <= 0) return;
+
+    var DURATION = 900;
+    var observer = new IntersectionObserver(function (entries, self) {
+      if (!entries.some(function (entry) { return entry.isIntersecting; })) return;
+      self.disconnect();
+      var startedAt;
+      var step = function (now) {
+        if (!startedAt) startedAt = now;
+        var t = Math.min(1, (now - startedAt) / DURATION);
+        // Ease-out: fast enough to read as "counting", slow at the end so the last digits settle.
+        var eased = 1 - Math.pow(1 - t, 3);
+        node.textContent = Math.round(value * eased).toLocaleString(state.lang);
+        if (t < 1) requestAnimationFrame(step);
+        else node.textContent = text;
+      };
+      requestAnimationFrame(step);
+    }, { threshold: 0.6 });
+    observer.observe(node);
   }
 
   function setToolFilter(filter) {
@@ -1165,8 +1350,11 @@
     });
   }
 
+  /* The FAQ lives on /why/ now, and that page has its own script. Guarding instead of
+     dropping the call keeps one renderer for both pages if the section ever comes back. */
   function renderFaq() {
     var container = document.getElementById('faq-list');
+    if (!container) return;
     var items = get(state.dict, 'faq.items') || [];
     container.replaceChildren();
 
@@ -1197,18 +1385,33 @@
     });
   }
 
-  /* "Who consumes OTE data" has no file behind it any more, on purpose: its one entry
-     (the Feed Reader) was a copy of a row in tools.json, which calls itself the canonical
-     tools catalogue — two spellings of one product, one of them bound to go stale. The
-     section is a view over the two registries that CAN be kept true:
-       · tools.json, software whose job is consuming feeds (working ones only — a proposed
-         tool is an idea, and listing it here would promise a reach that doesn't exist yet);
-       · adopters.json entries that declare `consumes`, i.e. an organisation that both
-         publishes and ingests. A directory is the normal case of being in both sections.
-     An entity therefore appears once in the data, with one name and one logo, and twice on
-     the page only when both halves are true of it. */
-  function consumerEntries() {
-    var tools = ((state.data.tools && state.data.tools.tools) || []).filter(function (tool) {
+  /* "Who consumes OTE data" has no file behind it, on purpose: its one entry (the Feed
+     Reader) was a copy of a row in tools.json, which calls itself the canonical tools
+     catalogue — two spellings of one product, one of them bound to go stale. What the
+     section renders is a view over the two registries that CAN be kept true, and it shows
+     them as two groups rather than one list, because they answer different questions:
+
+       · who already INGESTS your events — adopters.json entries declaring `consumes`. This
+         is reach: the reason an organiser cares at all.
+       · what you can READ a feed WITH — tools.json rows whose job is consuming (working
+         ones only: a proposed tool is an idea, and listing it here would promise a reach
+         that doesn't exist yet).
+
+     Mixing them made the section claim more reach than there is: four of the seven entries
+     were widgets and readers, and all four are also listed in #tools below. */
+  function ingestingEntries() {
+    // "planned" sorts last and carries a badge: listing intent as if it were live would
+    // overstate exactly what this group exists to measure.
+    var adopters = ((state.data.adopters && state.data.adopters.adopters) || []).filter(function (a) {
+      return a.consumes === 'live' || a.consumes === 'planned';
+    }).sort(function (a, b) {
+      return (a.consumes === 'planned' ? 1 : 0) - (b.consumes === 'planned' ? 1 : 0);
+    });
+    return withFeedHealth(adopters);
+  }
+
+  function consumingTools() {
+    return ((state.data.tools && state.data.tools.tools) || []).filter(function (tool) {
       // Matched on the English category, the canonical key in tools.json — comparing the
       // translated label would make a reworded es string empty this list without a sound.
       // scripts/validate.mjs fails if nothing in the catalogue matches it any more.
@@ -1216,21 +1419,15 @@
     }).map(function (tool) {
       return { name: t(tool.name), url: tool.url, desc: tool.desc, kind: get(state.dict, 'consumers.kindTool') || 'Tool' };
     });
-    // "planned" sorts last and carries a badge: listing intent as if it were live would
-    // overstate the reach the section exists to show.
-    var adopters = ((state.data.adopters && state.data.adopters.adopters) || []).filter(function (a) {
-      return a.consumes === 'live' || a.consumes === 'planned';
-    }).sort(function (a, b) {
-      return (a.consumes === 'planned' ? 1 : 0) - (b.consumes === 'planned' ? 1 : 0);
-    });
-    return tools.concat(withFeedHealth(adopters));
   }
 
   function renderAll() {
     applyDict();
     adopterCards.clear();
     renderEntries(withFeedHealth((state.data.adopters || {}).adopters), 'adopters-list', 'adopters-empty');
-    renderEntries(consumerEntries(), 'consumers-list', 'consumers-empty');
+    renderEntries(ingestingEntries(), 'consumers-list', 'consumers-empty');
+    renderEntries(consumingTools(), 'consumer-tools-list', 'consumer-tools-empty');
+    renderProofStats();
     renderSupporters((state.data.supporters || {}).supporters);
     renderTestimonials((state.data.testimonials || {}).testimonials);
     renderTools();

@@ -7759,8 +7759,8 @@ Source: docs/data/tools.json — The tools listed on the site: validators, gener
         "es": "Badge SVG estático, al estilo RSS, para hacer visible el feed de una comunidad en un README o en el pie de página — botón completo o solo icono, sin servicio ni paso de build de por medio. Abrir el feed en herramientas compatibles, o convertirlo en un widget embebible, sigue propuesto."
       },
       "category": {
-        "en": "Consume",
-        "es": "Consumir"
+        "en": "Publish",
+        "es": "Publicar"
       },
       "url": "https://github.com/OpenTechEvents/opentechevents-spec/tree/main/docs/badge"
     },

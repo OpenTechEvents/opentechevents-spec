@@ -37,7 +37,43 @@
     // "open" in a layout that no longer has a collapsed state to close it from.
     // Keep this number in sync with the media query in styles.css.
     window.addEventListener("resize", function () {
-      if (window.innerWidth > 1340) close();
+      if (window.innerWidth > 1000) close();
+    });
+  });
+
+  /* The Docs group inside the nav. Its links are in the HTML either way — this only toggles
+     their visibility — so a page with JS disabled loses a dropdown, not five pages. */
+  document.querySelectorAll("[data-nav-group]").forEach(function (group) {
+    var toggle = group.querySelector(".nav-group-toggle");
+    if (!toggle) return;
+
+    function setOpen(open) {
+      group.classList.toggle("is-open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+    }
+
+    toggle.addEventListener("click", function (event) {
+      event.stopPropagation();
+      setOpen(!group.classList.contains("is-open"));
+    });
+
+    // A click anywhere else closes it — but not a click inside the panel, which would
+    // cancel the navigation the link was there for.
+    document.addEventListener("click", function (event) {
+      if (!group.contains(event.target)) setOpen(false);
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && group.classList.contains("is-open")) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    // Tabbing out of the group is a dismissal too: the panel is positioned over the page,
+    // so leaving it open behind a focus ring three links away just obscures content.
+    group.addEventListener("focusout", function (event) {
+      if (!group.contains(event.relatedTarget)) setOpen(false);
     });
   });
 })();
