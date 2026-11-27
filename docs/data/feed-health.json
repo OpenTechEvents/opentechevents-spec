@@ -33,10 +33,19 @@
         },
         "description": "Conference dates and CFP deadlines we track — pick the ones you care about and subscribe",
         "textLanguage": "en",
-        "updatedAt": "2026-11-25T14:53:19+00:00",
+        "updatedAt": "2026-11-26T16:14:14+00:00",
         "covers": {
           "from": "2026-11-26"
         }
+      },
+      "subscribableFeeds": 174,
+      "subscribableSample": {
+        "ok": true,
+        "checked": [
+          "https://confs.rauljimenez.info/conf/a11yconf.json",
+          "https://confs.rauljimenez.info/e/atl-nticaconf-2027.json",
+          "https://confs.rauljimenez.info/e/x-ops-conference-2026.json"
+        ]
       },
       "cors": true,
       "transport": {
@@ -44,8 +53,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=900",
-        "ttfbMs": 333,
-        "totalMs": 348
+        "ttfbMs": 415,
+        "totalMs": 436
       },
       "failureKind": null,
       "failingSince": null,
@@ -73,16 +82,18 @@
         "textLanguages": [],
         "textLanguageEvents": {},
         "description": "Listado curado por la comunidad de conferencias de desarrollo de software celebradas en España: pasadas, presentes y futuras.",
-        "updatedAt": "2026-11-13T17:37:31.206Z"
+        "updatedAt": "2026-11-26T17:29:35.640Z"
       },
+      "subscribableFeeds": 1,
+      "subscribableSample": null,
       "cors": true,
       "transport": {
         "bytes": 468611,
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 166,
-        "totalMs": 208
+        "ttfbMs": 232,
+        "totalMs": 253
       },
       "failureKind": null,
       "failingSince": null,
@@ -100,19 +111,42 @@
       ],
       "eventCount": 58,
       "eventCountCheckedAt": "2026-11-26",
+      "metadata": {
+        "eventLanguages": [],
+        "textLanguages": [
+          "es"
+        ],
+        "textLanguageEvents": {
+          "es": 58
+        },
+        "description": "Eventos y meetups tecnológicos de España publicados en eventos.wiki",
+        "textLanguage": "es",
+        "updatedAt": "2026-11-26T23:52:40.048Z",
+        "covers": {
+          "from": "2026-08-26"
+        }
+      },
+      "subscribableFeeds": 31,
+      "subscribableSample": {
+        "ok": true,
+        "checked": [
+          "https://eventos.wiki/organizations/a11yconf/events.json",
+          "https://eventos.wiki/organizations/genaicommunity/events.json",
+          "https://eventos.wiki/organizations/yay-yay/events.json"
+        ]
+      },
       "cors": true,
       "transport": {
         "bytes": 78350,
         "encoding": null,
         "revalidation": null,
         "cacheControl": "public, max-age=1800",
-        "ttfbMs": 2599,
-        "totalMs": 2781
+        "ttfbMs": 2156,
+        "totalMs": 2236
       },
       "failureKind": null,
       "failingSince": null,
-      "error": null,
-      "metadata": null
+      "error": null
     },
     {
       "name": "HackBarna Digest",
@@ -144,16 +178,18 @@
         "description": "In-person tech, startup and AI meetups, hackathons, conferences and workshops in Barcelona.",
         "textLanguage": "en",
         "translations": {},
-        "updatedAt": "2026-11-26T00:40:44.432Z"
+        "updatedAt": "2026-11-26T23:52:42.695Z"
       },
+      "subscribableFeeds": 1,
+      "subscribableSample": null,
       "cors": true,
       "transport": {
         "bytes": 721030,
         "encoding": null,
         "revalidation": null,
         "cacheControl": "public, max-age=3600",
-        "ttfbMs": 890,
-        "totalMs": 1042
+        "ttfbMs": 1644,
+        "totalMs": 1724
       },
       "failureKind": null,
       "failingSince": null,
@@ -169,7 +205,7 @@
       "licenses": [
         "CC-BY-4.0"
       ],
-      "eventCount": 175,
+      "eventCount": 158,
       "eventCountCheckedAt": "2026-11-26",
       "metadata": {
         "eventLanguages": [
@@ -182,21 +218,23 @@
           "es"
         ],
         "textLanguageEvents": {
-          "en": 175,
-          "es": 175
+          "en": 158,
+          "es": 158
         },
         "description": "Encuentros de IA presenciales, abiertos a cualquiera y gratis o casi.",
         "textLanguage": "es",
-        "updatedAt": "2026-11-25T22:47:38Z"
+        "updatedAt": "2026-11-26T21:55:30Z"
       },
+      "subscribableFeeds": 1,
+      "subscribableSample": null,
       "cors": true,
       "transport": {
-        "bytes": 310415,
+        "bytes": 278935,
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 182,
-        "totalMs": 221
+        "ttfbMs": 365,
+        "totalMs": 387
       },
       "failureKind": null,
       "failingSince": null,
@@ -230,14 +268,16 @@
         },
         "updatedAt": "2026-08-24T04:19:16Z"
       },
+      "subscribableFeeds": 1,
+      "subscribableSample": null,
       "cors": true,
       "transport": {
         "bytes": 76918,
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 105,
-        "totalMs": 107
+        "ttfbMs": 394,
+        "totalMs": 396
       },
       "failureKind": null,
       "failingSince": null,
@@ -270,14 +310,16 @@
         "textLanguage": "es",
         "updatedAt": "2026-11-03T00:00:00Z"
       },
+      "subscribableFeeds": 1,
+      "subscribableSample": null,
       "cors": true,
       "transport": {
         "bytes": 12061,
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 114,
-        "totalMs": 115
+        "ttfbMs": 327,
+        "totalMs": 327
       },
       "failureKind": null,
       "failingSince": null,
@@ -305,14 +347,16 @@
         "description": "Charlas e xuntanzas da comunidade tecnolóxica Cascarilla Tech.",
         "updatedAt": "2026-11-11T13:50:34Z"
       },
+      "subscribableFeeds": 1,
+      "subscribableSample": null,
       "cors": true,
       "transport": {
         "bytes": 28743,
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 330,
-        "totalMs": 332
+        "ttfbMs": 283,
+        "totalMs": 285
       },
       "failureKind": null,
       "failingSince": null,
@@ -347,14 +391,16 @@
           "from": "2024-09-01"
         }
       },
+      "subscribableFeeds": 1,
+      "subscribableSample": null,
       "cors": true,
       "transport": {
         "bytes": 23290,
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 515,
-        "totalMs": 516
+        "ttfbMs": 297,
+        "totalMs": 298
       },
       "failureKind": null,
       "failingSince": null,

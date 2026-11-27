@@ -54,6 +54,93 @@ const BACKOFF_MS = [2000, 6000];
    because the schemas are still here and the feed still works for consumers. */
 const SUPPORT_WINDOW = Number(process.env.FEED_SUPPORT_WINDOW || 3);
 
+/* How many of a directory's derived sub-feeds are fetched to prove they exist. Three is
+   enough to catch a changed URL scheme, which is the realistic failure, and cheap enough to
+   run daily against someone else's server. Deterministic sample (first, middle, last), not
+   random: a count that changes because the dice changed is a count nobody can reproduce. */
+const SUBFEED_SAMPLE = Number(process.env.FEED_SUBFEED_SAMPLE || 3);
+
+/* ---------- directory feeds ---------- */
+
+/* Some adopters publish one feed; a directory publishes hundreds. confwatch serves a feed per
+   conference and per edition, eventos.wiki one per organisation, and those URLs are not listed
+   anywhere — they are derived from the directory's own document, by the same rules the site
+   applies in docs/app.js (`directoryFeeds` + `directoryOption`). scripts/validate.mjs checks
+   that this registry and that one still name the same origins, because two copies of a rule
+   is exactly the shape of thing that drifts.
+   Counting them is what makes "feeds you can subscribe to" a different number from "adopters",
+   and the sample fetch below is what keeps it from being a guess: a derived URL that nobody
+   has ever requested is a plausible string, not a feed. */
+const DIRECTORIES = {
+  "https://eventos.wiki/events.json": organisationFeeds,
+  "https://confs.rauljimenez.info/events.json": conferenceFeeds,
+};
+
+// Identical rules to docs/app.js: same origin, no credentials, path shaped like the route.
+function directoryOption(name, id, origin, route, suffix) {
+  if (typeof name !== "string" || !name.trim() || typeof id !== "string") return;
+  let url;
+  try {
+    url = new URL(id);
+  } catch {
+    return;
+  }
+  const path = url.pathname.replace(/\/$/, "");
+  if (url.origin !== origin || url.username || url.password || !route.test(path)) return;
+  return origin + path + suffix;
+}
+
+function organisationFeeds(doc, origin) {
+  const organisers = [...(doc.organizers || [])];
+  for (const event of doc.events) {
+    if (Array.isArray(event?.organizers)) organisers.push(...event.organizers);
+  }
+  return organisers.map((o) => directoryOption(o?.name, o?.url, origin, /^\/organizations\/[^/]+$/, "/events.json"));
+}
+
+function conferenceFeeds(doc, origin) {
+  const feeds = [];
+  for (const event of doc.events) {
+    const parent = event?.partOf;
+    const multipart = parent?.type === "multipart";
+    const conference = multipart ? event["confwatch:series"] : parent;
+    feeds.push(directoryOption(conference?.name, conference?.id, origin, /^\/conf\/[^/]+$/, ".json"));
+    // Each part of a multipart event points at the same edition feed, hence the dedupe below.
+    feeds.push(directoryOption(multipart ? parent.name : event?.name, multipart ? parent.id : event?.id,
+      origin, /^\/e\/[^/]+$/, ".json"));
+  }
+  return feeds;
+}
+
+/** Every distinct sub-feed URL this document implies, or null if it is not a directory. */
+function subFeedsOf(feedUrl, doc) {
+  const derive = DIRECTORIES[feedUrl];
+  if (!derive) return null;
+  const origin = new URL(feedUrl).origin;
+  return [...new Set(derive(doc, origin).filter(Boolean))].sort();
+}
+
+/** First, middle and last of the derived URLs must answer with a parseable OTE document. */
+async function sampleSubFeeds(urls) {
+  if (!urls.length) return { ok: true, sampled: [] };
+  const picks = [...new Set([0, Math.floor(urls.length / 2), urls.length - 1].slice(0, SUBFEED_SAMPLE))];
+  const sampled = [];
+  for (const i of picks) {
+    const url = urls[i];
+    try {
+      const res = await fetch(url, { signal: AbortSignal.timeout(TIMEOUT_MS) });
+      const doc = res.ok ? JSON.parse(await res.text()) : null;
+      const valid = Boolean(doc && Array.isArray(doc.events));
+      sampled.push({ url, ok: valid });
+      if (!valid) return { ok: false, sampled };
+    } catch (err) {
+      sampled.push({ url, ok: false, error: err.message });
+      return { ok: false, sampled };
+    }
+  }
+  return { ok: true, sampled };
+}
+
 const token = process.env.GITHUB_TOKEN;
 const repo = process.env.GITHUB_REPOSITORY;
 
@@ -214,11 +301,18 @@ async function attempt(url) {
     if (!supported.has(version)) return ok({ cors, transport, version, licenses: licensesIn(doc) });
     return hard("schema errors:\n" + ajv.errorsText(validate.errors, { separator: "\n" }), { cors, transport, version });
   }
+  const subFeeds = subFeedsOf(url, doc);
+  // A directory that no longer answers on its derived URLs reports nothing rather than a
+  // number: the site hides the figure instead of publishing one it cannot stand behind.
+  const sample = subFeeds ? await sampleSubFeeds(subFeeds) : { ok: true, sampled: [] };
   return ok({
     cors, transport, version, licenses: licensesIn(doc),
     // Count entries in this validated response, including past/cancelled events.
     // This is neither a unique-event total across feeds nor a community count.
     eventCount: doc.events.length,
+    // The feed itself, plus the sub-feeds it implies if it is a directory.
+    subscribableFeeds: subFeeds ? (sample.ok ? 1 + subFeeds.length : null) : 1,
+    subscribableSample: subFeeds ? { ok: sample.ok, checked: sample.sampled.map((s) => s.url) } : null,
     metadata: {
       ...languagesIn(doc),
       description: doc.description,
@@ -335,6 +429,7 @@ const previous = existsSync(PUBLIC_STATE) ? JSON.parse(readFileSync(PUBLIC_STATE
 const lastKnown = new Map((previous.feeds || []).map((f) => [f.feed, {
   specVersion: f.specVersion, licenses: f.licenses, transport: f.transport,
   eventCount: f.eventCount, eventCountCheckedAt: f.eventCountCheckedAt, metadata: f.metadata,
+  subscribableFeeds: f.subscribableFeeds, subscribableSample: f.subscribableSample,
 }]));
 const today = new Date().toISOString().slice(0, 10);
 const next = {};
@@ -343,7 +438,8 @@ let failing = 0;
 const noCors = [];
 
 for (const adopter of adopters) {
-  const { error, kind, cors, transport, version, licenses, eventCount, metadata } = await checkFeed(adopter.feed);
+  const { error, kind, cors, transport, version, licenses, eventCount, metadata,
+    subscribableFeeds, subscribableSample } = await checkFeed(adopter.feed);
   const prev = state[adopter.feed];
   const last = lastKnown.get(adopter.feed) || {};
   const stale = version && !supported.has(version);
@@ -366,6 +462,12 @@ for (const adopter of adopters) {
     eventCount: eventCount ?? last.eventCount ?? null,
     eventCountCheckedAt: eventCount !== undefined ? today : last.eventCountCheckedAt || null,
     metadata: metadata ?? last.metadata ?? null,
+    /* The feed plus, for a directory, the sub-feeds derived from it — see DIRECTORIES above.
+       Carried through an outage like specVersion: yesterday's measurement is still the best
+       thing known about a feed that timed out this morning. Null only ever means "we could
+       not stand behind a number", never zero. */
+    subscribableFeeds: subscribableFeeds ?? last.subscribableFeeds ?? null,
+    subscribableSample: subscribableSample ?? last.subscribableSample ?? null,
     cors: error ? null : cors === null,
     // How it is served, not what it says: size, whether the server compressed it, whether a
     // consumer can revalidate instead of re-downloading, and where the time went. Kept through
