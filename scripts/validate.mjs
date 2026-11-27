@@ -512,11 +512,11 @@ console.log("\nadopters registry (docs/data/)");
   }
 }
 
-// "Who consumes OTE data" is rendered by joining two registries (docs/app.js,
-// consumerEntries()): tools whose English category is "Consume", and adopters declaring
-// `consumes`. The join key is a string in a data file, so a well-meant rewording of the
-// category would empty the section silently — nobody looks at a list that renders fine
-// and happens to be short. The catalogue must keep answering that key.
+// "Who consumes OTE data" renders two registries as two groups (docs/app.js,
+// ingestingEntries() and consumingTools()): adopters declaring `consumes`, and tools whose
+// English category is "Consume". The join key is a string in a data file, so a well-meant
+// rewording of the category would empty the tools group silently — nobody looks at a list
+// that renders fine and happens to be short. The catalogue must keep answering that key.
 {
   const tools = JSON.parse(readFileSync(join("docs", "data", "tools.json"), "utf8")).tools;
   const consume = tools.filter((tool) => tool.category?.en === "Consume" && tool.status === "working");
@@ -563,9 +563,85 @@ for (const version of VERSIONS) {
   }
 }
 
+// Every string the site renders through a dictionary: the key must exist in BOTH languages.
+// The pages carry English in the markup as a fallback, so a key missing from en.json degrades
+// invisibly, and one missing from es.json renders the page half in each language — neither
+// shows up as an error anywhere. This became load-bearing when the landing was restructured:
+// #problem, #benefits and #faq moved to /why/ carrying their keys with them, and nothing else
+// would notice a key that stayed behind. Only data-i18n pages are covered; the older subpages
+// embed their own dictionaries in their JS (data-t), which is a separate problem.
+console.log("\ndocs/i18n dictionaries");
+{
+  const dicts = Object.fromEntries(
+    ["en", "es"].map((lang) => [lang, JSON.parse(readFileSync(join("docs", "i18n", `${lang}.json`), "utf8"))])
+  );
+  const resolve = (dict, path) => path.split(".").reduce((acc, k) => (acc == null ? acc : acc[k]), dict);
+  const pages = [join("docs", "index.html"), join("docs", "why", "index.html")];
+  for (const page of pages) {
+    const html = readFileSync(page, "utf8");
+    const keys = [...new Set([...html.matchAll(/data-i18n(?:-aria)?="([^"]+)"/g)].map((m) => m[1]))].sort();
+    for (const [lang, dict] of Object.entries(dicts)) {
+      const missing = keys.filter((key) => typeof resolve(dict, key) !== "string");
+      log(
+        missing.length === 0,
+        `${page} keys all resolve in ${lang}.json (${keys.length})${missing.length ? ` — missing ${missing.join(", ")}` : ""}`
+      );
+    }
+  }
+  // The FAQ is generated into /why/ from en.json; a Spanish list of another length would
+  // silently drop or invent questions on language switch.
+  const counts = Object.fromEntries(Object.entries(dicts).map(([lang, dict]) => [lang, dict.faq?.items?.length ?? 0]));
+  log(
+    counts.en > 0 && counts.en === counts.es,
+    `faq.items has the same length in both languages (en ${counts.en}, es ${counts.es})`
+  );
+}
+
+// The directory registry exists twice: docs/app.js derives the sub-feeds a visitor can pick
+// from a directory's document, and scripts/check-feeds.mjs counts the same URLs daily for the
+// "feeds you can subscribe to" figure on the landing. Two copies of one rule is the shape of
+// thing that drifts, and the drift is silent in the worst direction: adding a directory to the
+// site without teaching the counter about it would quietly understate the figure by a hundred
+// feeds, and nobody checks a number that renders fine. They must name the same feeds, and each
+// has to be a registered adopter.
+console.log("\ndirectory feeds");
+{
+  const urlsIn = (file, pattern) =>
+    new Set([...readFileSync(file, "utf8").matchAll(pattern)].map((m) => m[1]));
+  const site = urlsIn(join("docs", "app.js"), /^\s*'(https:\/\/[^']+)':\s*\{$/gm);
+  const checker = urlsIn(join("scripts", "check-feeds.mjs"), /^\s*"(https:\/\/[^"]+)":\s*\w+,$/gm);
+  const missing = [...site].filter((url) => !checker.has(url));
+  const extra = [...checker].filter((url) => !site.has(url));
+  log(
+    site.size > 0 && missing.length === 0 && extra.length === 0,
+    `docs/app.js and scripts/check-feeds.mjs agree on ${site.size} directory feed(s)` +
+      (missing.length ? ` — the counter is missing ${missing.join(", ")}` : "") +
+      (extra.length ? ` — the site no longer offers ${extra.join(", ")}` : "")
+  );
+
+  const registered = new Set(
+    JSON.parse(readFileSync(join("docs", "data", "adopters.json"), "utf8")).adopters.map((a) => a.feed)
+  );
+  const unregistered = [...site].filter((url) => !registered.has(url));
+  log(unregistered.length === 0, `every directory feed is a registered adopter${unregistered.length ? ` — ${unregistered.join(", ")}` : ""}`);
+
+  // The figure itself: null is how check-feeds.mjs says "I could not stand behind a number"
+  // (its daily sample of derived URLs failed), and the landing then drops that one stat. It is
+  // a legitimate state, so it warns rather than fails — but it must not pass unseen either.
+  const health = JSON.parse(readFileSync(join("docs", "data", "feed-health.json"), "utf8"));
+  const unmeasured = health.feeds.filter((feed) => typeof feed.subscribableFeeds !== "number");
+  const total = health.feeds.reduce((sum, feed) => sum + (feed.subscribableFeeds || 0), 0);
+  if (unmeasured.length) {
+    warnings++;
+    console.log(`  warn  ${unmeasured.length} feed(s) without a subscribable count — the landing hides the figure`);
+  } else {
+    console.log(`  ok    ${total} subscribable feeds across ${health.feeds.length} registered feeds`);
+  }
+}
+
 // Chaining these in package.json would break `npm run validate -- my-feed.json`: npm appends the
 // arguments to the END of the script string, so they would land on the wrong command.
-const generated = ["scripts/build-reference.mjs", "scripts/build-examples.mjs", "scripts/build-llms.mjs"]
+const generated = ["scripts/build-reference.mjs", "scripts/build-examples.mjs", "scripts/build-llms.mjs", "scripts/build-faq.mjs"]
   .map((script) => spawnSync(process.execPath, [script, "--check"], { stdio: "inherit" }))
   .filter((run) => run.status).length;
 

@@ -71,6 +71,7 @@
     "build-reference": "node scripts/build-reference.mjs",
     "build-examples": "node scripts/build-examples.mjs",
     "build-llms": "node scripts/build-llms.mjs",
+    "build-faq": "node scripts/build-faq.mjs",
     "publish-schemas": "mkdir -p docs/schema/v0.1 docs/schema/v0.2 docs/schema/v0.3 docs/schema/v0.4 docs/schema/v0.5 docs/schema/v0.6 && cp spec/v0.1/*.schema.json docs/schema/v0.1/ && cp spec/v0.2/*.schema.json docs/schema/v0.2/ && cp spec/v0.3/*.schema.json docs/schema/v0.3/ && cp spec/v0.4/*.schema.json docs/schema/v0.4/ && cp spec/v0.5/*.schema.json docs/schema/v0.5/ && cp spec/v0.6/*.schema.json docs/schema/v0.6/",
     "prepublishOnly": "npm run validate"
   },
