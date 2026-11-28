@@ -1,6 +1,6 @@
 {
   "_comment": "Health of the registered adopter feeds, refreshed daily by scripts/check-feeds.mjs. Feeds are validated against the spec version they declare; `supported` false means older than the supported window, which is information, not a failure. `specVersion` and `licenses` are the last values seen, kept through an outage; `licenses` lists every licence a consumer ends up with, feed-level inheritance already resolved. `eventCount` counts entries in the last validated response (all dates and statuses, no deduplication across feeds); null means not measured. `eventCountCheckedAt` is the UTC date of that measurement. `metadata` holds the publisher's description, its translations keyed by language, the feed generation time, the declared coverage window, event languages and available text languages from that same validated response. These values are retained when a response cannot be validated. `updated` is when this status last changed.",
-  "updated": "2026-11-27",
+  "updated": "2026-11-28",
   "latestSpecVersion": "0.6.0",
   "feeds": [
     {
@@ -13,8 +13,8 @@
       "licenses": [
         "CC0-1.0"
       ],
-      "eventCount": 96,
-      "eventCountCheckedAt": "2026-11-27",
+      "eventCount": 94,
+      "eventCountCheckedAt": "2026-11-28",
       "metadata": {
         "eventLanguages": [
           "de",
@@ -28,17 +28,17 @@
           "es"
         ],
         "textLanguageEvents": {
-          "en": 96,
-          "es": 36
+          "en": 94,
+          "es": 34
         },
         "description": "Conference dates and CFP deadlines we track — pick the ones you care about and subscribe",
         "textLanguage": "en",
         "updatedAt": "2026-11-27T09:16:55+00:00",
         "covers": {
-          "from": "2026-11-27"
+          "from": "2026-11-28"
         }
       },
-      "subscribableFeeds": 174,
+      "subscribableFeeds": 170,
       "subscribableSample": {
         "ok": true,
         "checked": [
@@ -49,12 +49,12 @@
       },
       "cors": true,
       "transport": {
-        "bytes": 192378,
+        "bytes": 186128,
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=900",
-        "ttfbMs": 637,
-        "totalMs": 655
+        "ttfbMs": 617,
+        "totalMs": 635
       },
       "failureKind": null,
       "failingSince": null,
@@ -71,7 +71,7 @@
         "CC-BY-4.0"
       ],
       "eventCount": 460,
-      "eventCountCheckedAt": "2026-11-27",
+      "eventCountCheckedAt": "2026-11-28",
       "metadata": {
         "eventLanguages": [
           "ca",
@@ -92,8 +92,8 @@
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 448,
-        "totalMs": 456
+        "ttfbMs": 312,
+        "totalMs": 316
       },
       "failureKind": null,
       "failingSince": null,
@@ -110,7 +110,7 @@
         "CC-BY-4.0"
       ],
       "eventCount": 58,
-      "eventCountCheckedAt": "2026-11-27",
+      "eventCountCheckedAt": "2026-11-28",
       "metadata": {
         "eventLanguages": [],
         "textLanguages": [
@@ -121,9 +121,9 @@
         },
         "description": "Eventos y meetups tecnológicos de España publicados en eventos.wiki",
         "textLanguage": "es",
-        "updatedAt": "2026-11-27T16:51:09.354Z",
+        "updatedAt": "2026-11-28T15:41:55.429Z",
         "covers": {
-          "from": "2026-08-27"
+          "from": "2026-08-28"
         }
       },
       "subscribableFeeds": 31,
@@ -141,8 +141,8 @@
         "encoding": null,
         "revalidation": null,
         "cacheControl": "public, max-age=1800",
-        "ttfbMs": 2529,
-        "totalMs": 2702
+        "ttfbMs": 2370,
+        "totalMs": 2542
       },
       "failureKind": null,
       "failingSince": null,
@@ -158,8 +158,8 @@
       "licenses": [
         "CC-BY-4.0"
       ],
-      "eventCount": 211,
-      "eventCountCheckedAt": "2026-11-27",
+      "eventCount": 204,
+      "eventCountCheckedAt": "2026-11-28",
       "metadata": {
         "eventLanguages": [
           "en",
@@ -171,25 +171,25 @@
           "es"
         ],
         "textLanguageEvents": {
-          "ca": 50,
-          "en": 211,
+          "ca": 51,
+          "en": 204,
           "es": 70
         },
         "description": "In-person tech, startup and AI meetups, hackathons, conferences and workshops in Barcelona.",
         "textLanguage": "en",
         "translations": {},
-        "updatedAt": "2026-11-27T16:51:14.602Z"
+        "updatedAt": "2026-11-28T15:41:59.047Z"
       },
       "subscribableFeeds": 1,
       "subscribableSample": null,
       "cors": true,
       "transport": {
-        "bytes": 708521,
+        "bytes": 697762,
         "encoding": null,
         "revalidation": null,
         "cacheControl": "public, max-age=3600",
-        "ttfbMs": 3758,
-        "totalMs": 3770
+        "ttfbMs": 1941,
+        "totalMs": 1950
       },
       "failureKind": null,
       "failingSince": null,
@@ -206,7 +206,7 @@
         "CC-BY-4.0"
       ],
       "eventCount": 142,
-      "eventCountCheckedAt": "2026-11-27",
+      "eventCountCheckedAt": "2026-11-28",
       "metadata": {
         "eventLanguages": [
           "ca",
@@ -233,8 +233,8 @@
         "encoding": "br",
         "revalidation": "etag+last-modified",
         "cacheControl": "public, max-age=0, must-revalidate",
-        "ttfbMs": 106,
-        "totalMs": 111
+        "ttfbMs": 83,
+        "totalMs": 88
       },
       "failureKind": null,
       "failingSince": null,
@@ -251,7 +251,7 @@
         "CC0-1.0"
       ],
       "eventCount": 25,
-      "eventCountCheckedAt": "2026-11-27",
+      "eventCountCheckedAt": "2026-11-28",
       "metadata": {
         "eventLanguages": [],
         "textLanguages": [
@@ -276,8 +276,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 181,
-        "totalMs": 183
+        "ttfbMs": 201,
+        "totalMs": 202
       },
       "failureKind": null,
       "failingSince": null,
@@ -294,7 +294,7 @@
         "CC-BY-4.0"
       ],
       "eventCount": 11,
-      "eventCountCheckedAt": "2026-11-27",
+      "eventCountCheckedAt": "2026-11-28",
       "metadata": {
         "eventLanguages": [
           "es",
@@ -318,8 +318,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 160,
-        "totalMs": 161
+        "ttfbMs": 384,
+        "totalMs": 384
       },
       "failureKind": null,
       "failingSince": null,
@@ -336,7 +336,7 @@
         "CC-BY-4.0"
       ],
       "eventCount": 12,
-      "eventCountCheckedAt": "2026-11-27",
+      "eventCountCheckedAt": "2026-11-28",
       "metadata": {
         "eventLanguages": [
           "es",
@@ -355,8 +355,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 322,
-        "totalMs": 323
+        "ttfbMs": 307,
+        "totalMs": 308
       },
       "failureKind": null,
       "failingSince": null,
@@ -373,7 +373,7 @@
         "CC-BY-4.0"
       ],
       "eventCount": 24,
-      "eventCountCheckedAt": "2026-11-27",
+      "eventCountCheckedAt": "2026-11-28",
       "metadata": {
         "eventLanguages": [
           "es"
@@ -399,8 +399,8 @@
         "encoding": "gzip",
         "revalidation": "etag+last-modified",
         "cacheControl": "max-age=600",
-        "ttfbMs": 87,
-        "totalMs": 88
+        "ttfbMs": 67,
+        "totalMs": 68
       },
       "failureKind": null,
       "failingSince": null,
